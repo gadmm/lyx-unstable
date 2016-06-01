@@ -66,6 +66,7 @@
 #include <QMainWindow>
 #include <QMimeData>
 #include <QMenu>
+#include <QMenuBar>
 #include <QPainter>
 #include <QPalette>
 #include <QScrollBar>
@@ -74,7 +75,6 @@
 #include <QTimer>
 #include <QToolButton>
 #include <QToolTip>
-#include <QMenuBar>
 
 #include <cmath>
 #include <iostream>
@@ -670,16 +670,27 @@ void GuiWorkArea::Private::updateScrollbar()
 
 void GuiWorkArea::scrollTo(int value)
 {
-	stopBlinkingCaret();
-	d->buffer_view_->scrollDocView(value, true);
+	d->scrollTo(value);
+}
 
+
+void GuiWorkArea::Private::scrollTo(int value)
+{
+	p->stopBlinkingCaret();
+	buffer_view_->scrollDocView(value, true);
+	scrollFinish();
+}
+
+
+void GuiWorkArea::Private::scrollFinish()
+{
 	if (lyxrc.cursor_follows_scrollbar) {
-		d->buffer_view_->setCursorFromScrollbar();
+		buffer_view_->setCursorFromScrollbar();
 		// FIXME: let GuiView take care of those.
-		d->lyx_view_->updateLayoutList();
+		lyx_view_->updateLayoutList();
 	}
-	// Show the caret immediately after any operation.
-	startBlinkingCaret();
+	// Show the cursor immediately after any operation.
+	p->startBlinkingCaret();
 	// FIXME QT5
 #ifdef Q_WS_X11
 	QApplication::syncX();

@@ -76,9 +76,7 @@ struct GuiWorkArea::Private
 {
 	///
 	Private(GuiWorkArea *);
-
-	///
-	~Private();
+	virtual ~Private();
 
 	///
 	void resizeBufferView();
@@ -91,6 +89,10 @@ struct GuiWorkArea::Private
 	void showCaret();
 	/// hide the caret if it is visible
 	void hideCaret();
+	/// This is the main function called when the user scrolls
+	virtual void scrollTo(int value);
+	/// Perform clean-up tasks after scrolling
+	void scrollFinish();
 	/// Set the range and value of the scrollbar and connect to its valueChanged
 	/// signal.
 	void updateScrollbar();
@@ -160,7 +162,8 @@ struct GuiWorkArea::Private
 
 }; // GuiWorkArea
 
+
 } // namespace frontend
 } // namespace lyx
 
-#endif // WORKAREA_H
+#endif // WORKAREA_PRIVATE_H

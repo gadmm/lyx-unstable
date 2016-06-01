@@ -91,6 +91,8 @@ struct GuiWorkArea::Private
 	void hideCaret();
 	/// This is the main function called when the user scrolls
 	virtual void scrollTo(int value);
+	// Stop any current scrolling animation
+	virtual void stopScrolling() {}
 	/// Perform clean-up tasks after scrolling
 	void scrollFinish();
 	/// Set the range and value of the scrollbar and connect to its valueChanged

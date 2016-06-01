@@ -153,6 +153,7 @@ private:
 
 	friend class GuiCompleter;
 	struct Private;
+	struct PrivateAnimated;
 	Private * const d;
 }; // GuiWorkArea
 

@@ -619,7 +619,6 @@ string BufferView::contextMenu(int x, int y) const
 }
 
 
-
 void BufferView::scrollDocView(int const value, bool update)
 {
 	// The scrollbar values are relative to the top of the screen, therefore the

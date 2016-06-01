@@ -139,6 +139,7 @@ SOURCEFILES = \
 	GuiViewSource.cpp \
 	GuiVSpace.cpp \
 	GuiWorkArea.cpp \
+	GuiWorkArea_PrivateAnimated.cpp \
 	GuiWrap.cpp \
 	IconPalette.cpp \
 	InGuiThread.cpp \
@@ -248,6 +249,7 @@ MOCHEADER = \
 	GuiViewSource.h \
 	GuiVSpace.h \
 	GuiWorkArea.h \
+	GuiWorkArea_PrivateAnimated.h \
 	GuiWrap.h \
 	IconPalette.h \
 	InGuiThread.h \

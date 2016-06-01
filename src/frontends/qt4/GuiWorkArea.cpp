@@ -12,7 +12,7 @@
 #include <config.h>
 
 #include "GuiWorkArea.h"
-#include "GuiWorkArea_Private.h"
+#include "GuiWorkArea_PrivateAnimated.h"
 
 #include "ColorCache.h"
 #include "FontLoader.h"
@@ -268,13 +268,13 @@ GuiWorkArea::Private::~Private()
 
 
 GuiWorkArea::GuiWorkArea(QWidget * /* w */)
-: d(new Private(this))
+	: d(new PrivateAnimated(this))
 {
 }
 
 
 GuiWorkArea::GuiWorkArea(Buffer & buffer, GuiView & gv)
-: d(new Private(this))
+	: GuiWorkArea(0)
 {
 	setGuiView(gv);
 	buffer.params().display_pixel_ratio = theGuiApp()->pixelRatio();

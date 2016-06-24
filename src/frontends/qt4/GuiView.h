@@ -47,6 +47,7 @@ class Dialog;
 class LayoutBox;
 class GuiToolbar;
 class GuiWorkArea;
+class InsetCombo;
 class TabWorkArea;
 class TocModels;
 class ToolbarInfo;
@@ -151,6 +152,7 @@ public:
 
 	///
 	LayoutBox * getLayoutDialog() const;
+	InsetCombo * getInsetCombo() const;
 
 	/// hides the workarea and makes sure it is clean
 	bool hideWorkArea(GuiWorkArea * wa);

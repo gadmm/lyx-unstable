@@ -63,6 +63,28 @@ private Q_SLOTS:
 
 
 
+class InsetMenuButton : public QToolButton
+{
+	Q_OBJECT
+public:
+	///
+	InsetMenuButton(GuiToolbar * bar);
+
+private:
+	///
+	void initialize();
+	///
+	GuiToolbar * bar_;
+	///
+	class Private;
+	Private * d;
+
+private Q_SLOTS:
+	///
+	void updateTriggered();
+};
+
+
 class GuiToolbar : public QToolBar
 {
 	Q_OBJECT
@@ -107,6 +129,8 @@ public:
 
 	///
 	Action * addItem(ToolbarItem const & item);
+    ///
+    GuiView const & owner() { return owner_; }
 
 Q_SIGNALS:
 	///

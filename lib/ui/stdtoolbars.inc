@@ -96,6 +96,8 @@ ToolbarSet
 		Item "Toggle math toolbar" "toolbar-toggle math"
 		Item "Toggle table toolbar" "toolbar-toggle table"
 		Item "Toggle review toolbar" "toolbar-toggle review"
+		Separator
+		Insets
 	End
 
 	Toolbar "view/update" "View/Update"

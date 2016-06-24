@@ -25,18 +25,26 @@
 #include "InsertTableWidget.h"
 #include "LayoutBox.h"
 #include "qt_helpers.h"
+#include "TextClass.h"
 #include "Toolbars.h"
 
+#include "Buffer.h"
+#include "BufferParams.h"
+#include "BufferView.h"
+#include "Cursor.h"
 #include "FuncRequest.h"
 #include "FuncStatus.h"
 #include "KeyMap.h"
 #include "LyX.h"
 #include "LyXRC.h"
 #include "Session.h"
+#include "Text.h"
 
 #include "support/debug.h"
 #include "support/gettext.h"
 #include "support/lstrings.h"
+
+#include <list>
 
 #include <QSettings>
 #include <QShowEvent>
@@ -261,6 +269,114 @@ void MenuButton::updateTriggered()
 }
 
 
+class InsetMenuButton::Private
+{
+	/// noncopyable
+	Private(Private const &);
+	void operator=(Private const &);
+public:
+	Private() : inset_(0)
+	{}
+
+	/// since Action retains a reference to the
+	/// FuncRequest, we need to keep these around
+	typedef std::list<FuncRequest> FuncCache;
+	///
+	DocumentClassConstPtr text_class_;
+	///
+	InsetText const * inset_;
+	///
+	FuncCache fcache_;
+};
+
+
+InsetMenuButton::InsetMenuButton(GuiToolbar * bar)
+	: QToolButton(bar), bar_(bar), d(new Private())
+{
+	setPopupMode(QToolButton::InstantPopup);
+	QString const label = qt_("Add Custom Inset");
+	setToolTip(label);
+	setStatusTip(label);
+	setText(label);
+	connect(bar, SIGNAL(iconSizeChanged(QSize)),
+		this, SLOT(setIconSize(QSize)));
+	initialize();
+}
+
+
+void InsetMenuButton::initialize()
+{
+	QString const label = qt_("Add Custom Inset");
+
+	QMenu * m = new QMenu(label, this);
+	m->setWindowTitle(label);
+	m->setTearOffEnabled(true);
+	setMenu(m);
+
+	connect(bar_, SIGNAL(updated()), this, SLOT(updateTriggered()));
+	updateTriggered();
+}
+
+
+void InsetMenuButton::updateTriggered()
+{
+	GuiView const & owner = bar_->owner();
+	BufferView const * bv = owner.currentBufferView();
+	QMenu * m = menu();
+	if (!bv) {
+		if (m)
+			m->clear();
+		setEnabled(false);
+		setMinimumWidth(sizeHint().width());
+		d->text_class_.reset();
+		d->inset_ = 0;
+			d->fcache_.clear();
+		return;
+    }
+    
+	// we'll only update the inset list if the text class has changed
+	// or we've moved from one inset to another
+	DocumentClassConstPtr text_class = bv->buffer().params().documentClassPtr();
+	InsetText const * inset = &(bv->cursor().innerText()->inset());
+	if (d->text_class_ == text_class && d->inset_ == inset)
+		return;
+    
+	if (m)
+		m->clear();
+	d->inset_ = inset;
+	d->text_class_ = text_class;
+	// FIXME If this is uncommented, then we crash.
+	// Presumably, the Action objects are still active
+	// for some reason, even though they have been
+	// removed from the menu.
+	//d->fcache_.clear();
+	
+	TextClass::InsetLayouts const & insetLayouts = d->text_class_->insetLayouts();
+	TextClass::InsetLayouts::const_iterator iit = insetLayouts.begin();
+	TextClass::InsetLayouts::const_iterator ien = insetLayouts.end();
+	
+	for (; iit != ien; ++iit) {
+		InsetLayout const & il = iit->second;
+		if (il.lyxtype() != InsetLayout::CUSTOM)
+			continue;
+        
+		docstring const name = iit->first;
+		QString const loc_item = toqstr(translateIfPossible(
+				prefixIs(name, from_ascii("Flex:")) ? 
+				name.substr(5) : name));
+
+		FuncRequest const func(LFUN_FLEX_INSERT, 
+			from_ascii("\"") + name + from_ascii("\""), FuncRequest::TOOLBAR);
+		d->fcache_.push_back(func);
+		FuncRequest const & cfunc = d->fcache_.back();
+		Action * act = 
+			new Action(getIcon(cfunc, false), loc_item, cfunc, loc_item, this);
+		m->addAction(act);
+	}
+	setEnabled(!d->fcache_.empty());
+}
+
+
 void GuiToolbar::add(ToolbarItem const & item)
 {
 	switch (item.type_) {
@@ -273,6 +389,10 @@ void GuiToolbar::add(ToolbarItem const & item)
 			layout, SLOT(setIconSize(QSize)));
 		QAction * action = addWidget(layout);
 		action->setVisible(true);
+		break;
+	}
+	case ToolbarItem::INSETS: {
+		addWidget(new InsetMenuButton(this));
 		break;
 	}
 	case ToolbarItem::MINIBUFFER:

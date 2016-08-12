@@ -1,0 +1,137 @@
+Developer's guide to LyX unstable
+---------------------------------
+
+LyX unstable is an experiment that tries to answer the following two questions:
+
+A. Is it possible to provide a test version of master that reads and writes the
+   latest stable format?
+
+B. Can the development of this version be made directly on the master branch
+   instead of a separate branch? (And therefore ask the developer of a file
+   format change to encapsulate his changes directly.)
+
+
+How is LyX unstable developed?
+------------------------------
+
+LyX unstable is a branch that evolves in parallel of master. Master is routinely
+merged into it (cherry-pick does not work because master itself contains merges
+that cannot be cherry-picked). After every merge introducing a file format
+change, the modifications at the interfaces are reverted using "#ifdef
+FILEFORMAT" in combination with helper functions such as
+disable_widget_if_ndef_FILEFORMAT().
+
+For the purpose of question B, the changes should be such that the behaviour of
+master is restored if somebody were to define FILEFORMAT in all headers (though
+no configure option has been programmed yet to do that).
+
+
+Risks for experiment A
+----------------------
+
+Ninja file format changes that are not recorded by an incrementation of
+LYX_FORMAT_LYX. (No occurrence so far.)
+
+(Update this section after such problems arise.)
+
+
+Risks for experiment B
+----------------------
+
+None so far.
+
+(Update this section after such problems arise.)
+
+
+How to update LyX unstable between master releases
+--------------------------------------------------
+
+(TL;DR: merge the commit on master that introduces the file format change into
+unstable, then introduce a commit that disables the changes at the interfaces:
+I/O, GUI (Qt & LFUNs).)
+
+1. Locate the next file-format-changing commit (X)
+
+   * See which commits alter src/version.h or change LFUNS, or sensitive files
+     listed below.
+
+2. Merge X into unstable (git merge X), or merge master if there is no new file
+   format change.
+
+   * Check that the diff with X (resp. master) is reasonable as a safety
+     measure.
+
+3. Introduce a commit disabling the file format change.
+
+   a. Use diff X~..X to locate sensitive changes.
+
+   b. Remove the offending code by enclosing it with #ifdef FILEFORMAT. Do not
+      simply delete them as this makes future merges more complicated.
+
+       * I/O: Make minimal changes to read/write the stable file format, e.g.:
+
+           +#ifdef FILEFORMAT
+            os << "\\use_microtype " << convert<string>(use_microtype) << '\n';
+           +#endif
+
+       * Qt GUI: Do not change Qt ui files. Use the helper function
+         disable_widget_if_ndef_FILEFORMAT() from "qt_helpers.h".
+
+       * LFUN UI: Do not change LyX ui files. use #ifdef FILEFORMAT in getStatus()
+         so that new LFUNs or new uses of LFUNs are disabled instead.
+
+   c. Layouts changes (TextClass.cpp, layout2layout.py): unstable should read
+      the latest layout format. So, it is not always necessary to update
+      lib/layout/. When a layout change is concommitant with a file format
+      change, see what can be done (no experience with this so far, update this
+      guide afterwards).
+
+         * The LYXFILE_LAYOUT_FORMAT version in TextClass.cpp has been
+           introduced so that the "Convert to latest layout" button in the Local
+           Layout only converts up to the latest stable layout version.
+
+   d. The following require no change / Keep an eye open.
+
+       * Do not alter lyx2lyx. Unstable can read master lyx files via lyx2lyx.
+
+       * Keep lib/{doc,examples,templates} in the newer format. They will be
+         opened via lyx2lyx.
+
+   	   * Keep an eye on lib/Makefile.am (e.g. scripts for External Insets),
+         lib/configure.py
+
+       * LFUN format change (LyXAction.cpp, prefs2prefs): no measure taken so far,
+         but keep an eye open.
+
+       * Prefs format (LYXRC.cpp, prefs2prefs): no measure taken. LyX unstable
+         should read and write the latest preference format (it should be
+         compiled with an appropriate suffix to make its use possible in
+         conjunction with stable).
+
+4. Check that the diff with X / master is reasonable.
+
+5. TODO: Add an automated test to check that there is no change after opening
+   and saving stable lyx files.
+
+6. goto 1.
+
+
+How to update LyX unstable after the next master release:
+---------------------------------------------------------
+
+1. Update LyX unstable to the master commit corresponding to the new stable
+   release following the previous guide.
+
+2. Reset "#ifdef FILEFORMAT"/disable_widget_if_ndef_FILEFORMAT() occurrences and
+   other changes (i.e. assuming FILEFORMAT defined).
+
+3. Set up the new unstable version:
+
+   * configure.ac : release name
+
+   * src/version.h and src/TextClass.cpp: LYX_FORMAT_LYX, LYX_FORMAT_TEX2LYX,
+     and LYXFILE_LAYOUT_FORMAT should match the new stable formats.
+
+4. Check that the diff with master is reasonable: only contains the helper
+   code.
+

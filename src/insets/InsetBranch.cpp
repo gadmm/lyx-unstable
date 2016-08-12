@@ -223,9 +223,11 @@ bool InsetBranch::getStatus(Cursor & cur, FuncRequest const & cmd,
 		flag.setEnabled(known_branch && !isBranchSelected(true));
 		break;
 
+#ifdef FILEFORMAT
 	case LFUN_BRANCH_INVERT:
 		flag.setEnabled(true);
 		break;
+#endif
 
 	case LFUN_BRANCH_ADD:
 		flag.setEnabled(!known_branch);
@@ -390,17 +392,24 @@ void InsetBranch::addToToc(DocIterator const & cpit, bool output_active,
 
 void InsetBranchParams::write(ostream & os) const
 {
-	os << to_utf8(branch) 
-	   << '\n' 
+	os << to_utf8(branch);
+#ifdef FILEFORMAT
+	os << '\n' 
 	   << "inverted " 
 	   << inverted;
+#endif
 }
 
 
 void InsetBranchParams::read(Lexer & lex)
 {
+#ifdef FILEFORMAT
 	lex >> branch;
 	lex >> "inverted" >> inverted;
+#else
+	lex.eatLine();
+	branch = lex.getDocString();
+#endif
 }
 
 } // namespace lyx

@@ -6,11 +6,20 @@
 Format 60
 
 # Includes
+Input scrartcl.layout
 Input beamer.layout
 
 # override settings inherited from beamer.layout
 Provides geometry 0
 Provides hyperref 0
+
+DefaultFont
+	Family                Roman
+	Series                Medium
+	Shape                 Up
+	Size                  Normal
+	Color                 None
+EndFont
 
 Preamble
 	\usepackage{beamerarticle,pgf}

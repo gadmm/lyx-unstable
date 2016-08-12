@@ -33,8 +33,8 @@ extern char const * const lyx_version_info;
 #ifdef FILEFORMAT
 // Do not remove the comment below, so we get merge conflict in
 // independent branches. Instead add your own.
-#define LYX_FORMAT_LYX 511 // rgh: inverted branches
-#define LYX_FORMAT_TEX2LYX 511
+#define LYX_FORMAT_LYX 512 // spitz: beamer article extension
+#define LYX_FORMAT_TEX2LYX 512
 
 #else
 // LyX 2.2 format

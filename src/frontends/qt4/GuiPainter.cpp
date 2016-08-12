@@ -208,12 +208,17 @@ void GuiPainter::lines(int const * xp, int const * yp, int np,
 		return;
 
 	// double the size if needed
-	// FIXME THREAD
+#if defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ == 6)
 	static QVector<QPoint> points(32);
+#else
+	thread_local QVector<QPoint> points(32);
+#endif
 	if (np > points.size())
 		points.resize(2 * np);
 
-	bool antialias = ls != line_solid_aliased;
+	// Note: the proper way to not get blurry vertical and horizontal lines is
+	// to add 0.5 to all coordinates.
+	bool antialias = false;
 	for (int i = 0; i < np; ++i) {
 		points[i].setX(xp[i]);
 		points[i].setY(yp[i]);
@@ -223,7 +228,8 @@ void GuiPainter::lines(int const * xp, int const * yp, int np,
 	QColor const color = computeColor(col);
 	setQPainterPen(color, ls, lw);
 	bool const text_is_antialiased = renderHints() & TextAntialiasing;
-	setRenderHint(Antialiasing, antialias && text_is_antialiased);
+	setRenderHint(Antialiasing,
+	              antialias && text_is_antialiased && ls != line_solid_aliased);
 	if (fs == fill_none) {
 		drawPolyline(points.data(), np);
 	} else {

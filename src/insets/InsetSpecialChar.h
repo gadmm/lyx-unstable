@@ -61,6 +61,8 @@ public:
 	///
 	void metrics(MetricsInfo &, Dimension &) const;
 	///
+	void drawBackground(PainterInfo & pi, int x, int y) const;
+	///
 	void draw(PainterInfo & pi, int x, int y) const;
 	///
 	void write(std::ostream &) const;
@@ -77,6 +79,8 @@ public:
 	docstring xhtml(XHTMLStream &, OutputParams const &) const;
 	///
 	void toString(odocstream &) const;
+	///
+	bool isInToc() const { return true; }	
 	///
 	void forOutliner(docstring &, size_t const, bool const) const;
 	///

@@ -335,6 +335,10 @@ bool XHTMLStream::closeFontTags()
 		// we haven't had any content
 		return true;
 
+#ifdef	XHTML_DEBUG
+	dumpTagStack("Beging Close Font Tags");
+#endif
+
 	// this may be a useless check, since we ought at least to have
 	// the parsep_tag. but it can't hurt too much to be careful.
 	if (tag_stack_.empty())
@@ -347,10 +351,14 @@ bool XHTMLStream::closeFontTags()
 		tag_stack_.pop_back();
 		// this shouldn't happen, since then the font tags
 		// weren't in any other tag.
-		LBUFERR(!tag_stack_.empty());
+		LASSERT(!tag_stack_.empty(), return true);
 		curtag = tag_stack_.back();
 	}
 
+#ifdef	XHTML_DEBUG
+	dumpTagStack("End Close Font Tags");
+#endif
+	
 	if (*curtag == parsep_tag)
 		return true;
 
@@ -373,6 +381,9 @@ void XHTMLStream::startDivision(bool keep_empty)
 	pending_tags_.push_back(makeTagPtr(html::StartTag(parsep_tag)));
 	if (keep_empty)
 		clearTagDeque();
+#ifdef	XHTML_DEBUG
+	dumpTagStack("StartDivision");
+#endif
 }
 
 
@@ -390,6 +401,11 @@ void XHTMLStream::endDivision()
 			if (*cur_tag == parsep_tag)
 				break;
 		}
+
+#ifdef	XHTML_DEBUG
+		dumpTagStack("EndDivision");
+#endif
+		
 		return;
 	}
 
@@ -408,6 +424,10 @@ void XHTMLStream::endDivision()
 		writeError("Tag `" + cur_tag->tag_ + "' still open at end of paragraph. Closing.");
 		os_ << cur_tag->writeEndTag();
 	}
+
+#ifdef	XHTML_DEBUG
+	dumpTagStack("EndDivision");
+#endif
 }
 
 
@@ -845,12 +865,28 @@ ParagraphList::const_iterator makeParagraphs(Buffer const & buf,
 		//   (i) the current layout permits multiple paragraphs
 		//  (ii) we are either not already inside a paragraph (HTMLIsBlock) OR
 		//       we are, but this is not the first paragraph
-		// But we do not want to open the paragraph tag if this paragraph contains
+		//
+		// But there is also a special case, and we first see whether we are in it.
+		// We do not want to open the paragraph tag if this paragraph contains
 		// only one item, and that item is "inline", i.e., not HTMLIsBlock (such 
-		// as a branch). That is the "special case" we handle first.
+		// as a branch). On the other hand, if that single item has a font change
+		// applied to it, then we still do need to open the paragraph.
+		//
+		// Obviously, this is very fragile. The main reason we need to do this is
+		// because of branches, e.g., a branch that contains an entire new section.
+		// We do not really want to wrap that whole thing in a <div>...</div>.
+		bool special_case = false;
 		Inset const * specinset = par->size() == 1 ? par->getInset(0) : 0;
-		bool const special_case =  
-			specinset && !specinset->getLayout().htmlisblock();
+		if (specinset && !specinset->getLayout().htmlisblock()) {
+			Layout const & style = par->layout();
+			FontInfo const first_font = style.labeltype == LABEL_MANUAL ?
+						style.labelfont : style.font;
+			FontInfo const our_font =
+				par->getFont(buf.masterBuffer()->params(), 0,
+			               text.outerFont(distance(begin, par))).fontInfo();
+			if (first_font == our_font)
+				special_case = true;
+		}
 
 		bool const open_par = runparams.html_make_pars
 			&& (!runparams.html_in_par || par != pbegin)

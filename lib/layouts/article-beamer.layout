@@ -6,7 +6,6 @@
 Format 60
 
 # Includes
-Input article.layout
 Input beamer.layout
 
 # override settings inherited from beamer.layout (Paul Rubin <rubin@msu.edu>)

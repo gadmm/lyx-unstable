@@ -68,6 +68,8 @@ public:
 	///
 	void redraw(bool update_metrics);
 
+	/// return true if the key is part of a shortcut
+	bool queryKeySym(KeySymbol const & key, KeyModifier mod) const;
 	/// Process Key pressed event.
 	/// This needs to be public because it is accessed externally by GuiView.
 	void processKeySym(KeySymbol const & key, KeyModifier mod);
@@ -141,7 +143,8 @@ private:
 	void mouseMoveEvent(QMouseEvent * ev);
 	/// wheel event
 	void wheelEvent(QWheelEvent * ev);
-	/// key press
+	/// key press event. It also knows how to handle ShortcutOverride events to
+	/// avoid code duplication.
 	void keyPressEvent(QKeyEvent * ev);
 	/// IM events
 	void inputMethodEvent(QInputMethodEvent * ev);
@@ -227,12 +230,19 @@ private Q_SLOTS:
 	void on_currentTabChanged(int index);
 	///
 	void showContextMenu(const QPoint & pos);
+	/// enable closing tab on middle-click
+	void mousePressEvent(QMouseEvent * me);
+	void mouseReleaseEvent(QMouseEvent * me);
 	///
 	void mouseDoubleClickEvent(QMouseEvent * event);
 
 private:
-	///
+	/// true if position is a tab (rather than the blank space in tab bar)
+	bool posIsTab(QPoint position);
+
 	int clicked_tab_;
+	///
+	int midpressed_tab_;
 	///
 	QToolButton * closeBufferButton;
 }; // TabWorkArea

@@ -564,6 +564,12 @@ void BufferView::updateScrollbar()
 		d->scrollbarParameters_.max -= minVisiblePart();
 	else
 		d->scrollbarParameters_.max -= d->scrollbarParameters_.page_step;
+
+	// 0 must be inside the range as it denotes the current position
+	if (d->scrollbarParameters_.max < 0)
+		d->scrollbarParameters_.max = 0;
+	if (d->scrollbarParameters_.min > 0)
+		d->scrollbarParameters_.min = 0;
 }
 
 
@@ -873,7 +879,7 @@ void BufferView::scrollToCursor()
 }
 
 
-bool BufferView::scrollToCursor(DocIterator const & dit, bool recenter)
+bool BufferView::scrollToCursor(DocIterator const & dit, bool const recenter)
 {
 	// We are not properly started yet, delay until resizing is
 	// done.

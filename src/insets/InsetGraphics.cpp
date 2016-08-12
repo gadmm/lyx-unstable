@@ -872,14 +872,12 @@ string InsetGraphics::prepareHTMLFile(OutputParams const & runparams) const
 	if (params().filename.empty())
 		return string();
 
-	string const orig_file = params().filename.absFileName();
+	if (!params().filename.isReadableFile())
+		return string();
 
 	// The master buffer. This is useful when there are multiple levels
 	// of include files
 	Buffer const * masterBuffer = buffer().masterBuffer();
-
-	if (!params().filename.isReadableFile())
-		return string();
 
 	// We place all temporary files in the master buffer's temp dir.
 	// This is possible because we use mangled file names.
@@ -895,14 +893,16 @@ string InsetGraphics::prepareHTMLFile(OutputParams const & runparams) const
 	if (status == FAILURE)
 		return string();
 
-	string output_file = onlyFileName(temp_file.absFileName());
-
 	string const from = formats.getFormatFromFile(temp_file);
-	if (from.empty())
+	if (from.empty()) {
 		LYXERR(Debug::GRAPHICS, "\tCould not get file format.");
+		return string();
+	}
 
 	string const to   = findTargetFormat(from, runparams);
 	string const ext  = formats.extension(to);
+	string const orig_file = params().filename.absFileName();
+	string output_file = onlyFileName(temp_file.absFileName());
 	LYXERR(Debug::GRAPHICS, "\t we have: from " << from << " to " << to);
 	LYXERR(Debug::GRAPHICS, "\tthe orig file is: " << orig_file);
 
@@ -962,10 +962,20 @@ docstring InsetGraphics::xhtml(XHTMLStream & xs, OutputParams const & op) const
 	// really be better to do width and height conversion, rather than to output
 	// these parameters here.
 	string imgstyle;
-	if (!params().width.zero())
-		imgstyle += "width:" + params().width.asHTMLString() + ";";
-	if (!params().height.zero())
-		imgstyle += " height:" + params().height.asHTMLString() + ";";
+	bool const havewidth  = !params().width.zero();
+	bool const haveheight = !params().height.zero();
+	if (havewidth || haveheight) {
+		if (havewidth)
+			imgstyle += "width:" + params().width.asHTMLString() + ";";
+		if (haveheight)
+			imgstyle += " height:" + params().height.asHTMLString() + ";";
+	} else if (params().scale != "100") {
+		// Note that this will not have the same effect as in LaTeX export:
+		// There, the image will be scaled from its original size. Here, the
+		// percentage will be interpreted by the browser, and the image will
+		// be scaled to a percentage of the window size.
+		imgstyle = "width:" + params().scale + "%;";
+	}
 	if (!imgstyle.empty())
 		imgstyle = "style='" + imgstyle + "' ";
 

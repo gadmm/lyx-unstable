@@ -639,6 +639,7 @@ def checkFormatEntries(dtl_tools):
     checkViewer('gnumeric spreadsheet software', ['gnumeric'],
       rc_entry = [r'''\Format gnumeric gnumeric "Gnumeric spreadsheet" "" ""    "%%"   "document"	"application/x-gnumeric"
 \Format excel      xls    "Excel spreadsheet"      "" "" "%%"    "document"	"application/vnd.ms-excel"
+\Format html_table html   "HTML Table (for spreadsheets)"      "" "" "%%"    "document"	"text/html"
 \Format oocalc     ods    "OpenDocument spreadsheet" "" "" "%%"    "document"	"application/vnd.oasis.opendocument.spreadsheet"'''])
  #
     checkViewer('an HTML previewer', ['firefox', 'mozilla file://$$p$$i', 'netscape'],
@@ -929,6 +930,7 @@ def checkConverterEntries():
     if fig2dev == "fig2dev":
         addToRC(r'''\converter fig        eps        "fig2dev -L eps $$i $$o"	""
 \converter fig        ppm        "fig2dev -L ppm $$i $$o"	""
+\converter fig        svg        "fig2dev -L svg $$i $$o"	""
 \converter fig        png        "fig2dev -L png $$i $$o"	""
 \converter fig        pdftex     "python -tt $$s/scripts/fig2pdftex.py $$i $$o"	""
 \converter fig        pstex      "python -tt $$s/scripts/fig2pstex.py $$i $$o"	""''')
@@ -976,11 +978,13 @@ def checkConverterEntries():
             r'''\converter dot        eps        "dot -Teps $$i -o $$o"	""
 \converter dot        png        "dot -Tpng $$i -o $$o"	""'''])
     #
-    checkProg('a Dia -> PNG converter', ['dia -e $$o -t png $$i'],
-        rc_entry = [ r'\converter dia        png        "%%"	""'])
+    path, dia = checkProg('a Dia -> Image converter', ['dia'])
+    if dia == 'dia':
+        addToRC(r'''\converter dia        png        "dia -e $$o -t png $$i"	""
+\converter dia        eps        "dia -e $$o -t eps $$i"	""
+\converter dia        svg        "dia -e $$o -t svg $$i"	""''')
+
     #
-    checkProg('a Dia -> EPS converter', ['dia -e $$o -t eps $$i'],
-        rc_entry = [ r'\converter dia        eps        "%%"	""'])
     # Actually, this produces EPS, but with a wrong bounding box (usually A4 or letter).
     # The eps2->eps converter then fixes the bounding box by cropping.
     # Although unoconv can convert to png and pdf as well, do not define
@@ -1015,7 +1019,11 @@ def checkConverterEntries():
     checkProg('a spreadsheet -> latex converter', ['ssconvert'],
        rc_entry = [ r'''\converter gnumeric latex "ssconvert --export-type=Gnumeric_html:latex $$i $$o" ""
 \converter oocalc latex "ssconvert --export-type=Gnumeric_html:latex $$i $$o" ""
-\converter excel  latex "ssconvert --export-type=Gnumeric_html:latex $$i $$o" ""'''])
+\converter excel  latex "ssconvert --export-type=Gnumeric_html:latex $$i $$o" ""
+\converter gnumeric html_table "ssconvert --export-type=Gnumeric_html:html40frag $$i $$o" ""
+\converter oocalc html_table "ssconvert --export-type=Gnumeric_html:html40frag $$i $$o" ""
+\converter excel  html_table "ssconvert --export-type=Gnumeric_html:html40frag $$i $$o" ""
+'''])
 
     path, lilypond = checkProg('a LilyPond -> EPS/PDF/PNG converter', ['lilypond'])
     if (lilypond != ''):

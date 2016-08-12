@@ -41,9 +41,11 @@
 #include "support/bind.h"
 #include "support/TempFile.h"
 
+#include <atomic>
 #include <fstream>
 #include <iomanip>
 #include <memory>
+#include <mutex>
 #include <sstream>
 
 #include <QTimer>
@@ -90,13 +92,13 @@ lyx::Converter const * setConverter(string const & from)
 			return ptr;
 	}
 
-	// FIXME THREAD
-	static bool first = true;
-	if (first) {
-		first = false;
-		LYXERR0("PreviewLoader::startLoading()\n"
-			<< "No converter from \"" << from << "\" format has been defined.");
-	}
+	// Show the error only once
+	static once_flag flag;
+	call_once(flag, [&](){
+			LYXERR0("PreviewLoader::startLoading()\n"
+			        << "No converter from \"" << from
+			        << "\" format has been defined.");
+		});
 	return 0;
 }
 
@@ -728,8 +730,7 @@ void PreviewLoader::Impl::startLoading(bool wait)
 	if (wait) {
 		ForkedCall call(buffer_.filePath(), buffer_.layoutPos());
 		int ret = call.startScript(ForkedProcess::Wait, command);
-		// FIXME THREAD
-		static int fake = (2^20) + 1;
+		static atomic_int fake((2^20) + 1);
 		int pid = fake++;
 		inprogress.pid = pid;
 		inprogress.command = command;

@@ -1322,6 +1322,27 @@ Tabular::getVAlignment(idx_type cell, bool onlycolumn) const
 }
 
 
+int Tabular::offsetVAlignment() const
+{
+	// for top-alignment the first horizontal table line must be exactly at
+	// the position of the base line of the surrounding text line
+	// for bottom alignment, the same is for the last table line
+	int offset_valign = 0;
+	switch (tabular_valignment) {
+	case Tabular::LYX_VALIGN_BOTTOM:
+		offset_valign = rowAscent(0) - height();
+		break;
+	case Tabular::LYX_VALIGN_MIDDLE:
+		offset_valign = (- height()) / 2 + rowAscent(0);
+		break;
+	case Tabular::LYX_VALIGN_TOP:
+		offset_valign = rowAscent(0);
+		break;
+	}
+	return offset_valign;
+}
+
+
 Length const Tabular::getPWidth(idx_type cell) const
 {
 	if (isMultiColumn(cell))
@@ -3487,14 +3508,14 @@ docstring InsetTableCell::xhtml(XHTMLStream & xs, OutputParams const & rp) const
 InsetTabular::InsetTabular(Buffer * buf, row_type rows,
 			   col_type columns)
 	: Inset(buf), tabular(buf, max(rows, row_type(1)), max(columns, col_type(1))),
-	  first_visible_cell_(0), offset_valign_(0), rowselect_(false), colselect_(false)
+	  rowselect_(false), colselect_(false)
 {
 }
 
 
 InsetTabular::InsetTabular(InsetTabular const & tab)
 	: Inset(tab), tabular(tab.tabular),
-	  first_visible_cell_(0), offset_valign_(0), rowselect_(false), colselect_(false)
+	  rowselect_(false), colselect_(false)
 {
 }
 
@@ -3581,7 +3602,7 @@ void InsetTabular::read(Lexer & lex)
 int InsetTabular::rowFromY(Cursor & cur, int y) const
 {
 	// top y coordinate of tabular
-	int h = yo(cur.bv()) - tabular.rowAscent(0) + offset_valign_;
+	int h = yo(cur.bv()) - tabular.rowAscent(0) + tabular.offsetVAlignment();
 	row_type r = 0;
 	for (; r < tabular.nrows() && y > h; ++r)
 		h += tabular.rowAscent(r) + tabular.rowDescent(r)
@@ -3690,23 +3711,8 @@ void InsetTabular::metrics(MetricsInfo & mi, Dimension & dim) const
 		tabular.setRowDescent(r, maxdes + ADD_TO_HEIGHT + bottom_space);
 	}
 
-	// for top-alignment the first horizontal table line must be exactly at
-	// the position of the base line of the surrounding text line
-	// for bottom alignment, the same is for the last table line
-	switch (tabular.tabular_valignment) {
-	case Tabular::LYX_VALIGN_BOTTOM:
-		offset_valign_ = tabular.rowAscent(0) - tabular.height();
-		break;
-	case Tabular::LYX_VALIGN_MIDDLE:
-		offset_valign_ = (- tabular.height()) / 2 + tabular.rowAscent(0);
-		break;
-	case Tabular::LYX_VALIGN_TOP:
-		offset_valign_ = tabular.rowAscent(0);
-		break;
-	}
-
 	tabular.updateColumnWidths();
-	dim.asc = tabular.rowAscent(0) - offset_valign_;
+	dim.asc = tabular.rowAscent(0) - tabular.offsetVAlignment();
 	dim.des = tabular.height() - dim.asc;
 	dim.wid = tabular.width() + 2 * ADD_TO_TABULAR_WIDTH;
 }
@@ -3757,9 +3763,8 @@ void InsetTabular::draw(PainterInfo & pi, int x, int y) const
 	bool const original_selection_state = pi.selected;
 
 	idx_type idx = 0;
-	first_visible_cell_ = Tabular::npos;
 
-	int yy = y + offset_valign_;
+	int yy = y + tabular.offsetVAlignment();
 	for (row_type r = 0; r < tabular.nrows(); ++r) {
 		int nx = x;
 		for (col_type c = 0; c < tabular.ncols(); ++c) {
@@ -3772,9 +3777,6 @@ void InsetTabular::draw(PainterInfo & pi, int x, int y) const
 				nx += tabular.cellWidth(idx);
 				continue;
 			}
-
-			if (first_visible_cell_ == Tabular::npos)
-				first_visible_cell_ = idx;
 
 			pi.selected |= isCellSelected(cur, r, c);
 			int const cx = nx + tabular.textHOffset(idx);
@@ -3797,7 +3799,7 @@ void InsetTabular::draw(PainterInfo & pi, int x, int y) const
 void InsetTabular::drawBackground(PainterInfo & pi, int x, int y) const
 {
 	x += ADD_TO_TABULAR_WIDTH;
-	y += offset_valign_ - tabular.rowAscent(0);
+	y += tabular.offsetVAlignment() - tabular.rowAscent(0);
 	pi.pain.fillRectangle(x, y, tabular.width(), tabular.height(),
 		pi.backgroundColor(this));
 }
@@ -3834,7 +3836,7 @@ void InsetTabular::drawSelection(PainterInfo & pi, int x, int y) const
 				}
 				int const w = tabular.cellWidth(cell);
 				int const h = tabular.cellHeight(cell);
-				int const yy = y - tabular.rowAscent(r) + offset_valign_;
+				int const yy = y - tabular.rowAscent(r) + tabular.offsetVAlignment();
 				if (isCellSelected(cur, r, c))
 					pi.pain.fillRectangle(xx, yy, w, h, Color_selection);
 				xx += w;
@@ -3972,7 +3974,7 @@ bool InsetTabular::hitSelectRow(BufferView const & bv, int x) const
 
 bool InsetTabular::hitSelectColumn(BufferView const & bv, int y) const
 {
-	int const y0 = yo(bv) - tabular.rowAscent(0) + offset_valign_;
+	int const y0 = yo(bv) - tabular.rowAscent(0) + tabular.offsetVAlignment();
 	// FIXME: using ADD_TO_TABULAR_WIDTH is not really correct since
 	// there is no margin added vertically to tabular insets.
 	// However, it works for now.
@@ -4296,41 +4298,6 @@ void InsetTabular::doDispatch(Cursor & cur, FuncRequest & cmd)
 		}
 		cur.screenUpdateFlags(Update::Force | Update::FitCursor);
 		break;
-
-//	case LFUN_SCREEN_DOWN: {
-//		//if (hasSelection())
-//		//	cur.selection() = false;
-//		col_type const col = tabular.cellColumn(cur.idx());
-//		int const t =	cur.bv().top_y() + cur.bv().height();
-//		if (t < yo() + tabular.getHeightOfTabular()) {
-//			cur.bv().scrollDocView(t, true);
-//			cur.idx() = tabular.cellBelow(first_visible_cell_) + col;
-//		} else {
-//			cur.idx() = tabular.getFirstCellInRow(tabular.rows() - 1) + col;
-//		}
-//		cur.par() = 0;
-//		cur.pos() = 0;
-//		break;
-//	}
-//
-//	case LFUN_SCREEN_UP: {
-//		//if (hasSelection())
-//		//	cur.selection() = false;
-//		col_type const col = tabular.cellColumn(cur.idx());
-//		int const t =	cur.bv().top_y() + cur.bv().height();
-//		if (yo() < 0) {
-//			cur.bv().scrollDocView(t, true);
-//			if (yo() > 0)
-//				cur.idx() = col;
-//			else
-//				cur.idx() = tabular.cellBelow(first_visible_cell_) + col;
-//		} else {
-//			cur.idx() = col;
-//		}
-//		cur.par() = cur.lastpar();
-//		cur.pos() = cur.lastpos();
-//		break;
-//	}
 
 	case LFUN_LAYOUT_TABULAR:
 		cur.bv().showDialog("tabular");
@@ -5125,13 +5092,7 @@ docstring InsetTabular::xhtml(XHTMLStream & xs, OutputParams const & rp) const
 void InsetTabular::validate(LaTeXFeatures & features) const
 {
 	tabular.validate(features);
-	// FIXME XHTML
-	// It'd be better to be able to get this from an InsetLayout, but at present
-	// InsetLayouts do not seem really to work for things that aren't InsetTexts.
-	if (features.runparams().flavor == OutputParams::HTML)
-		features.addCSSSnippet(
-			"table { border: 1px solid black; display: inline-block; }\n"
-			"td { border: 1px solid black; padding: 0.5ex; }");
+	features.useInsetLayout(getLayout());
 }
 
 
@@ -5155,7 +5116,7 @@ void InsetTabular::cursorPos(BufferView const & bv,
 	// y offset	correction
 	y += cellYPos(sl.idx());
 	y += tabular.textVOffset(sl.idx());
-	y += offset_valign_;
+	y += tabular.offsetVAlignment();
 
 	// x offset correction
 	x += cellXPos(sl.idx());

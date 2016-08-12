@@ -95,11 +95,23 @@ static GuiFontInfo * fontinfo_[NUM_FAMILIES][NUM_SERIES][NUM_SHAPE][NUM_SIZE];
 // if not cached, create it.
 GuiFontInfo & fontinfo(FontInfo const & f)
 {
-	// LASSERT: Is there anything we might do here besides crash?
-	LBUFERR(f.family() < NUM_FAMILIES);
-	LBUFERR(f.series() < NUM_SERIES);
-	LBUFERR(f.realShape() < NUM_SHAPE);
-	LBUFERR(f.size() < NUM_SIZE);
+    bool const fontIsRealized =
+            (f.family() < NUM_FAMILIES) &&
+            (f.series() < NUM_SERIES) &&
+            (f.realShape() < NUM_SHAPE) &&
+            (f.size() < NUM_SIZE);
+    if (!fontIsRealized) {
+        // We can reset the font to something sensible in release mode.
+        LATTEST(false);
+        LYXERR0("Unrealized font!");
+        FontInfo f2 = f;
+        f2.realize(sane_font);
+        GuiFontInfo * & fi =
+            fontinfo_[f2.family()][f2.series()][f2.realShape()][f2.size()];
+        if (!fi)
+            fi = new GuiFontInfo(f2);
+        return *fi;
+    }
 	// fi is a reference to the pointer type (GuiFontInfo *) in the
 	// fontinfo_ table.
 	GuiFontInfo * & fi =

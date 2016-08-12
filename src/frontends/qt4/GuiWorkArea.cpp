@@ -505,6 +505,14 @@ void GuiWorkArea::redraw(bool update_metrics)
 }
 
 
+// Keep in sync with GuiWorkArea::processKeySym below
+bool GuiWorkArea::queryKeySym(KeySymbol const & key, KeyModifier mod) const
+{
+	return guiApp->queryKeySym(key, mod);
+}
+
+
+// Keep in sync with GuiWorkArea::queryKeySym above
 void GuiWorkArea::processKeySym(KeySymbol const & key, KeyModifier mod)
 {
 	if (d->lyx_view_->isFullScreen() && d->lyx_view_->menuBar()->isVisible()
@@ -663,10 +671,9 @@ void GuiWorkArea::toggleCursor()
 void GuiWorkArea::Private::updateScrollbar()
 {
 	ScrollbarParameters const & scroll_ = buffer_view_->scrollbarParameters();
-	// WARNING: don't touch at the scrollbar value like this:
-	//   verticalScrollBar()->setValue(scroll_.position);
-	// because this would cause a recursive signal/slot calling with
-	// GuiWorkArea::scrollTo
+	// Block signals to prevent setRange() and setSliderPosition from causing
+	// recursive calls via the signal valueChanged. (#10311)
+	QSignalBlocker blocker(p->verticalScrollBar());
 	p->verticalScrollBar()->setRange(scroll_.min, scroll_.max);
 	p->verticalScrollBar()->setPageStep(scroll_.page_step);
 	p->verticalScrollBar()->setSingleStep(scroll_.single_step);
@@ -711,6 +718,12 @@ bool GuiWorkArea::event(QEvent * e)
 		e->accept();
 		return true;
 	}
+
+	case QEvent::ShortcutOverride:
+		// keyPressEvent is ShortcutOverride-aware and only accepts the event in
+		// this case
+		keyPressEvent(static_cast<QKeyEvent *>(e));
+		return e->isAccepted();
 
 	case QEvent::KeyPress: {
 		// We catch this event in order to catch the Tab or Shift+Tab key press
@@ -1028,6 +1041,10 @@ void GuiWorkArea::generateSyntheticMouseEvent()
 
 void GuiWorkArea::keyPressEvent(QKeyEvent * ev)
 {
+	// this is also called for ShortcutOverride events. In this case, one must
+	// not act but simply accept the event explicitly.
+	bool const act = (ev->type() != QEvent::ShortcutOverride);
+
 	// Do not process here some keys if dialog_mode_ is set
 	if (d->dialog_mode_
 		&& (ev->modifiers() == Qt::NoModifier
@@ -1045,7 +1062,8 @@ void GuiWorkArea::keyPressEvent(QKeyEvent * ev)
 		switch (ev->key()) {
 		case Qt::Key_Enter:
 		case Qt::Key_Return:
-			d->completer_->activate();
+			if (act)
+				d->completer_->activate();
 			ev->accept();
 			return;
 		}
@@ -1055,7 +1073,9 @@ void GuiWorkArea::keyPressEvent(QKeyEvent * ev)
 	// (the auto repeated events come too fast)
 	// it looks like this is only needed on X11
 #if defined(Q_WS_X11) || defined(QPA_XCB)
-	if (qApp->hasPendingEvents() && ev->isAutoRepeat()) {
+	// FIXME: this is a weird way to implement event compression. Also, this is
+	// broken with IBus.
+	if (act && qApp->hasPendingEvents() && ev->isAutoRepeat()) {
 		switch (ev->key()) {
 		case Qt::Key_PageDown:
 		case Qt::Key_PageUp:
@@ -1070,7 +1090,7 @@ void GuiWorkArea::keyPressEvent(QKeyEvent * ev)
 	}
 #endif
 
-	KeyModifier m = q_key_state(ev->modifiers());
+	KeyModifier const m = q_key_state(ev->modifiers());
 
 	std::string str;
 	if (m & ShiftModifier)
@@ -1081,16 +1101,20 @@ void GuiWorkArea::keyPressEvent(QKeyEvent * ev)
 		str += "Alt-";
 	if (m & MetaModifier)
 		str += "Meta-";
-	
-	LYXERR(Debug::KEY, " count: " << ev->count() << " text: " << ev->text()
-		<< " isAutoRepeat: " << ev->isAutoRepeat() << " key: " << ev->key()
-		<< " keyState: " << str);
+
+	if (act)
+		LYXERR(Debug::KEY, " count: " << ev->count() << " text: " << ev->text()
+		       << " isAutoRepeat: " << ev->isAutoRepeat() << " key: " << ev->key()
+		       << " keyState: " << str);
 
 	KeySymbol sym;
 	setKeySymbol(&sym, ev);
 	if (sym.isOK()) {
-		processKeySym(sym, q_key_state(ev->modifiers()));
-		ev->accept();
+		if (act) {
+			processKeySym(sym, m);
+			ev->accept();
+		} else
+			ev->setAccepted(queryKeySym(sym, m));
 	} else {
 		ev->ignore();
 	}
@@ -1227,7 +1251,7 @@ void GuiWorkArea::inputMethodEvent(QInputMethodEvent * e)
 		stopBlinkingCursor();
 
 	// last_width : for checking if last preedit string was/wasn't empty.
-	// FIXME THREAD
+	// FIXME THREAD && FIXME
 	// We could have more than one work area, right?
 	static bool last_width = false;
 	if (!last_width && preedit_string.empty()) {
@@ -1532,7 +1556,7 @@ NoTabFrameMacStyle noTabFrameMacStyle;
 
 
 TabWorkArea::TabWorkArea(QWidget * parent)
-	: QTabWidget(parent), clicked_tab_(-1)
+	: QTabWidget(parent), clicked_tab_(-1), midpressed_tab_(-1)
 {
 #ifdef Q_OS_MAC
 	setStyle(&noTabFrameMacStyle);
@@ -1580,6 +1604,26 @@ TabWorkArea::TabWorkArea(QWidget * parent)
 }
 
 
+void TabWorkArea::mousePressEvent(QMouseEvent *me)
+{
+	if (me->button() == Qt::MidButton)
+		midpressed_tab_ = tabBar()->tabAt(me->pos());
+	else
+		QTabWidget::mousePressEvent(me);
+}
+
+
+void TabWorkArea::mouseReleaseEvent(QMouseEvent *me)
+{
+	if (me->button() == Qt::MidButton) {
+		int const midreleased_tab = tabBar()->tabAt(me->pos());
+		if (midpressed_tab_ == midreleased_tab && posIsTab(me->pos()))
+			closeTab(midreleased_tab);
+	} else
+		QTabWidget::mouseReleaseEvent(me);
+}
+
+
 void TabWorkArea::paintEvent(QPaintEvent * event)
 {
 	if (tabBar()->isVisible()) {
@@ -1603,15 +1647,27 @@ void TabWorkArea::paintEvent(QPaintEvent * event)
 }
 
 
+bool TabWorkArea::posIsTab(QPoint position)
+{
+	// tabAt returns -1 if tab does not covers position
+	return tabBar()->tabAt(position) > -1;
+}
+
+
 void TabWorkArea::mouseDoubleClickEvent(QMouseEvent * event)
 {
 	if (event->button() != Qt::LeftButton)
 		return;
 
+	// this code chunk is unnecessary because it seems the event only makes
+	// it this far if it is not on a tab. I'm not sure why this is (maybe
+	// it is handled and ended in DragTabBar?), and thus I'm not sure if
+	// this is true in all cases and if it will be true in the future so I
+	// leave this code for now. (skostysh, 2016-07-21)
+	//
 	// return early if double click on existing tabs
-	for (int i = 0; i < count(); ++i)
-		if (tabBar()->tabRect(i).contains(event->pos()))
-			return;
+	if (posIsTab(event->pos()))
+		return;
 
 	dispatch(FuncRequest(LFUN_BUFFER_NEW));
 }

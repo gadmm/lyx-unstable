@@ -551,14 +551,14 @@ void RowPainter::paintOnlyInsets()
 	for ( ; cit != end ; ++cit) {
 		Row::Element const & e = *cit;
 		if (e.type == Row::INSET) {
-			// If outer row has changed, nested insets are repainted completely.
-			// FIXME: check what this really does. The test is weird.
-			bool const nested_inset =
-				(e.inset->asInsetMath() && !e.inset->asInsetMath()->asMacroTemplate())
-				|| e.inset->asInsetText() || e.inset->asInsetTabular();
-			if (nested_inset)
-				paintInset(e);
+			paintInset(e);
+			// The line that indicates word in a different language
+			paintForeignMark(e);
+			// change tracking (not for insets that handle it themselves)
+			if (!e.inset->canPaintChange(*pi_.base.bv))
+				paintChange(e);
 		}
+
 		x_ += e.full_width();
 	}
 }

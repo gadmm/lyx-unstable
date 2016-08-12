@@ -313,6 +313,19 @@ InsetLayout Listings
 	ForceLTR              true
 	RefPrefix             lst
 	HTMLTag               pre
+	HTMLStyle
+		div.float-listings {
+			border: 2px solid black;
+			padding: 1ex;
+			margin: 1ex;
+		}
+		div.listings-caption {
+			text-align: center;
+			border: 2px solid black;
+			padding: 1ex;
+			margin: 1ex;
+	}
+	EndHTMLStyle
 End
 
 InsetLayout Branch
@@ -617,4 +630,17 @@ End
 
 InsetLayout PrintNomencl
   HTMLTag h2
+End
+
+InsetLayout Tabular
+	HTMLStyle
+		table {
+			border-collapse: collapse;
+			display: inline-block;
+		}
+		td {
+			border: 1px solid black;
+			padding: 0.5ex;
+		}
+	EndHTMLStyle
 End

@@ -61,6 +61,7 @@
 #include "support/lstrings.h"
 #include "support/textutils.h"
 
+#include <atomic>
 #include <sstream>
 #include <vector>
 
@@ -283,10 +284,11 @@ private:
 
 class Paragraph::Private
 {
-	// Enforce our own "copy" constructor by declaring the standard one and
-	// the assignment operator private without implementing them.
-	Private(Private const &);
-	Private & operator=(Private const &);
+	// Enforce our own "copy" constructor
+	Private(Private const &) = delete;
+	Private & operator=(Private const &) = delete;
+	// Unique ID generator
+	static int make_id();
 public:
 	///
 	Private(Paragraph * owner, Layout const & layout);
@@ -506,35 +508,37 @@ Paragraph::Private::Private(Paragraph * owner, Layout const & layout)
 }
 
 
-// Initialization of the counter for the paragraph id's,
-//
-// FIXME: There should be a more intelligent way to generate and use the
-// paragraph ids per buffer instead a global static counter for all InsetText
-// in the running program.
-// However, this per-session id is used in LFUN_PARAGRAPH_GOTO to
-// switch to a different buffer, as used in the outliner for instance.
-static int paragraph_id = -1;
+//static
+int Paragraph::Private::make_id()
+{
+	// The id is unique per session across buffers because it is used in
+	// LFUN_PARAGRAPH_GOTO to switch to a different buffer, for instance in the
+	// outliner.
+	// (thread-safe)
+	static atomic_uint next_id(0);
+	return next_id++;
+}
+
 
 Paragraph::Private::Private(Private const & p, Paragraph * owner)
 	: owner_(owner), inset_owner_(p.inset_owner_), fontlist_(p.fontlist_),
+	  id_(make_id()),
 	  params_(p.params_), changes_(p.changes_), insetlist_(p.insetlist_),
 	  begin_of_body_(p.begin_of_body_), text_(p.text_), words_(p.words_),
 	  layout_(p.layout_)
 {
-	id_ = ++paragraph_id;
 	requestSpellCheck(p.text_.size());
 }
 
 
 Paragraph::Private::Private(Private const & p, Paragraph * owner,
 	pos_type beg, pos_type end)
-	: owner_(owner), inset_owner_(p.inset_owner_),
+	: owner_(owner), inset_owner_(p.inset_owner_), id_(make_id()),
 	  params_(p.params_), changes_(p.changes_),
 	  insetlist_(p.insetlist_, beg, end),
 	  begin_of_body_(p.begin_of_body_), words_(p.words_),
 	  layout_(p.layout_)
 {
-	id_ = ++paragraph_id;
 	if (beg >= pos_type(p.text_.size()))
 		return;
 	text_ = p.text_.substr(beg, end - beg);
@@ -2409,18 +2413,18 @@ void Paragraph::latex(BufferParams const & bparams,
 		++column;
 
 		// Fully instantiated font
-		Font const font = getFont(bparams, i, outerfont);
+		Font const current_font = getFont(bparams, i, outerfont);
 
 		Font const last_font = running_font;
 
 		// Do we need to close the previous font?
 		if (open_font &&
-		    (font != running_font ||
-		     font.language() != running_font.language()))
+		    (current_font != running_font ||
+		     current_font.language() != running_font.language()))
 		{
 			column += running_font.latexWriteEndChanges(
 					os, bparams, runparams, basefont,
-					(i == body_pos-1) ? basefont : font);
+					(i == body_pos-1) ? basefont : current_font);
 			running_font = basefont;
 			open_font = false;
 		}
@@ -2431,7 +2435,7 @@ void Paragraph::latex(BufferParams const & bparams,
 		string const lang_end_command = runparams.use_polyglossia ?
 			"\\end{$$lang}" : lyxrc.language_command_end;
 		if (!running_lang.empty() &&
-		    font.language()->encoding()->package() == Encoding::CJK) {
+		    current_font.language()->encoding()->package() == Encoding::CJK) {
 				string end_tag = subst(lang_end_command,
 							"$$lang",
 							running_lang);
@@ -2442,28 +2446,28 @@ void Paragraph::latex(BufferParams const & bparams,
 		// Switch file encoding if necessary (and allowed)
 		if (!runparams.pass_thru && !style.pass_thru &&
 		    runparams.encoding->package() != Encoding::none &&
-		    font.language()->encoding()->package() != Encoding::none) {
+		    current_font.language()->encoding()->package() != Encoding::none) {
 			pair<bool, int> const enc_switch =
 			    	switchEncoding(os.os(), bparams, runparams,
-					*(font.language()->encoding()));
+					*(current_font.language()->encoding()));
 			if (enc_switch.first) {
 				column += enc_switch.second;
-				runparams.encoding = font.language()->encoding();
+				runparams.encoding = current_font.language()->encoding();
 			}
 		}
 
 		char_type const c = d->text_[i];
 
 		// Do we need to change font?
-		if ((font != running_font ||
-		     font.language() != running_font.language()) &&
+		if ((current_font != running_font ||
+		     current_font.language() != running_font.language()) &&
 			i != body_pos - 1)
 		{
 			odocstringstream ods;
-			column += font.latexWriteStartChanges(ods, bparams,
+			column += current_font.latexWriteStartChanges(ods, bparams,
 							      runparams, basefont,
 							      last_font);
-			running_font = font;
+			running_font = current_font;
 			open_font = true;
 			docstring fontchange = ods.str();
 			// check whether the fontchange ends with a \\textcolor
@@ -2489,7 +2493,7 @@ void Paragraph::latex(BufferParams const & bparams,
 			// style.pass_thru is false.
 			if (i != body_pos - 1) {
 				if (d->simpleTeXBlanks(runparams, os,
-						i, column, font, style)) {
+						i, column, current_font, style)) {
 					// A surrogate pair was output. We
 					// must not call latexSpecialChar
 					// in this iteration, since it would output
@@ -2502,7 +2506,7 @@ void Paragraph::latex(BufferParams const & bparams,
 
 		OutputParams rp = runparams;
 		rp.free_spacing = style.free_spacing;
-		rp.local_font = &font;
+		rp.local_font = &current_font;
 		rp.intitle = style.intitle;
 
 		// Two major modes:  LaTeX or plain
@@ -2752,7 +2756,7 @@ void doFontSwitch(vector<html::FontTag> & tagsToOpen,
 docstring Paragraph::simpleLyXHTMLOnePar(Buffer const & buf,
 				    XHTMLStream & xs,
 				    OutputParams const & runparams,
-				    Font const & outerfont, 
+				    Font const & outerfont,
 				    bool start_paragraph, bool close_paragraph,
 				    pos_type initial) const
 {

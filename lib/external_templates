@@ -75,6 +75,17 @@ Template GnumericSpreadsheet
 		Requirement "ifthen"
 		ReferencedFile pdflatex "$$AbsOrRelPathMaster$$Basename.tex"
 	FormatEnd
+	Format Ascii
+		Product "[Spreadsheet: $$FName]"
+	FormatEnd
+	Format DocBook
+		Product "[Spreadsheet: $$FName]"
+	FormatEnd
+	Format XHTML
+		Product "$$Contents(\"$$AbsPath$$Basename.html\")</p>"
+		UpdateFormat html_table
+		UpdateResult "$$AbsPath$$Basename.html"
+	FormatEnd
 TemplateEnd
 
 Template RasterImage
@@ -145,6 +156,12 @@ Template RasterImage
 		ReferencedFile docbook     "$$AbsPath$$Basename.eps"
 		ReferencedFile docbook-xml "$$AbsPath$$Basename.eps"
 	FormatEnd
+	Format XHTML
+		Product "<img src=\"$$AbsOrRelPathMaster$$Basename.png\" />"
+		UpdateFormat png
+		UpdateResult "$$AbsPath$$Basename.png"
+		ReferencedFile xhtml "$$AbsPath$$Basename.png"
+	FormatEnd
 TemplateEnd
 
 Template VectorGraphics
@@ -208,6 +225,12 @@ Template VectorGraphics
 		ReferencedFile docbook     "$$AbsPath$$Basename.eps"
 		ReferencedFile docbook-xml "$$AbsPath$$Basename.eps"
 	FormatEnd
+	Format XHTML
+		Product "<img src=\"$$AbsOrRelPathMaster$$Basename.svg\" />"
+		UpdateFormat svg
+		UpdateResult "$$AbsPath$$Basename.svg"
+		ReferencedFile xhtml "$$AbsPath$$Basename.svg"
+	FormatEnd
 TemplateEnd
 
 Template XFig
@@ -257,6 +280,12 @@ Template XFig
 		UpdateResult "$$AbsPath$$Basename.eps"
 		ReferencedFile docbook     "$$AbsPath$$Basename.eps"
 		ReferencedFile docbook-xml "$$AbsPath$$Basename.eps"
+	FormatEnd
+	Format XHTML
+		Product "<img src=\"$$AbsOrRelPathMaster$$Basename.svg\" />"
+		UpdateFormat svg
+		UpdateResult "$$AbsPath$$Basename.svg"
+		ReferencedFile xhtml "$$AbsPath$$Basename.svg"
 	FormatEnd
 TemplateEnd
 
@@ -308,6 +337,11 @@ Template ChessDiagram
 	Format DocBook
 		Product "[Chess: $$AbsOrRelPathMaster$$Basename]"
 	FormatEnd
+	Format XHTML
+		Product "<pre>$$Contents(\"$$AbsPath$$Basename.asc\")</pre>"
+		UpdateFormat asciichess
+		UpdateResult "$$AbsPath$$Basename.asc"
+	FormatEnd
 TemplateEnd
 
 
@@ -358,6 +392,12 @@ Template LilyPond
 	Format DocBook
 		Product "[LilyPond: $$FName]"
 	FormatEnd
+	Format XHTML
+		Product "<img src=\"$$AbsOrRelPathMaster$$Basename.png\" />"
+		UpdateFormat png
+		UpdateResult "$$AbsPath$$Basename.png"
+		ReferencedFile xhtml "$$AbsPath$$Basename.png"
+	FormatEnd
 TemplateEnd
 
 Template PDFPages
@@ -398,6 +438,9 @@ Template PDFPages
 		Product "[PDFPages: $$FName]"
 	FormatEnd
 	Format DocBook
+		Product "[PDFPages: $$FName]"
+	FormatEnd
+	Format XHTML
 		Product "[PDFPages: $$FName]"
 	FormatEnd
 TemplateEnd
@@ -452,6 +495,12 @@ Template Dia
 		UpdateResult "$$AbsPath$$Basename.eps"
 		ReferencedFile docbook     "$$AbsPath$$Basename.eps"
 		ReferencedFile docbook-xml "$$AbsPath$$Basename.eps"
+	FormatEnd
+	Format XHTML
+		Product "<img src=\"$$AbsOrRelPathMaster$$Basename.svg\" />"
+		UpdateFormat svg
+		UpdateResult "$$AbsPath$$Basename.svg"
+		ReferencedFile xhtml "$$AbsPath$$Basename.svg"
 	FormatEnd
 TemplateEnd
 

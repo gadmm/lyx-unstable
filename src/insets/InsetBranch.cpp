@@ -64,7 +64,7 @@ void InsetBranch::read(Lexer & lex)
 }
 
 
-docstring InsetBranch::toolTip(BufferView const & bv, int, int) const
+docstring InsetBranch::toolTip(BufferView const &, int, int) const
 {
 	docstring const masterstatus = isBranchSelected() ?
 		_("active") : _("non-active");
@@ -72,14 +72,22 @@ docstring InsetBranch::toolTip(BufferView const & bv, int, int) const
 		_("active") : _("non-active");
 	docstring const status = (masterstatus == childstatus) ?
 		masterstatus :
-		support::bformat(_("master: %1$s, child: %2$s"),
+		support::bformat(_("master %1$s, child %2$s"),
 						 masterstatus, childstatus);
-	docstring const heading = params_.inverted ?
-		support::bformat(_("Branch, inverted (%1$s): %2$s"), status, params_.branch) :
-		support::bformat(_("Branch (%1$s): %2$s"), status, params_.branch);
-	if (isOpen(bv))
-		return heading;
-	return toolTipText(heading + from_ascii("\n"));
+
+	docstring const masteron = producesOutput() ?
+		_("on") : _("off");
+	docstring const childon = producesOutput(true) ?
+		_("on") : _("off");
+	docstring const onoff = (masteron == childon) ?
+		masteron :
+		support::bformat(_("master %1$s, child %2$s"),
+						 masteron, childon);
+
+	docstring const heading = 
+		support::bformat(_("Branch Name: %1$s\nBranch Status: %2$s\nInset Status: %3$s"),
+						 params_.branch, status, onoff);
+	return toolTipText(heading);
 }
 
 
@@ -87,25 +95,18 @@ docstring const InsetBranch::buttonLabel(BufferView const &) const
 {
 	static char_type const tick = 0x2714; // ✔ U+2714 HEAVY CHECK MARK
 	static char_type const cross = 0x2716; // ✖ U+2716 HEAVY MULTIPLICATION X
-	static char_type const itick = 0x271A; // ✚ U+271A HEAVY GREEK CROSS
-	static char_type const icross = 0x274E; // ❎ U+274E NEGATIVE SQUARED CROSS MARK
 
 	Buffer const & realbuffer = *buffer().masterBuffer();
 	BranchList const & branchlist = realbuffer.params().branchlist();
 	bool const inmaster = branchlist.find(params_.branch);
 	bool const inchild = buffer().params().branchlist().find(params_.branch);
 
-	bool const master_selected = isBranchSelected();
-	bool const child_selected = isBranchSelected(true);
+	bool const master_selected = producesOutput();
+	bool const child_selected = producesOutput(true);
 
-	docstring symb = docstring(1, master_selected ? 
-		(params_.inverted ? icross : tick) :
-		(params_.inverted ? itick: cross));
-	if (inchild && master_selected != child_selected) {
-		symb += child_selected ? 
-			(params_.inverted ? icross : tick) :
-			(params_.inverted ? itick: cross);
-	}
+	docstring symb = docstring(1, master_selected ? tick : cross);
+	if (inchild && master_selected != child_selected)
+		symb += (child_selected ? tick : cross);
 
 	if (decoration() == InsetLayout::MINIMALISTIC)
 		return symb + params_.branch;
@@ -189,7 +190,11 @@ void InsetBranch::doDispatch(Cursor & cur, FuncRequest & cmd)
 		break;
 	}
 	case LFUN_BRANCH_INVERT:
+		cur.recordUndoInset(this);
 		params_.inverted = !params_.inverted;
+		// what we really want here is a TOC update, but that means
+		// a full buffer update
+		cur.forceBufferUpdate();
 		break;
 	case LFUN_BRANCH_ADD:
 		lyx::dispatch(FuncRequest(LFUN_BRANCH_ADD, params_.branch));
@@ -226,6 +231,7 @@ bool InsetBranch::getStatus(Cursor & cur, FuncRequest const & cmd,
 #ifdef FILEFORMAT
 	case LFUN_BRANCH_INVERT:
 		flag.setEnabled(true);
+		flag.setOnOff(params_.inverted);
 		break;
 #endif
 
@@ -277,9 +283,15 @@ bool InsetBranch::isBranchSelected(bool const child) const
 }
 
 
+bool InsetBranch::producesOutput(bool const child) const
+{
+	return isBranchSelected(child) != params_.inverted;
+}
+
+
 void InsetBranch::latex(otexstream & os, OutputParams const & runparams) const
 {
-	if (isBranchActive())
+	if (producesOutput())
 		InsetText::latex(os, runparams);
 }
 
@@ -287,7 +299,7 @@ void InsetBranch::latex(otexstream & os, OutputParams const & runparams) const
 int InsetBranch::plaintext(odocstringstream & os,
 			   OutputParams const & runparams, size_t max_length) const
 {
-	if (!isBranchActive())
+	if (!producesOutput())
 		return 0;
 
 	int len = InsetText::plaintext(os, runparams, max_length);
@@ -298,13 +310,13 @@ int InsetBranch::plaintext(odocstringstream & os,
 int InsetBranch::docbook(odocstream & os,
 			 OutputParams const & runparams) const
 {
-	return isBranchActive() ?  InsetText::docbook(os, runparams) : 0;
+	return producesOutput() ?  InsetText::docbook(os, runparams) : 0;
 }
 
 
 docstring InsetBranch::xhtml(XHTMLStream & xs, OutputParams const & rp) const
 {
-	if (isBranchActive()) {
+	if (producesOutput()) {
 		OutputParams newrp = rp;
 		newrp.par_begin = 0;
 		newrp.par_end = text().paragraphs().size();
@@ -316,7 +328,7 @@ docstring InsetBranch::xhtml(XHTMLStream & xs, OutputParams const & rp) const
 
 void InsetBranch::toString(odocstream & os) const
 {
-	if (isBranchActive())
+	if (producesOutput())
 		InsetCollapsable::toString(os);
 }
 
@@ -324,14 +336,14 @@ void InsetBranch::toString(odocstream & os) const
 void InsetBranch::forOutliner(docstring & os, size_t const maxlen,
 							  bool const shorten) const
 {
-	if (isBranchActive())
+	if (producesOutput())
 		InsetCollapsable::forOutliner(os, maxlen, shorten);
 }
 
 
 void InsetBranch::validate(LaTeXFeatures & features) const
 {
-	if (isBranchActive())
+	if (producesOutput())
 		InsetCollapsable::validate(features);
 }
 
@@ -345,7 +357,7 @@ string InsetBranch::contextMenuName() const
 bool InsetBranch::isMacroScope() const 
 {
 	// Its own scope if not selected by buffer
-	return !isBranchActive();
+	return !producesOutput();
 }
 
 
@@ -385,7 +397,7 @@ void InsetBranch::addToToc(DocIterator const & cpit, bool output_active,
 	toc->push_back(TocItem(pit, 0, str, output_active));
 
 	// Proceed with the rest of the inset.
-	bool const doing_output = output_active && isBranchActive();
+	bool const doing_output = output_active && producesOutput();
 	InsetCollapsable::addToToc(cpit, doing_output, utype);
 }
 

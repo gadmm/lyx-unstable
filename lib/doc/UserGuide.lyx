@@ -1,5 +1,5 @@
-#LyX 2.2 created this file. For more info see http://www.lyx.org/
-\lyxformat 508
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 511
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -68,6 +68,7 @@ enumitem
 \font_osf false
 \font_sf_scale 100 100
 \font_tt_scale 100 100
+\use_microtype false
 \graphics default
 \default_output_format pdf2
 \output_sync 0
@@ -134,11 +135,13 @@ enumitem
 \papercolumns 1
 \papersides 2
 \paperpagestyle default
-\tracking_changes false
+\tracking_changes true
 \output_changes false
 \html_math_output 0
 \html_css_as_file 0
 \html_be_strict true
+\author 274215730 "scott"
+\author 424524441 "rgheck"
 \end_header
 
 \begin_body
@@ -6680,7 +6683,7 @@ The default numbering of numbered lists can be changed by adding an optional
  argument (menu 
 \family sans
 Insert\SpecialChar menuseparator
-Short Title
+Enumerate Options
 \family default
 ) to the first item of each level in the list.
  There you add the command
@@ -8310,14 +8313,12 @@ Verbatim
 \end_layout
 
 \begin_layout Verbatim
-
 This is Verbatim.
 \end_layout
 
 \begin_layout Verbatim
 \noindent
 \align block
-
 The following 2 lines are empty:
 \end_layout
 
@@ -8330,7 +8331,6 @@ The following 2 lines are empty:
 \end_layout
 
 \begin_layout Verbatim
-
 Almost everything is allowed in Verbatim:"%&$§#~'`
 \backslash
 }][{|
@@ -8354,7 +8354,6 @@ Verbatim
 \end_layout
 
 \begin_layout Verbatim*
-
 This is Verbatim*.
 \end_layout
 
@@ -19336,7 +19335,7 @@ Header
 \family default
 : The current row and all rows above, that don't have any special options
  defined, are defined to be the header rows of all pages of the longtable.
- except for the first page, if 
+ Except for the first page, if 
 \family sans
 First
 \begin_inset space ~
@@ -29745,6 +29744,7 @@ Here is an example, where only the question text appears, the answer branch
 
 \begin_layout Standard
 \begin_inset Branch Question
+inverted 0
 status open
 
 \begin_layout Standard
@@ -29758,6 +29758,7 @@ Question: Who was the first physics Nobel prize winner?
 
 \begin_layout Standard
 \begin_inset Branch Answer
+inverted 0
 status collapsed
 
 \begin_layout Standard
@@ -29864,6 +29865,66 @@ Exam-Question-Answer.pdf
 
  if both branches were active.
  This helps you to export different versions of your document easily.
+\change_inserted 424524441 1468296009
+
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted 424524441 1468297080
+As of LyX 2.3.0, there are also 
+\begin_inset Quotes eld
+\end_inset
+
+inverted
+\begin_inset Quotes erd
+\end_inset
+
+ branch insets, whose content is output just in case the branch is 
+\emph on
+not
+\emph default
+ activated.
+ 
+\begin_inset Branch Question
+inverted 1
+status open
+
+\begin_layout Standard
+
+\change_inserted 424524441 1468296217
+For example, this material will only appear when the Question branch is
+ deactivated.
+\change_unchanged
+
+\end_layout
+
+\end_inset
+
+ This make it easy to add alternative text for different versions of a document.
+ To control whether a particular inset is 
+\begin_inset Quotes eld
+\end_inset
+
+inverted
+\begin_inset Quotes erd
+\end_inset
+
+, right-click on the inset button and choose 
+\begin_inset Quotes eld
+\end_inset
+
+
+\change_unchanged
+Invert Inset
+\change_inserted 424524441 1468297080
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+\change_deleted 424524441 1468296150
+
 \end_layout
 
 \begin_layout Standard
@@ -29948,6 +30009,7 @@ answer}[1]{#1}
 
 \begin_layout Standard
 \begin_inset Branch Question
+inverted 0
 status open
 
 \begin_layout Standard
@@ -29984,6 +30046,7 @@ answer}[1]{}
 
 \begin_layout Standard
 \begin_inset Branch Answer
+inverted 0
 status collapsed
 
 \begin_layout Standard
@@ -42930,6 +42993,39 @@ scaling
  is used for the size of equations in the output.
 \end_layout
 
+\begin_layout Description
+LyX
+\begin_inset space ~
+\end_inset
+
+Format The option 
+\family sans
+Save transient properties
+\family default
+ controls whether document settings that are frequently switched or that
+ are specific to the user are saved with the document.
+ The properties that are affected by option are currently
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+the activation of change tracking
+\end_layout
+
+\begin_layout Itemize
+the output of tracked changes
+\end_layout
+
+\begin_layout Itemize
+the recording of the document directory path.
+\end_layout
+
+\begin_layout Standard
+Disabling the option can prevent issues in collaborative work and/or when
+ using a version control system (for instance unnecessary merge conflicts).
+\end_layout
+
+\end_deeper
 \begin_layout Section
 La
 \family sans
@@ -43509,6 +43605,12 @@ arg   "closetab"
 \family default
 ) at the right side of the tab bar to close tabs.
  Otherwise every document tab has its own close button.
+
+\change_inserted 274215730 1469338548
+ Regardless of this option, one may always close a tab by middle-clicking
+ it in the tab bar.
+\change_unchanged
+
 \end_layout
 
 \begin_layout Standard

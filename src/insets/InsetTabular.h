@@ -470,6 +470,9 @@ public:
 	///
 	VAlignment getVAlignment(idx_type cell,
 				 bool onlycolumn = false) const;
+	/// The vertical offset of the table due to the vertical
+	/// alignment with respect to the baseline.
+	int offsetVAlignment() const;
 	///
 	Length const getPWidth(idx_type cell) const;
 	///
@@ -753,7 +756,7 @@ public:
 	///
 	column_vector column_info;
 	///
-	mutable cell_vvector cell_info;
+	cell_vvector cell_info;
 	///
 	Length tabular_width;
 	///
@@ -978,6 +981,9 @@ public:
 	void completionPosAndDim(Cursor const &, int & x, int & y, Dimension & dim) const;
 	///
 	virtual bool usePlainLayout() const { return true; }
+	///
+	docstring layoutName() const { return from_ascii("Tabular"); }
+
 
 	///
 	InsetTabular * asInsetTabular() { return this; }
@@ -1051,15 +1057,11 @@ private:
 	/// return the cell nearest to x, y
 	idx_type getNearestCell(BufferView &, int x, int y) const;
 
-	/// test the rotation state of the give cell range.
+	/// test the rotation state of the given cell range.
 	bool oneCellHasRotationState(bool rotated,
 				row_type row_start, row_type row_end,
 				col_type col_start, col_type col_end) const;
-	///
-	mutable idx_type first_visible_cell_;
-	/// The vertical offset of the table due to the vertical
-	/// alignment with respect to the baseline.
-	mutable int offset_valign_;
+
 	/// true when selecting rows with the mouse
 	bool rowselect_;
 	/// true when selecting columns with the mouse

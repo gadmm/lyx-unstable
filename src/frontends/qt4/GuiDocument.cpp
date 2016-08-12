@@ -777,6 +777,7 @@ GuiDocument::GuiDocument(GuiView & lv)
 
 	// fonts
 	fontModule = new FontModule;
+	disable_widget_if_ndef_FILEFORMAT(fontModule->microtypeCB);
 	connect(fontModule->osFontsCB, SIGNAL(clicked()),
 		this, SLOT(change_adaptor()));
 	connect(fontModule->osFontsCB, SIGNAL(toggled(bool)),

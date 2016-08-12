@@ -1015,6 +1015,7 @@ void Preamble::handle_package(Parser &p, string const & name,
 				h_options += ',' + join(options, ",");
 		}
 	}
+#ifdef FILEFORMAT
 	else if (name == "microtype") {
 		//we internally support only microtype without params
 		if (options.empty())
@@ -1022,6 +1023,7 @@ void Preamble::handle_package(Parser &p, string const & name,
 		else
 			h_preamble << "\\usepackage[" << opts << "]{microtype}";
 	}
+#endif
 
 	else if (!in_lyx_preamble) {
 		if (options.empty())

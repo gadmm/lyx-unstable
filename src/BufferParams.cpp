@@ -1142,7 +1142,9 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 	if (!fonts_cjk.empty()) {
 		os << "\\font_cjk " << fonts_cjk << '\n';
 	}
+#ifdef FILEFORMAT
 	os << "\\use_microtype " << convert<string>(use_microtype) << '\n';
+#endif
 	os << "\\graphics " << graphics_driver << '\n';
 	os << "\\default_output_format " << default_output_format << '\n';
 	os << "\\output_sync " << output_sync << '\n';

@@ -195,6 +195,11 @@ QString changeExtension(QString const & oldname, QString const & ext);
 /// parameter.
 QString guiName(std::string const & type, BufferParams const & bp);
 
+/// if FILEFORMAT is not defined, calls setDisabled on w and prepend the tooltip
+/// with the text "Newer file format required". (LyX unstable)
+void disable_widget_if_ndef_FILEFORMAT(QWidget * w);
+
+
 } // namespace lyx
 
 #endif // QTHELPERS_H

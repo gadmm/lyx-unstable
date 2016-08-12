@@ -648,4 +648,14 @@ QString guiName(string const & type, BufferParams const & bp)
 }
 
 
+#ifdef FILEFORMAT
+void disable_widget_if_ndef_FILEFORMAT(QWidget *) {}
+#else
+void disable_widget_if_ndef_FILEFORMAT(QWidget * w) {
+	QString ff_reason = qt_("<i>(Newer file format required.)</i> ");
+	w->setDisabled(true);
+	w->setToolTip(ff_reason + w->toolTip());
+}
+#endif
+
 } // namespace lyx

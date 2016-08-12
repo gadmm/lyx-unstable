@@ -38,7 +38,9 @@ LYX_FORMAT_LYX. (No occurrence so far.)
 Risks for experiment B
 ----------------------
 
-None so far.
+Updates to layout contents (not layout format) requires to keep the version from
+before the change (e.g. in a "(un)stable/" subdirectory). Then, an hypothethical
+FILEFORMAT switch should also determine which version is used.
 
 (Update this section after such problems arise.)
 
@@ -77,14 +79,21 @@ I/O, GUI (Qt & LFUNs).)
        * Qt GUI: Do not change Qt ui files. Use the helper function
          disable_widget_if_ndef_FILEFORMAT() from "qt_helpers.h".
 
-       * LFUN UI: Do not change LyX ui files. use #ifdef FILEFORMAT in getStatus()
-         so that new LFUNs or new uses of LFUNs are disabled instead.
+       * LFUN UI: Do not change LyX ui files. use #ifdef FILEFORMAT in
+         getStatus() so that new LFUNs or new uses of LFUNs are disabled
+         instead.
 
-   c. Layouts changes (TextClass.cpp, layout2layout.py): unstable should read
-      the latest layout format. So, it is not always necessary to update
-      lib/layout/. When a layout change is concommitant with a file format
-      change, see what can be done (no experience with this so far, update this
-      guide afterwards).
+   c. Layout changes.
+
+         * Layout format changes (TextClass.cpp, layout2layout.py): LyX unstable
+           must be able to read the latest layout format. So, it is not
+           necessary to update lib/layout/ when the change concerns an update to
+           the latest layout format.
+
+         * Layout content changes: when a layout change is concommitant with a
+           file format change, for instance, if the contents of the layout is
+           modified, the layout must be reverted to its prior state. (This step
+           breaks experiment B as reported above.)
 
          * The LYXFILE_LAYOUT_FORMAT version in TextClass.cpp has been
            introduced so that the "Convert to latest layout" button in the Local
@@ -97,11 +106,11 @@ I/O, GUI (Qt & LFUNs).)
        * Keep lib/{doc,examples,templates} in the newer format. They will be
          opened via lyx2lyx.
 
-   	   * Keep an eye on lib/Makefile.am (e.g. scripts for External Insets),
+       * Keep an eye on lib/Makefile.am (e.g. scripts for External Insets),
          lib/configure.py
 
-       * LFUN format change (LyXAction.cpp, prefs2prefs): no measure taken so far,
-         but keep an eye open.
+       * LFUN format change (LyXAction.cpp, prefs2prefs): no measure taken so
+         far, but keep an eye open.
 
        * Prefs format (LYXRC.cpp, prefs2prefs): no measure taken. LyX unstable
          should read and write the latest preference format (it should be
@@ -122,8 +131,9 @@ How to update LyX unstable after the next master release:
 1. Update LyX unstable to the master commit corresponding to the new stable
    release following the previous guide.
 
-2. Reset "#ifdef FILEFORMAT"/disable_widget_if_ndef_FILEFORMAT() occurrences and
-   other changes (i.e. assuming FILEFORMAT defined).
+2. Use "git diff X" to reset "#ifdef FILEFORMAT" /
+   disable_widget_if_ndef_FILEFORMAT() occurrences and other changes
+   (changes/deleted non-source files...).
 
 3. Set up the new unstable version:
 
@@ -133,5 +143,4 @@ How to update LyX unstable after the next master release:
      and LYXFILE_LAYOUT_FORMAT should match the new stable formats.
 
 4. Check that the diff with master is reasonable: only contains the helper
-   code.
-
+   code and new lyx formats.

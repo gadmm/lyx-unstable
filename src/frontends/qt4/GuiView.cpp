@@ -2751,9 +2751,13 @@ bool GuiView::closeWorkArea(GuiWorkArea * wa)
 bool GuiView::closeBuffer()
 {
 	GuiWorkArea * wa = currentMainWorkArea();
+	// coverity complained about this
+	// it seems unnecessary, but perhaps is worth the check
+	LASSERT(wa, return false);
+
 	setCurrentWorkArea(wa);
 	Buffer & buf = wa->bufferView().buffer();
-	return wa && closeWorkArea(wa, !buf.parent());
+	return closeWorkArea(wa, !buf.parent());
 }
 
 
@@ -3241,7 +3245,6 @@ void GuiView::dispatchVC(FuncRequest const & cmd, DispatchResult & dr)
 		}
 
 	case LFUN_VC_COMPARE: {
-
 		if (cmd.argument().empty()) {
 			lyx::dispatch(FuncRequest(LFUN_DIALOG_SHOW, "comparehistory"));
 			break;
@@ -3251,6 +3254,8 @@ void GuiView::dispatchVC(FuncRequest const & cmd, DispatchResult & dr)
 		string f1, f2;
 
 		// f1
+		// it seems safe to assume we have a buffer
+		// coverity[FORWARD_NULL]
 		if (!buffer->lyxvc().prepareFileRevision(rev1, f1))
 			break;
 
@@ -3962,6 +3967,9 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 			break;
 
 		case LFUN_FORWARD_SEARCH: {
+		// it seems safe to assume we have a document buffer, since
+		// getStatus wants one.
+		// coverity[FORWARD_NULL]
 			Buffer const * doc_master = doc_buffer->masterBuffer();
 			FileName const path(doc_master->temppath());
 			string const texname = doc_master->isChild(doc_buffer)

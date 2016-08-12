@@ -12,12 +12,11 @@
 #ifndef MATH_MATHMLSTREAM_H
 #define MATH_MATHMLSTREAM_H
 
-#include "support/strfwd.h"
-
 #include "InsetMath.h"
-// FIXME: Move to individual insets
-#include "MetricsInfo.h"
 #include "texstream.h"
+
+#include "support/Changer.h"
+#include "support/strfwd.h"
 
 
 namespace lyx {
@@ -40,10 +39,9 @@ public:
 		wsPreview
 	};
 	///
-	WriteStream(otexrowstream & os, bool fragile, bool latex, OutputType output,
-				Encoding const * encoding = 0);
-	///
-	explicit WriteStream(otexrowstream & os);
+	explicit WriteStream(otexrowstream & os, bool fragile = false,
+	                     bool latex = false, OutputType output = wsDefault,
+	                     Encoding const * encoding = 0);
 	///
 	~WriteStream();
 	///
@@ -89,11 +87,8 @@ public:
 	/// LaTeX encoding
 	Encoding const * encoding() const { return encoding_; }
 
-	/// maintains a stack of texrow informations about outer math insets.
-	/// push an entry
-	void pushRowEntry(TexRow::RowEntry entry);
-	/// pop an entry
-	void popRowEntry();
+	/// Temporarily change the TexRow information about the outer row entry.
+	Changer changeRowEntry(TexRow::RowEntry entry);
 	/// TexRow::starts the innermost outer math inset
 	/// returns true if the outer row entry will appear at this line
 	bool startOuterRow();
@@ -124,8 +119,8 @@ private:
 	int line_;
 	///
 	Encoding const * encoding_;
-	///
-	std::vector<TexRow::RowEntry> outer_row_entries_;
+	/// Row entry we are in
+	TexRow::RowEntry row_entry_;
 };
 
 ///

@@ -13,8 +13,6 @@
 
 #include "MathMacroTemplate.h"
 
-#include "DocIterator.h"
-#include "LaTeXFeatures.h"
 #include "InsetMathBrace.h"
 #include "InsetMathChar.h"
 #include "InsetMathHull.h"
@@ -31,9 +29,12 @@
 #include "Color.h"
 #include "Cursor.h"
 #include "DispatchResult.h"
+#include "DocIterator.h"
 #include "FuncRequest.h"
 #include "FuncStatus.h"
+#include "LaTeXFeatures.h"
 #include "Lexer.h"
+#include "MetricsInfo.h"
 #include "TocBackend.h"
 
 #include "frontends/Painter.h"
@@ -396,7 +397,8 @@ void InsetNameWrapper::draw(PainterInfo & pi, int x, int y) const
 
 MathMacroTemplate::MathMacroTemplate(Buffer * buf)
 	: InsetMathNest(buf, 3), numargs_(0), argsInLook_(0), optionals_(0),
-	  type_(MacroTypeNewcommand), lookOutdated_(true)
+	  type_(MacroTypeNewcommand), redefinition_(false), lookOutdated_(true),
+	  premetrics_(false), labelBoxAscent_(0), labelBoxDescent_(0)
 {
 	initMath();
 }
@@ -407,7 +409,8 @@ MathMacroTemplate::MathMacroTemplate(Buffer * buf, docstring const & name, int n
 	MathData const & def, MathData const & display)
 	: InsetMathNest(buf, optionals + 3), numargs_(numargs), argsInLook_(numargs),
 	  optionals_(optionals), optionalValues_(optionalValues),
-	  type_(type), lookOutdated_(true)
+	  type_(type), redefinition_(false), lookOutdated_(true),
+	  premetrics_(false), labelBoxAscent_(0), labelBoxDescent_(0)
 {
 	initMath();
 
@@ -540,8 +543,8 @@ void MathMacroTemplate::createLook(int args) const
 
 void MathMacroTemplate::metrics(MetricsInfo & mi, Dimension & dim) const
 {
-	FontSetChanger dummy1(mi.base, from_ascii("mathnormal"));
-	StyleChanger dummy2(mi.base, LM_ST_TEXT);
+	Changer dummy1 = mi.base.changeFontSet("mathnormal");
+	Changer dummy2 = mi.base.changeStyle(LM_ST_TEXT);
 
 	// valid macro?
 	MacroData const * macro = 0;
@@ -582,9 +585,10 @@ void MathMacroTemplate::metrics(MetricsInfo & mi, Dimension & dim) const
 
 void MathMacroTemplate::draw(PainterInfo & pi, int x, int y) const
 {
-	ColorChanger dummy0(pi.base.font, Color_math);
-	FontSetChanger dummy1(pi.base, from_ascii("mathnormal"));
-	StyleChanger dummy2(pi.base, LM_ST_TEXT);
+	// FIXME: Calling Changer on the same object repeatedly is inefficient.
+	Changer dummy0 = pi.base.font.changeColor(Color_math);
+	Changer dummy1 = pi.base.changeFontSet("mathnormal");
+	Changer dummy2 = pi.base.changeStyle(LM_ST_TEXT);
 
 	setPosCache(pi, x, y);
 	Dimension const dim = dimension(*pi.base.bv);

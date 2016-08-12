@@ -35,6 +35,7 @@ liblyxsupport_a_SOURCES = \
 	FileMonitor.cpp \
 	RandomAccessList.h \
 	bind.h \
+	Changer.h \
 	ConsoleApplication.cpp \
 	ConsoleApplication.h \
 	ConsoleApplicationPrivate.h \
@@ -56,7 +57,6 @@ liblyxsupport_a_SOURCES = \
 	FileNameList.h \
 	filetools.cpp \
 	filetools.h \
-	foreach.h \
 	ForkedCalls.cpp \
 	ForkedCalls.h \
 	functional.h \
@@ -90,13 +90,13 @@ liblyxsupport_a_SOURCES = \
 	qstring_helpers.cpp \
 	qstring_helpers.h \
 	regex.h \
+	RefChanger.h \
 	socktools.cpp \
 	socktools.h \
 	strfwd.h \
 	Systemcall.cpp \
 	Systemcall.h \
 	SystemcallPrivate.h \
-	shared_ptr.h \
 	TempFile.cpp \
 	TempFile.h \
 	textutils.h \
@@ -106,6 +106,7 @@ liblyxsupport_a_SOURCES = \
 	trivstring.cpp \
 	trivstring.h \
 	types.h \
+	unique_ptr.h \
 	userinfo.cpp \
 	userinfo.h \
 	unicode.cpp \

@@ -12,13 +12,11 @@ EXTRA_DIST = coding/Rules coding/Recommendations \
 	FORMAT lyx.rpm.README \
 	lyxserver lyx.spec.in lyx.spec \
 	LyX-Mac-binary-release.sh \
-tools/convert_kmap.py \
 tools/gen_lfuns.py \
 tools/generate_symbols_images.lyx \
 tools/generate_symbols_images.py \
 tools/generate_symbols_list.py \
 tools/generate_symbols_svg.lyx \
-tools/generate_symbols_svg.py \
 tools/mergepo.py \
 tools/unicodesymbols.py \
 tools/updatedocs.py \
@@ -153,6 +151,7 @@ cmake/modules/FindMyThesLIB.cmake \
 cmake/modules/FindOpenSSL.cmake \
 cmake/modules/FindQt4.cmake \
 cmake/modules/FindZLIB.cmake \
+cmake/modules/LyXDestinations.cmake \
 cmake/modules/LyXMacros.cmake \
 cmake/modules/LyXPaths.cmake \
 cmake/modules/LyXuic.cmake \
@@ -165,6 +164,7 @@ cmake/po/unix2dos.py \
 cmake/post_install/CMakeLists.txt \
 cmake/scripts/LyXCreateImagesResource.cmake \
 cmake/scripts/LyXGetVersion.cmake \
+cmake/scripts/xmingw \
 keystest/cache-bisect.py \
 keystest/keytest.py \
 keystest/make_screenshot_html.py

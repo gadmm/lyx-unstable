@@ -37,7 +37,7 @@ namespace lyx {
 
 namespace graphics {
 
-class CacheItem::Impl : public boost::signals::trackable {
+class CacheItem::Impl : public boost::signals2::trackable {
 public:
 
 	///
@@ -109,18 +109,18 @@ public:
 	bool remove_loaded_file_;
 
 	/// The image and its loading status.
-	shared_ptr<Image> image_;
+	std::shared_ptr<Image> image_;
 	///
 	ImageStatus status_;
 
 	/// This signal is emitted when the image loading status changes.
-	boost::signal<void()> statusChanged;
+	boost::signals2::signal<void()> statusChanged;
 
 	/// The connection of the signal ConvProcess::finishedConversion,
-	boost::signals::connection cc_;
+	boost::signals2::connection cc_;
 
 	///
-	boost::scoped_ptr<Converter> converter_;
+	unique_ptr<Converter> converter_;
 };
 
 
@@ -192,7 +192,7 @@ ImageStatus CacheItem::status() const
 }
 
 
-boost::signals::connection CacheItem::connect(slot_type const & slot) const
+boost::signals2::connection CacheItem::connect(slot_type const & slot) const
 {
 	return pimpl_->statusChanged.connect(slot);
 }
@@ -244,7 +244,7 @@ void CacheItem::Impl::reset()
 	if (cc_.connected())
 		cc_.disconnect();
 
-	if (converter_.get())
+	if (converter_)
 		converter_.reset();
 }
 
@@ -264,8 +264,8 @@ void CacheItem::Impl::imageConverted(bool success)
 	string const text = success ? "succeeded" : "failed";
 	LYXERR(Debug::GRAPHICS, "Image conversion " << text << '.');
 
-	file_to_load_ = converter_.get() ?
-		FileName(converter_->convertedFile()) : FileName();
+	file_to_load_ = converter_ ? FileName(converter_->convertedFile())
+		                       : FileName();
 	converter_.reset();
 	cc_.disconnect();
 

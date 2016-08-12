@@ -107,12 +107,12 @@
 #include "support/types.h"
 
 #include "support/bind.h"
-#include "support/shared_ptr.h"
 
 #include <algorithm>
 #include <fstream>
 #include <iomanip>
 #include <map>
+#include <memory>
 #include <set>
 #include <sstream>
 #include <vector>
@@ -236,8 +236,8 @@ public:
 	/// positions of child buffers in the buffer
 	typedef map<Buffer const * const, DocIterator> BufferPositionMap;
 	struct ScopeBuffer {
-		ScopeBuffer() {}
-		ScopeBuffer(DocIterator const & s,Buffer const * b)
+		ScopeBuffer() : buffer(0) {}
+		ScopeBuffer(DocIterator const & s, Buffer const * b)
 			: scope(s), buffer(b) {}
 		DocIterator scope;
 		Buffer const * buffer;
@@ -1397,9 +1397,8 @@ bool Buffer::save() const
 	// proper location once that has been done successfully. that
 	// way we preserve the original file if something goes wrong.
 	string const justname = fileName().onlyFileNameWithoutExt();
-	boost::scoped_ptr<TempFile>
-		tempfile(new TempFile(fileName().onlyPath(),
-	           justname + "-XXXXXX.lyx"));
+	auto tempfile = make_unique<TempFile>(fileName().onlyPath(),
+	                                      justname + "-XXXXXX.lyx");
 	bool const symlink = fileName().isSymLink();
 	if (!symlink)
 		tempfile->setAutoRemove(false);
@@ -1660,9 +1659,11 @@ bool Buffer::makeLaTeXFile(FileName const & fname,
 {
 	OutputParams runparams = runparams_in;
 
-	// XeTeX with TeX fonts is only safe with ASCII encoding,
-	// but the "flavor" is not known in BufferParams::encoding().
-	if (!params().useNonTeXFonts && (runparams.flavor == OutputParams::XETEX))
+	// XeTeX with TeX fonts is only safe with ASCII encoding (see also #9740),
+	// Check here, because the "flavor" is not known in BufferParams::encoding()
+	// (power users can override this safety measure selecting "utf8-plain").
+	if (!params().useNonTeXFonts && (runparams.flavor == OutputParams::XETEX)
+	    && (runparams.encoding->name() != "utf8-plain"))
 		runparams.encoding = encodings.fromLyXName("ascii");
 
 	string const encoding = runparams.encoding->iconvName();
@@ -1748,8 +1749,10 @@ void Buffer::writeLaTeXSource(otexstream & os,
 	OutputParams runparams = runparams_in;
 
 	// XeTeX with TeX fonts is only safe with ASCII encoding,
-	// but the "flavor" is not known in BufferParams::encoding().
-	if (!params().useNonTeXFonts && (runparams.flavor == OutputParams::XETEX))
+	// Check here, because the "flavor" is not known in BufferParams::encoding()
+	// (power users can override this safety measure selecting "utf8-plain").
+	if (!params().useNonTeXFonts && (runparams.flavor == OutputParams::XETEX)
+	    && (runparams.encoding->name() != "utf8-plain"))
 		runparams.encoding = encodings.fromLyXName("ascii");
 	// FIXME: when only the current paragraph is shown, this is ignored
 	//        (or not reached) and characters encodable in the current
@@ -3654,11 +3657,11 @@ void Buffer::changeRefsIfUnique(docstring const & from, docstring const & to)
 }
 
 // returns NULL if id-to-row conversion is unsupported
-auto_ptr<TexRow> Buffer::getSourceCode(odocstream & os, string const & format,
-			   pit_type par_begin, pit_type par_end,
-			   OutputWhat output, bool master) const
+unique_ptr<TexRow> Buffer::getSourceCode(odocstream & os, string const & format,
+                                         pit_type par_begin, pit_type par_end,
+                                         OutputWhat output, bool master) const
 {
-	auto_ptr<TexRow> texrow(NULL);
+	unique_ptr<TexRow> texrow;
 	OutputParams runparams(&params().encoding());
 	runparams.nice = true;
 	runparams.flavor = params().getOutputFlavor(format);
@@ -3712,7 +3715,7 @@ auto_ptr<TexRow> Buffer::getSourceCode(odocstream & os, string const & format,
 			LaTeXFeatures features(*this, params(), runparams);
 			params().validate(features);
 			runparams.use_polyglossia = features.usePolyglossia();
-			texrow.reset(new TexRow());
+			texrow = make_unique<TexRow>();
 			texrow->newline();
 			texrow->newline();
 			// latex or literate
@@ -3755,7 +3758,7 @@ auto_ptr<TexRow> Buffer::getSourceCode(odocstream & os, string const & format,
 				writeDocBookSource(os, absFileName(), runparams, output);
 		} else {
 			// latex or literate
-			texrow.reset(new TexRow());
+			texrow = make_unique<TexRow>();
 			texrow->newline();
 			texrow->newline();
 			otexstream ots(os, *texrow);
@@ -3848,7 +3851,7 @@ public:
 	///
 	virtual shared_ptr<ForkedProcess> clone() const
 	{
-		return shared_ptr<ForkedProcess>(new AutoSaveBuffer(*this));
+		return make_shared<AutoSaveBuffer>(*this);
 	}
 	///
 	int start()
@@ -4619,6 +4622,11 @@ static depth_type getDepth(DocIterator const & it)
 		if (!it[i].inset().inMathed())
 			depth += it[i].paragraph().getDepth() + 1;
 	// remove 1 since the outer inset does not count
+	// we should have at least one non-math inset, so
+	// depth should nevery be 0. but maybe it is worth
+	// marking this, just in case.
+	LATTEST(depth > 0);
+	// coverity[INTEGER_OVERFLOW]
 	return depth - 1;
 }
 

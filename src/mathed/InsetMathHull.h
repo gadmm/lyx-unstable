@@ -17,7 +17,7 @@
 #include "DocIterator.h"
 #include "OutputEnums.h"
 
-#include <boost/scoped_ptr.hpp>
+#include "support/unique_ptr.h"
 
 
 namespace lyx {
@@ -235,7 +235,7 @@ private:
 	/// change number of columns, split or combine columns if necessary.
 	void changeCols(col_type);
 	///
-	docstring standardFont() const;
+	std::string standardFont() const;
 	///
 	ColorCode standardColor() const;
 	/// consistency check
@@ -258,7 +258,7 @@ private:
 	///
 	std::vector<InsetLabel *> label_;
 	///
-	boost::scoped_ptr<RenderPreview> preview_;
+	unique_ptr<RenderPreview> preview_;
 	///
 	DocIterator docit_;
 	///

@@ -632,6 +632,10 @@ def convert_dashes(document):
             else:
                 i = j
             continue
+        if len(words) > 0 and words[0] in ["\\leftindent", "\\paragraph_spacing", "\\align", "\\labelwidthstring"]:
+            # skip paragraph parameters (bug 10243)
+            i += 1
+            continue
         while True:
             j = document.body[i].find("--")
             if j == -1:
@@ -796,7 +800,7 @@ def convert_specialchar_internal(document, forward):
             else:
                 i = j
             continue
-        for key, value in specialchars.iteritems():
+        for key, value in specialchars.items():
             if forward:
                 document.body[i] = document.body[i].replace("\\SpecialChar " + key, "\\SpecialChar " + value)
                 document.body[i] = document.body[i].replace("\\SpecialCharNoPassThru " + key, "\\SpecialCharNoPassThru " + value)
@@ -1131,11 +1135,11 @@ def convert_origin(document):
     if i == -1:
         document.warning("Malformed LyX document: No \\textclass!!")
         return
-    if document.dir == "":
-        origin = "stdin"
+    if document.dir == u'':
+        origin = u'stdin'
     else:
-        relpath = ''
-        if document.systemlyxdir and document.systemlyxdir != '':
+        relpath = u''
+        if document.systemlyxdir and document.systemlyxdir != u'':
             try:
                 if os.path.isabs(document.dir):
                     absdir = os.path.normpath(document.dir)
@@ -1146,16 +1150,14 @@ def convert_origin(document):
                 else:
                     abssys = os.path.normpath(os.path.abspath(document.systemlyxdir))
                 relpath = os.path.relpath(absdir, abssys)
-                if relpath.find('..') == 0:
-                    relpath = ''
+                if relpath.find(u'..') == 0:
+                    relpath = u''
             except:
-                relpath = ''
-        if relpath == '':
-            origin = document.dir.replace('\\', '/') + '/'
+                relpath = u''
+        if relpath == u'':
+            origin = document.dir.replace(u'\\', u'/') + u'/'
         else:
-            origin = os.path.join("/systemlyxdir", relpath).replace('\\', '/') + '/'
-        if os.name != 'nt':
-            origin = unicode(origin, sys.getfilesystemencoding())
+            origin = os.path.join(u"/systemlyxdir", relpath).replace(u'\\', u'/') + u'/'
     document.header[i:i] = ["\\origin " + origin]
 
 
@@ -1189,7 +1191,7 @@ def revert_textcolor(document):
                     # register that xcolor must be loaded in the preamble
                     if xcolor == False:
                         xcolor = True
-                        add_to_preamble(document, ["\\@ifundefined{rangeHsb}{\usepackage{xcolor}}{}"])
+                        add_to_preamble(document, ["\\@ifundefined{rangeHsb}{\\usepackage{xcolor}}{}"])
                     # find the next \\color and/or the next \\end_layout
                     j = find_token(document.body, "\\color", i + 1)
                     k = find_token(document.body, "\\end_layout", i + 1)
@@ -1273,7 +1275,7 @@ def revert_colorbox(document):
             pass
         else:
             # we also neeed to load xcolor in the preamble but only once
-            add_to_preamble(document, ["\\@ifundefined{rangeHsb}{\usepackage{xcolor}}{}"])
+            add_to_preamble(document, ["\\@ifundefined{rangeHsb}{\\usepackage{xcolor}}{}"])
             document.body[einset + 1 : einset + 1] = put_cmd_in_ert("}")
             if framecolor != defaultframecolor:
                 document.body[binset:binset] = put_cmd_in_ert("\\fcolorbox{" + framecolor + "}{" + backcolor + "}{")

@@ -69,6 +69,7 @@
 #include "support/lyxalgo.h"
 #include "support/lyxtime.h"
 #include "support/textutils.h"
+#include "support/unique_ptr.h"
 
 #include <sstream>
 
@@ -187,9 +188,8 @@ Text::Text(InsetText * owner, bool use_default_layout)
 
 
 Text::Text(InsetText * owner, Text const & text)
-	: owner_(owner)
+	: owner_(owner), pars_(text.pars_)
 {
-	pars_ = text.pars_;
 	ParagraphList::iterator const end = pars_.end();
 	ParagraphList::iterator it = pars_.begin();
 	for (; it != end; ++it)
@@ -464,8 +464,7 @@ void Text::readParToken(Paragraph & par, Lexer & lex,
 	} else if (token == "\\SpecialChar" ||
 	           (token == "\\SpecialCharNoPassThru" &&
 	            !par.layout().pass_thru && !inset().isPassThru())) {
-		auto_ptr<Inset> inset;
-		inset.reset(new InsetSpecialChar);
+		auto inset = make_unique<InsetSpecialChar>();
 		inset->read(lex);
 		inset->setBuffer(*buf);
 		par.insertInset(par.size(), inset.release(), font, change);
@@ -474,8 +473,7 @@ void Text::readParToken(Paragraph & par, Lexer & lex,
 		docstring const s = ltrim(lex.getDocString(), "\\");
 		par.insert(par.size(), s, font, change);
 	} else if (token == "\\IPAChar") {
-		auto_ptr<Inset> inset;
-		inset.reset(new InsetIPAChar);
+		auto inset = make_unique<InsetIPAChar>();
 		inset->read(lex);
 		inset->setBuffer(*buf);
 		par.insertInset(par.size(), inset.release(), font, change);
@@ -500,7 +498,7 @@ void Text::readParToken(Paragraph & par, Lexer & lex,
 	} else if (token == "\\backslash") {
 		par.appendChar('\\', font, change);
 	} else if (token == "\\LyXTable") {
-		auto_ptr<Inset> inset(new InsetTabular(buf));
+		auto inset = make_unique<InsetTabular>(buf);
 		inset->read(lex);
 		par.insertInset(par.size(), inset.release(), font, change);
 	} else if (token == "\\change_unchanged") {

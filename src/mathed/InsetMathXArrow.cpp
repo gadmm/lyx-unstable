@@ -13,12 +13,15 @@
 #include "support/lassert.h"
 
 #include "InsetMathXArrow.h"
+
 #include "MathData.h"
 #include "MathStream.h"
 #include "MathStream.h"
 #include "MathSupport.h"
 
 #include "LaTeXFeatures.h"
+#include "MetricsInfo.h"
+
 
 #include <algorithm>
 
@@ -40,7 +43,7 @@ Inset * InsetMathXArrow::clone() const
 
 void InsetMathXArrow::metrics(MetricsInfo & mi, Dimension & dim) const
 {
-	ScriptChanger dummy(mi.base);
+	Changer dummy = mi.base.changeScript();
 	Dimension dim0;
 	cell(0).metrics(mi, dim0);
 	Dimension dim1;
@@ -54,7 +57,7 @@ void InsetMathXArrow::metrics(MetricsInfo & mi, Dimension & dim) const
 
 void InsetMathXArrow::draw(PainterInfo & pi, int x, int y) const
 {
-	ScriptChanger dummy(pi.base);
+	Changer dummy = pi.base.changeScript();
 	Dimension const dim = dimension(*pi.base.bv);
 	Dimension const & dim0 = cell(0).dimension(*pi.base.bv);
 	// center the cells with the decoration

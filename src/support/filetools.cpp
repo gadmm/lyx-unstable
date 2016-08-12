@@ -51,6 +51,7 @@
 #endif
 
 #include <cerrno>
+#include <climits>
 #include <cstdlib>
 #include <cstdio>
 

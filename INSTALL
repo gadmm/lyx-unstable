@@ -48,19 +48,18 @@ Requirements
 ------------
 
 First of all, you will need a recent C++ compiler, where recent means
-that the compilers are close to C++ standard conforming like gcc (at
-least 4.x) or clang. Note that the compiler will be used in C++11 mode
-when possible.
+that the compilers are close to C++11 standard conforming like gcc (at
+least 4.6) or clang.
 
 LyX makes great use of the C++ Standard Template Library (STL).
 This means that gcc users will have to install the relevant libstdc++
 library to be able to compile this version of LyX.
 
-For full LyX usability we suggest to use Qt 4.x and at least Qt 4.8 which
-has been widely tested. For compilation you need to compile against at
-least Qt 4.5.0 and at Windows we advise at highest Qt 4.8.4. The only
-special point to make is that you must ensure that both LyX and the
-Qt libraries are compiled with the same C++ compiler.
+For full LyX usability we suggest to use Qt 5.6 and higher, or at the
+very least Qt 5.4. For compilation you need to compile against at least
+Qt 4.8 which has been widely tested, and for Windows we advise at least
+Qt 4.8.4. The only special point to make is that you must ensure that
+both LyX and the Qt libraries are compiled with the same C++ compiler.
 
 To build LyX with spell checking capabilities included you have to
 install at least one of the development packages of the spell checker
@@ -206,8 +205,9 @@ The following options allow you to tweak the generated code more precisely (see 
     optimization of LyX. The compile may be much quicker with some
     compilers, but LyX will run more slowly.
 
-  o --disable-cxx11 forces the compiler in C++98 mode. The default is
-    to use C++11 mode for known good compilers.
+  o --disable-std-regex forces the compiler to use boost::regex. The default is
+    to use std::regex for known good C++ libraries, but the test is not robust for clang.
+    --enable-std-regex will force the use of std::regex.
 
   o --enable-debug will add debug information to your binary. This
     requires a lot more disk space, but is a must if you want to try

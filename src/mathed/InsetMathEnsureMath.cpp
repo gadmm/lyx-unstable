@@ -13,10 +13,12 @@
 
 #include "InsetMathEnsureMath.h"
 
-#include "LaTeXFeatures.h"
 #include "MathData.h"
 #include "MathStream.h"
 #include "MathSupport.h"
+
+#include "LaTeXFeatures.h"
+#include "MetricsInfo.h"
 
 #include <ostream>
 
@@ -36,8 +38,8 @@ Inset * InsetMathEnsureMath::clone() const
 
 void InsetMathEnsureMath::metrics(MetricsInfo & mi, Dimension & dim) const
 {
-	bool really_change_font = isTextFont(from_ascii(mi.base.fontname));
-	FontSetChanger dummy(mi.base, "mathnormal", really_change_font);
+	bool really_change_font = isTextFont(mi.base.fontname);
+	Changer dummy = mi.base.changeFontSet("mathnormal", really_change_font);
 	cell(0).metrics(mi, dim);
 	metricsMarkers(dim);
 }
@@ -45,8 +47,8 @@ void InsetMathEnsureMath::metrics(MetricsInfo & mi, Dimension & dim) const
 
 void InsetMathEnsureMath::draw(PainterInfo & pi, int x, int y) const
 {
-	bool really_change_font = isTextFont(from_ascii(pi.base.fontname));
-	FontSetChanger dummy(pi.base, "mathnormal", really_change_font);
+	bool really_change_font = isTextFont(pi.base.fontname);
+	Changer dummy = pi.base.changeFontSet("mathnormal", really_change_font);
 	cell(0).draw(pi, x, y);
 	drawMarkers(pi, x, y);
 }

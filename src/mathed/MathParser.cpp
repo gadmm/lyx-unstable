@@ -74,9 +74,10 @@ following hack as starting point to write some macros:
 #include "Encoding.h"
 #include "Lexer.h"
 
-#include "support/debug.h"
 #include "support/convert.h"
+#include "support/debug.h"
 #include "support/docstream.h"
+#include "support/unique_ptr.h"
 
 #include <sstream>
 
@@ -1941,23 +1942,6 @@ bool Parser::parse1(InsetMathGrid & grid, unsigned flags,
 			parse(ar, FLAG_OPTION, mode);
 			cell->push_back(createInsetMath(t.cs(), buf));
 			parse2(cell->back(), FLAG_ITEM, mode, false);
-		}
-
-		// Disabled
-		else if (1 && t.cs() == "ar") {
-			auto_ptr<InsetMathXYArrow> p(new InsetMathXYArrow);
-			// try to read target
-			parse(p->cell(0), FLAG_OTPTION, mode);
-			// try to read label
-			if (nextToken().cat() == catSuper || nextToken().cat() == catSub) {
-				p->up_ = nextToken().cat() == catSuper;
-				getToken();
-				parse(p->cell(1), FLAG_ITEM, mode);
-				//lyxerr << "read label: " << p->cell(1) << endl;
-			}
-
-			cell->push_back(MathAtom(p.release()));
-			//lyxerr << "read cell: " << cell << endl;
 		}
 #endif
 

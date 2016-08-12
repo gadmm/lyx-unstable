@@ -1,12 +1,26 @@
-#!/usr/bin/python
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# file generate_symbols_images.py
+# This file is part of LyX, the document processor.
+# Licence details can be found in the file COPYING.
+
+# Full author contact details are available in file CREDITS
+
+from __future__ import print_function
 import sys,string,re,os,os.path
+import io
 
 def get_code(code, font):
-    if font != "dontknowwhichfontusesthisstrangeencoding":
+    # computer modern fonts use a strange encoding
+    cmfonts = ["cmex", "cmr", "cmm", "cmsy"]
+    if font not in cmfonts:
         return code
     if code < 10:
         return code+161
-    elif code < 32:
+    if code < 11:
+        return code+162
+    elif code <= 32:
         return code+163
     else:
         return code
@@ -19,7 +33,7 @@ ignore_list = ["not", "braceld", "bracerd", "bracelu", "braceru",
                "lmoustache", "rmoustache", "lgroup", "rgroup", "bracevert"]
 
 def process(file):
-    fh = open(file)
+    fh = io.open(file, 'r', encoding='ascii')
     lines = fh.readlines()
     fh.close()
     package, ext = os.path.splitext(os.path.basename(file))
@@ -28,7 +42,7 @@ def process(file):
     mdsymbolcode = 0
 
     n = len(lines)
-    for i in xrange(n):
+    for i in range(n):
         line = lines[i]
         mo =  re.match(r'\s*%.*', line)
         if mo != None:
@@ -39,7 +53,7 @@ def process(file):
 
         # some entries are spread over two lines so we join the next line
         # to the current one, (if current line contains a comment, we remove it)
-        line = string.split(line,'%')[0]+next_line
+        line = line.split('%')[0]+next_line
 
         mo =  re.match(r'.*\\DeclareSymbolFont\s*\{(.*?)\}\s*\{(.*?)\}\s*\{(.*?)\}.*', line)
         if mo != None:
@@ -105,7 +119,7 @@ def process(file):
                 sys.stderr.write("%s -> %s\n" % (symbol, mo2.group(1)))
                 symbol = mo2.group(1)
 
-            if font_names.has_key(font):
+            if font in font_names:
                 font = font_names[font]
 
             code = get_code(code, font)
@@ -113,36 +127,36 @@ def process(file):
                 continue
 
             xcode = 0
-            if xsymbols.has_key(symbol):
+            if symbol in xsymbols:
                 xcode = xsymbols[symbol]
                 del xsymbols[symbol]
 
-            if symbols.has_key(symbol):
+            if symbol in symbols:
                 sys.stderr.write(symbol+ " exists\n")
                 if code != symbols[symbol]:
                     sys.stderr.write("code is not equal!!!\n")
             else:
                 symbols[symbol] = code
                 if package == '':
-                    print "%-18s %-4s %3d %3d %-6s" % (symbol,font,code,xcode,type)
+                    print("%-18s %-4s %3d %3d %-6s" % (symbol,font,code,xcode,type))
                 else:
-                    print "%-18s %-4s %3d %3d %-9s x  %s" % (symbol,font,code,xcode,type,package)
+                    print("%-18s %-4s %3d %3d %-9s x  %s" % (symbol,font,code,xcode,type,package))
 
 
 path = os.path.split(sys.argv[0])[0]
-fh = open(os.path.join(path, "x-font"))
+fh = io.open(os.path.join(path, "x-font"), 'r', encoding='ascii')
 lines = fh.readlines()
 fh.close()
 for line in lines:
-    x = string.split(line)
+    x = line.split()
     symbol = x[0]
-    code = string.atoi(x[1],16)
+    code = int(x[1], 16)
     xsymbols[symbol] = code
 
 for file in sys.argv[1:]:
-    print "# Generated from " + os.path.basename(file) + "\n"
+    print("# Generated from " + os.path.basename(file) + "\n")
     process(file)
-    print
+    print()
 
 exceptions = [
     ("neq", "x", 0, 185, "mathrel"),
@@ -151,21 +165,21 @@ exceptions = [
     ("surd", "x", 0, 214, "mathord")
 ]
 
-if xsymbols.has_key("leq"):
+if "leq" in xsymbols:
     sys.exit(0)
 
 for x in exceptions:
-    print "%-18s %-4s %3d %3d %-6s" % x
-    if xsymbols.has_key(x[0]):
+    print("%-18s %-4s %3d %3d %-6s" % x)
+    if x[0] in xsymbols:
         del xsymbols[x[0]]
 
-print """
+print ("""
 lyxbar             cmsy 161   0 mathord
 lyxeq              cmr   61   0 mathord
 lyxdabar           msa   57   0 mathord
 lyxright           msa   75   0 mathord
 lyxleft            msa   76   0 mathord
-"""
+""")
 
 for symbol in xsymbols.keys():
     sys.stderr.write(symbol+"\n")

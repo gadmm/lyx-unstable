@@ -16,6 +16,8 @@
 #include "MathStream.h"
 #include "MathStream.h"
 
+#include "MetricsInfo.h"
+
 #include "support/lstrings.h"
 
 #include <ostream>
@@ -43,7 +45,7 @@ Inset * InsetMathTabular::clone() const
 
 void InsetMathTabular::metrics(MetricsInfo & mi, Dimension & dim) const
 {
-	FontSetChanger dummy(mi.base, "textnormal");
+	Changer dummy = mi.base.changeFontSet("textnormal");
 	InsetMathGrid::metrics(mi, dim);
 	dim.wid += 6;
 }
@@ -59,7 +61,7 @@ Dimension const InsetMathTabular::dimension(BufferView const & bv) const
 
 void InsetMathTabular::draw(PainterInfo & pi, int x, int y) const
 {
-	FontSetChanger dummy(pi.base, "textnormal");
+	Changer dummy = pi.base.changeFontSet("textnormal");
 	InsetMathGrid::drawWithMargin(pi, x, y, 4, 2);
 }
 

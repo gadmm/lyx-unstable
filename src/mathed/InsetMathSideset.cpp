@@ -11,20 +11,22 @@
 
 #include <config.h>
 
+#include "InsetMathSideset.h"
+
+#include "InsetMathSymbol.h"
+#include "MathData.h"
+#include "MathStream.h"
+#include "MathSupport.h"
+
 #include "BufferView.h"
 #include "Cursor.h"
 #include "DispatchResult.h"
 #include "FuncRequest.h"
 #include "FuncStatus.h"
-#include "InsetMathSideset.h"
-#include "InsetMathSymbol.h"
 #include "LaTeXFeatures.h"
-#include "MathData.h"
-#include "MathStream.h"
-#include "MathSupport.h"
+#include "MetricsInfo.h"
 
 #include "support/debug.h"
-
 #include "support/lassert.h"
 
 
@@ -197,7 +199,7 @@ void InsetMathSideset::metrics(MetricsInfo & mi, Dimension & dim) const
 		br().metrics(mi, dimbr);
 		dimtr = dimbr;
 	}
-	ScriptChanger dummy(mi.base);
+	Changer dummy = mi.base.changeScript();
 	if (scriptl_) {
 		bl().metrics(mi, dimbl);
 		tl().metrics(mi, dimtl);
@@ -231,7 +233,7 @@ void InsetMathSideset::draw(PainterInfo & pi, int x, int y) const
 		bl().draw(pi, x          , y);
 	if (!scriptr_)
 		br().draw(pi, x + dxr(bv), y);
-	ScriptChanger dummy(pi.base);
+	Changer dummy = pi.base.changeScript();
 	if (scriptl_) {
 		bl().draw(pi, x          , y + dyb(bv));
 		tl().draw(pi, x          , y - dyt(bv));

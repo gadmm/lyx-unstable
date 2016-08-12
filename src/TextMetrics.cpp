@@ -481,6 +481,11 @@ bool TextMetrics::redoParagraph(pit_type const pit)
 	if (text_->isMainText()) {
 		if (pit == 0) {
 			pm.rows().front().dimension().asc += 20;
+			/* coverity[copy_paste_error]: coverity thinks that we
+			 * should update pm.dim().asc below, but all the rows
+			 * heights are actually counted as part of the paragraph metric
+			 * descent see loop above).
+			 */
 			pm.dim().des += 20;
 		}
 		ParagraphList const & pars = text_->paragraphs();
@@ -928,7 +933,7 @@ bool TextMetrics::breakRow(Row & row, int const right_margin) const
 	// if the row is too large, try to cut at last separator. In case
 	// of success, reset indication that the row was broken abruptly.
 	if (row.shortenIfNeeded(body_pos, width))
-		row.right_boundary(false);
+		row.right_boundary(!row.empty() && row.back().endpos == row.endpos());
 
 	// make sure that the RTL elements are in reverse ordering
 	row.reverseRTL(is_rtl);
@@ -1857,7 +1862,6 @@ void TextMetrics::drawParagraph(PainterInfo & pi, pit_type const pit, int const 
 		return;
 	}
 
-	BufferParams const & bparams = bv_->buffer().params();
 	int const ww = bv_->workHeight();
 	Cursor const & cur = bv_->cursor();
 	DocIterator sel_beg = cur.selectionBegin();
@@ -1923,7 +1927,7 @@ void TextMetrics::drawParagraph(PainterInfo & pi, pit_type const pit, int const 
 		}
 
 		// Row signature; has row changed since last paint?
-		row.setCrc(pm.computeRowSignature(row, bparams));
+		row.setCrc(pm.computeRowSignature(row, *bv_));
 		bool row_has_changed = row.changed()
 			|| bv_->hadHorizScrollOffset(text_, pit, row.pos());
 

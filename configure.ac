@@ -130,6 +130,9 @@ AC_C_BIGENDIAN
 # Nice to have when an assertion triggers
 LYX_CHECK_CALLSTACK_PRINTING
 
+# C++14 only
+LYX_CHECK_DEF(make_unique, memory, [using std::make_unique;])
+
 # Needed for our char_type
 AC_CHECK_SIZEOF(wchar_t)
 
@@ -237,6 +240,7 @@ dnl AC_LANG_POP(C)
 lyx_win_res=false;
 case ${host} in
     *mingw*|*cygwin*) lyx_win_res=true;;
+    *freebsd*) AC_SEARCH_LIBS(backtrace_symbols, [execinfo])
 esac
 if test "x$lyx_win_res" = "xtrue"; then
     AC_CHECK_TOOL(RC, windres,)
@@ -294,10 +298,6 @@ AH_BOTTOM([
 /************************************************************
  ** You should not need to change anything beyond this point */
 
-#if __cplusplus >= 201103L || defined(__GXX_EXPERIMENTAL_CXX0X__)
-#define LYX_USE_CXX11
-#endif
-
 #ifndef HAVE_STRERROR
 #if defined(__cplusplus)
 extern "C"
@@ -315,7 +315,6 @@ char * strerror(int n);
 #define BOOST_DISABLE_THREADS 1
 #define BOOST_NO_WREGEX 1
 #define BOOST_NO_WSTRING 1
-#define BOOST_SIGNALS_NO_DEPRECATION_WARNING 1
 
 #ifdef __CYGWIN__
 #  define NOMINMAX

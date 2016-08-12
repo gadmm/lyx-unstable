@@ -35,6 +35,7 @@
 #include "BufferView.h"
 #include "CmdDef.h"
 #include "Color.h"
+#include "Converter.h"
 #include "CutAndPaste.h"
 #include "ErrorList.h"
 #include "Font.h"
@@ -63,7 +64,6 @@
 #include "support/ExceptionMessage.h"
 #include "support/FileName.h"
 #include "support/filetools.h"
-#include "support/foreach.h"
 #include "support/ForkedCalls.h"
 #include "support/gettext.h"
 #include "support/lassert.h"
@@ -246,6 +246,16 @@ vector<string> loadableImageFormats()
 			if (jpeg_found)
 				continue;
 		}
+		else if (lyxrc.use_converter_cache &&
+		         (ext == "svg" || ext == "svgz") &&
+		          theConverters().isReachable("svg", "png"))
+			// Qt only supports SVG 1.2 tiny. See #9778. We prefer displaying
+			// the SVG as in the output. However we require that the converter
+			// cache is enabled since this is expensive. We also require that
+			// an explicit svg->png converter is defined, since the default
+			// converter could produce bad quality as well. This assumes that
+			// png can always be loaded.
+			continue;
 		fmts.push_back(ext);
 	}
 
@@ -1453,6 +1463,8 @@ void GuiApplication::gotoBookmark(unsigned int idx, bool openFile,
 	// if the current buffer is not that one, switch to it.
 	BufferView * doc_bv = current_view_ ?
 		current_view_->documentBufferView() : 0;
+	// FIXME It's possible that doc_bv is null!!
+	// See coverity #102061
 	Cursor const old = doc_bv->cursor();
 	if (!doc_bv || doc_bv->buffer().fileName() != tmp.filename) {
 		if (switchToBuffer) {
@@ -1659,11 +1671,19 @@ void GuiApplication::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 			boost::crc_32_type crc;
 			crc = for_each(fname.begin(), fname.end(), crc);
 			createView(crc.checksum());
+			// we know current_view_ is non-null, because createView sets it.
+			// but let's make sure
+			LASSERT(current_view_, break);
 			current_view_->openDocument(fname);
+			// FIXME but then why check current_view_ here?
 			if (current_view_ && !current_view_->documentBufferView())
 				current_view_->close();
-		} else
+		} else {
+			// we know !d->views.empty(), so this should be ok
+			// but let's make sure
+			LASSERT(current_view_, break);
 			current_view_->openDocument(fname);
+		}
 		break;
 	}
 
@@ -1858,11 +1878,12 @@ void GuiApplication::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 
 		QList<GuiView *> allViews = d->views_.values();
 
-		// this foreach does not modify any buffer. It just collects info on local visibility of buffers
-		// and on which buffer is active in each view.
+		// this for does not modify any buffer. It just collects info on local
+		// visibility of buffers and on which buffer is active in each view.
 		Buffer * const last = theBufferList().last();
-		foreach (GuiView * view, allViews) {
-			// all of the buffers might be locally hidden. That is, there is no active buffer.
+		for(GuiView * view : allViews) {
+			// all of the buffers might be locally hidden. That is, there is no
+			// active buffer.
 			if (!view || !view->currentBufferView())
 				activeBuffers[view] = 0;
 			else
@@ -1909,7 +1930,7 @@ void GuiApplication::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 		}
 
 		// put things back to how they were (if possible).
-		foreach (GuiView * view, allViews) {
+		for (GuiView * view : allViews) {
 			Buffer * originalBuf = activeBuffers[view];
 			// there might not have been an active buffer in this view or it might have been closed by the LFUN.
 			if (theBufferList().isLoaded(originalBuf))
@@ -2792,7 +2813,7 @@ bool GuiApplication::closeAllViews()
 	theSession().lastOpened().clear();
 
 	QList<GuiView *> const views = d->views_.values();
-	foreach (GuiView * view, views) {
+	for (GuiView * view : views) {
 		if (!view->closeScheduled())
 			return false;
 	}
@@ -2808,7 +2829,7 @@ bool GuiApplication::prepareAllViewsForLogout()
 		return true;
 
 	QList<GuiView *> const views = d->views_.values();
-	foreach (GuiView * view, views) {
+	for (GuiView * view : views) {
 		if (!view->prepareAllBuffersForLogout())
 			return false;
 	}
@@ -2827,7 +2848,7 @@ GuiView & GuiApplication::view(int id) const
 void GuiApplication::hideDialogs(string const & name, Inset * inset) const
 {
 	QList<GuiView *> const views = d->views_.values();
-	foreach (GuiView * view, views)
+	for (GuiView * view : views)
 		view->hideDialog(name, inset);
 }
 

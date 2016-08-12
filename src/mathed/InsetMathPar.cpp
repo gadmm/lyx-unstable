@@ -15,6 +15,8 @@
 #include "MathData.h"
 #include "MathStream.h"
 
+#include "MetricsInfo.h"
+
 #include <ostream>
 
 namespace lyx {
@@ -28,14 +30,14 @@ InsetMathPar::InsetMathPar(Buffer * buf, MathData const & ar)
 
 void InsetMathPar::metrics(MetricsInfo & mi, Dimension & dim) const
 {
-	FontSetChanger dummy1(mi.base, "textnormal");
+	Changer dummy = mi.base.changeFontSet("textnormal");
 	InsetMathGrid::metrics(mi, dim);
 }
 
 
 void InsetMathPar::draw(PainterInfo & pi, int x, int y) const
 {
-	FontSetChanger dummy1(pi.base, "textnormal");
+	Changer dummy = pi.base.changeFontSet("textnormal");
 	InsetMathGrid::draw(pi, x, y);
 }
 

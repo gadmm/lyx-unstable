@@ -12,6 +12,7 @@
 
 #include "BufferView.h"
 #include "ColorSet.h"
+#include "LyXRC.h"
 #include "MetricsInfo.h"
 
 #include "insets/Inset.h"
@@ -22,6 +23,7 @@
 
 #include "support/docstring.h"
 #include "support/lassert.h"
+#include "support/RefChanger.h"
 
 using namespace std;
 
@@ -34,16 +36,47 @@ namespace lyx {
 //
 /////////////////////////////////////////////////////////////////////////
 
-MetricsBase::MetricsBase()
-	: bv(0), font(), style(LM_ST_TEXT), fontname("mathnormal"),
-	  textwidth(0)
-{}
+MetricsBase::MetricsBase(BufferView * b, FontInfo f, int w)
+	: bv(b), font(move(f)), style(LM_ST_TEXT), fontname("mathnormal"),
+	  textwidth(w), solid_line_thickness_(1), solid_line_offset_(1),
+	  dotted_line_thickness_(1)
+{
+	if (lyxrc.zoom >= 200) {
+		// derive the line thickness from zoom factor
+		// the zoom is given in percent
+		// (increase thickness at 250%, 450% etc.)
+		solid_line_thickness_ = (lyxrc.zoom + 50) / 200;
+		// adjust line_offset_ too
+		solid_line_offset_ = 1 + solid_line_thickness_ / 2;
+	}
+	if (lyxrc.zoom >= 100) {
+		// derive the line thickness from zoom factor
+		// the zoom is given in percent
+		// (increase thickness at 150%, 250% etc.)
+		dotted_line_thickness_ = (lyxrc.zoom + 50) / 100;
+	}
+}
 
 
-MetricsBase::MetricsBase(BufferView * b, FontInfo const & f, int w)
-	: bv(b), font(f), style(LM_ST_TEXT), fontname("mathnormal"),
-	  textwidth(w)
-{}
+Changer MetricsBase::changeFontSet(string const & name, bool cond)
+{
+	RefChanger<MetricsBase> rc = make_save(*this);
+	if (!cond)
+		rc->keep();
+	else {
+		ColorCode oldcolor = font.color();
+		string const oldname = fontname;
+		fontname = name;
+		font = sane_font;
+		augmentFont(font, name);
+		font.setSize(rc->old.font.size());
+		if (name != "lyxtex"
+		    && ((isTextFont(oldname) && oldcolor != Color_foreground)
+		        || (isMathFont(oldname) && oldcolor != Color_math)))
+			font.setColor(oldcolor);
+	}
+	return move(rc);
+}
 
 
 /////////////////////////////////////////////////////////////////////////
@@ -52,8 +85,8 @@ MetricsBase::MetricsBase(BufferView * b, FontInfo const & f, int w)
 //
 /////////////////////////////////////////////////////////////////////////
 
-MetricsInfo::MetricsInfo(BufferView * bv, FontInfo const & font, int textwidth, 
-	MacroContext const & mc)
+MetricsInfo::MetricsInfo(BufferView * bv, FontInfo font, int textwidth,
+                         MacroContext const & mc)
 	: base(bv, font, textwidth), macrocontext(mc)
 {}
 
@@ -117,210 +150,58 @@ Color PainterInfo::textColor(Color const & color) const
 }
 
 
-/////////////////////////////////////////////////////////////////////////
-//
-// ScriptChanger
-//
-/////////////////////////////////////////////////////////////////////////
-
-Styles smallerScriptStyle(Styles st)
+Changer MetricsBase::changeScript(bool cond)
 {
-	switch (st) {
-		case LM_ST_DISPLAY:
-		case LM_ST_TEXT:
-			return LM_ST_SCRIPT;
-		case LM_ST_SCRIPT:
-		case LM_ST_SCRIPTSCRIPT:
-		default: // shut up compiler
-			return LM_ST_SCRIPTSCRIPT;
+	switch (style) {
+	case LM_ST_DISPLAY:
+	case LM_ST_TEXT:
+		return changeStyle(LM_ST_SCRIPT, cond);
+	case LM_ST_SCRIPT:
+	case LM_ST_SCRIPTSCRIPT:
+		return changeStyle(LM_ST_SCRIPTSCRIPT, cond);
 	}
+	//remove Warning
+	LASSERT(false, return Changer());
 }
 
 
-ScriptChanger::ScriptChanger(MetricsBase & mb)
-	: StyleChanger(mb, smallerScriptStyle(mb.style))
-{}
-
-
-/////////////////////////////////////////////////////////////////////////
-//
-// FracChanger
-//
-/////////////////////////////////////////////////////////////////////////
-
-Styles smallerFracStyle(Styles st)
+Changer MetricsBase::changeFrac(bool cond)
 {
-	switch (st) {
-		case LM_ST_DISPLAY:
-			return LM_ST_TEXT;
-		case LM_ST_TEXT:
-			return LM_ST_SCRIPT;
-		case LM_ST_SCRIPT:
-		case LM_ST_SCRIPTSCRIPT:
-		default: // shut up compiler
-			return LM_ST_SCRIPTSCRIPT;
+	switch (style) {
+	case LM_ST_DISPLAY:
+		return changeStyle(LM_ST_TEXT, cond);
+	case LM_ST_TEXT:
+		return changeStyle(LM_ST_SCRIPT, cond);
+	case LM_ST_SCRIPT:
+	case LM_ST_SCRIPTSCRIPT:
+		return changeStyle(LM_ST_SCRIPTSCRIPT, cond);
 	}
+	//remove Warning
+	return Changer();
 }
 
 
-FracChanger::FracChanger(MetricsBase & mb)
-	: StyleChanger(mb, smallerFracStyle(mb.style))
-{}
-
-
-/////////////////////////////////////////////////////////////////////////
-//
-// ArrayChanger
-//
-/////////////////////////////////////////////////////////////////////////
-
-ArrayChanger::ArrayChanger(MetricsBase & mb)
-	: StyleChanger(mb, mb.style == LM_ST_DISPLAY ? LM_ST_TEXT : mb.style)
-{}
-
-
-/////////////////////////////////////////////////////////////////////////
-//
-// ShapeChanger
-//
-/////////////////////////////////////////////////////////////////////////
-
-ShapeChanger::ShapeChanger(FontInfo & font, FontShape shape)
-	: Changer<FontInfo, FontShape>(font, font.shape())
-{
-	orig_.setShape(shape);
-}
-
-
-ShapeChanger::~ShapeChanger()
-{
-	orig_.setShape(save_);
-}
-
-
-/////////////////////////////////////////////////////////////////////////
-//
-// StyleChanger
-//
-/////////////////////////////////////////////////////////////////////////
-
-StyleChanger::StyleChanger(MetricsBase & mb, Styles style)
-	: Changer<MetricsBase>(mb)
+Changer MetricsBase::changeStyle(Styles new_style, bool cond)
 {
 	static const int diff[4][4] =
 		{ { 0, 0, -3, -5 },
 		  { 0, 0, -3, -5 },
 		  { 3, 3,  0, -2 },
 		  { 5, 5,  2,  0 } };
-	int t = diff[mb.style][style];
-	if (t > 0)
-		while (t--)
-			mb.font.incSize();
-	else
-		while (t++)
-			mb.font.decSize();
-	mb.style = style;
-}
-
-
-StyleChanger::~StyleChanger()
-{
-	orig_ = save_;
-}
-
-
-/////////////////////////////////////////////////////////////////////////
-//
-// FontSetChanger
-//
-/////////////////////////////////////////////////////////////////////////
-
-FontSetChanger::FontSetChanger(MetricsBase & mb, char const * name,
-				bool really_change_font)
-	: Changer<MetricsBase>(mb), change_(really_change_font)
-{
-	if (change_) {
-		FontSize oldsize = save_.font.size();
-		ColorCode oldcolor = save_.font.color();
-		docstring const oldname = from_ascii(save_.fontname);
-		mb.fontname = name;
-		mb.font = sane_font;
-		augmentFont(mb.font, from_ascii(name));
-		mb.font.setSize(oldsize);
-		if (string(name) != "lyxtex"
-		    && ((isTextFont(oldname) && oldcolor != Color_foreground)
-			|| (isMathFont(oldname) && oldcolor != Color_math)))
-			mb.font.setColor(oldcolor);
+	int t = diff[style][new_style];
+	RefChanger<MetricsBase> rc = make_save(*this);
+	if (!cond)
+		rc->keep();
+	else {
+		if (t > 0)
+			while (t--)
+				font.incSize();
+		else
+			while (t++)
+				font.decSize();
+		style = new_style;
 	}
-}
-
-
-FontSetChanger::FontSetChanger(MetricsBase & mb, docstring const & name,
-				bool really_change_font)
-	: Changer<MetricsBase>(mb), change_(really_change_font)
-{
-	if (change_) {
-		FontSize oldsize = save_.font.size();
-		ColorCode oldcolor = save_.font.color();
-		docstring const oldname = from_ascii(save_.fontname);
-		mb.fontname = to_utf8(name);
-		mb.font = sane_font;
-		augmentFont(mb.font, name);
-		mb.font.setSize(oldsize);
-		if (name != "lyxtex"
-		    && ((isTextFont(oldname) && oldcolor != Color_foreground)
-			|| (isMathFont(oldname) && oldcolor != Color_math)))
-			mb.font.setColor(oldcolor);
-	}
-}
-
-
-FontSetChanger::~FontSetChanger()
-{
-	if (change_)
-		orig_ = save_;
-}
-
-
-/////////////////////////////////////////////////////////////////////////
-//
-// WidthChanger
-//
-/////////////////////////////////////////////////////////////////////////
-
-WidthChanger::WidthChanger(MetricsBase & mb, int w)
-	: Changer<MetricsBase>(mb)
-{
-	mb.textwidth = w;
-}
-
-
-WidthChanger::~WidthChanger()
-{
-	orig_ = save_;
-}
-
-
-/////////////////////////////////////////////////////////////////////////
-//
-// ColorChanger
-//
-/////////////////////////////////////////////////////////////////////////
-
-ColorChanger::ColorChanger(FontInfo & font, ColorCode color,
-			   bool really_change_color)
-	: Changer<FontInfo, ColorCode>(font, font.color()), change_(really_change_color)
-{
-	if (change_) {
-		font.setColor(color);
-	}
-}
-
-
-ColorChanger::~ColorChanger()
-{
-	if (change_)
-		orig_.setColor(save_);
+	return move(rc);
 }
 
 

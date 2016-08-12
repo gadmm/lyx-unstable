@@ -62,14 +62,14 @@
 #include "support/lstrings.h"
 #include "support/lyxalgo.h"
 #include "support/TempFile.h"
+#include "support/unique_ptr.h"
 
 #include "frontends/alert.h"
 #include "frontends/Clipboard.h"
 #include "frontends/Selection.h"
 
-#include <boost/tuple/tuple.hpp>
-
 #include <string>
+#include <tuple>
 
 using namespace std;
 using namespace lyx::support;
@@ -875,11 +875,9 @@ void cutSelection(Cursor & cur, bool doclear, bool realcut)
 		if (begpit != endpit)
 			cur.screenUpdateFlags(Update::Force | Update::FitCursor);
 
-		boost::tie(endpit, endpos) =
-			eraseSelectionHelper(bp,
-				text->paragraphs(),
-				begpit, endpit,
-				cur.selBegin().pos(), endpos);
+		tie(endpit, endpos) =
+			eraseSelectionHelper(bp, text->paragraphs(), begpit, endpit,
+			                     cur.selBegin().pos(), endpos);
 
 		// cutSelection can invalidate the cursor so we need to set
 		// it anew. (Lgb)
@@ -1055,7 +1053,8 @@ docstring selection(size_t sel_index, DocumentClassConstPtr docclass)
 	if (sel_index >= theCuts.size())
 		return docstring();
 
-	boost::scoped_ptr<Buffer> buffer(copyToTempBuffer(theCuts[sel_index].first, docclass));
+	unique_ptr<Buffer> buffer(copyToTempBuffer(theCuts[sel_index].first,
+	                                           docclass));
 	if (!buffer)
 		return docstring();
 

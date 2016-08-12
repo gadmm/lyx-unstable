@@ -12,18 +12,20 @@
 
 #include "InsetMathSymbol.h"
 
-#include "Dimension.h"
-#include "LaTeXFeatures.h"
 #include "MathAtom.h"
 #include "MathParser.h"
 #include "MathStream.h"
 #include "MathSupport.h"
 
+#include "Dimension.h"
+#include "LaTeXFeatures.h"
+#include "MetricsInfo.h"
+
 #include "support/debug.h"
 #include "support/docstream.h"
+#include "support/lyxlib.h"
 #include "support/textutils.h"
-
-#include <boost/scoped_ptr.hpp>
+#include "support/unique_ptr.h"
 
 
 namespace lyx {
@@ -67,7 +69,7 @@ void InsetMathSymbol::metrics(MetricsInfo & mi, Dimension & dim) const
 					 sym_->extra == "mathalpha" &&
 					 mi.base.fontname == "mathit";
 	std::string const font = italic_upcase_greek ? "cmm" : sym_->inset;
-	FontSetChanger dummy(mi.base, from_ascii(font));
+	Changer dummy = mi.base.changeFontSet(font);
 	mathed_string_dim(mi.base.font, sym_->draw, dim);
 	docstring::const_reverse_iterator rit = sym_->draw.rbegin();
 	kerning_ = mathed_char_kerning(mi.base.font, *rit);
@@ -116,7 +118,7 @@ void InsetMathSymbol::draw(PainterInfo & pi, int x, int y) const
 	//else
 	//	x += support::iround(0.0833 * em);
 
-	FontSetChanger dummy(pi.base, from_ascii(font));
+	Changer dummy = pi.base.changeFontSet(font);
 	pi.draw(x, y - h_, sym_->draw);
 }
 
@@ -255,9 +257,9 @@ void InsetMathSymbol::octave(OctaveStream & os) const
 
 void InsetMathSymbol::write(WriteStream & os) const
 {
-	boost::scoped_ptr<MathEnsurer> ensurer;
+	unique_ptr<MathEnsurer> ensurer;
 	if (currentMode() != TEXT_MODE)
-		ensurer.reset(new MathEnsurer(os));
+		ensurer = make_unique<MathEnsurer>(os);
 	os << '\\' << name();
 
 	// $,#, etc. In theory the restriction based on catcodes, but then

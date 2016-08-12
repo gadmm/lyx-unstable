@@ -48,7 +48,7 @@
 #cmakedefine USE_POSIX_PACKAGING 1
 #cmakedefine USE_WINDOWS_PACKAGING 1
 #cmakedefine USE_MACOSX_PACKAGING 1
-#cmakedefine PATH_MAX ${PATH_MAX}
+#cmakedefine HAVE_DEF_PATH_MAX 1
 
 #cmakedefine WORDS_BIGENDIAN 1
 
@@ -68,13 +68,6 @@
 // use GNU libstdc++ with C++11 ABI
 #cmakedefine USE_GLIBCXX_CXX11_ABI 1
 
-// use GNU c++11 extensions
-#cmakedefine LYX_USE_CXX11 1
-#ifndef LYX_USE_CXX11
-  #if __cplusplus >= 201103L || defined(__GXX_EXPERIMENTAL_CXX0X__)
-    #error "Conflicting defines of LYX_USE_CXX11"
-  #endif
-#endif
 #cmakedefine Z_PREFIX 1
 
 // Defined if QT=QT5 uses X11
@@ -93,6 +86,7 @@ ${Include_used_spellchecker}
 #define ENABLE_NLS 1
 #endif
 
+#cmakedefine HAVE_DEF_MAKE_UNIQUE 1
 
 #endif // config.h guard
 

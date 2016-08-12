@@ -38,6 +38,7 @@
 #include "MacroTable.h"
 #include "MathMacro.h"
 #include "MathMacroTemplate.h"
+#include "MetricsInfo.h"
 #include "output_xhtml.h"
 #include "Paragraph.h"
 #include "ParIterator.h"
@@ -425,15 +426,15 @@ int InsetMathHull::defaultColSpace(col_type col)
 }
 
 
-docstring InsetMathHull::standardFont() const
+string InsetMathHull::standardFont() const
 {
 	switch (type_) {
 	case hullRegexp:
-		return from_ascii("texttt");
+		return "texttt";
 	case hullNone:
-		return from_ascii("lyxnochange");
+		return "lyxnochange";
 	default:
-		return from_ascii("mathnormal");
+		return "mathnormal";
 	}
 }
 
@@ -487,8 +488,9 @@ void InsetMathHull::metrics(MetricsInfo & mi, Dimension & dim) const
 		return;
 	}
 
-	FontSetChanger dummy1(mi.base, standardFont());
-	StyleChanger dummy2(mi.base, display() ? LM_ST_DISPLAY : LM_ST_TEXT);
+	// FIXME: Changing the same object repeatedly is inefficient.
+	Changer dummy1 = mi.base.changeFontSet(standardFont());
+	Changer dummy2 = mi.base.changeStyle(display() ? LM_ST_DISPLAY : LM_ST_TEXT);
 
 	// let the cells adjust themselves
 	InsetMathGrid::metrics(mi, dim);
@@ -499,7 +501,7 @@ void InsetMathHull::metrics(MetricsInfo & mi, Dimension & dim) const
 	}
 
 	if (numberedType()) {
-		FontSetChanger dummy(mi.base, from_ascii("mathbf"));
+		Changer dummy = mi.base.changeFontSet("mathbf");
 		int l = 0;
 		for (row_type row = 0; row < nrows(); ++row)
 			l = max(l, mathed_string_width(mi.base.font, nicelabel(row)));
@@ -580,9 +582,9 @@ void InsetMathHull::draw(PainterInfo & pi, int x, int y) const
 	ColorCode color = pi.selected && lyxrc.use_system_colors
 				? Color_selectiontext : standardColor();
 	bool const really_change_color = pi.base.font.color() == Color_none;
-	ColorChanger dummy0(pi.base.font, color, really_change_color);
-	FontSetChanger dummy1(pi.base, standardFont());
-	StyleChanger dummy2(pi.base, display() ? LM_ST_DISPLAY : LM_ST_TEXT);
+	Changer dummy0 = pi.base.font.changeColor(color, really_change_color);
+	Changer dummy1 = pi.base.changeFontSet(standardFont());
+	Changer dummy2 = pi.base.changeStyle(display() ? LM_ST_DISPLAY : LM_ST_TEXT);
 
 	InsetMathGrid::draw(pi, x + 1, y);
 
@@ -590,7 +592,7 @@ void InsetMathHull::draw(PainterInfo & pi, int x, int y) const
 		int const xx = x + colinfo_.back().offset_ + colinfo_.back().width_ + 20;
 		for (row_type row = 0; row < nrows(); ++row) {
 			int const yy = y + rowinfo_[row].offset_;
-			FontSetChanger dummy(pi.base, from_ascii("mathrm"));
+			Changer dummy = pi.base.changeFontSet("mathrm");
 			docstring const nl = nicelabel(row);
 			pi.draw(xx, yy, nl);
 		}
@@ -1872,13 +1874,14 @@ void InsetMathHull::doDispatch(Cursor & cur, FuncRequest & cmd)
 
 namespace {
 
-bool allowDisplayMath(Cursor cur)
+bool allowDisplayMath(Cursor const & cur)
 {
 	LATTEST(cur.depth() > 1);
-	cur.pop();
+	Cursor tmpcur = cur;
+	tmpcur.pop();
 	FuncStatus status;
 	FuncRequest cmd(LFUN_MATH_DISPLAY);
-	return cur.getStatus(cmd, status) && status.enabled();
+	return tmpcur.getStatus(cmd, status) && status.enabled();
 }
 
 }

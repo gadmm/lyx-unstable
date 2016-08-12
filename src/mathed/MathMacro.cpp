@@ -30,6 +30,7 @@
 #include "LaTeXFeatures.h"
 #include "LyX.h"
 #include "LyXRC.h"
+#include "MetricsInfo.h"
 
 #include "frontends/Painter.h"
 
@@ -432,7 +433,7 @@ void MathMacro::metrics(MetricsInfo & mi, Dimension & dim) const
 		if (lyxrc.macro_edit_style == LyXRC::MACRO_EDIT_INLINE_BOX
 		    && d->editing_[mi.base.bv]) {
 			FontInfo font = mi.base.font;
-			augmentFont(font, from_ascii("lyxtex"));
+			augmentFont(font, "lyxtex");
 			Dimension namedim;
 			mathed_string_dim(font, name(), namedim);
 #if 0
@@ -551,10 +552,10 @@ void MathMacro::draw(PainterInfo & pi, int x, int y) const
 	int expy = y;
 
 	if (d->displayMode_ == DISPLAY_INIT || d->displayMode_ == DISPLAY_INTERACTIVE_INIT) {
-		FontSetChanger dummy(pi.base, "lyxtex");
+		Changer dummy = pi.base.changeFontSet("lyxtex");
 		pi.pain.text(x, y, from_ascii("\\") + name(), pi.base.font);
 	} else if (d->displayMode_ == DISPLAY_UNFOLDED) {
-		FontSetChanger dummy(pi.base, "lyxtex");
+		Changer dummy = pi.base.changeFontSet("lyxtex");
 		pi.pain.text(x, y, from_ascii("\\"), pi.base.font);
 		x += mathed_string_width(pi.base.font, from_ascii("\\")) + 1;
 		cell(0).draw(pi, x, y);
@@ -621,7 +622,7 @@ void MathMacro::draw(PainterInfo & pi, int x, int y) const
 		if (drawBox && d->editing_[pi.base.bv]) {
 			// draw header and rectangle around
 			FontInfo font = pi.base.font;
-			augmentFont(font, from_ascii("lyxtex"));
+			augmentFont(font, "lyxtex");
 			font.setSize(FONT_SIZE_TINY);
 			font.setColor(Color_mathmacrolabel);
 			Dimension namedim;

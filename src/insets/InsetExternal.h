@@ -17,9 +17,9 @@
 #include "ExternalTemplate.h"
 
 #include "support/FileName.h"
+#include "support/unique_ptr.h"
 
-#include <boost/scoped_ptr.hpp>
-#include <boost/signals/trackable.hpp>
+#include <boost/signals2/trackable.hpp>
 
 
 namespace lyx {
@@ -90,7 +90,7 @@ private:
 class RenderBase;
 
 ///
-class InsetExternal : public Inset, public boost::signals::trackable
+class InsetExternal : public Inset, public boost::signals2::trackable
 {
 	// Disable assignment operator, since it is not used, and it is too
 	// complicated to implement it consistently with the copy constructor
@@ -169,7 +169,7 @@ private:
 	/// The current params
 	InsetExternalParams params_;
 	/// The thing that actually draws the image on LyX's screen.
-	boost::scoped_ptr<RenderBase> renderer_;
+	unique_ptr<RenderBase> renderer_;
 	/// changes color of the button when mouse enters/leaves this inset
 	mutable std::map<BufferView const *, bool> mouse_hover_;
 };

@@ -21,9 +21,12 @@
 #include "Toc.h"
 
 #include "support/strfwd.h"
+#include "support/unique_ptr.h"
 
 #include <stack>
 
+
+using std::shared_ptr;
 
 namespace lyx {
 
@@ -72,12 +75,11 @@ public:
 	TocItem() : dit_(0), depth_(0), output_(false) {}
 	///
 	TocItem(DocIterator const & dit,
-		int depth,
-		docstring const & s,
-		bool output_active,
-		docstring const & t = docstring(),
-		FuncRequest action = FuncRequest(LFUN_UNKNOWN_ACTION)
-		);
+	        int depth,
+	        docstring const & s,
+	        bool output_active,
+	        docstring const & t = docstring(),
+	        FuncRequest action = FuncRequest(LFUN_UNKNOWN_ACTION));
 	///
 	~TocItem() {}
 	///
@@ -126,10 +128,10 @@ public:
 	TocBuilder(shared_ptr<Toc> const toc);
 	/// When entering a float
 	void pushItem(DocIterator const & dit, docstring const & s,
-				  bool output_active, bool is_captioned = false);
+	              bool output_active, bool is_captioned = false);
 	/// When encountering a caption
 	void captionItem(DocIterator const & dit, docstring const & s,
-					 bool output_active);
+	                 bool output_active);
 	/// When exiting a float
 	void pop();
 private:
@@ -146,24 +148,7 @@ private:
 };
 
 
-///
-class TocBuilderStore
-{
-public:
-	TocBuilderStore() {};
-	///
-	shared_ptr<TocBuilder> get(std::string const & type, shared_ptr<Toc> toc);
-	///
-	void clear() { map_.clear(); };
-private:
-	typedef std::map<std::string, shared_ptr<TocBuilder> > map_t;
-	map_t map_;
-};
-
-
-///
-/**
-*/
+/// Class to build and access the Tocs of a particular buffer.
 class TocBackend
 {
 public:
@@ -185,14 +170,16 @@ public:
 	TocList const & tocs() const { return tocs_; }
 	/// never null
 	shared_ptr<Toc const> toc(std::string const & type) const;
+	/// never null
 	shared_ptr<Toc> toc(std::string const & type);
-	/// nevel null
-	shared_ptr<TocBuilder> builder(std::string const & type);
-	/// Return the first Toc Item before the cursor
-	Toc::const_iterator item(
-		std::string const & type, ///< Type of Toc.
-		DocIterator const & dit ///< The cursor location in the document.
-	) const;
+	/// \return the current TocBuilder for the Toc of type \param type, or
+	/// creates one if it does not already exist.
+	TocBuilder & builder(std::string const & type);
+	/// \return the first Toc Item before the cursor.
+	/// \param type: Type of Toc.
+	/// \param dit: The cursor location in the document.
+	Toc::const_iterator
+	item(std::string const & type, DocIterator const & dit) const;
 
 	///
 	void writePlaintextTocList(std::string const & type,
@@ -204,7 +191,7 @@ private:
 	///
 	TocList tocs_;
 	///
-	TocBuilderStore builders_;
+	std::map<std::string, unique_ptr<TocBuilder>> builders_;
 	///
 	Buffer const * buffer_;
 }; // TocBackend

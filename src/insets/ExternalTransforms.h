@@ -16,6 +16,8 @@
 
 #include "graphics/GraphicsParams.h"
 
+#include "support/unique_ptr.h"
+
 #include <boost/any.hpp>
 #include <boost/function.hpp>
 
@@ -121,7 +123,7 @@ public:
  */
 class TransformCommand {
 public:
-	typedef std::auto_ptr<TransformCommand const> ptr_type;
+	typedef unique_ptr<TransformCommand const> ptr_type;
 	virtual ~TransformCommand() {}
 
 	/// The string from the External Template that we seek to replace.
@@ -200,7 +202,7 @@ private:
  */
 class TransformOption {
 public:
-	typedef std::auto_ptr<TransformOption const> ptr_type;
+	typedef unique_ptr<TransformOption const> ptr_type;
 	virtual ~TransformOption() {}
 
 	/// The string from the External Template that we seek to replace.
@@ -332,7 +334,7 @@ typedef boost::function<TransformCommand::ptr_type(RotationData)>
 class TransformStore
 {
 public:
-	TransformStore() {}
+	TransformStore() : id(Rotate) {}
 
 	/** Stores \c factory and a reminder of what \c data this \c factory
 	 *  operates on.

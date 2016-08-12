@@ -51,8 +51,6 @@ lyx_LDFLAGS = -framework AppKit -framework ApplicationServices \
 	-Wl,-rpath,@executable_path/../Frameworks
 endif
 
-#lyx_LDFLAGS=-Wl,-O1
-
 if INSTALL_MACOSX
 APPLESPELL = AppleSpellChecker.cpp AppleSpellChecker.h
 endif
@@ -72,10 +70,6 @@ HUNSPELL = HunspellChecker.cpp HunspellChecker.h
 PWL = PersonalWordList.cpp PersonalWordList.h
 endif
 
-# These four objects are linked as object files as they are not
-# referenced within the core and therefore are not picked up
-# by the linker without looping over libs. We do not want that,
-# and in fact libtools seems not able to do that.
 lyx_SOURCES = \
 	main.cpp \
 	$(APPLESPELL) \
@@ -334,7 +328,8 @@ if MONOLITHIC_CORE
 BUILT_SOURCES += lyxcore.cpp $(STANDALONEFILES)
 CLEANFILES += lyxcore.cpp
 
-liblyxcore_a_SOURCES = lyxcore.cpp $(STANDALONEFILES) $(HEADERFILESCORE)
+nodist_liblyxcore_a_SOURCES = lyxcore.cpp
+liblyxcore_a_SOURCES = $(STANDALONEFILES) $(HEADERFILESCORE)
 
 else
 
@@ -546,7 +541,8 @@ if MONOLITHIC_MATHED
 BUILT_SOURCES += lyxmathed.cpp
 CLEANFILES += lyxmathed.cpp
 
-liblyxmathed_a_SOURCES = lyxmathed.cpp $(HEADERFILESMATHED)
+nodist_liblyxmathed_a_SOURCES = lyxmathed.cpp
+liblyxmathed_a_SOURCES = $(HEADERFILESMATHED)
 
 else
 
@@ -676,11 +672,6 @@ HEADERFILESINSETS = \
 	insets/InsetVSpace.h \
 	insets/InsetWrap.h
 
-#	insets/InsetList.cpp \
-#	insets/InsetList.h \
-#	insets/InsetSection.h \
-#	insets/InsetSection.cpp
-
 lyxinsets.cpp:
 	$(AM_V_GEN)for file in $(SOURCEFILESINSETS) ; do echo '#include "'$${file}'"' ; done >$@
 
@@ -689,7 +680,8 @@ if MONOLITHIC_INSETS
 BUILT_SOURCES += lyxinsets.cpp
 CLEANFILES += lyxinsets.cpp
 
-liblyxinsets_a_SOURCES = lyxinsets.cpp $(HEADERFILESINSETS)
+nodist_liblyxinsets_a_SOURCES = lyxinsets.cpp
+liblyxinsets_a_SOURCES = $(HEADERFILESINSETS)
 
 else
 

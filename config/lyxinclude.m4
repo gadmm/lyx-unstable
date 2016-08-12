@@ -143,6 +143,20 @@ AC_DEFUN([LYX_PROG_CLANG],
 #endif
 ],
 [lyx_cv_prog_clang=yes ; CLANG=yes], [lyx_cv_prog_clang=no ; CLANG=no])])
+if test $CLANG = yes ; then
+  AC_CACHE_CHECK([for clang version],
+    [lyx_cv_clang_version],
+    [clang_noversion=no
+     AC_COMPUTE_INT(clang_major,__clang_major__,,[clang_noversion_=yes])
+     AC_COMPUTE_INT(clang_minor,__clang_minor__,,[clang_noversion_=yes])
+     AC_COMPUTE_INT(clang_patchlevel,__clang_patchlevel__,,[clang_noversion_=yes])
+     if test $clang_noversion = yes ; then
+       clang_version=unknown
+     else
+       clang_version=$clang_major.$clang_minor.$clang_patchlevel
+     fi
+     lyx_cv_clang_version=$clang_version])
+fi
 ])
 
 
@@ -176,9 +190,10 @@ dnl the extra cxx11 flags have to be passed to the preprocessor. They are
 dnl not plainly added to AM_CPPFLAGS because then the objc compiler (mac)
 dnl would fail.
 AC_DEFUN([LYX_CXX_USE_REGEX],
-[lyx_std_regex=no
- if test $lyx_use_cxx11 = yes; then
-   save_CPPFLAGS=$CPPFLAGS
+[AC_ARG_ENABLE(std-regex,
+  AC_HELP_STRING([--enable-std-regex],[use std::regex instead of boost::regex (default is autodetected)]),
+  [lyx_std_regex=$enableval],
+  [save_CPPFLAGS=$CPPFLAGS
    # we want to pass -std=c++11 to clang/cpp if necessary
    CPPFLAGS="$AM_CPPFLAGS $1 $CPPFLAGS"
    save_CXXFLAGS=$CXXFLAGS
@@ -194,13 +209,12 @@ AC_DEFUN([LYX_CXX_USE_REGEX],
        dnl <regex> in gcc is unusable in versions less than 4.9.0
        dnl see https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53631
        case $gxx_version in
-         4.0*|4.1*|4.2*|4.3*|4.4*|4.5*|4.6*|4.7*|4.8*) lyx_std_regex=no ;;
+         4.6*|4.7*|4.8*) lyx_std_regex=no ;;
          *) ;;
        esac
      fi
-   fi
-   AC_MSG_RESULT([$lyx_std_regex])
- fi
+     AC_MSG_RESULT([$lyx_std_regex])
+   fi])
 
  if test $lyx_std_regex = yes ; then
   lyx_flags="$lyx_flags std-regex"
@@ -298,10 +312,6 @@ case $enable_optimization in
     *) lyx_optim=${enable_optimization};;
 esac
 
-AC_ARG_ENABLE(cxx11,
-  AC_HELP_STRING([--disable-cxx11],[disable C++11 mode (default: enabled for known good compilers)]),,
-  enable_cxx11=auto;)
-
 AC_ARG_ENABLE(assertions,
   AC_HELP_STRING([--enable-assertions],[add runtime sanity checks in the program]),,
   [AS_CASE([$build_type], [dev*|pre*], [enable_assertions=yes],
@@ -321,7 +331,8 @@ if test x$GXX = xyes; then
     gxx_version=`${CXX} -dumpversion`
     CXX_VERSION="($gxx_version)"
   else
-    gxx_version=clang
+    gxx_version=clang-$clang_version
+    CXX_VERSION="($clang_version)"
   fi
 
   AM_CXXFLAGS="$lyx_optim"
@@ -344,7 +355,8 @@ if test x$GXX = xyes; then
       AM_CPPFLAGS="$AM_CPPFLAGS -Wall -Wextra"
   fi
   case $gxx_version in
-      2.*|3.*) AC_ERROR([gcc 4.x is required]);;
+      2.*|3.*) AC_ERROR([gcc >= 4.6 is required]);;
+      4.0*|4.1*|4.2*|4.3*|4.4*|4.5*) AC_ERROR([gcc >= 4.6 is required]);;
   esac
   if test x$enable_stdlib_debug = xyes ; then
     dnl FIXME: for clang/libc++, one should define _LIBCPP_DEBUG2=0
@@ -357,21 +369,18 @@ if test x$GXX = xyes; then
         ;;
     esac
   fi
-  dnl enable_cxx11 can be yes/no/auto.
-  dnl By default, it is auto and we enable C++11 when possible
-  if test x$enable_cxx11 != xno ; then
     case $gxx_version in
-      4.0*|4.1*|4.2*)
-         if test x$enable_cxx11 = xyes; then
-            AC_ERROR([There is no C++11 support in gcc 4.2 or older])
-         fi;;
-      4.3*|4.4*|4.5*|4.6*)
+      4.6*)
         dnl Note that this will define __GXX_EXPERIMENTAL_CXX0X__.
         dnl The source code relies on that.
         cxx11_flags="-std=c++0x";;
-      clang)
+      clang-3.0*|clang-3.1*|clang-3.2*|clang-3.3*)
         dnl presumably all clang versions support c++11.
-	dnl the deprecated-register warning is very annoying with Qt4.x right now.
+	dnl boost contains pragmas that are annoying on older clang versions
+        cxx11_flags="-std=c++11 -Wno-unknown-pragmas";;
+      clang*)
+        dnl the more recent versions support the deprecated-register warning,
+        dnl which  is very annoying with Qt4.x right now.
         cxx11_flags="-std=c++11"
         AM_CXXFLAGS="$AM_CXXFLAGS -Wno-deprecated-register";;
       *)
@@ -379,18 +388,14 @@ if test x$GXX = xyes; then
                 [cxx11_flags="-std=gnu++11"],
                 [cxx11_flags="-std=c++11"]);;
     esac
-    # cxx11_flags is useful when running preprocessor alone 
+    # cxx11_flags is useful when running preprocessor alone
     # (see detection of regex).
     AM_CXXFLAGS="$cxx11_flags $AM_CXXFLAGS"
-  fi
 fi
 
 LYX_CXX_CXX11
-if test $lyx_use_cxx11 = yes; then
-  if test x$GXX = xyes; then
-    dnl We still use auto_ptr, which is obsoleted. Shut off the warnings.
-    AM_CXXFLAGS="$AM_CXXFLAGS -Wno-deprecated-declarations"
-  fi
+if test $lyx_use_cxx11 = no; then
+  AC_ERROR([A C++11 compatible compiler is required])
 fi
 LYX_CXX_USE_REGEX([$cxx11_flags])
 ])
@@ -407,46 +412,51 @@ AC_DEFUN([LYX_USE_INCLUDED_BOOST],[
 	AC_MSG_RESULT([$lyx_cv_with_included_boost])
 	if test x$lyx_cv_with_included_boost = xyes ; then
 	    BOOST_INCLUDES='-I$(top_srcdir)/3rdparty/boost'
-	    BOOST_LIBS='$(top_builddir)/3rdparty/boost/liblyxboost.a'
+	    if test $lyx_std_regex = yes ; then
+	      BOOST_LIBS=""
+	    else
+	      BOOST_LIBS='$(top_builddir)/3rdparty/boost/liblyxboost.a'
+	    fi
 	else
-	    AC_LANG_PUSH(C++)
-	    save_LIBS=$LIBS
+	    BOOST_INCLUDES=
+	    if test $lyx_std_regex = yes ; then
+	      BOOST_LIBS=""
+	    else
+	      AC_LANG_PUSH(C++)
+	      save_LIBS=$LIBS
 
-	    AC_MSG_CHECKING([for multithreaded boost libraries])
-	    LIBS="$save_LIBS -lboost_signals-mt $LIBTHREAD"
-	    AC_LINK_IFELSE(
-		[AC_LANG_PROGRAM([#include <boost/signal.hpp>],
-			[boost::signal<void ()> s;])],
+	      AC_MSG_CHECKING([for multithreaded boost libraries])
+	      LIBS="$save_LIBS -lboost_regex-mt $LIBTHREAD"
+	      AC_LINK_IFELSE(
+		[AC_LANG_PROGRAM([#include <boost/regex.hpp>],
+			[boost::regex reg;])],
 		[AC_MSG_RESULT([yes])
 		 BOOST_MT="-mt"],
 		[AC_MSG_RESULT([no])
 		 AC_MSG_CHECKING([for plain boost libraries])
-		 LIBS="$save_LIBS -lboost_signals"
+		 LIBS="$save_LIBS -lboost_regex"
 		 AC_LINK_IFELSE(
-		     [AC_LANG_PROGRAM([#include <boost/signal.hpp>],
-			     [boost::signal<void ()> s;])],
+		     [AC_LANG_PROGRAM([#include <boost/regex.hpp>],
+			     [boost::regex reg;])],
 		     [AC_MSG_RESULT([yes])
 		      BOOST_MT=""],
 		     [AC_MSG_RESULT([no])
 		      AC_MSG_ERROR([cannot find suitable boost library (do not use --without-included-boost)])
 		 ])
-	    ])
-	    LIBS=$save_LIBS
-	    AC_LANG_POP(C++)
-	    BOOST_INCLUDES=
-	    if test $lyx_std_regex = yes ; then
-	      BOOST_LIBS="-lboost_signals${BOOST_MT}"
-	    else
-	      BOOST_LIBS="-lboost_regex${BOOST_MT} -lboost_signals${BOOST_MT}"
-	    fi
+	      ])
+	      LIBS=$save_LIBS
+	      AC_LANG_POP(C++)
 
-	    dnl In general, system boost libraries are incompatible with
-	    dnl the use of stdlib-debug in libstdc++. See ticket #9736 for
-	    dnl details.
-	    if test $enable_stdlib_debug = "yes" ; then
+	      dnl In general, system boost libraries are incompatible with
+	      dnl the use of stdlib-debug in libstdc++. See ticket #9736 for
+	      dnl details.
+	      if test $enable_stdlib_debug = "yes" ; then
 		LYX_WARNING([Compiling LyX with stdlib-debug and system boost libraries may lead to
    crashes. Consider using --disable-stdlib-debug or removing
    --without-included-boost.])
+	      fi
+
+	      BOOST_LIBS="-lboost_regex${BOOST_MT}"
 	    fi
 	fi
 	AC_SUBST(BOOST_INCLUDES)

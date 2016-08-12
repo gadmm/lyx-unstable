@@ -116,6 +116,7 @@ support::FileName TempName::operator()() const
 
 InsetExternalParams::InsetExternalParams()
 	: display(true),
+	  preview_mode(PREVIEW_OFF),
 	  lyxscale(defaultLyxScale),
 	  draft(false)
 {
@@ -375,6 +376,8 @@ bool InsetExternalParams::read(Buffer const & buffer, Lexer & lex)
 
 	if (lyxerr.debugging(Debug::EXTERNAL)) {
 		lyxerr	<< "InsetExternalParams::read:\n";
+		// false positive
+		// coverity[NEGATIVE_RETURNS]
 		write(buffer, lyxerr);
 	}
 
@@ -418,7 +421,7 @@ InsetExternal::InsetExternal(Buffer * buf)
 // Mouse hover is not copied and remains empty
 InsetExternal::InsetExternal(InsetExternal const & other)
 	: Inset(other),
-	  boost::signals::trackable(),
+	  boost::signals2::trackable(),
 	  params_(other.params_),
 	  renderer_(other.renderer_->clone(this))
 {}

@@ -51,7 +51,8 @@ namespace lyx {
 
 
 InsetCaption::InsetCaption(Buffer * buf, string const & type)
-    : InsetText(buf, InsetText::PlainLayout), type_(type)
+    : InsetText(buf, InsetText::PlainLayout), 
+      labelwidth_(0), is_subfloat_(false), type_(type)
 {
 	setDrawFrame(true);
 	setFrameColor(Color_collapsableframe);
@@ -106,7 +107,7 @@ void InsetCaption::addToToc(DocIterator const & cpit, bool output_active,
 		str = full_label_;
 		text().forOutliner(str, length);
 	}
-	buffer().tocBackend().builder(type)->captionItem(pit, str, output_active);
+	buffer().tocBackend().builder(type).captionItem(pit, str, output_active);
 	// Proceed with the rest of the inset.
 	InsetText::addToToc(cpit, output_active, utype);
 }

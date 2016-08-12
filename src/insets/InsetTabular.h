@@ -28,11 +28,13 @@
 #include "InsetText.h"
 #include "Length.h"
 
-#include "support/shared_ptr.h"
-
 #include <climits>
 #include <iosfwd>
+#include <memory>
 #include <vector>
+
+
+using std::shared_ptr;
 
 namespace lyx {
 
@@ -875,6 +877,8 @@ public:
 	bool allowSpellCheck() const { return true; }
 	///
 	bool canTrackChanges() const { return true; }
+	///
+	bool canPaintChange(BufferView const &) const { return true; }
 	/** returns false if, when outputing LaTeX, font changes should
 	    be closed before generating this inset. This is needed for
 	    insets that may contain several paragraphs */

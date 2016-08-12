@@ -682,7 +682,7 @@ void GuiWorkArea::Private::updateScrollbar()
 	p->verticalScrollBar()->setRange(scroll_.min, scroll_.max);
 	p->verticalScrollBar()->setPageStep(scroll_.page_step);
 	p->verticalScrollBar()->setSingleStep(scroll_.single_step);
-	p->verticalScrollBar()->setSliderPosition(scroll_.position);
+	p->verticalScrollBar()->setSliderPosition(0);
 }
 
 
@@ -724,7 +724,7 @@ bool GuiWorkArea::event(QEvent * e)
 		return true;
 	}
 
-	case QEvent::ShortcutOverride: {
+	case QEvent::KeyPress: {
 		// We catch this event in order to catch the Tab or Shift+Tab key press
 		// which are otherwise reserved to focus switching between controls
 		// within a dialog.
@@ -937,8 +937,10 @@ void GuiWorkArea::wheelEvent(QWheelEvent * ev)
 	int const lines = qApp->wheelScrollLines();
 	int const page_step = verticalScrollBar()->pageStep();
 	// Test if the wheel mouse is set to one screen at a time.
-	int scroll_value = lines > page_step
-		? page_step : lines * verticalScrollBar()->singleStep();
+	// This is according to
+	// https://doc.qt.io/qt-5/qapplication.html#wheelScrollLines-prop
+	int scroll_value =
+		min(lines * verticalScrollBar()->singleStep(), page_step);
 
 	// Take into account the rotation and the user preferences.
 	scroll_value = int(scroll_value * delta * lyxrc.mouse_wheel_speed);
@@ -1825,6 +1827,7 @@ void TabWorkArea::closeTab(int index)
 class DisplayPath {
 public:
 	/// make vector happy
+	// coverity[UNINIT_CTOR]
 	DisplayPath() {}
 	///
 	DisplayPath(int tab, FileName const & filename)
@@ -1981,6 +1984,8 @@ void TabWorkArea::updateTabTexts()
 			// that it makes the path more unique.
 			somethingChanged = true;
 			It sit = segStart;
+			// this is ok for the reason mentioned  in the previous comment.
+			// coverity[INVALIDATE_ITERATOR]
 			QString dspString = sit->forecastPathString();
 			LYXERR(Debug::GUI, "first forecast found for "
 			       << sit->abs() << " => " << dspString);

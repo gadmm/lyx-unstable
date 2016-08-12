@@ -22,8 +22,9 @@
 
 #include "support/bind.h"
 
-#include <set>
 #include <queue>
+#include <memory>
+#include <set>
 
 using namespace std;
 using namespace lyx::support;
@@ -159,9 +160,9 @@ void LoaderQueue::touch(Cache::ItemPtr const & item)
 //
 /////////////////////////////////////////////////////////////////////
 
-typedef shared_ptr<Image> ImagePtr;
+typedef std::shared_ptr<Image> ImagePtr;
 
-class Loader::Impl : public boost::signals::trackable {
+class Loader::Impl : public boost::signals2::trackable {
 public:
 	///
 	Impl();
@@ -187,9 +188,9 @@ public:
 	/// We modify a local copy of the image once it is loaded.
 	ImagePtr image_;
 	/// This signal is emitted when the image loading status changes.
-	boost::signal<void()> signal_;
+	boost::signals2::signal<void()> signal_;
 	/// The connection of the signal StatusChanged 	
-	boost::signals::connection sc_;
+	boost::signals2::connection sc_;
 
 	double displayPixelRatio() const
 	{
@@ -347,7 +348,7 @@ void Loader::setDisplayPixelRatio(double scale)
 }
 
 
-boost::signals::connection Loader::connect(slot_type const & slot) const
+boost::signals2::connection Loader::connect(slot_type const & slot) const
 {
 	return pimpl_->signal_.connect(slot);
 }

@@ -8,8 +8,8 @@ EXTRA_DIST = boost \
 	libs/CMakeLists.txt \
 	libs/regex/CMakeLists.txt \
 	libs/regex/src/CMakeLists.txt \
-	libs/signals/CMakeLists.txt \
-	libs/signals/src/CMakeLists.txt
+	libs/regex/src/usinstances.cpp
+# The last file above is only compiled for msvc (see cmake)
 
 AM_CPPFLAGS += -DBOOST_USER_CONFIG="<config.h>" 
 AM_CPPFLAGS +=  $(BOOST_INCLUDES)
@@ -18,31 +18,12 @@ AM_CPPFLAGS +=  $(BOOST_INCLUDES)
 
 if MONOLITHIC_BOOST
 
-if LYX_USE_STD_REGEX
-
-liblyxboost_a_SOURCES = \
-	lyxboostsignals.cpp
-
-else
-
 liblyxboost_a_SOURCES = \
 	lyxboost.cpp \
 	libs/regex/src/instances.cpp \
 	libs/regex/src/cpp_regex_traits.cpp \
-	libs/regex/src/c_regex_traits.cpp 
-
-endif #LYX_USE_STD_REGEX
-
-else
-
-if LYX_USE_STD_REGEX
-
-liblyxboost_a_SOURCES = \
-	libs/signals/src/connection.cpp \
-	libs/signals/src/named_slot_map.cpp \
-	libs/signals/src/signal_base.cpp \
-	libs/signals/src/slot.cpp \
-	libs/signals/src/trackable.cpp
+	libs/regex/src/c_regex_traits.cpp \
+	libs/regex/src/wc_regex_traits.cpp 
 
 else
 
@@ -59,16 +40,10 @@ liblyxboost_a_SOURCES = \
 	libs/regex/src/regex_raw_buffer.cpp \
 	libs/regex/src/regex_traits_defaults.cpp \
 	libs/regex/src/w32_regex_traits.cpp \
+	libs/regex/src/wc_regex_traits.cpp \
 	libs/regex/src/wide_posix_api.cpp \
 	libs/regex/src/winstances.cpp \
-	libs/regex/src/static_mutex.cpp \
-	libs/signals/src/connection.cpp \
-	libs/signals/src/named_slot_map.cpp \
-	libs/signals/src/signal_base.cpp \
-	libs/signals/src/slot.cpp \
-	libs/signals/src/trackable.cpp
-
-endif #LYX_USE_STD_REGEX
-
+	libs/regex/src/static_mutex.cpp
 
 endif #MONOLITHIC_BOOST
+

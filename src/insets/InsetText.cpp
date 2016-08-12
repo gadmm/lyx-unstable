@@ -48,6 +48,7 @@
 #include "Row.h"
 #include "sgml.h"
 #include "TexRow.h"
+#include "texstream.h"
 #include "TextClass.h"
 #include "Text.h"
 #include "TextMetrics.h"
@@ -56,13 +57,13 @@
 #include "frontends/alert.h"
 #include "frontends/Painter.h"
 
+#include "support/bind.h"
 #include "support/convert.h"
 #include "support/debug.h"
 #include "support/gettext.h"
-#include "support/lstrings.h"
-
-#include "support/bind.h"
 #include "support/lassert.h"
+#include "support/lstrings.h"
+#include "support/RefChanger.h"
 
 #include <algorithm>
 
@@ -215,24 +216,48 @@ void InsetText::draw(PainterInfo & pi, int x, int y) const
 {
 	TextMetrics & tm = pi.base.bv->textMetrics(&text_);
 
+	int const w = tm.width() + TEXT_TO_INSET_OFFSET;
+	int const yframe = y - TEXT_TO_INSET_OFFSET - tm.ascent();
+	int const h = tm.height() + 2 * TEXT_TO_INSET_OFFSET;
+	int const xframe = x + TEXT_TO_INSET_OFFSET / 2;
+	bool change_drawn = false;
 	if (drawFrame_ || pi.full_repaint) {
-		int const w = tm.width() + TEXT_TO_INSET_OFFSET;
-		int const yframe = y - TEXT_TO_INSET_OFFSET - tm.ascent();
-		int const h = tm.height() + 2 * TEXT_TO_INSET_OFFSET;
-		int const xframe = x + TEXT_TO_INSET_OFFSET / 2;
 		if (pi.full_repaint)
 			pi.pain.fillRectangle(xframe, yframe, w, h,
 				pi.backgroundColor(this));
 
+		// Change color of the frame in tracked changes, like for tabulars.
+        // Only do so if the color is not custom. But do so even if RowPainter
+        // handles the strike-through already.
+		Color c;
+		if (pi.change_.changed()
+		    // Originally, these are the colors with role Text, from role() in
+		    // ColorCache.cpp.  The code is duplicated to avoid depending on Qt
+		    // types, and also maybe it need not match in the future.
+		    && (frameColor() == Color_foreground
+		        || frameColor() == Color_cursor
+		        || frameColor() == Color_preview
+		        || frameColor() == Color_tabularline
+		        || frameColor() == Color_previewframe)) {
+			c = pi.change_.color();
+			change_drawn = true;
+		} else
+			c = frameColor();
 		if (drawFrame_)
-			pi.pain.rectangle(xframe, yframe, w, h, frameColor());
+			pi.pain.rectangle(xframe, yframe, w, h, c);
 	}
-	ColorCode const old_color = pi.background_color;
-	pi.background_color = pi.backgroundColor(this, false);
-
-	tm.draw(pi, x + TEXT_TO_INSET_OFFSET, y);
-
-	pi.background_color = old_color;
+	{
+		Changer dummy = make_change(pi.background_color,
+		                            pi.backgroundColor(this, false));
+		// The change tracking cue must not be inherited
+		Changer dummy2 = make_change(pi.change_, Change());
+		tm.draw(pi, x + TEXT_TO_INSET_OFFSET, y);
+	}
+	if (canPaintChange(*pi.base.bv) && (!change_drawn || pi.change_.deleted()))
+		// Do not draw the change tracking cue if already done by RowPainter and
+		// do not draw the cue for INSERTED if the information is already in the
+		// color of the frame
+		pi.change_.paintCue(pi, xframe, yframe, xframe + w, yframe + h);
 }
 
 
@@ -423,8 +448,8 @@ void InsetText::rejectChanges()
 void InsetText::validate(LaTeXFeatures & features) const
 {
 	features.useInsetLayout(getLayout());
-	for_each(paragraphs().begin(), paragraphs().end(),
-		 bind(&Paragraph::validate, _1, ref(features)));
+	for (Paragraph const & p : paragraphs())
+		p.validate(features);
 }
 
 
@@ -588,7 +613,9 @@ docstring InsetText::insetAsXHTML(XHTMLStream & xs, OutputParams const & rp,
 	runparams.par_end = text().paragraphs().size();
 	
 	if (undefined()) {
+		xs.startDivision(false);
 		xhtmlParagraphs(text_, buffer(), xs, runparams);
+		xs.endDivision();
 		return docstring();
 	}
 
@@ -622,7 +649,9 @@ docstring InsetText::insetAsXHTML(XHTMLStream & xs, OutputParams const & rp,
 	if (il.isPassThru())
 		runparams.pass_thru = true;
 
+	xs.startDivision(false);
 	xhtmlParagraphs(text_, buffer(), xs, runparams);
+	xs.endDivision();
 
 	if (opts & WriteInnerTag)
 		xs << html::EndTag(il.htmlinnertag());
@@ -857,9 +886,9 @@ void InsetText::iterateForToc(DocIterator const & cdit, bool output_active,
 				par.forOutliner(tocstring, length);
 			dit.pos() = 0;
 			toc->push_back(TocItem(dit, toclevel - min_toclevel,
-								  tocstring, doing_output, tocstring));
+			                       tocstring, doing_output));
 		}
-		
+
 		// And now the list of changes.
 		par.addChangesToToc(dit, buffer(), doing_output);
 	}
@@ -965,10 +994,8 @@ string InsetText::contextMenuName() const
 }
 
 
-docstring InsetText::toolTipText(docstring prefix,
-		size_t numlines, size_t len) const
+docstring InsetText::toolTipText(docstring prefix, size_t const len) const
 {
-	size_t const max_length = numlines * len;
 	OutputParams rp(&buffer().params().encoding());
 	rp.for_tooltip = true;
 	odocstringstream oss;
@@ -978,17 +1005,17 @@ docstring InsetText::toolTipText(docstring prefix,
 	ParagraphList::const_iterator end = paragraphs().end();
 	ParagraphList::const_iterator it = beg;
 	bool ref_printed = false;
-	docstring str;
 
 	for (; it != end; ++it) {
 		if (it != beg)
 			oss << '\n';
-		writePlaintextParagraph(buffer(), *it, oss, rp, ref_printed, max_length);
-		str = oss.str();
-		if (str.length() >= max_length)
+		writePlaintextParagraph(buffer(), *it, oss, rp, ref_printed, len);
+		if (oss.tellp() >= 0 && size_t(oss.tellp()) > len)
 			break;
 	}
-	return support::wrapParas(str, 4, len, numlines);
+	docstring str = oss.str();
+	support::truncateWithEllipsis(str, len);
+	return str;
 }
 
 

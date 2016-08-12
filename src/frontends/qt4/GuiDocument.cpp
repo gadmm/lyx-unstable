@@ -72,6 +72,7 @@
 #include <QCloseEvent>
 #include <QFontDatabase>
 #include <QScrollBar>
+#include <QTextBoundaryFinder>
 #include <QTextCursor>
 
 #include <sstream>
@@ -1278,10 +1279,10 @@ GuiDocument::GuiDocument(GuiView & lv)
 		QString tooltip = toqstr(bformat(_("%1$s [Class '%2$s']"), guiname, from_utf8(tc.latexname())));
 		if (!available) {
 			docstring const output_type = (tc.outputType() == lyx::DOCBOOK) ? _("DocBook") : _("LaTeX");
-			tooltip += '\n' + toqstr(wrap(bformat(_("Class not found by LyX. "
+			tooltip += '\n' + toqstr(bformat(_("Class not found by LyX. "
 							   "Please check if you have the matching %1$s class "
 							   "and all required packages (%2$s) installed."),
-							 output_type, from_utf8(tc.prerequisites(", ")))));
+							 output_type, from_utf8(tc.prerequisites(", "))));
 		}
 		latexModule->classCO->addItemSort(toqstr(tc.name()),
 						  toqstr(guiname),
@@ -1748,7 +1749,7 @@ void GuiDocument::deleteBoxBackgroundColor()
 
 void GuiDocument::languageChanged(int i)
 {
-	// some languages only work with polyglossia/XeTeX
+	// some languages only work with polyglossia
 	Language const * lang = lyx::languages.getLanguage(
 		fromqstr(langModule->languageCO->itemData(i).toString()));
 	if (lang->babel().empty() && !lang->polyglossia().empty()) {
@@ -3528,12 +3529,16 @@ void GuiDocument::saveDocDefault()
 void GuiDocument::updateAvailableModules()
 {
 	modules_av_model_.clear();
-	list<modInfoStruct> const & modInfoList = getModuleInfo();
-	list<modInfoStruct>::const_iterator mit = modInfoList.begin();
-	list<modInfoStruct>::const_iterator men = modInfoList.end();
-	for (int i = 0; mit != men; ++mit, ++i)
-		modules_av_model_.insertRow(i, mit->name, mit->id,
-				mit->description);
+	list<modInfoStruct> modInfoList = getModuleInfo();
+	// Sort names according to the locale
+	modInfoList.sort([](modInfoStruct const & a, modInfoStruct const & b) {
+			return 0 < b.name.localeAwareCompare(a.name);
+		});
+	int i = 0;
+	for (modInfoStruct const & m : modInfoList) {
+		modules_av_model_.insertRow(i, m.name, m.id, m.description);
+		++i;
+	}
 }
 
 
@@ -3541,11 +3546,11 @@ void GuiDocument::updateSelectedModules()
 {
 	modules_sel_model_.clear();
 	list<modInfoStruct> const selModList = getSelectedModules();
-	list<modInfoStruct>::const_iterator mit = selModList.begin();
-	list<modInfoStruct>::const_iterator men = selModList.end();
-	for (int i = 0; mit != men; ++mit, ++i)
-		modules_sel_model_.insertRow(i, mit->name, mit->id,
-				mit->description);
+	int i = 0;
+	for (modInfoStruct const & m : selModList) {
+		modules_sel_model_.insertRow(i, m.name, m.id, m.description);
+		++i;
+	}
 }
 
 
@@ -3707,20 +3712,18 @@ list<GuiDocument::modInfoStruct> const & GuiDocument::getModuleInfo()
 
 
 list<GuiDocument::modInfoStruct> const
-		GuiDocument::makeModuleInfo(LayoutModuleList const & mods)
+GuiDocument::makeModuleInfo(LayoutModuleList const & mods)
 {
-	LayoutModuleList::const_iterator it =  mods.begin();
-	LayoutModuleList::const_iterator end = mods.end();
 	list<modInfoStruct> mInfo;
-	for (; it != end; ++it) {
+	for (string const & name : mods) {
 		modInfoStruct m;
-		m.id = *it;
-		LyXModule const * const mod = theModuleList[*it];
+		LyXModule const * const mod = theModuleList[name];
 		if (mod)
-			// FIXME Unicode
-			m.name = toqstr(translateIfPossible(from_utf8(mod->getName())));
-		else
-			m.name = toqstr(*it) + toqstr(" (") + qt_("Not Found") + toqstr(")");
+			m = modInfo(*mod);
+		else {
+			m.id = name;
+			m.name = toqstr(name + " (") + qt_("Not Found") + toqstr(")");
+		}
 		mInfo.push_back(m);
 	}
 	return mInfo;
@@ -3912,27 +3915,35 @@ bool GuiDocument::hasMonolithicExpertSet(QString const & font) const
 }
 
 
+//static
+GuiDocument::modInfoStruct GuiDocument::modInfo(LyXModule const & mod)
+{
+	// FIXME Unicode: docstrings would be better for these parameters but this
+	// change requires a lot of others
+	modInfoStruct m;
+	m.id = mod.getID();
+	m.name = toqstr(translateIfPossible(from_utf8(mod.getName())));
+	QString desc = toqstr(translateIfPossible(from_utf8(mod.getDescription())));
+	// Find the first sentence of the description
+	QTextBoundaryFinder bf(QTextBoundaryFinder::Sentence, desc);
+	int pos = bf.toNextBoundary();
+	if (pos > 0)
+		desc.truncate(pos);
+	QString modulename = QString(qt_("(Module name: %1)")).arg(toqstr(m.id));
+	// Tooltip is the desc followed by the module name
+	m.description = QString("%1<i>%2</i>")
+		.arg(desc.isEmpty() ? QString() : QString("<p>%1</p>").arg(desc),
+		     modulename);
+	return m;
+}
+
+
 void GuiDocument::loadModuleInfo()
 {
 	moduleNames_.clear();
-	LyXModuleList::const_iterator it  = theModuleList.begin();
-	LyXModuleList::const_iterator end = theModuleList.end();
-	for (; it != end; ++it) {
-		modInfoStruct m;
-		m.id = it->getID();
-		// FIXME Unicode
-		m.name = toqstr(translateIfPossible(from_utf8(it->getName())));
-		// this is supposed to give us the first sentence of the description
-		// FIXME Unicode
-		QString desc =
-			toqstr(translateIfPossible(from_utf8(it->getDescription())));
-		int const pos = desc.indexOf(".");
-		if (pos > 0)
-			desc.truncate(pos + 1);
-		m.description = desc;
-		if (it->category().substr(0, 8) != "Citation")
-			moduleNames_.push_back(m);
-	}
+	for (LyXModule const & mod : theModuleList)
+		if (mod.category().substr(0, 8) != "Citation")
+			moduleNames_.push_back(modInfo(mod));
 }
 
 

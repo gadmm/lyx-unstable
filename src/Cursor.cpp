@@ -31,6 +31,7 @@
 #include "Paragraph.h"
 #include "ParIterator.h"
 #include "Row.h"
+#include "texstream.h"
 #include "Text.h"
 #include "TextMetrics.h"
 #include "TocBackend.h"
@@ -50,8 +51,6 @@
 #include "mathed/MacroTable.h"
 #include "mathed/MathData.h"
 #include "mathed/MathMacro.h"
-
-#include "support/bind.h"
 
 #include <sstream>
 #include <limits>
@@ -1184,9 +1183,8 @@ void Cursor::plainInsert(MathAtom const & t)
 
 void Cursor::insert(docstring const & str)
 {
-	for_each(str.begin(), str.end(),
-		 bind(static_cast<void(Cursor::*)(char_type)>
-			     (&Cursor::insert), this, _1));
+	for (char_type c : str)
+		insert(c);
 }
 
 
@@ -1569,8 +1567,7 @@ void Cursor::normalize()
 			<< pos() << ' ' << lastpos() <<  " in idx: " << idx()
 		       << " in atom: '";
 		odocstringstream os;
-		TexRow texrow(false);
-		otexrowstream ots(os,texrow);
+		otexrowstream ots(os, false);
 		WriteStream wi(ots, false, true, WriteStream::wsDefault);
 		inset().asInsetMath()->write(wi);
 		lyxerr << to_utf8(os.str()) << endl;

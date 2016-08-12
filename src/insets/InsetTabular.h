@@ -24,7 +24,6 @@
 #ifndef INSET_TABULAR_H
 #define INSET_TABULAR_H
 
-#include "Inset.h"
 #include "InsetText.h"
 #include "Length.h"
 
@@ -33,8 +32,6 @@
 #include <memory>
 #include <vector>
 
-
-using std::shared_ptr;
 
 namespace lyx {
 
@@ -612,13 +609,13 @@ public:
 	/// returns the VISIBLE cell at r,c, which may be the same as the
 	/// cell at the previous row or column, if we're dealing with some
 	/// multirow or multicell.
-	shared_ptr<InsetTableCell> cellInset(idx_type cell) const;
-	shared_ptr<InsetTableCell> cellInset(row_type row,
-						  col_type column) const;
+	std::shared_ptr<InsetTableCell> cellInset(idx_type cell);
+	std::shared_ptr<InsetTableCell> cellInset(row_type row, col_type column);
+	InsetTableCell const * cellInset(idx_type cell) const;
 	//@}
 	///
 	void setCellInset(row_type row, col_type column,
-			  shared_ptr<InsetTableCell>) const;
+	                  std::shared_ptr<InsetTableCell>);
 	/// Search for \param inset in the tabular, with the
 	///
 	void validate(LaTeXFeatures &) const;
@@ -675,9 +672,12 @@ public:
 		///
 		Length p_width; // this is only set for multicolumn!!!
 		///
-		shared_ptr<InsetTableCell> inset;
+		std::shared_ptr<InsetTableCell> inset;
 	};
-	CellData & cellInfo(idx_type cell) const;
+	///
+	CellData const & cellInfo(idx_type cell) const;
+	///
+	CellData & cellInfo(idx_type cell);
 	///
 	typedef std::vector<CellData> cell_vector;
 	///
@@ -832,7 +832,9 @@ public:
 	/// change associated Buffer
 	void setBuffer(Buffer & buffer);
 	/// retrieve associated Buffer
-	Buffer & buffer() const { return *buffer_; }
+	Buffer const & buffer() const { return *buffer_; }
+	/// retrieve associated Buffer
+	Buffer & buffer() { return *buffer_; }
 
 private:
 	Buffer * buffer_;
@@ -917,9 +919,9 @@ public:
 	/// number of cells
 	size_t nargs() const { return tabular.numberofcells; }
 	///
-	shared_ptr<InsetTableCell const> cell(idx_type) const;
+	std::shared_ptr<InsetTableCell const> cell(idx_type) const;
 	///
-	shared_ptr<InsetTableCell> cell(idx_type);
+	std::shared_ptr<InsetTableCell> cell(idx_type);
 	///
 	Text * getText(int) const;
 

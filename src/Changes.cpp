@@ -22,6 +22,7 @@
 #include "MetricsInfo.h"
 #include "OutputParams.h"
 #include "Paragraph.h"
+#include "texstream.h"
 #include "TocBackend.h"
 
 #include "support/debug.h"
@@ -529,16 +530,14 @@ void Changes::addToToc(DocIterator const & cdit, Buffer const & buffer,
 		Toc::iterator it = TocBackend::findItem(*change_list, 0, author);
 		if (it == change_list->end()) {
 			change_list->push_back(TocItem(dit, 0, author, true));
-			change_list->push_back(TocItem(dit, 1, str, output_active,
-				support::wrapParas(str, 4)));
+			change_list->push_back(TocItem(dit, 1, str, output_active));
 			continue;
 		}
 		for (++it; it != change_list->end(); ++it) {
 			if (it->depth() == 0 && it->str() != author)
 				break;
 		}
-		change_list->insert(it, TocItem(dit, 1, str, output_active,
-			support::wrapParas(str, 4)));
+		change_list->insert(it, TocItem(dit, 1, str, output_active));
 	}
 }
 
@@ -558,9 +557,9 @@ void Change::paintCue(PainterInfo & pi, double const x1, double const y,
 		return;
 	// Calculate 1/3 height of font
 	FontMetrics const & fm = theFontMetrics(font);
-	int const y_bar = deleted() ? y - fm.maxAscent() / 3
+	double const y_bar = deleted() ? y - fm.maxAscent() / 3
 		: y + 2 * pi.base.solidLineOffset() + pi.base.solidLineThickness();
-	pi.pain.line(int(x1), y_bar, int(x2), y_bar, color(),
+	pi.pain.line(int(x1), int(y_bar), int(x2), int(y_bar), color(),
 	             Painter::line_solid, pi.base.solidLineThickness());
 }
 
@@ -577,19 +576,22 @@ void Change::paintCue(PainterInfo & pi, double const x1, double const y1,
 	 * y2 /_____
 	 *    x1  x2
 	 */
-	double y = 0;
 	switch(type) {
 	case UNCHANGED:
 		return;
 	case INSERTED:
-		y = y2;
-		break;
+		pi.pain.line(int(x1), int(y2) + 1, int(x2), int(y2) + 1,
+		             color(), Painter::line_solid,
+		             pi.base.solidLineThickness());
+		return;
 	case DELETED:
-		y = y1;
-		break;
+		// FIXME: we cannot use antialias since we keep drawing on the same
+		// background with the current painting mechanism.
+		pi.pain.line(int(x1), int(y2), int(x2), int(y1),
+		             color(), Painter::line_solid_aliased,
+		             pi.base.solidLineThickness());
+		return;
 	}
-	pi.pain.line(x1, y2, x2, y, color(), Painter::line_solid,
-	             pi.base.solidLineThickness());
 }
 
 

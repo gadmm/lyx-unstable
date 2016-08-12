@@ -1001,8 +1001,13 @@ namespace {
 	{
 		// In order to avoid parsing problems with command interpreters
 		// we pass input data through a file
-		TempFile tempfile("casinput");
-		FileName const cas_tmpfile = tempfile.name();
+		// Since the CAS is supposed to read the temp file we need
+		// to unlock it on windows (bug 10262).
+		unique_ptr<TempFile> tempfile(new TempFile("casinput"));
+		tempfile->setAutoRemove(false);
+		FileName const cas_tmpfile = tempfile->name();
+		tempfile.reset();
+
 		if (cas_tmpfile.empty()) {
 			lyxerr << "Warning: cannot create temporary file."
 			       << endl;
@@ -1016,6 +1021,7 @@ namespace {
 		lyxerr << "calling: " << cmd
 		       << "\ninput: '" << data << "'" << endl;
 		cmd_ret const ret = runCommand(command);
+		cas_tmpfile.removeFile();
 		return ret.second;
 	}
 
@@ -1106,7 +1112,7 @@ namespace {
 		if (tmp.size() < 2)
 			return MathData();
 
-		out = subst(tmp[1], "\\>", string());
+		out = subst(subst(tmp[1], "\\>", string()), "{\\it ", "\\mathit{");
 		lyxerr << "output: '" << out << "'" << endl;
 
 		// Ugly code that tries to make the result prettier

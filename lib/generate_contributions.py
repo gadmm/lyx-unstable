@@ -903,6 +903,14 @@ contributors = [
                  "6 October 2013",
                  u"Dialog usability fix"),
 
+     contributor(u"John Hudson",
+                 "j.r.hudson () virginmedia ! com",
+                 "GPL",
+                 "Contributions",
+                 "m=146722333213915",
+                 "29 June 2016",
+                 u"Documentation updates"),
+
      contributor(u"Bernard Hurley",
                  "bernard () fong-hurley ! org ! uk",
                  "GPL",
@@ -1590,6 +1598,14 @@ contributors = [
                  "m=119072721929143",
                  "25 September 2007",
                  u"Major rework of the AMS classes"),
+
+     contributor(u"Dima Ruinskiy",
+                 "dima.ruinskiy () outlook ! com",
+                 "GPL",
+                 "Joining LyX development team",
+                 "m=146687842921797",
+                 "24 June 2016",
+                 u"Reintroduction of Windows Vista support (bug 10186)"),
 
      contributor(u"Guy Rutenberg",
                  "guyrutenberg () gmail ! com",

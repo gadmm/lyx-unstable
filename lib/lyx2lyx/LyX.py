@@ -92,7 +92,7 @@ format_relation = [("0_06",    [200], minor_versions("0.6" , 4)),
                    ("2_0", list(range(346,414)), minor_versions("2.0" , 8)),
                    ("2_1", list(range(414,475)), minor_versions("2.1" , 5)),
                    ("2_2", list(range(475,509)), minor_versions("2.2" , 0)),
-                   ("2_3", list(range(509,511)), minor_versions("2.3" , 0))
+                   ("2_3", (), minor_versions("2.3" , 0))
                   ]
 
 ####################################################################
@@ -317,7 +317,7 @@ class LyX_base:
                 line = trim_eol_binary(line)
                 decoded = line.decode('latin1')
             if check_token(decoded, '\\begin_preamble'):
-                while 1:
+                while True:
                     line = self.input.readline()
                     if not line:
                         # eof found before end of header
@@ -345,7 +345,7 @@ class LyX_base:
             if check_token(decoded, '\\end_preamble'):
                 continue
 
-            line = line.strip()
+            line = line.rstrip()
             if not line:
                 continue
 
@@ -401,7 +401,7 @@ class LyX_base:
             self.body[i] = self.body[i].decode(self.encoding)
 
         # Read document body
-        while 1:
+        while True:
             line = self.input.readline().decode(self.encoding)
             if not line:
                 break
@@ -767,7 +767,7 @@ class LyX_base:
 
 #        toc_par = []
 #        i = 0
-#        while 1:
+#        while True:
 #            i = find_tokens(self.body, sections, i)
 #            if i == -1:
 #                break

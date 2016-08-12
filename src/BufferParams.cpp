@@ -38,6 +38,7 @@
 #include "LyXRC.h"
 #include "OutputParams.h"
 #include "Spacing.h"
+#include "texstream.h"
 #include "TexRow.h"
 #include "VSpace.h"
 #include "PDFOptions.h"
@@ -1591,7 +1592,8 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 		os << from_ascii(ams);
 
 	if (useNonTeXFonts) {
-		os << "\\usepackage{fontspec}\n";
+		if (!features.isProvided("fontspec"))
+			os << "\\usepackage{fontspec}\n";
 		if (features.mustProvide("unicode-math")
 		    && features.isAvailable("unicode-math"))
 			os << "\\usepackage{unicode-math}\n";
@@ -2056,7 +2058,7 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	// koma's own caption commands are used instead of caption. We
 	// use \PassOptionsToPackage here because the user could have
 	// already loaded subfig in the preamble.
-	if (features.isRequired("subfig")) {
+	if (features.mustProvide("subfig")) {
 		atlyxpreamble += "\\@ifundefined{showcaptionsetup}{}{%\n"
 			" \\PassOptionsToPackage{caption=false}{subfig}}\n"
 			"\\usepackage{subfig}\n";
@@ -2117,7 +2119,7 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	}
 	if (features.isRequired("bicaption"))
 		lyxpreamble += "\\usepackage{bicaption}\n";
-	if (!listings_params.empty() || features.isRequired("listings"))
+	if (!listings_params.empty() || features.mustProvide("listings"))
 		lyxpreamble += "\\usepackage{listings}\n";
 	if (!listings_params.empty()) {
 		lyxpreamble += "\\lstset{";
@@ -2131,6 +2133,7 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 
 	// xunicode needs to be loaded at least after amsmath, amssymb,
 	// esint and the other packages that provide special glyphs
+	// The package only supports XeTeX currently.
 	if (features.runparams().flavor == OutputParams::XETEX
 	    && useNonTeXFonts)
 		lyxpreamble += "\\usepackage{xunicode}\n";
@@ -2349,14 +2352,7 @@ bool BufferParams::addLayoutModule(string const & modName)
 
 string BufferParams::bufferFormat() const
 {
-	string format = documentClass().outputFormat();
-	if (format == "latex") {
-		if (useNonTeXFonts)
-			return "xetex"; // actually "xetex or luatex"
-		if (encoding().package() == Encoding::japanese)
-			return "platex";
-	}
-	return format;
+	return documentClass().outputFormat();
 }
 
 
@@ -2417,16 +2413,9 @@ vector<string> BufferParams::backends() const
 			v.push_back("pdflatex");
 			v.push_back("latex");
 		}
+		v.push_back("xetex");
 		v.push_back("luatex");
 		v.push_back("dviluatex");
-		v.push_back("xetex");
-	} else if (buffmt == "xetex") {
-		v.push_back("xetex");
-		// FIXME: need to test all languages (bug 8205)
-		if (!language || !language->isPolyglossiaExclusive()) {
-			v.push_back("luatex");
-			v.push_back("dviluatex");
-		}
 	} else
 		v.push_back(buffmt);
 

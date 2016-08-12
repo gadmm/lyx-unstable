@@ -160,61 +160,88 @@ fi
 ])
 
 
-dnl Usage: LYX_CXX_CXX11: set lyx_use_cxx11 to yes if the compiler implements
-dnl the C++11 standard.
-AC_DEFUN([LYX_CXX_CXX11],
-[AC_CACHE_CHECK([whether the compiler implements C++11],
-               [lyx_cv_cxx_cxx11],
- [save_CPPFLAGS=$CPPFLAGS
-  CPPFLAGS="$AM_CPPFLAGS $CPPFLAGS"
-  save_CXXFLAGS=$CXXFLAGS
-  CXXFLAGS="$AM_CXXFLAGS $CXXFLAGS"
-  AC_LANG_PUSH(C++)
-  AC_TRY_COMPILE([], [
-#if __cplusplus >= 201103L || defined(__GXX_EXPERIMENTAL_CXX0X__)
-	    this is a c++11 compiler
-#endif
-  ],
-  [lyx_cv_cxx_cxx11=no], [lyx_cv_cxx_cxx11=yes ; lyx_flags="$lyx_flags c++11"])
- AC_LANG_POP(C++)
- CXXFLAGS=$save_CXXFLAGS
- CPPFLAGS=$save_CPPFLAGS])
- lyx_use_cxx11=$lyx_cv_cxx_cxx11
+dnl Usage: LYX_CXX_CXX11_FLAGS: add to AM_CXXFLAGS the best flag that
+selects C++11 mode; gives an error when C++11 mode is not found.
+AC_DEFUN([LYX_CXX_CXX11_FLAGS],
+[AC_CACHE_CHECK([for at least C++11 mode], [lyx_cv_cxx11_flags],
+ [lyx_cv_cxx11_flags=none
+  for flag in -std=c++14 -std=c++11 "" -std=c++0x -std=gnu++14 -std=gnu++11 -std=gnu++0x ; do
+    save_CPPFLAGS=$CPPFLAGS
+    CPPFLAGS="$AM_CPPFLAGS $CPPFLAGS"
+    save_CXXFLAGS=$CXXFLAGS
+    CXXFLAGS="$flag $AM_CXXFLAGS $CXXFLAGS"
+    AC_LANG_PUSH(C++)
+    dnl sample openmp source code to test
+    AC_TRY_COMPILE([
+       template <typename T>
+       struct check
+       {
+	   static_assert(sizeof(int) <= sizeof(T), "not big enough");
+       };
+
+       typedef check<check<bool>> right_angle_brackets;
+
+       class TestDeleted
+       {
+       public:
+	   TestDeleted() = delete;
+       };
+
+
+       int a;
+       decltype(a) b;
+
+       typedef check<int> check_type;
+       check_type c;
+       check_type&& cr = static_cast<check_type&&>(c);
+
+       auto d = a;], [],
+    [lyx_cv_cxx11_flags=$flag; break])
+   AC_LANG_POP(C++)
+   CXXFLAGS=$save_CXXFLAGS
+   CPPFLAGS=$save_CPPFLAGS
+  done])
+  if test $lyx_cv_cxx11_flags = none ; then
+    AC_ERROR([Cannot find suitable C++11 mode for compiler $CXX])
+  fi
+  AM_CXXFLAGS="$lyx_cv_cxx11_flags $AM_CXXFLAGS"
 ])
 
 
-dnl Usage: LYX_CXX_USE_REGEX(cxx11_flags)
+dnl Usage: LYX_CXX_USE_REGEX
 dnl decide whether we want to use std::regex and set the
-dnl LYX_USE_STD_REGEX accordingly.
-dnl the extra cxx11 flags have to be passed to the preprocessor. They are
-dnl not plainly added to AM_CPPFLAGS because then the objc compiler (mac)
-dnl would fail.
+dnl LYX_USE_STD_REGEX macro and conditional accordingly.
 AC_DEFUN([LYX_CXX_USE_REGEX],
 [AC_ARG_ENABLE(std-regex,
   AC_HELP_STRING([--enable-std-regex],[use std::regex instead of boost::regex (default is autodetected)]),
   [lyx_std_regex=$enableval],
-  [save_CPPFLAGS=$CPPFLAGS
-   # we want to pass -std=c++11 to clang/cpp if necessary
-   CPPFLAGS="$AM_CPPFLAGS $1 $CPPFLAGS"
+  [AC_MSG_CHECKING([for correct regex implementation])
+   save_CPPFLAGS=$CPPFLAGS
+   CPPFLAGS="$AM_CPPFLAGS $CPPFLAGS"
    save_CXXFLAGS=$CXXFLAGS
    CXXFLAGS="$AM_CXXFLAGS $CXXFLAGS"
    AC_LANG_PUSH(C++)
-   AC_CHECK_HEADER([regex], [lyx_std_regex=yes], [lyx_std_regex=no])
+   # The following code snippet has been taken taken from example in
+   #   http://stackoverflow.com/questions/8561850/compile-stdregex-iterator-with-gcc
+   AC_TRY_LINK(
+     [
+	#include <regex>
+	#include <iostream>
+
+	#include <string.h>
+
+	typedef std::regex_iterator<const char *> Myiter;
+     ], [
+	const char *pat = "axayaz";
+	Myiter::regex_type rx("a");
+	Myiter next(pat, pat + strlen(pat), rx);
+	Myiter end;
+   ], [lyx_std_regex=yes], [lyx_std_regex=no])
    AC_LANG_POP(C++)
    CXXFLAGS=$save_CXXFLAGS
    CPPFLAGS=$save_CPPFLAGS
-   if test x$GXX = xyes && test $lyx_std_regex = yes ; then
-     AC_MSG_CHECKING([for correct regex implementation])
-     if test x$CLANG = xno || test $lyx_cv_lib_stdcxx = yes; then
-       dnl <regex> in gcc is unusable in versions less than 4.9.0
-       dnl see https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53631
-       case $gxx_version in
-         4.6*|4.7*|4.8*) lyx_std_regex=no ;;
-         *) ;;
-       esac
-     fi
-     AC_MSG_RESULT([$lyx_std_regex])
-   fi])
+   AC_MSG_RESULT([$lyx_std_regex])
+ ])
 
  if test $lyx_std_regex = yes ; then
   lyx_flags="$lyx_flags std-regex"
@@ -369,35 +396,24 @@ if test x$GXX = xyes; then
         ;;
     esac
   fi
+fi
+
+LYX_CXX_CXX11_FLAGS
+
+# Some additional flags may be needed
+if test x$GXX = xyes; then
     case $gxx_version in
-      4.6*)
-        dnl Note that this will define __GXX_EXPERIMENTAL_CXX0X__.
-        dnl The source code relies on that.
-        cxx11_flags="-std=c++0x";;
       clang-3.0*|clang-3.1*|clang-3.2*|clang-3.3*)
-        dnl presumably all clang versions support c++11.
-	dnl boost contains pragmas that are annoying on older clang versions
-        cxx11_flags="-std=c++11 -Wno-unknown-pragmas";;
+        dnl boost contains pragmas that are annoying on older clang versions
+        AM_CPPFLAGS="-Wno-unknown-pragmas $AM_CPPFLAGS";;
       clang*)
         dnl the more recent versions support the deprecated-register warning,
         dnl which  is very annoying with Qt4.x right now.
-        cxx11_flags="-std=c++11"
         AM_CXXFLAGS="$AM_CXXFLAGS -Wno-deprecated-register";;
-      *)
-        AS_CASE([$host], [*cygwin*],
-                [cxx11_flags="-std=gnu++11"],
-                [cxx11_flags="-std=c++11"]);;
     esac
-    # cxx11_flags is useful when running preprocessor alone
-    # (see detection of regex).
-    AM_CXXFLAGS="$cxx11_flags $AM_CXXFLAGS"
 fi
 
-LYX_CXX_CXX11
-if test $lyx_use_cxx11 = no; then
-  AC_ERROR([A C++11 compatible compiler is required])
-fi
-LYX_CXX_USE_REGEX([$cxx11_flags])
+LYX_CXX_USE_REGEX
 ])
 
 dnl Usage: LYX_USE_INCLUDED_BOOST : select if the included boost should
@@ -841,9 +857,17 @@ dnl Defines HAVE_DEF_{NAME}
 AC_DEFUN([LYX_CHECK_DEF],
 [LYX_AH_CHECK_DEF($1, $2)
  AC_MSG_CHECKING([whether $1 is defined by header $2])
+ save_CPPFLAGS=$CPPFLAGS
+ CPPFLAGS="$AM_CPPFLAGS $CPPFLAGS"
+ save_CXXFLAGS=$CXXFLAGS
+ CXXFLAGS="$AM_CXXFLAGS $CXXFLAGS"
+ AC_LANG_PUSH(C++)
  AC_TRY_COMPILE([#include <$2>], [$3],
      lyx_have_def_name=yes,
      lyx_have_def_name=no)
+ AC_LANG_POP(C++)
+ CXXFLAGS=$save_CXXFLAGS
+ CPPFLAGS=$save_CPPFLAGS
  AC_MSG_RESULT($lyx_have_def_name)
  if test "x$lyx_have_def_name" = xyes; then
    AC_DEFINE_UNQUOTED(AS_TR_CPP(HAVE_DEF_$1))

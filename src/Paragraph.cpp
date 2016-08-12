@@ -40,6 +40,7 @@
 #include "ParagraphParameters.h"
 #include "SpellChecker.h"
 #include "sgml.h"
+#include "texstream.h"
 #include "TextClass.h"
 #include "TexRow.h"
 #include "Text.h"
@@ -1377,13 +1378,12 @@ void Paragraph::Private::validate(LaTeXFeatures & features) const
 		BufferParams const & bp = features.runparams().is_child
 			? buf.masterParams() : buf.params();
 		Font f;
-		TexRow texrow;
 		// Using a string stream here circumvents the encoding
 		// switching machinery of odocstream. Therefore the
 		// output is wrong if this paragraph contains content
 		// that needs to switch encoding.
 		odocstringstream ods;
-		otexstream os(ods, texrow);
+		otexstream os(ods, false);
 		if (is_command) {
 			os << '\\' << from_ascii(layout_->latexname());
 			// we have to provide all the optional arguments here, even though
@@ -2752,7 +2752,8 @@ void doFontSwitch(vector<html::FontTag> & tagsToOpen,
 docstring Paragraph::simpleLyXHTMLOnePar(Buffer const & buf,
 				    XHTMLStream & xs,
 				    OutputParams const & runparams,
-				    Font const & outerfont,
+				    Font const & outerfont, 
+				    bool start_paragraph, bool close_paragraph,
 				    pos_type initial) const
 {
 	docstring retval;
@@ -2774,7 +2775,8 @@ docstring Paragraph::simpleLyXHTMLOnePar(Buffer const & buf,
 
 	Layout const & style = *d->layout_;
 
-	xs.startParagraph(allowEmpty());
+	if (start_paragraph)
+		xs.startDivision(allowEmpty());
 
 	FontInfo font_old =
 		style.labeltype == LABEL_MANUAL ? style.labelfont : style.font;
@@ -3060,7 +3062,9 @@ docstring Paragraph::simpleLyXHTMLOnePar(Buffer const & buf,
 			if (!runparams.for_toc || inset->isInToc()) {
 				OutputParams np = runparams;
 				np.local_font = &font;
-				if (!inset->getLayout().htmlisblock())
+				// If the paragraph has size 1, then we are in the "special
+				// case" where we do not output the containing paragraph info
+				if (!inset->getLayout().htmlisblock() && size() != 1)
 					np.html_in_par = true;
 				retval += inset->xhtml(xs, np);
 			}
@@ -3071,8 +3075,13 @@ docstring Paragraph::simpleLyXHTMLOnePar(Buffer const & buf,
 		font_old = font.fontInfo();
 	}
 
+	// FIXME XHTML
+	// I'm worried about what happens if a branch, say, is itself
+	// wrapped in some font stuff. I think that will not work.
 	xs.closeFontTags();
-	xs.endParagraph();
+	if (close_paragraph)
+		xs.endDivision();
+
 	return retval;
 }
 

@@ -30,6 +30,7 @@
 #include "output_xhtml.h"
 #include "OutputParams.h"
 #include "TextClass.h"
+#include "texstream.h"
 
 #include "support/debug.h"
 #include "support/docstream.h"
@@ -126,7 +127,7 @@ void InsetListings::latex(otexstream & os, OutputParams const & runparams) const
 	// glyphs, except if full-unicode aware backends
 	// such as XeTeX or LuaTeX are used, and with pLaTeX.
 	bool const multibyte_possible =	runparams.isFullUnicode()
-	    || (buffer().params().bufferFormat() == "platex"
+	    || (buffer().params().encoding().package() == Encoding::japanese
 	        && runparams.encoding->package() == Encoding::japanese);
 
 	if (!multibyte_possible && !runparams.encoding->hasFixedWidth()) {
@@ -395,9 +396,8 @@ docstring InsetListings::getCaption(OutputParams const & runparams) const
 	if (ins == 0)
 		return docstring();
 
-	TexRow texrow;
 	odocstringstream ods;
-	otexstream os(ods, texrow);
+	otexstream os(ods, false);
 	ins->getArgs(os, runparams);
 	ins->getArgument(os, runparams);
 

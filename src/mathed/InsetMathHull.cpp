@@ -43,6 +43,7 @@
 #include "Paragraph.h"
 #include "ParIterator.h"
 #include "sgml.h"
+#include "TexRow.h"
 #include "TextClass.h"
 #include "TextPainter.h"
 #include "TocBackend.h"
@@ -59,11 +60,12 @@
 #include "frontends/Painter.h"
 
 #include "support/convert.h"
-#include "support/lassert.h"
 #include "support/debug.h"
-#include "support/filetools.h"
 #include "support/gettext.h"
+#include "support/filetools.h"
+#include "support/lassert.h"
 #include "support/lstrings.h"
+#include "support/RefChanger.h"
 
 #include <sstream>
 
@@ -559,15 +561,17 @@ void InsetMathHull::drawBackground(PainterInfo & pi, int x, int y) const
 void InsetMathHull::draw(PainterInfo & pi, int x, int y) const
 {
 	BufferView const * const bv = pi.base.bv;
+	Dimension const dim = dimension(*bv);
 
 	if (type_ == hullRegexp) {
-		Dimension const dim = dimension(*bv);
 		pi.pain.rectangle(x + 1, y - dim.ascent() + 1,
 			dim.width() - 2, dim.height() - 2, Color_regexpframe);
 	}
 
 	if (previewState(bv)) {
-		Dimension const dim = dimension(*bv);
+		// Do not draw change tracking cue if taken care of by RowPainter
+		// already.
+		Changer dummy = make_change(pi.change_, Change(), !canPaintChange(*bv));
 		if (previewTooSmall(dim)) {
 			// we have an extra frame
 			preview_->draw(pi, x + ERROR_FRAME_WIDTH, y);
@@ -597,6 +601,10 @@ void InsetMathHull::draw(PainterInfo & pi, int x, int y) const
 			pi.draw(xx, yy, nl);
 		}
 	}
+	// drawing change line
+	if (canPaintChange(*bv))
+		pi.change_.paintCue(pi, x + 1, y + 1 - dim.asc,
+		                    x + dim.wid, y + dim.des);
 	setPosCache(pi, x, y);
 }
 
@@ -607,8 +615,7 @@ void InsetMathHull::metricsT(TextMetricsInfo const & mi, Dimension & dim) const
 		InsetMathGrid::metricsT(mi, dim);
 	} else {
 		odocstringstream os;
-		TexRow texrow(false);
-		otexrowstream ots(os,texrow);
+		otexrowstream ots(os, false);
 		WriteStream wi(ots, false, true, WriteStream::wsDefault);
 		write(wi);
 		dim.wid = os.str().size();
@@ -624,8 +631,7 @@ void InsetMathHull::drawT(TextPainter & pain, int x, int y) const
 		InsetMathGrid::drawT(pain, x, y);
 	} else {
 		odocstringstream os;
-		TexRow texrow(false);
-		otexrowstream ots(os,texrow);
+		otexrowstream ots(os, false);
 		WriteStream wi(ots, false, true, WriteStream::wsDefault);
 		write(wi);
 		pain.draw(x, y, os.str().c_str());
@@ -644,8 +650,7 @@ static docstring latexString(InsetMathHull const & inset)
 	static Encoding const * encoding = 0;
 	if (inset.isBufferValid())
 		encoding = &(inset.buffer().params().encoding());
-	TexRow texrow(false);
-	otexrowstream ots(ls,texrow);
+	otexrowstream ots(ls, false);
 	WriteStream wi(ots, false, true, WriteStream::wsPreview, encoding);
 	inset.write(wi);
 	return ls.str();
@@ -2175,8 +2180,7 @@ bool InsetMathHull::searchForward(BufferView * bv, string const & str,
 void InsetMathHull::write(ostream & os) const
 {
 	odocstringstream oss;
-	TexRow texrow(false);
-	otexrowstream ots(oss,texrow);
+	otexrowstream ots(oss, false);
 	WriteStream wi(ots, false, false, WriteStream::wsDefault);
 	oss << "Formula ";
 	write(wi);
@@ -2219,8 +2223,7 @@ int InsetMathHull::plaintext(odocstringstream & os,
 	}
 
 	odocstringstream oss;
-	TexRow texrow(false);
-	otexrowstream ots(oss,texrow);
+	otexrowstream ots(oss, false);
 	Encoding const * const enc = encodings.fromLyXName("utf8");
 	WriteStream wi(ots, false, true, WriteStream::wsDefault, enc);
 
@@ -2262,8 +2265,7 @@ int InsetMathHull::docbook(odocstream & os, OutputParams const & runparams) cons
 	++ms.tab(); ms.cr(); ms.os() << '<' << bname << '>';
 
 	odocstringstream ls;
-	TexRow texrow;
-	otexstream ols(ls, texrow);
+	otexstream ols(ls);
 	if (runparams.flavor == OutputParams::XML) {
 		ms << MTag("alt role='tex' ");
 		// Workaround for db2latex: db2latex always includes equations with
@@ -2281,7 +2283,7 @@ int InsetMathHull::docbook(odocstream & os, OutputParams const & runparams) cons
 	} else {
 		ms << MTag("alt role='tex'");
 		latex(ols, runparams);
-		res = texrow.rows();
+		res = ols.texrow().rows();
 		ms << from_utf8(subst(subst(to_utf8(ls.str()), "&", "&amp;"), "<", "&lt;"));
 		ms << ETag("alt");
 	}
@@ -2486,7 +2488,9 @@ docstring InsetMathHull::xhtml(XHTMLStream & xs, OutputParams const & op) const
 	//    )
 	// but what follows is equivalent, since we'll enter only if either (a) we
 	// tried and failed with MathML or HTML or (b) didn't try yet at all but
-	// aren't doing LaTeX, in which case we are doing Images.
+	// aren't doing LaTeX.
+	//
+	// so this is for Images.
 	if (!success && mathtype != BufferParams::LaTeX) {
 		graphics::PreviewImage const * pimage = 0;
 		if (!op.dryrun) {
@@ -2513,7 +2517,7 @@ docstring InsetMathHull::xhtml(XHTMLStream & xs, OutputParams const & op) const
 
 			string const tag = (getType() == hullSimple) ? "span" : "div";
 			xs << html::CR()
-			   << html::StartTag(tag)
+			   << html::StartTag(tag, "style = \"text-align: center;\"")
 				 << html::CompTag("img", "src=\"" + filename + "\" alt=\"Mathematical Equation\"")
 				 << html::EndTag(tag)
 				 << html::CR();
@@ -2528,8 +2532,7 @@ docstring InsetMathHull::xhtml(XHTMLStream & xs, OutputParams const & op) const
 		// Unfortunately, we cannot use latexString() because we do not want
 		// $...$ or whatever.
 		odocstringstream ls;
-		TexRow texrow(false);
-		otexrowstream ots(ls,texrow);
+		otexrowstream ots(ls, false);
 		WriteStream wi(ots, false, true, WriteStream::wsPreview);
 		ModeSpecifier specifier(wi, MATH_MODE);
 		mathAsLatex(wi);
@@ -2579,5 +2582,13 @@ void InsetMathHull::recordLocation(DocIterator const & di)
 {
 	docit_ = di;
 }
+
+
+bool InsetMathHull::canPaintChange(BufferView const &) const
+{
+	// We let RowPainter do it seamlessly for inline insets
+	return display() != Inline;
+}
+
 
 } // namespace lyx

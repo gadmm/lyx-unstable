@@ -45,6 +45,8 @@
 #include "Paragraph.h"
 #include "ParagraphParameters.h"
 #include "ParIterator.h"
+#include "TexRow.h"
+#include "texstream.h"
 #include "TextClass.h"
 #include "TextMetrics.h"
 
@@ -525,7 +527,7 @@ string const featureAsString(Tabular::Feature action)
 }
 
 
-DocIterator separatorPos(InsetTableCell * cell, docstring const & align_d)
+DocIterator separatorPos(InsetTableCell const * cell, docstring const & align_d)
 {
 	DocIterator dit = doc_iterator_begin(&(cell->buffer()), cell);
 	for (; dit; dit.forwardChar())
@@ -1668,7 +1670,13 @@ bool Tabular::hasMultiColumn(col_type c) const
 }
 
 
-Tabular::CellData & Tabular::cellInfo(idx_type cell) const
+Tabular::CellData const & Tabular::cellInfo(idx_type cell) const
+{
+	return cell_info[cellRow(cell)][cellColumn(cell)];
+}
+
+
+Tabular::CellData & Tabular::cellInfo(idx_type cell)
 {
 	return cell_info[cellRow(cell)][cellColumn(cell)];
 }
@@ -2308,7 +2316,7 @@ void Tabular::TeXCellPreamble(otexstream & os, idx_type cell,
 	// we center in multicol when no decimal point
 	if (column_info[c].alignment == LYX_ALIGN_DECIMAL) {
 		docstring const align_d = column_info[c].decimal_point;
-		DocIterator const dit = separatorPos(cellInset(cell).get(), align_d);
+		DocIterator const dit = separatorPos(cellInset(cell), align_d);
 		ismulticol |= !dit;
 	}
 
@@ -2533,7 +2541,7 @@ void Tabular::TeXRow(otexstream & os, row_type row,
 		     OutputParams const & runparams) const
 {
 	idx_type cell = cellIndex(row, 0);
-	shared_ptr<InsetTableCell> inset = cellInset(cell);
+	InsetTableCell const * inset = cellInset(cell);
 	Paragraph const & par = inset->paragraphs().front();
 	string const lang = par.getParLanguage(buffer().params())->lang();
 
@@ -2572,7 +2580,7 @@ void Tabular::TeXRow(otexstream & os, row_type row,
 		}
 
 		TeXCellPreamble(os, cell, ismulticol, ismultirow);
-		shared_ptr<InsetTableCell> inset = cellInset(cell);
+		InsetTableCell const * inset = cellInset(cell);
 
 		Paragraph const & par = inset->paragraphs().front();
 
@@ -2606,7 +2614,7 @@ void Tabular::TeXRow(otexstream & os, row_type row,
 		if (getAlignment(cell) == LYX_ALIGN_DECIMAL) {
 			// copy cell and split in 2
 			InsetTableCell head = InsetTableCell(*cellInset(cell));
-			head.setBuffer(buffer());
+			head.setBuffer(const_cast<Buffer &>(buffer()));
 			DocIterator dit = cellInset(cell)->getText(0)->macrocontextPosition();
 			dit.pop_back();
 			dit.push_back(CursorSlice(head));
@@ -2679,8 +2687,7 @@ void Tabular::TeXRow(otexstream & os, row_type row,
 void Tabular::latex(otexstream & os, OutputParams const & runparams) const
 {
 	bool const is_tabular_star = !tabular_width.zero();
-	TexRow::RowEntry pos = TexRow::textEntry(runparams.lastid,
-											 runparams.lastpos);
+	RowEntry pos = TexRow::textEntry(runparams.lastid, runparams.lastpos);
 
 	//+---------------------------------------------------------------------
 	//+                      first the opening preamble                    +
@@ -2987,6 +2994,13 @@ docstring Tabular::xhtmlRow(XHTMLStream & xs, row_type row,
 			continue;
 
 		stringstream attr;
+		
+		Length const cwidth = column_info[c].p_width;
+		if (!cwidth.zero()) {
+			string const hwidth = cwidth.asHTMLString();
+			attr << "style =\"width: " << hwidth << ";\" ";
+		}
+		
 		attr << "align='";
 		switch (getAlignment(cell)) {
 		case LYX_ALIGN_LEFT:
@@ -3018,7 +3032,7 @@ docstring Tabular::xhtmlRow(XHTMLStream & xs, row_type row,
 		else if (isMultiRow(cell))
 			attr << " rowspan='" << rowSpan(cell) << "'";
 
-		xs << html::StartTag(celltag, attr.str()) << html::CR();
+		xs << html::StartTag(celltag, attr.str(), true) << html::CR();
 		ret += cellInset(cell)->xhtml(xs, runparams);
 		xs << html::EndTag(celltag) << html::CR();
 		++cell;
@@ -3321,21 +3335,26 @@ void Tabular::plaintext(odocstringstream & os,
 }
 
 
-shared_ptr<InsetTableCell> Tabular::cellInset(idx_type cell) const
+shared_ptr<InsetTableCell> Tabular::cellInset(idx_type cell)
 {
 	return cell_info[cellRow(cell)][cellColumn(cell)].inset;
 }
 
 
-shared_ptr<InsetTableCell> Tabular::cellInset(row_type row,
-					       col_type column) const
+shared_ptr<InsetTableCell> Tabular::cellInset(row_type row, col_type column)
 {
 	return cell_info[row][column].inset;
 }
 
 
+InsetTableCell const * Tabular::cellInset(idx_type cell) const
+{
+	return cell_info[cellRow(cell)][cellColumn(cell)].inset.get();
+}
+
+
 void Tabular::setCellInset(row_type row, col_type column,
-			      shared_ptr<InsetTableCell> ins) const
+                           shared_ptr<InsetTableCell> ins)
 {
 	CellData & cd = cell_info[row][column];
 	cd.inset = ins;

@@ -135,16 +135,13 @@ docstring EndTag::writeEndTag() const
 }
 
 
-docstring ParTag::writeTag() const
+ParTag::ParTag(std::string const & tag, std::string attr,
+       std::string const & parid)
+  : StartTag(tag)
 {
-	docstring output = StartTag::writeTag();
-
-	if (parid_.empty())
-		return output;
-
-	string const pattr = "id='" + parid_ + "'";
-	output += html::CompTag("a", pattr).writeTag();
-	return output;
+	if (!parid.empty())
+		attr += " id='" + parid + "'";
+	attr_ = attr;
 }
 
 
@@ -294,21 +291,27 @@ XHTMLStream::XHTMLStream(odocstream & os)
 
 
 #ifdef XHTML_DEBUG
-void XHTMLStream::dumpTagStack(string const & msg) const
+void XHTMLStream::dumpTagStack(string const & msg)
 {
-	writeError(msg + ": Tag Stack");
-	TagStack::const_reverse_iterator it = tag_stack_.rbegin();
-	TagStack::const_reverse_iterator en = tag_stack_.rend();
+	*this << html::CR();
+	writeError(msg);
+	*this << html::CR();
+	writeError("Tag Stack");
+	TagDeque::const_reverse_iterator it = tag_stack_.rbegin();
+	TagDeque::const_reverse_iterator en = tag_stack_.rend();
 	for (; it != en; ++it) {
-		writeError(it->tag_);
+		writeError(it->get()->tag_);
 	}
+	writeError("End Tag Stack");
+	*this << html::CR();
 	writeError("Pending Tags");
 	it = pending_tags_.rbegin();
 	en = pending_tags_.rend();
 	for (; it != en; ++it) {
-		writeError(it->tag_);
+		writeError(it->get()->tag_);
 	}
-	writeError("End Tag Stack");
+	writeError("End Pending Tags");
+	*this << html::CR();
 }
 #endif
 
@@ -365,7 +368,7 @@ bool XHTMLStream::closeFontTags()
 }
 
 
-void XHTMLStream::startParagraph(bool keep_empty)
+void XHTMLStream::startDivision(bool keep_empty)
 {
 	pending_tags_.push_back(makeTagPtr(html::StartTag(parsep_tag)));
 	if (keep_empty)
@@ -373,7 +376,7 @@ void XHTMLStream::startParagraph(bool keep_empty)
 }
 
 
-void XHTMLStream::endParagraph()
+void XHTMLStream::endDivision()
 {
 	if (isTagPending(parsep_tag)) {
 		// this case is normal. it just means we didn't have content,
@@ -391,7 +394,7 @@ void XHTMLStream::endParagraph()
 	}
 
 	if (!isTagOpen(parsep_tag)) {
-		writeError("No paragraph separation tag found in endParagraph().");
+		writeError("No division separation tag found in endDivision().");
 		return;
 	}
 
@@ -832,25 +835,26 @@ ParagraphList::const_iterator makeParagraphs(Buffer const & buf,
 		if (!lay.counter.empty())
 			buf.masterBuffer()->params().
 			    documentClass().counters().step(lay.counter, OutputUpdate);
+
 		// FIXME We should see if there's a label to be output and
 		// do something with it.
 		if (par != pbegin)
 			xs << html::CR();
 
-		// If we are already in a paragraph, and this is the first one, then we
-		// do not want to open the paragraph tag.
-		// we also do not want to open it if the current layout does not permit
-		// multiple paragraphs.
-		bool const opened = runparams.html_make_pars &&
-			(par != pbegin || !runparams.html_in_par);
-		bool const make_parid = !runparams.for_toc && runparams.html_make_pars;
+		// We want to open the paragraph tag if:
+		//   (i) the current layout permits multiple paragraphs
+		//  (ii) we are either not already inside a paragraph (HTMLIsBlock) OR
+		//       we are, but this is not the first paragraph
+		// But we do not want to open the paragraph tag if this paragraph contains
+		// only one item, and that item is "inline", i.e., not HTMLIsBlock (such 
+		// as a branch). That is the "special case" we handle first.
+		Inset const * specinset = par->size() == 1 ? par->getInset(0) : 0;
+		bool const special_case =  
+			specinset && !specinset->getLayout().htmlisblock();
 
-		if (opened)
-			openParTag(xs, lay, par->params(),
-			           make_parid ? par->magicLabel() : "");
-
-		docstring const deferred =
-			par->simpleLyXHTMLOnePar(buf, xs, runparams, text.outerFont(distance(begin, par)));
+		bool const open_par = runparams.html_make_pars
+			&& (!runparams.html_in_par || par != pbegin)
+			&& !special_case;
 
 		// We want to issue the closing tag if either:
 		//   (i)  We opened it, and either html_in_par is false,
@@ -859,15 +863,27 @@ ParagraphList::const_iterator makeParagraphs(Buffer const & buf,
 		//        but we are in the first par, and there is a next par.
 		ParagraphList::const_iterator nextpar = par;
 		++nextpar;
-		bool const needclose =
-			(opened && (!runparams.html_in_par || nextpar != pend))
-			|| (!opened && runparams.html_in_par && par == pbegin && nextpar != pend);
-		if (needclose) {
-			closeTag(xs, lay);
-			xs << html::CR();
+		bool const close_par =
+			(open_par && (!runparams.html_in_par || nextpar != pend))
+			|| (!open_par && runparams.html_in_par && par == pbegin && nextpar != pend);
+
+		if (open_par) {
+			// We do not issue the paragraph id if we are doing 
+			// this for the TOC (or some similar purpose)
+			openParTag(xs, lay, par->params(),
+			           runparams.for_toc ? "" : par->magicLabel());
 		}
+
+		docstring const deferred = par->simpleLyXHTMLOnePar(buf, xs, 
+			runparams, text.outerFont(distance(begin, par)),
+			open_par, close_par);
+
 		if (!deferred.empty()) {
 			xs << XHTMLStream::ESCAPE_NONE << deferred << html::CR();
+		}
+		if (close_par) {
+			closeTag(xs, lay);
+			xs << html::CR();
 		}
 	}
 	return pend;
@@ -995,7 +1011,7 @@ ParagraphList::const_iterator makeEnvironment(Buffer const & buf,
 					openItemTag(xs, style, par->params());
 
 				par->simpleLyXHTMLOnePar(buf, xs, runparams,
-					text.outerFont(distance(begin, par)), sep);
+					text.outerFont(distance(begin, par)), true, true, sep);
 				++par;
 
 				// We may not want to close the tag yet, in particular:
@@ -1057,14 +1073,24 @@ void makeCommand(Buffer const & buf,
 		    documentClass().counters().step(style.counter, OutputUpdate);
 
 	bool const make_parid = !runparams.for_toc && runparams.html_make_pars;
+	
+	if (style.labeltype == LABEL_ABOVE)
+		xs << html::StartTag("div")
+		   << pbegin->params().labelString()
+		   << html::EndTag("div");
+	else if (style.labeltype == LABEL_CENTERED)
+		xs << html::StartTag("div", "style = \"text-align: center;\"")
+		   << pbegin->params().labelString()
+		   << html::EndTag("div");
 
 	openParTag(xs, style, pbegin->params(),
 	           make_parid ? pbegin->magicLabel() : "");
 
 	// Label around sectioning number:
 	// FIXME Probably need to account for LABEL_MANUAL
-	// FIXME Probably also need now to account for labels ABOVE and CENTERED.
-	if (style.labeltype != LABEL_NO_LABEL) {
+	if (style.labeltype != LABEL_NO_LABEL &&
+	    style.labeltype != LABEL_ABOVE &&
+	    style.labeltype != LABEL_CENTERED ) {
 		openLabelTag(xs, style);
 		xs << pbegin->params().labelString();
 		closeLabelTag(xs, style);

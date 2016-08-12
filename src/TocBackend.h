@@ -26,8 +26,6 @@
 #include <stack>
 
 
-using std::shared_ptr;
-
 namespace lyx {
 
 class Buffer;
@@ -75,11 +73,11 @@ public:
 	TocItem() : dit_(0), depth_(0), output_(false) {}
 	///
 	TocItem(DocIterator const & dit,
-	        int depth,
-	        docstring const & s,
-	        bool output_active,
-	        docstring const & t = docstring(),
-	        FuncRequest action = FuncRequest(LFUN_UNKNOWN_ACTION));
+		int depth,
+		docstring const & s,
+		bool output_active,
+		FuncRequest action = FuncRequest(LFUN_UNKNOWN_ACTION)
+		);
 	///
 	~TocItem() {}
 	///
@@ -90,8 +88,6 @@ public:
 	docstring const & str() const { return str_; }
 	///
 	void str(docstring const & s) { str_ = s; }
-	///
-	docstring const & tooltip() const;
 	/// String for display, e.g. it has a mark if output is inactive
 	docstring const asString() const;
 	///
@@ -112,8 +108,6 @@ private:
 	int depth_;
 	/// Full item string
 	docstring str_;
-	/// The tooltip string
-	docstring tooltip_;
 	/// Is this item in a note, inactive branch, etc?
 	bool output_;
 	/// Custom action
@@ -125,7 +119,7 @@ private:
 class TocBuilder
 {
 public:
-	TocBuilder(shared_ptr<Toc> const toc);
+	TocBuilder(std::shared_ptr<Toc> const toc);
 	/// When entering a float
 	void pushItem(DocIterator const & dit, docstring const & s,
 	              bool output_active, bool is_captioned = false);
@@ -142,7 +136,7 @@ private:
 		bool is_captioned;
 	};
 	///
-	shared_ptr<Toc> const toc_;
+	std::shared_ptr<Toc> const toc_;
 	///
 	std::stack<frame> stack_;
 };
@@ -169,9 +163,9 @@ public:
 	///
 	TocList const & tocs() const { return tocs_; }
 	/// never null
-	shared_ptr<Toc const> toc(std::string const & type) const;
+	std::shared_ptr<Toc const> toc(std::string const & type) const;
 	/// never null
-	shared_ptr<Toc> toc(std::string const & type);
+	std::shared_ptr<Toc> toc(std::string const & type);
 	/// \return the current TocBuilder for the Toc of type \param type, or
 	/// creates one if it does not already exist.
 	TocBuilder & builder(std::string const & type);

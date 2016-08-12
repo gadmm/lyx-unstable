@@ -141,7 +141,10 @@ LYX_OPTION(ENABLE_URLTESTS  "Enable for URL tests" OFF ALL)
 LYX_OPTION(ENABLE_EXPORT_TESTS "Enable for export tests" OFF ALL)
 LYX_OPTION(ASAN             "Use address sanitizer" OFF ALL)
 LYX_COMBO(USE_QT            "Use Qt version as frontend" QT4 QT5)
-LYX_OPTION(3RDPARTY_BUILD   "Build 3rdparty libs" OFF ALL)
+#LYX_OPTION(3RDPARTY_BUILD   "Build 3rdparty libs" OFF ALL)
+LYX_OPTION(EXTERNAL_Z       "Build 3rdparty lib zlib" ON ALL)
+LYX_OPTION(EXTERNAL_ICONV   "Build 3rdparty lib iconvlib" ON ALL)
+LYX_OPTION(EXTERNAL_HUNSPELL "Build 3rdparty lib hunspelllib" ON ALL)
 
 # GCC specific
 LYX_OPTION(PROFILE              "Build profile version" OFF GCC)
@@ -206,7 +209,6 @@ if(LYX_MERGE_FILES)
 else()
 	set(LYX_MERGE_REBUILD OFF)
 endif()
-
 
 if(LYX_DEPENDENCIES_DOWNLOAD)
 	message(STATUS)
@@ -310,6 +312,14 @@ elseif(APPLE)
 	set(USE_MACOSX_PACKAGING ON)
 else()
 	set(USE_POSIX_PACKAGING ON)
+endif()
+
+if(LYX_3RDPARTY_BUILD)
+  # LYX_3RDPARTY_BUILD is not cached anymore, but for compatibility reasons
+  # this enables the build of all 3rd_party libs
+  set(LYX_EXTERNAL_Z        OFF CACHE BOOL "Build 3rdparty lib zlib"    FORCE)
+  set(LYX_EXTERNAL_ICONV    OFF CACHE BOOL "Build 3rdparty iconvlib"    FORCE)
+  set(LYX_EXTERNAL_HUNSPELL OFF CACHE BOOL "Build 3rdparty hunspelllib" FORCE)
 endif()
 
 macro(setstripped _varname)
@@ -642,7 +652,7 @@ include_directories(${TOP_BINARY_DIR} ${TOP_SRC_DIR}/src)
 set(Spelling_FOUND OFF)
 set(Include_used_spellchecker)   # String will be inserted into config.h
 
-if(LYX_3RDPARTY_BUILD)
+if(NOT LYX_EXTERNAL_HUNSPELL)
     add_subdirectory(3rdparty/hunspell)
     add_definitions(-DHUNSPELL_STATIC)
     set(HUNSPELL_FOUND ON)
@@ -706,15 +716,17 @@ if(LYX_NLS)
 	endif()
 endif()
 
-if(UNIX)
-    find_package(ICONV REQUIRED)
-    find_package(ZLIB REQUIRED)
+if(LYX_EXTERNAL_ICONV)
+  find_package(ICONV REQUIRED)
 else()
-    if(LYX_3RDPARTY_BUILD)
-	add_subdirectory(3rdparty/libiconv)
-	set(HAVE_ICONV_CONST 1)
-	add_subdirectory(3rdparty/zlib)
-    endif()
+  add_subdirectory(3rdparty/libiconv)
+  set(HAVE_ICONV_CONST 1)
+endif()
+
+if(LYX_EXTERNAL_Z)
+  find_package(ZLIB REQUIRED)
+else()
+  add_subdirectory(3rdparty/zlib)
 endif()
 
 if(LYX_EXTERNAL_BOOST)
@@ -755,10 +767,14 @@ if(WIN32)
 		set(WIN32_CONSOLE WIN32)
 	endif()
 	if(MSVC)
-		add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DNOMINMAX)
+		# -DPSAPI_VERSION=1 is needed to run on vista (bug 10186)
+		add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DNOMINMAX -DPSAPI_VERSION=1)
 		# disable checked iterators for msvc release builds to get maximum speed
 		set(CMAKE_CXX_FLAGS_RELEASE  "${CMAKE_CXX_FLAGS_RELEASE} /D_SECURE_SCL=0")
 	else()
+		# -DPSAPI_VERSION=1 is not needed for mingw, since the mingw psapi.h
+		# does not use it and always declares the vista compatible API.
+		# If this ever changes then -DPSAPI_VERSION might be needed here as well. 
 		add_definitions(-DWINVER=0x0500)
 	endif()
 endif()
@@ -909,11 +925,6 @@ endif()
 include(${LYX_CMAKE_DIR}/ConfigureChecks.cmake)
 configure_file(${LYX_CMAKE_DIR}/configCompiler.h.cmake ${TOP_BINARY_DIR}/configCompiler.h)
 
-set(QPA_XCB)
-if(Qt5X11Extras_FOUND AND QT_USES_X11)
-  # QPA_XCB is only valid if QT5+X11
-  set(QPA_XCB 1)
-endif()
 configure_file(${LYX_CMAKE_DIR}/config.h.cmake ${TOP_BINARY_DIR}/config.h)
 
 if(QTVERSION MATCHES "^([0-9]+)\\.([0-9]+)\\.([0-9]+).*")

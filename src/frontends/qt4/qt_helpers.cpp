@@ -687,9 +687,13 @@ QString formatToolTip(QString text, int em)
 void disable_widget_if_ndef_FILEFORMAT(QWidget *) {}
 #else
 void disable_widget_if_ndef_FILEFORMAT(QWidget * w) {
-	QString ff_reason = qt_("<i>(Newer file format required.)</i> ");
+	QString tooltip = w->toolTip();
+	QString ff_reason = qt_("Newer file format required.");
 	w->setDisabled(true);
-	w->setToolTip(ff_reason + w->toolTip());
+	if (tooltip.isEmpty())
+		w->setToolTip(QString("<i>%1</i>").arg(ff_reason));
+	else if (!tooltip.contains(ff_reason))
+		w->setToolTip(QString("<i>(%1)</i> %2").arg(ff_reason).arg(tooltip));
 }
 #endif
 

@@ -1,0 +1,2656 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+% DO NOT ALTER THIS PREAMBLE!!!
+%
+%This preamble is designed to ensure that the document prints
+% out as advertised. If you mess with this preamble,
+% parts of the document may not print out as expected.  If you
+% have problems LaTeXing this file, please contact 
+% the documentation team
+% email: lyx-docs@lists.lyx.org
+
+% the pages of the TOC is numbered roman
+% and a pdf-bookmark for the TOC is added
+\pagenumbering{roman}
+\let\myTOC\tableofcontents
+\renewcommand\tableofcontents{%
+  \pdfbookmark[1]{\contentsname}{}
+  \myTOC
+  \cleardoublepage
+  \pagenumbering{arabic} }
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language norsk
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "palatino" "default"
+\font_sans "helvet" "default"
+\font_typewriter "courier" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format pdf2
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref true
+\pdf_title "Introduksjon til LyX"
+\pdf_author "LyX-teamet"
+\pdf_subject "LyX-dokumentasjon, introduksjon"
+\pdf_keywords "LyX, dokumentasjon"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered true
+\pdf_bookmarksopen true
+\pdf_bookmarksopenlevel 2
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle false
+\pdf_quoted_options "linkcolor=black, citecolor=black, urlcolor=blue, filecolor=blue, pdfpagelayout=OneColumn, pdfnewwindow=true, pdfstartview=XYZ, plainpages=false"
+\papersize a4paper
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 0
+\use_package mathdots 1
+\use_package mathtools 0
+\use_package mhchem 1
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Register
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 2
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language french
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Introduksjon til \SpecialChar LyX
+
+\end_layout
+
+\begin_layout Author
+av \SpecialChar LyX
+-teamet
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Bruk epostlisten for \SpecialChar LyX
+-dokumentasjon, 
+\begin_inset CommandInset href
+LatexCommand href
+target "lyx-docs@lists.lyx.org"
+type "mailto:"
+
+\end_inset
+
+, om du har kommentarer eller forslag til rettelser.
+ Oversatt til norsk av 
+\shape smallcaps
+Helge Hafting
+\shape default
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+\SpecialChar LyX
+-filosofien
+\end_layout
+
+\begin_layout Subsection
+Hva er \SpecialChar LyX
+?
+\end_layout
+
+\begin_layout Standard
+\SpecialChar LyX
+ er et program for å produsere dokumenter.
+ Det egner seg bra til komplekse tekniske og vitenskapelige artikler med
+ formler, kryssreferanser, bibliografier, indekser m.m.
+ Det er utmerket for dokumenter av enhver lengde, hvor vanlige tekstbehandlingsf
+unksjoner ønskes: automatisk nummerering av sider og avsnitt, stavekontroll
+ osv.
+ \SpecialChar LyX
+ kan også brukes for å skrive et brev til mor, selvom det finnes enklere
+ programmer for slike formål.
+ Det er ikke det beste programmet for plakater, brosjyrer eller reklamemateriale
+, (vi kommer tilbake til hvorfor), men slikt er også mulig med litt ekstra
+ arbeid.
+ Eksempler på hva \SpecialChar LyX
+ brukes til: referater, brev, avhandlinger, lærebøker,
+ forelesningsnotater, seminar- og konferansemateriale, programdokumentasjon,
+ bøker, artikler i vitenskapelige tidsskrifter, filmmanuskripter, forretningspla
+ner\SpecialChar ldots
+ og mye annet.
+\end_layout
+
+\begin_layout Standard
+\SpecialChar LyX
+ gir oss en moderne måte å skrive dokumenter på datamaskinen, et markeringsparad
+igme som bryter med den foreldete 
+\begin_inset Quotes fld
+\end_inset
+
+skrivemaskin-modellen
+\begin_inset Quotes frd
+\end_inset
+
+.
+ Det er laget for tekstforfattere som vil ha et profesjonelt resultat raskt,
+ med minimal innsats, uten å måtte være spesialister i typografi.
+ Typesettingen gjøres hovedsaklig av datamaskinen, ikke forfatteren; med
+ \SpecialChar LyX
+ kan forfatteren konsentrere seg om innholdet.
+\end_layout
+
+\begin_layout Standard
+Noe av utfordringen med å ta i bruk \SpecialChar LyX
+ er å måtte tenke på en ny måte.
+ En gang i tiden var skrivemaskinen alt vi hadde, så vi lærte oss noen triks
+ for å komme rundt dens begrensninger.
+ Understreking med tegnet 
+\begin_inset Quotes fld
+\end_inset
+
+_
+\begin_inset Quotes frd
+\end_inset
+
+ var en måte å fremheve tekst.
+ Du måtte lære kolonnebredder og tabulatorposisjoner, og stille inn disse,
+ for å lage tabeller.
+ Det samme gjaldt brev og annen høyrejustert tekst.
+ Orddeling ved linjeskift krevde fremsyn og et trenet øye.
+\end_layout
+
+\begin_layout Standard
+Med andre ord, vi er trent opp til å bekymre oss om små detaljer om hvor
+ vi skal sette hvilket tegn.
+ Derfor virker de fleste tekstbehandlere på denne måten.
+ De bruker fremdeles tabulatorer for å lage avstand.
+ Du må fremdeles bekymre deg om nøyaktig hvor på siden ting havner.
+ Å utheve tekst betyr å bytte skrifttype, omtrent som når man bytter skrivehode
+ på en skrivemaskin.
+ Dette er filosofien bak tekstbehandlere av typen WYSIWYG 
+\begin_inset Quotes fld
+\end_inset
+
+
+\lang british
+What you see is what you get
+\lang norsk
+
+\begin_inset Quotes frd
+\end_inset
+
+ (Det du ser er det du får) .
+ Dessverre er resultatet av dette paradigmet ofte 
+\begin_inset Quotes fld
+\end_inset
+
+Det du ser er alt du får
+\begin_inset Quotes frd
+\end_inset
+
+.
+ Du får ikke noe mer.
+\end_layout
+
+\begin_layout Standard
+Det er her \SpecialChar LyX
+ er anderledes enn annen tekstbehandling.
+ Du bekymrer deg ikke om hva som skal hvor.
+ Du forteller \SpecialChar LyX
+ 
+\emph on
+hva du skriver
+\emph default
+ og \SpecialChar LyX
+ ordner resten etter et regelsett kalt en 
+\emph on
+stil.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Riktignok har andre populære kontorprogrammer også fått seg noen slags stiler
+ som kan brukes på lignende vis.
+ Men de brukes sjelden i praksis.
+\end_layout
+
+\end_inset
+
+
+\emph default
+ La oss ta et eksempel:
+\end_layout
+
+\begin_layout Standard
+Du skriver en rapport.
+ Først vil du ha et avsnitt kalt 
+\begin_inset Quotes fld
+\end_inset
+
+Introduksjon
+\begin_inset Quotes frd
+\end_inset
+
+.
+ Så du bruker menyen i tekstbehandleren og velger en større skrift.
+ Deretter aktiverer du fet skrift, og skriver 
+\begin_inset Quotes fld
+\end_inset
+
+1.
+ Introduksjon
+\begin_inset Quotes frd
+\end_inset
+
+.
+ Hvis du senere skulle finne ut at dette hører hjemme et annet sted i dokumentet
+, eller hvis du skriver et nytt avsnitt foran det, må du forandre numrene
+ for dette og alle etterfølgende avsnitt både i teksten og innholdsfortegnelsen.
+\end_layout
+
+\begin_layout Standard
+I \SpecialChar LyX
+ velger du 
+\family sans
+Seksjon
+\family default
+ i menyen til venstre for knapperaden og skriver 
+\begin_inset Quotes fld
+\end_inset
+
+Introduksjon
+\begin_inset Quotes frd
+\end_inset
+
+.
+ Det er alt! Hvis du flytter avsnittet et annet sted oppdateres numrene
+ automatisk, overalt.
+ Og hvis du refererer til avsnittet på rett vis, ved å sette inn kryssreferanser
+, vil \SpecialChar LyX
+ oppdatere dem automatisk så du aldri noensinne trenger skrive et
+ avsnittsnummer selv.
+\end_layout
+
+\begin_layout Standard
+La oss så se på konsistensproblematikken.
+ Fem dager senere åpner du dokumentet igjen, for å skrive seksjon
+\begin_inset space ~
+\end_inset
+
+4.
+ Men du har glemt at du brukte 18
+\begin_inset space \thinspace{}
+\end_inset
+
+pt fet skrift i stedet for 16
+\begin_inset space \thinspace{}
+\end_inset
+
+pt, så overskriften for seksjon
+\begin_inset space ~
+\end_inset
+
+4 får en annen skrifttype enn for seksjon
+\begin_inset space ~
+\end_inset
+
+1.
+ Det problemet eksisterer ikke i \SpecialChar LyX
+.
+ Datamaskinen husker på detaljer, som hvilke ting som skal ha hvilken skrifttype.
+ Du slipper.
+ Det er tross alt slike småting maskinene er flinke til.
+\end_layout
+
+\begin_layout Standard
+Et annet eksempel.
+ Du lager en liste.
+ I andre tekstbehandlere er en liste en mengde tabulatorer og linjeskift.
+ Du må selv passe på å sette et merke foran hvert punkt, passe på at det
+ blir riktig merke, hvor mange blanke linjer det skal være mellom punktene,
+ og så videre.
+ I \SpecialChar LyX
+ tenker du bare på to ting: hva slags liste det er, og hva det skal stå
+ i den.
+ Det er det hele.
+\end_layout
+
+\begin_layout Standard
+Så den grunnleggende ideen bak \SpecialChar LyX
+ er: angi 
+\emph on
+hva
+\emph default
+ du lager, ikke 
+\emph on
+hvordan
+\emph default
+ du gjør det.
+ I stedet for 
+\begin_inset Quotes fld
+\end_inset
+
+Det du ser er det du får
+\begin_inset Quotes frd
+\end_inset
+
+ er \SpecialChar LyX
+-filosofien 
+\begin_inset Quotes fld
+\end_inset
+
+Det du ser er det du 
+\emph on
+mener
+\emph default
+
+\begin_inset Quotes frd
+\end_inset
+
+ (
+\lang british
+What You See Is What You Mean
+\lang norsk
+, WYSIWYM).
+ Det er en mektig idé, som gjør arbeidet med å skrive dokumenter mye enklere.
+ Dette er også grunnen til at \SpecialChar LyX
+ ikke er så godt egnet til plakater og brosjyrer
+ — i slike tilfeller 
+\emph on
+ønsker
+\emph default
+ du å spesifisere nøyaktig hvor alt skal stå, fordi det ikke er noen funksjonell
+e enheter som avsnitt, seksjoner, osv.
+ Det betyr ikke at \SpecialChar LyX
+ mangler noe vesentlig, det er simpelthen ikke riktig
+ verktøy for jobben.
+ Du bruker heller ikke en skrutrekker til å slå inn spiker med.
+\end_layout
+
+\begin_layout Subsection
+Forskjeller mellom \SpecialChar LyX
+ og andre tekstbehandlere
+\end_layout
+
+\begin_layout Standard
+Dette finner du ikke i \SpecialChar LyX
+:
+\end_layout
+
+\begin_layout Itemize
+Formateringslinjal
+\end_layout
+
+\begin_layout Itemize
+Tabulatorer
+\end_layout
+
+\begin_layout Itemize
+Ekstra mellomrom (f.eks.
+ ved å trykke 
+\family sans
+Enter
+\family default
+ eller 
+\family sans
+Mellomrom
+\family default
+ to eller flere ganger på rad.)
+\end_layout
+
+\begin_layout Standard
+Tabulatorer er, sammen med en linjal som viser posisjonen på siden, ubrukelige
+ i \SpecialChar LyX
+.
+ Programmet bekymrer seg om hvor på siden ting plasseres, ikke du.
+ Det samme gjelder ekstra mellomrom, \SpecialChar LyX
+ legger dem inn når det er nødvendig,
+ avhengig av konteksten.
+ I starten kan det være irriterende å ikke kunne sette inn to blanke linjer
+ på rad, men det gir mening når du tenker i WYSIWYM.
+\end_layout
+
+\begin_layout Standard
+Her er noen ting som fins i \SpecialChar LyX
+, men brukes anderledes enn en skulle tro:
+\end_layout
+
+\begin_layout Itemize
+Innrykk
+\end_layout
+
+\begin_layout Itemize
+Sideskift
+\end_layout
+
+\begin_layout Itemize
+Linjeavstand (f.eks.
+ enkel, dobbel, osv.)
+\end_layout
+
+\begin_layout Itemize
+Avstand, vannrett og loddrett
+\end_layout
+
+\begin_layout Itemize
+Skrifttyper og -størrelser
+\end_layout
+
+\begin_layout Itemize
+Skriftjustering (fet, kursiv, understreking, osv.)
+\end_layout
+
+\begin_layout Standard
+Selv om de fins i \SpecialChar LyX
+, trenger du dem vanligvis ikke.
+ \SpecialChar LyX
+ tar seg av slikt avhengig av hva du holder på med.
+ Forskjellige deler av dokumentet settes automatisk med andre skrifttyper
+ og -størrelser.
+ Avsnittsinnrykk avhenger av konteksten; ulike avsnittstyper rykkes inn
+ forskjellig.
+ Sideskift skjer også automatisk.
+ Generelt er avstanden mellom linjer, ord og avsnitt fleksibel, styrt av
+ \SpecialChar LyX
+.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Alle disse egenskapene kan finjusteres (noen krever kjennskap til \SpecialChar LaTeX
+), enten
+ for hele dokumentet eller deler av det.
+ Se 
+\emph on
+Håndboka
+\emph default
+ eller 
+\emph on
+Ekstra muligheter 
+\emph default
+for detaljer.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Til slutt noen områder hvor vi mener \SpecialChar LyX
+ (og \SpecialChar LaTeX
+) overgår mange andre tekstbehandlere:
+\end_layout
+
+\begin_layout Itemize
+Orddeling
+\end_layout
+
+\begin_layout Itemize
+Lister av alle slag
+\end_layout
+
+\begin_layout Itemize
+Matematikk
+\end_layout
+
+\begin_layout Itemize
+Tabeller
+\end_layout
+
+\begin_layout Itemize
+Kryssreferanser
+\end_layout
+
+\begin_layout Standard
+Riktig nok kan mange moderne tekstbehandlere håndtere matematiske symboler,
+ tabeller og orddeling, og mange har beveget seg mot stildefinisjoner og
+ WYSIWYM-filosofien.
+ Men det har skjedd nylig, mens \SpecialChar LyX
+ bygger på dokumentutviklingssystemet \SpecialChar LaTeX
+.
+ \SpecialChar LaTeX
+ har eksistert siden 1985, og 
+\emph on
+virker
+\emph default
+.
+\end_layout
+
+\begin_layout Subsection
+Hva er \SpecialChar LaTeX
+?
+\end_layout
+
+\begin_layout Standard
+\SpecialChar LaTeX
+ er et dokumentutviklingssystem designet av Leslie Lamport i 1985.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Informasjonen i dette avsnittet kommer fra 
+\begin_inset Quotes fld
+\end_inset
+
+A Guide to \SpecialChar LaTeX2e
+,
+\begin_inset Quotes frd
+\end_inset
+
+ av Helmut Kopka og Patrick Dal, som er nevnt i 
+\emph on
+Håndbokas
+\emph default
+ litteraturliste.
+\end_layout
+
+\end_inset
+
+ Det bygger igjen på et typesettingsspråk kalt \SpecialChar TeX
+, som Donald Knuth lagde
+ i 1984.
+ \SpecialChar TeX
+ leser typesettingskommandoer fra en tekstfil, og utfører dem.
+ Mange av trykkerifagets 
+\begin_inset Quotes fld
+\end_inset
+
+triks
+\begin_inset Quotes frd
+\end_inset
+
+ er implementert som algoritmer av Knuth, dette er grunnen til den fremragende
+ kvaliteten på utskrifter fra \SpecialChar TeX
+.
+ \SpecialChar TeX
+ produserer filer i standardformatet 
+\emph on
+pdf,
+\emph default
+ eller en såkalt 
+\begin_inset Quotes fld
+\end_inset
+
+utstyrsuavhengig
+\begin_inset Quotes frd
+\end_inset
+
+ (
+\lang british
+device independent
+\lang norsk
+) fil, 
+\family typewriter
+dvi
+\family default
+.
+ D
+\family typewriter
+enne dvi
+\family default
+-filen brukes for forhåndsvisninger, og kan konverteres til andre formater
+ som PostScript.
+\end_layout
+
+\begin_layout Standard
+\SpecialChar TeX
+ er mer enn et typesettingsprogram.
+ Det har også mulighet for å definere makroer.
+ De fleste \SpecialChar TeX
+-brukere bruker egentlig en makro-pakke Knuth lagde for å skjule
+ de typografiske detaljene.
+ Det er dette folk flest kjenner som Tex.
+ Det er her Leslie Lamport kommer inn.
+ Han ville ha en makro-pakke som var mer brukerorientert og mindre typesetter-or
+ientert, et kommandosett for å sette ting som seksjoner, tabeller og formler
+ på en ensartet konsistent måte.
+ Slik ble \SpecialChar LaTeX
+ til.
+\end_layout
+
+\begin_layout Standard
+Samtidig med utviklingen av \SpecialChar LaTeX
+ lagde andre sine egne makropakker for \SpecialChar TeX
+, for
+ å lage slides, artikler til matematiske tidsskrifter, osv.
+ Noen brukte rå \SpecialChar TeX
+, andre gjorde forandringer i \SpecialChar LaTeX
+.
+ For å rydde opp i det resulterende rotet begynte endel \SpecialChar LaTeX
+-folk, blant dem
+ Lamport, å arbeide på \SpecialChar LaTeX2e
+, den nåværende utgaven av \SpecialChar LaTeX
+.
+ Denne utgaven har kommandoer som gjør det lettere å opprette \SpecialChar TeX
+-makroer,
+ bruke nye skrifttyper, m.m.
+ \SpecialChar LaTeX
+ er faktisk et omfattende språk i seg selv! Brukere verden over har lagd
+ sine egne tillegg til \SpecialChar LaTeX
+ utover de vanlige.
+\end_layout
+
+\begin_layout Standard
+Det er to måter å utvide \SpecialChar LaTeX
+: klasser og stiler.
+ En 
+\emph on
+klasse
+\emph default
+ er et sett \SpecialChar LaTeX
+- (og \SpecialChar TeX
+-) makroer som beskriver en type dokument, f.eks.
+ en bok eller artikkel.
+ Det fins klasser for slides, for fysiske og matematiske tidsskrifter \SpecialChar ldots
+ mange
+ universiteter har til og med sine egne klasser for sine avhandlinger! En
+ 
+\emph on
+stil
+\emph default
+ avviker fra en klasse ved at den ikke definerer en ny dokumenttype, men
+ en annen 
+\emph on
+oppførsel
+\emph default
+ ethvert dokument kan ha.
+ For eksempel styrer \SpecialChar LyX
+ marger og linjeavstand med to \SpecialChar LaTeX
+ stil-filer.
+ Det fins stilfiler for en lang rekke ting: utskrift av etiketter eller
+ konvolutter, endring av innrykk, nye skrifttyper, håndtering av grafikk,
+ design av sideoppsett, justering av litteraturlister, forandring av utseende
+ og plassering for fotnoter, tabeller og figurer, listeoppsett, osv.
+\end_layout
+
+\begin_layout Standard
+Her er en oppsummering:
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+\SpecialChar TeX
+: Typesettingsspråk med makrofunksjonalitet.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+\SpecialChar LaTeX
+: Makropakke bygd på \SpecialChar TeX
+.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+klasser: Beskrivelser av dokumenttyper for \SpecialChar LaTeX
+.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+stiler: Forandrer \SpecialChar LaTeX
+'s standardoppførsel på en eller annen måte.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+\SpecialChar LyX
+: Visuell, WYSIWYM tekstbehandler som bruker \SpecialChar LaTeX
+ for utskrift.
+\end_layout
+
+\begin_layout Standard
+Tanken bak denne seksjonen var å prøve å forklare 
+\emph on
+hvorfor
+\emph default
+ \SpecialChar LyX
+ er anderledes enn andre tekstbehandlere.
+ Forklaringen er enkel: \SpecialChar LyX
+ bruker \SpecialChar LaTeX
+ for å skrive ut.
+ Som \SpecialChar LaTeX
+ fokuserer \SpecialChar LyX
+ på konteksten i det du skriver — 
+\emph on
+hva
+\emph default
+ du skriver.
+ Datamaskinen ordner deretter utseendet.
+\end_layout
+
+\begin_layout Section
+Finne frem i dokumentasjonen
+\end_layout
+
+\begin_layout Standard
+For å gjøre det lettere å svare på dine spørsmål og beskrive alle mulighetene
+ i \SpecialChar LyX
+, er dokumentasjonen delt opp i flere filer.
+ Hver tjener sitt formål, som beskrevet under.
+ Du bør lese dette kapitlet grundig før du pløyer gjennom dem, det inneholder
+ mye nyttig informasjon og kommentarer som kan spare tid for deg.
+\end_layout
+
+\begin_layout Standard
+Forhåpentligvis stopper aldri utviklingen av \SpecialChar LyX
+; så noe av dokumentasjonen
+ være litt bakpå, eller mangle stoff.
+ Men vi prøver å holde følge! Som for resten av \SpecialChar LyX
+ produseres bruksanvisningene
+ av frivillige, som har 
+\begin_inset Quotes fld
+\end_inset
+
+virkelige jobber
+\begin_inset Quotes frd
+\end_inset
+
+, familier, oppvask, 
+\emph on
+osv
+\emph default
+.
+ Hvis du vil hjelpe, les kapittel
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Bidra"
+
+\end_inset
+
+ i tillegg til resten av dette dokumentet.
+\end_layout
+
+\begin_layout Standard
+Og gjør oss en tjeneste — hvis noe i bruksanvisningene forvirrer deg, er
+ uklart eller feil, la oss få vite det! Du kan kontakte oss ved å skrive
+ til 
+\begin_inset CommandInset href
+LatexCommand href
+target "lyx-docs@lists.lyx.org"
+type "mailto:"
+
+\end_inset
+
+.
+ Hvis du har spørsmål som ikke har opplagte svar i dokumentasjonen og trenger
+ hjelp fort, kan du bruke postlisten for \SpecialChar LyX
+-brukere, som har adressen 
+\begin_inset CommandInset href
+LatexCommand href
+target "lyx-users@lists.lyx.org"
+type "mailto:"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Formatet på bruksanvisningene
+\end_layout
+
+\begin_layout Standard
+Noen trykker dokumentasjonen, andre leser filene på skjermen i \SpecialChar LyX
+.
+ Utseendet på skjermen avviker en del fra det trykte.
+ For det første står tittelen øverst i dokumentet, ikke på en egen side
+ som i visse trykte versjoner.
+ Hverken fotnoter eller innholdsfortegnelsen vises normalt.
+ For å åpne en fotnote, som ser slik ut:
+\begin_inset Graphics
+	filename ../clipart/footnote.png
+	scale 75
+
+\end_inset
+
+, klikker du på den med venstre museknapp.
+ For innholdsfortegnelsen kan du enten klikke på den grå knappen, eller
+ bruke menyen 
+\family sans
+\bar under
+N
+\bar default
+aviger
+\family default
+, hvor innholdet vises automatisk.
+ 
+\end_layout
+
+\begin_layout Standard
+I de trykte dokumentene opptrer alle kryssreferanser som kapittelnumre,
+ seksjonsnumre, underseksjonsnumre osv.
+ På skjermen vil derimot kryssreferanser være en grå firkant som den følgende:
+ 
+\begin_inset Graphics
+	filename ../clipart/reference.png
+	scale 75
+
+\end_inset
+
+.
+ Hvis du klikker på firkanten med venstre museknapp får du et vindu med
+ liste over alle kryssreferanser i dokumentet.
+ Du kan hoppe til det aktuelle kapitlet ved å klikke på knappen 
+\family sans
+Gå
+\begin_inset space ~
+\end_inset
+
+til
+\family default
+.
+ Det er like lett å komme tilbake dit du kom fra, ved å bruke knappen 
+\family sans
+Tilbake
+\family default
+.
+\end_layout
+
+\begin_layout Standard
+Nå som vi har gjort rede for noen av forskjellene mellom den trykte versjonen
+ og det på skjermen, kan vi begynne å se på dette dokumentets format.
+ Du vil støte på ord i forskjellige skrifter:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Uthevet stil
+\emph default
+ brukes for generell utheving, generelle argumenter, boktitler, titler på
+ avsnitt i de andre bruksanvisningene, og notater fra forfatterne.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Skrivemaskin
+\family default
+ brukes til program- og filnavn, \SpecialChar LyX
+-kode og funksjoner.
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+Grotesk
+\family default
+ brukes for navn på menyer, knapper, vinduer, og taster på tastaturet.
+\end_layout
+
+\begin_layout Itemize
+
+\noun on
+Kapiteler
+\noun default
+ brukes til personnavn.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Fet 
+\series default
+brukes til \SpecialChar LaTeX
+-kode.
+\end_layout
+
+\begin_layout Standard
+Når vi beskriver taster, bruker vi følgende konvensjon:
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+\begin_inset Quotes fld
+\end_inset
+
+Ctrl-
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+ betyr 
+\family sans
+Ctrl-
+\family default
+ tasten.
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+\begin_inset Quotes fld
+\end_inset
+
+Shift-
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+ betyr 
+\family sans
+Skift-
+\family default
+ tasten.
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+\begin_inset Quotes fld
+\end_inset
+
+Alt-
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+ betyr 
+\family sans
+Alt-
+\family default
+ tasten, som på noen tastaturer heter 
+\family sans
+Meta
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+\begin_inset Quotes fld
+\end_inset
+
+F1
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+ \SpecialChar ldots
+ 
+\family sans
+
+\begin_inset Quotes fld
+\end_inset
+
+F12
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+ er funksjonstastene.
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+\begin_inset Quotes fld
+\end_inset
+
+Esc
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+ er 
+\lang british
+escape
+\lang norsk
+-tasten.
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+\begin_inset Quotes fld
+\end_inset
+
+Venstre
+\begin_inset Quotes frd
+\end_inset
+
+,
+\family default
+ 
+\family sans
+
+\begin_inset Quotes fld
+\end_inset
+
+Høyre
+\begin_inset Quotes frd
+\end_inset
+
+,
+\family default
+ 
+\family sans
+
+\begin_inset Quotes fld
+\end_inset
+
+Opp
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+ og 
+\family sans
+
+\begin_inset Quotes fld
+\end_inset
+
+Ned
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+: piltaster.
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+\begin_inset Quotes fld
+\end_inset
+
+
+\lang british
+Insert
+\lang norsk
+
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+, 
+\family sans
+
+\begin_inset Quotes fld
+\end_inset
+
+
+\lang british
+Delete
+\lang norsk
+
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+, 
+\family sans
+
+\begin_inset Quotes fld
+\end_inset
+
+
+\lang british
+Home
+\lang norsk
+
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+, 
+\family sans
+
+\begin_inset Quotes fld
+\end_inset
+
+
+\lang british
+End
+\lang norsk
+
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+, 
+\family sans
+
+\begin_inset Quotes fld
+\end_inset
+
+PageUp
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+, 
+\family sans
+
+\begin_inset Quotes fld
+\end_inset
+
+PageDown
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+: 6
+\begin_inset space ~
+\end_inset
+
+taster som fins over piltastene på endel PC-tastaturer.
+ 
+\family sans
+
+\begin_inset Quotes fld
+\end_inset
+
+PageUp
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+ og 
+\family sans
+
+\begin_inset Quotes fld
+\end_inset
+
+PageDown
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+ kalles 
+\family sans
+
+\begin_inset Quotes fld
+\end_inset
+
+
+\lang british
+Prior
+\lang norsk
+
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+ og 
+\family sans
+
+\begin_inset Quotes fld
+\end_inset
+
+
+\lang british
+Next
+\lang norsk
+
+\begin_inset Quotes frd
+\end_inset
+
+
+\family default
+ på enkelte tastaturer.
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+\lang british
+Return
+\family default
+\lang norsk
+ og 
+\family sans
+\lang british
+Enter
+\family default
+\lang norsk
+ refererer til samme tast.
+ Noen tastaturer bruker navnet 
+\begin_inset Quotes fld
+\end_inset
+
+
+\lang british
+Return
+\lang norsk
+
+\begin_inset Quotes frd
+\end_inset
+
+, noen bruker 
+\begin_inset Quotes fld
+\end_inset
+
+
+\lang british
+Enter
+\lang norsk
+
+\begin_inset Quotes frd
+\end_inset
+
+ i stedet, noen har to taster.
+ \SpecialChar LyX
+ behandler begge som samme tast, og kaller dem både 
+\family sans
+\lang british
+Return
+\family default
+\lang norsk
+ og 
+\family sans
+\lang british
+Enter
+\family default
+\lang norsk
+.
+\end_layout
+
+\begin_layout Standard
+Du finner en liste over hurtigtaster menyen 
+\family sans
+Hjelp
+\family default
+ under 
+\family sans
+Hurtigtaster.
+\end_layout
+
+\begin_layout Subsection
+Måleenheter i bruksanvisningene
+\end_layout
+
+\begin_layout Standard
+Tabell
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "cap:Units-for-image"
+
+\end_inset
+
+ forklarer måleenhetene som brukes i \SpecialChar LyX
+ og dokumentasjonen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "cap:Units-for-image"
+
+\end_inset
+
+Måleenheter
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="20" columns="3">
+<features booktabs="true" tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Enhet
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Engelsk
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+navn/beskrivelse
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+mm
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+millimeter
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+cm
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+centimeter
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+in
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\lang british
+inch
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+tomme
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+pt
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+punkt (72.27
+\begin_inset space \thinspace{}
+\end_inset
+
+pt = 1
+\begin_inset space \thinspace{}
+\end_inset
+
+in)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+pc
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+pica (1
+\begin_inset space \thinspace{}
+\end_inset
+
+pc = 12
+\begin_inset space \thinspace{}
+\end_inset
+
+pt)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+sp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+skalert punkt (65536
+\begin_inset space \thinspace{}
+\end_inset
+
+sp = 1
+\begin_inset space \thinspace{}
+\end_inset
+
+pt)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+bp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\lang british
+big point
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+stort punkt (72
+\begin_inset space \thinspace{}
+\end_inset
+
+bp = 1
+\begin_inset space \thinspace{}
+\end_inset
+
+in)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+dd
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+didot (72
+\begin_inset space \thinspace{}
+\end_inset
+
+dd 
+\begin_inset Formula $\approx$
+\end_inset
+
+ 37.6
+\begin_inset space \thinspace{}
+\end_inset
+
+mm)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+cc
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+cicero (1
+\begin_inset space \thinspace{}
+\end_inset
+
+cc = 12
+\begin_inset space \thinspace{}
+\end_inset
+
+dd)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Skalér %
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\lang british
+Scale
+\lang norsk
+%
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+% av opprinnelig bildebredde
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Tekstbredde %
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\lang british
+text
+\lang norsk
+%
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+% av tekstbredde
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Kolonnebredde %
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\lang british
+col
+\lang norsk
+%
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+% av kolonnebredde
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Sidebredde %
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\lang british
+page
+\lang norsk
+%
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+% av papirbredde
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Linjelengde %
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\lang british
+line
+\lang norsk
+%
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+% av linjelengde
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Teksthøyde %
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+theight%
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+% av teksthøyde
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Sidehøyde %
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+pheight%
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+% av papirhøyde
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ex
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+høyden av 
+\emph on
+x 
+\emph default
+i skriften som brukes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+em
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+bredden av 
+\emph on
+M
+\emph default
+ i skriften 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+mu
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\lang british
+math unit
+\lang norsk
+ (1
+\begin_inset space \thinspace{}
+\end_inset
+
+mu = 1/18
+\begin_inset space \thinspace{}
+\end_inset
+
+em)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Bruksanvisningene
+\end_layout
+
+\begin_layout Standard
+Følgende liste beskriver innholdet i hver av filene i dokumentasjonen.
+ Ikke alle er oversatt til norsk ennå.
+\end_layout
+
+\begin_layout Description
+Introduksjon
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Denne filen.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Innføring
+\emph on
+ (
+\lang british
+Tutorial
+\lang norsk
+)
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Hvis \SpecialChar LyX
+ og \SpecialChar LaTeX
+ er nytt for deg, bør du starte her.
+ Hvis du har brukt LaTex før, bør du likevel lese 
+\emph on
+Innføringen,
+\emph default
+ fra og med avsnittet 
+\begin_inset Quotes fld
+\end_inset
+
+
+\lang british
+\SpecialChar LyX
+ for \SpecialChar LaTeX
+ users.
+\lang norsk
+
+\begin_inset Quotes frd
+\end_inset
+
+ Det skader ikke å skumlese resten av dokumentet heller.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Håndbok
+\emph on
+ (
+\lang british
+User's
+\begin_inset space ~
+\end_inset
+
+Guide
+\lang norsk
+)
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Den primære dokumentasjonen.
+ Den dekker 
+\emph on
+de fleste
+\emph default
+ av de grunnleggende funksjonene i \SpecialChar LyX
+.
+ 
+\emph on
+Håndboka
+\emph default
+ forutsetter at du har lest 
+\emph on
+Innføringen.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Inkluderte
+\begin_inset space ~
+\end_inset
+
+objekter 
+\emph on
+(
+\lang british
+Embedded Objects
+\lang norsk
+)
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Tillegg til 
+\emph on
+Håndboka
+\emph default
+.
+ Detaljer om tabeller, grafikk, flytende elementer, noter og rammer.
+ Dessuten mange av \SpecialChar LaTeX
+-ekspertenes spesielle triks.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Matte 
+\emph on
+(
+\lang british
+Math
+\lang norsk
+)
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Tillegg til 
+\emph on
+Håndboka.
+
+\emph default
+ Detaljer om typesetting av alle slags formler.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Ekstra
+\begin_inset space ~
+\end_inset
+
+muligheter
+\emph on
+ (
+\lang british
+Additional Features
+\lang norsk
+)
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Tillegg til 
+\emph on
+Håndboka.
+
+\emph default
+ Dokumenterer hvordan du bruker \SpecialChar LaTeX
+-kom\SpecialChar softhyphen
+mandoer, mer om layout, og spesielle
+ redigeringsfunksjoner.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Tilpassing
+\emph on
+ (
+\lang british
+Customization
+\lang norsk
+)
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+En beskrivelse av avanserte \SpecialChar LyX
+-funksjoner, herunder hvordan du tilpasser \SpecialChar LyX
+'
+ generelle oppførsel til dine behov.
+ Dette omfatter tastaturutlegg, språktilpasning og konfigurasjonsfiler.
+ Den har også informasjon om layoutfiler, som trengs for å få \SpecialChar LyX
+ til å støtte
+ nye 
+\lang british
+\SpecialChar LaTeX
+
+\lang norsk
+-klasser og pakker.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Hurtigtaster 
+\emph on
+(Shortcuts)
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Tabeller med hurtigtaster i \SpecialChar LyX
+.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+\SpecialChar LaTeX
+
+\begin_inset space ~
+\end_inset
+
+konfigurasjon
+\emph on
+ (
+\lang british
+\SpecialChar LaTeX
+
+\begin_inset space ~
+\end_inset
+
+configuration
+\lang norsk
+)
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\SpecialChar LyX
+ undersøker systemet under installasjonen.
+ Denne filen inneholder det \SpecialChar LyX
+ fant ut om ditt system.
+ Ta en titt for å se om du mangler noe du muligens vil ha.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Disse filene refererer til hverandre når det er nødvendig.
+ 
+\emph on
+Håndboka
+\emph default
+ har for eksempel litt informasjon om installering og tilpasning, men henviser
+ leseren til 
+\emph on
+Tilpassing
+\emph default
+ for mer informasjon.
+\end_layout
+
+\begin_layout Standard
+Vi gjentar et viktig poeng:
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+Les 
+\emph on
+Innføringen
+\emph default
+ nå, hvis du ikke kjenner \SpecialChar LyX
+ fra før.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ellers skaffer du deg unødvendige frustrasjoner.
+ \SpecialChar LyX
+ kan alt en tekstbehandler trenger å kunne gjøre, men krever i blant en
+ annen tenkemåte.
+\end_layout
+
+\begin_layout Section
+Bidrag til \SpecialChar LyX
+-prosjektet
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Bidra"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Å bidra til \SpecialChar LyX
+
+\end_layout
+
+\begin_layout Standard
+\SpecialChar LyX
+ er stort sett skrevet i C++ (\SpecialChar LaTeX
+-import er skrevet i Python).
+ Det er et stort prosjekt, og derfor ikke fritt for feil og behov for forbedring
+er i kildekoden.
+\end_layout
+
+\begin_layout Subsubsection
+Rapporter feil
+\end_layout
+
+\begin_layout Standard
+Under bruk av \SpecialChar LyX
+ kan det hende det skjer noe du mener er feil.
+ Kræsj kan forekomme, selvom de er sjeldne.
+ Feil i brukergrensesnittet regnes som alvorlige feil; det er spesielt interessa
+nt å få vite om deler av brukergrensesnittet du finner forvirrende eller
+ uklart.
+\end_layout
+
+\begin_layout Standard
+\SpecialChar LyX
+ har et feilrapporteringssystem, som du finner på 
+\family typewriter
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.lyx.org/trac/wiki/BugTrackerHome
+\end_layout
+
+\end_inset
+
+
+\family default
+.
+ Sjekk her før du rapporterer feil, i fall feilen allerede er rapportert.
+ Hvis du har kommentarer til en kjent feil, eller ønsker å rapportere en
+ ny, bruker du enten feilrapporteringssystemet eller sender en engelskspråklig
+ e-post til utviklingslisten 
+\begin_inset CommandInset href
+LatexCommand href
+target "lyx-devel@lists.lyx.org"
+type "mailto:"
+
+\end_inset
+
+.
+ Du finner arkivet for denne postlisten via \SpecialChar LyX
+-hjemmesiden,
+\family typewriter
+ 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.lyx.org/
+\end_layout
+
+\end_inset
+
+
+\family default
+.
+\end_layout
+
+\begin_layout Standard
+En brukbar feilrapport må som minimum fortelle hvilken versjon av \SpecialChar LyX
+ det er
+ du har problemer med.
+ Nøyaktige detaljerte feilrapporter foretrekkes – jo mer tid utviklerne
+ trenger på å finne ut hva som er galt, jo mindre tid får de til andre forbedrin
+ger.
+ Nevn hva slags system og hvilken versjon du kjører \SpecialChar LyX
+ på.
+ Opplys om versjonen på programbiblioteker du bruker, og hvis det er relevant,
+ versjonene for eksterne programmer \SpecialChar LyX
+ bruker.
+ Hvis det er et kompilerings- eller konfigurasjonsproblem legger du ved
+ filen 
+\family typewriter
+config.log
+\family default
+, og nevner hvilken kompilator du bruker.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Bidra med retting og nye funksjoner
+\end_layout
+
+\begin_layout Standard
+Hvis du har gjort forandringer i kildekoden som du synes bør bli med i \SpecialChar LyX
+,
+ kan du sende inn endringene i form av en diff-fil (i 
+\begin_inset Quotes fld
+\end_inset
+
+unified
+\begin_inset Quotes frd
+\end_inset
+
+ format) til listen referert ovenfor, sammen med en beskrivelse av hva forandrin
+gene dine består i.
+\end_layout
+
+\begin_layout Subsection
+Bidrag til dokumentasjonen
+\end_layout
+
+\begin_layout Standard
+\SpecialChar LyX
+ har omfattende dokumentasjon; men \SpecialChar LyX
+ er under konstant utvikling og hver
+ ny utgave føyer til nye funksjoner.
+ Kanhende finner du ut at dokumentasjonen kan forbedres.
+ Dette avsnittet beskriver hva du gjør hvis du finner en feil eller har
+ forslag om å forbedre dokumentasjonen.
+\end_layout
+
+\begin_layout Subsubsection
+Rapporter feil i bruksanvisningene
+\end_layout
+
+\begin_layout Standard
+Hvis du finner feil i en bruksanvisning, send et engelskspråklig brev til
+ postlisten 
+\begin_inset CommandInset href
+LatexCommand href
+target "lyx-docs@lists.lyx.org"
+type "mailto:"
+
+\end_inset
+
+.
+ Dokumentasjonsteamet tar seg av rettingen.
+\end_layout
+
+\begin_layout Subsubsection
+Delta i dokumentasjonsteamet.
+\end_layout
+
+\begin_layout Standard
+Som alt annet i \SpecialChar LyX
+-prosjektet, har også dokumentasjonsprosjektet alltid bruk
+ for hjelp! Hvis du er interessert i å bidra, skal du gjennomføre det følgende
+ først:
+\end_layout
+
+\begin_layout Enumerate
+Skaff deg den nyeste \SpecialChar LyX
+-kildekoden fra 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.lyx.org/trac/browser/lyxgit/lib/doc?rev=master
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Les deretter 
+\emph on
+Håndboka
+\emph default
+ og 
+\emph on
+Innføringen.
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Meningen med dette er å gi deg idéer.
+ 
+\emph on
+Innføringen
+\emph default
+ og 
+\emph on
+Håndboka
+\emph default
+ er sannsynligvis de mest oppdaterte filene i dokumentasjonen.
+ Du vil få et godt inntrykk av hvordan vi vil at bruksanvisningene skal
+ se ut og leses.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Kontakt teamet på engelsk på: 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset CommandInset href
+LatexCommand href
+target "lyx-docs@lists.lyx.org"
+type "mailto:"
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+for å diskutere de endringer du foreslår, og få tilbakemelding.
+\end_layout
+
+\begin_layout Standard
+Endringene du ønsker kan være alt fra å gjøre teksten klarere, til større
+ omstruktureringer.
+ Alle forbedringer mottas med takk.
+\end_layout
+
+\end_body
+\end_document

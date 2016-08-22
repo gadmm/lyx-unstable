@@ -1,0 +1,2505 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+% DO NOT ALTER THIS PREAMBLE!!! 
+%
+%This preamble is designed to ensure that the document prints
+% out as advertised. If you mess with this preamble,
+% parts of the document may not print out as expected. If you
+% have problems LaTeXing this file, please contact 
+% the documentation team
+% email: lyx-docs@lists.lyx.org
+
+% the pages of the TOC is numbered roman
+% and a pdf-bookmark for the TOC is added
+\pagenumbering{roman}
+\let\myTOC\tableofcontents
+\renewcommand\tableofcontents{%
+\pdfbookmark[1]{\contentsname}{}
+\myTOC
+\cleardoublepage
+\pagenumbering{arabic} }
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language russian
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format pdf2
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref true
+\pdf_title "Введение в LyX"
+\pdf_author "LyX Team"
+\pdf_subject "LyX-documentation Intro"
+\pdf_keywords "LyX, documentation"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered true
+\pdf_bookmarksopen true
+\pdf_bookmarksopenlevel 2
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle false
+\pdf_quoted_options "linkcolor=black, citecolor=black, urlcolor=blue, filecolor=blue, pdfpagelayout=OneColumn, pdfnewwindow=true, pdfstartview=XYZ, plainpages=false"
+\papersize a4paper
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 0
+\use_package mathdots 1
+\use_package mathtools 0
+\use_package mhchem 1
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Предметный указатель
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 2
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language french
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Введение в \SpecialChar LyX
+
+\end_layout
+
+\begin_layout Author
+автор: команда разработки \SpecialChar LyX
+
+\begin_inset Newline newline
+\end_inset
+
+перевод: Максим Дзюманенко
+\begin_inset Newline newline
+\end_inset
+
+лит.
+ редактор: Виталий Липатов
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Философия \SpecialChar LyX
+
+\end_layout
+
+\begin_layout Quote
+\begin_inset Quotes eld
+\end_inset
+
+Uncle Cosmo, why do they call this a word processor?
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quote
+\begin_inset Quotes eld
+\end_inset
+
+It's simple, Skyler.
+ You've seen what food processors do to food, right?
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+— Дядя Космо, почему они называют его текстовым процессором?
+\end_layout
+
+\begin_layout Plain Layout
+— Это просто, Скайлер.
+ Ты когда-нибудь видел, что делает с продуктами кухонный процессор?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quote
+\begin_inset space \hfill{}
+\end_inset
+
+— Jeff MacNelly in 
+\begin_inset Quotes eld
+\end_inset
+
+Shoe
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Subsection
+Что такое \SpecialChar LyX
+?
+\end_layout
+
+\begin_layout Standard
+\SpecialChar LyX
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LyX
+ произносится как 
+\begin_inset Quotes fld
+\end_inset
+
+ликс
+\begin_inset Quotes frd
+\end_inset
+
+ — 
+\emph on
+прим.
+ ред.
+\end_layout
+
+\end_inset
+
+ — это система подготовки документов.
+ Она отличается тем, что позволяет вам создавать сложные научно-технические
+ статьи с математическими формулами, перекрёстными ссылками, библиографиями,
+ предметными указателями и т.п.
+ \SpecialChar LyX
+ очень хорош для документов любого размера, в которых требуются обычные
+ возможности редактирования: автоматическое разбиение на разделы и страницы,
+ проверка правописания и тому подобное.
+ Также его можно использовать для написания писем маме, хотя для этого есть
+ и более простые программы.
+ Это определённо не самый лучший инструмент для создания транспарантов,
+ объявлений или рекламных плакатов (далее мы объясним почему), хотя при
+ определённых усилиях можно сделать и это.
+ Вот некоторые примеры использования \SpecialChar LyX
+: записки, письма, диссертации и дипломные
+ работы, конспекты лекций, заметки для семинара, протоколы собраний, документаци
+я к программам, книги (по PostgreSQL, удалённому обнаружению и криптографии;
+ научная фантастика, поэзия и даже одна или две детские книжки), статьи
+ в реферируемые научные журналы, сценарии для спектаклей и фильмов, коммерческие
+ предложения\SpecialChar ldots
+ и многое другое.
+\end_layout
+
+\begin_layout Standard
+\SpecialChar LyX
+ — программа, обеспечивающая современный подход к написанию документов,
+ используя парадигму стилевой разметки — подход, который принципиально отличаетс
+я от устаревшей традиции, сложившейся во времена повсеместного использования
+ пишущих машинок.
+ Он разработан для авторов, которым быстро и с минимальными усилиями требуется
+ получить профессионально выглядящий документ, без необходимости становиться
+ специалистом в области полиграфии.
+ Оформительская работа при этом выполняется по большей части компьютером,
+ а не автором.
+ Используя \SpecialChar LyX
+, автор может сконцентрироваться над содержимым своего труда.
+\end_layout
+
+\begin_layout Standard
+Трудности, с которыми сталкиваются начинающие пользователи \SpecialChar LyX
+, исчезают по
+ мере изменения их образа мышления.
+ Когда-то мы все, создавая документ, пользовались пишущими машинками, и
+ при этом научились некоторым приёмам обхождения их ограничений.
+ Единственным способом выделения текста тогда было подчёркивание, которое
+ является ни чем иным, как наложением знаков 
+\begin_inset Quotes fld
+\end_inset
+
+_
+\begin_inset Quotes frd
+\end_inset
+
+ поверх набранного текста.
+ Перед набором таблицы мы пытались представить, какие должны быть размеры
+ столбцов и позиции табуляции.
+ То же применимо к письмам и другим видам выровненного по правому краю текста.
+ Переносы в конце строки требовали точного глаза и предвидения.
+\end_layout
+
+\begin_layout Standard
+Другими словами, всем нам приходилось заботиться о мелких деталях, где и
+ какой символ поставить.
+ В результате почти все текстовые процессоры унаследовали эту точку зрения.
+ Они всё ещё используют символы табуляции для добавления пробельного пространств
+а.
+ Вам всё ещё нужно заботиться о том, где что появится на странице.
+ Выделение текста подразумевает изменение шрифта, подобное смене печатающего
+ барабана.
+ Эта философия лежит в основе WYSIWYG текстового процессора: 
+\begin_inset Quotes fld
+\end_inset
+
+
+\lang english
+What You See Is What You Get
+\lang russian
+
+\begin_inset Quotes frd
+\end_inset
+
+ (
+\begin_inset Quotes fld
+\end_inset
+
+Что видите, то и получите
+\begin_inset Quotes frd
+\end_inset
+
+).
+ К несчастью, эта парадигма часто приводит к результату 
+\begin_inset Quotes fld
+\end_inset
+
+
+\lang english
+What You See Is All You Get
+\lang russian
+
+\begin_inset Quotes frd
+\end_inset
+
+ (
+\begin_inset Quotes fld
+\end_inset
+
+То, что вы видите — это всё, что вы получите
+\begin_inset Quotes frd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+В этом \SpecialChar LyX
+ отличается от обычных текстовых процессоров.
+ Вам не придётся беспокоиться, какой символ куда поставить.
+ Вы указываете \SpecialChar LyX
+, 
+\emph on
+что вы делаете
+\emph default
+, а \SpecialChar LyX
+ заботится об остальном, следуя своду правил, называемым 
+\emph on
+стилем.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Справедливости ради нужно заметить, что большинство последних версий популярных
+ офисных пакетов имеют некоторую разновидность поддержки стилей, реализующей
+ подобный метод разметки.
+ Однако наш опыт показывает, что они всё ещё редко используются на практике.
+\end_layout
+
+\end_inset
+
+
+\emph default
+ Рассмотрим небольшой пример:
+\end_layout
+
+\begin_layout Standard
+Предположим, вы пишете доклад.
+ Чтобы начать доклад, вам нужен раздел 
+\begin_inset Quotes fld
+\end_inset
+
+Введение
+\begin_inset Quotes frd
+\end_inset
+
+.
+ Итак, вы идёте в какое-либо меню вашего текстового процессора, где меняется
+ размер шрифта, и выбираете новый размер шрифта.
+ Затем включаете жирный шрифт.
+ Далее вы набираете: 
+\begin_inset Quotes fld
+\end_inset
+
+1.
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+Введение
+\begin_inset Quotes frd
+\end_inset
+
+.
+ 
+\begin_inset Quotes fld
+\end_inset
+
+
+\begin_inset Quotes frd
+\end_inset
+
+ Конечно, если позже вы решите, что этот раздел должен располагаться в другом
+ месте документа, или если вы вставите перед ним новый раздел, вам потребуется
+ изменить номера этого и всех последующих разделов, а также изменить строчки
+ в содержании документа.
+ 
+\end_layout
+
+\begin_layout Standard
+В \SpecialChar LyX
+ вы идёте в разворачивающееся меню в левом краю панели инструментов, выбираете
+ 
+\family sans
+Раздел
+\family default
+ и набираете: 
+\begin_inset Quotes fld
+\end_inset
+
+Введение
+\begin_inset Quotes frd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Вот и всё.
+ Вы можете вырез
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+'
+\end_layout
+
+\end_inset
+
+ать и вставлять разделы, при этом все разделы документа будут автоматически
+ перенумерованы.
+ И если вы правильно (путём вставки 
+\emph on
+перекрёстных
+\emph default
+ 
+\emph on
+ссылок
+\emph default
+) ввели ссылки на этот раздел, \SpecialChar LyX
+ будет автоматически обновлять их по всему
+ файлу, так что вам никогда не придётся указывать номера разделов самостоятельно.
+\end_layout
+
+\begin_layout Standard
+Теперь рассмотрим проблему согласованности.
+ Пять дней спустя, вы открываете ваш доклад и начинаете Раздел
+\begin_inset space ~
+\end_inset
+
+4.
+ Однако вы забыли, что использовали жирный шрифт размером 18
+\begin_inset space ~
+\end_inset
+
+пунктов вместо 16-ти пунктов, так что теперь вы набираете заголовок Раздел
+\begin_inset space ~
+\end_inset
+
+4 не тем шрифтом, который вы использовали для Раздела
+\begin_inset space ~
+\end_inset
+
+1.
+ Этой проблемы нет в \SpecialChar LyX
+.
+ Вместо вас компьютер сам позаботится о всей этой бухгалтерии — какая часть
+ текста имеет какой размер шрифта.
+ В конце концов, это то, в чём компьютер действительно хорош.
+\end_layout
+
+\begin_layout Standard
+Вот другой пример.
+ Предположим, вы создаёте список.
+ В других текстовых процессорах список — это просто совокупность отступов
+ и новых строк.
+ Вам нужно держать в голове, где размещать метку для каждого пункта списка,
+ какими должны быть метки, сколько пустых строк вставлять между каждым пунктом
+ и так далее.
+ В \SpecialChar LyX
+ вам нужно заботиться о двух вещах: какого типа данный список и что вы
+ хотите поместить в него.
+ И это всё.
+\end_layout
+
+\begin_layout Standard
+Итак, основная идея \SpecialChar LyX
+ такова: указывать, 
+\emph on
+что
+\emph default
+ вы делаете, а не 
+\emph on
+как
+\emph default
+ это делать.
+ Вместо 
+\begin_inset Quotes fld
+\end_inset
+
+
+\lang english
+What You See Is What You Get
+\lang russian
+
+\begin_inset Quotes frd
+\end_inset
+
+, модель \SpecialChar LyX
+ — 
+\begin_inset Quotes fld
+\end_inset
+
+
+\lang english
+What You See Is What You 
+\emph on
+Mean
+\emph default
+\lang russian
+
+\begin_inset Quotes frd
+\end_inset
+
+ (
+\begin_inset Quotes fld
+\end_inset
+
+Вы видите то, что вы имели в виду
+\begin_inset Quotes frd
+\end_inset
+
+) или 
+\begin_inset Quotes fld
+\end_inset
+
+WYSIWYM
+\begin_inset Quotes frd
+\end_inset
+
+.
+ Это мощная идея, которая значительно упрощает процесс написания документов.
+ Вот почему \SpecialChar LyX
+ не так хорош для создания плакатов и афиш — ведь в этом случае
+ вам приходится 
+\emph on
+указывать
+\emph default
+ точное расположение частей, так как в плакатах нет отдельных функциональных
+ единиц, таких как абзацы, разделы и т.п.
+ Это не означает, что в \SpecialChar LyX
+ отсутствуют какие-то продвинутые функции.
+ Это просто означает, что \SpecialChar LyX
+ — неподходящий инструмент для этой работы: вы
+ же не используете отвёртку для забивания гвоздей (по крайней мере если
+ ваша отвёртка не с пожизненной гарантией).
+\end_layout
+
+\begin_layout Subsection
+Различия между \SpecialChar LyX
+ и другими текстовыми процессорами
+\end_layout
+
+\begin_layout Standard
+Вот список того, что вы не найдёте в \SpecialChar LyX
+:
+\end_layout
+
+\begin_layout Itemize
+Линейки документа
+\end_layout
+
+\begin_layout Itemize
+Позиции табуляции
+\end_layout
+
+\begin_layout Itemize
+Дополнительное пробельное пространство (то есть два или более нажатий 
+\family sans
+Enter
+\family default
+ или 
+\family sans
+Пробел
+\family default
+)
+\end_layout
+
+\begin_layout Standard
+Позиции табуляции, вместе с линейкой показывающие вам расположение компонентов
+ документа на странице, бесполезны в \SpecialChar LyX
+.
+ О компоновке страницы заботится сама программа, а не вы.
+ Аналогично и с дополнительными пробелами — \SpecialChar LyX
+ добавляет их по необходимости,
+ в зависимости от контекста.
+ Невозможность набрать две пустых строки подряд сначала будет раздражать,
+ но вы увидите в этом гораздо больше смысла, когда начнёте мыслить в категориях
+ WYSIWYM.
+\end_layout
+
+\begin_layout Standard
+Вот то, что есть в \SpecialChar LyX
+, но используется не так, как вы можете подумать:
+\end_layout
+
+\begin_layout Itemize
+Управление отступами
+\end_layout
+
+\begin_layout Itemize
+Разбиение на страницы
+\end_layout
+
+\begin_layout Itemize
+Междустрочные интервалы (т.е.
+ одиночный интервал, двойной интервал, и т.д.)
+\end_layout
+
+\begin_layout Itemize
+Горизонтальные и вертикальные отступы
+\end_layout
+
+\begin_layout Itemize
+Шрифты и размеры шрифтов
+\end_layout
+
+\begin_layout Itemize
+Гарнитуры шрифта (жирный, наклонный, подчёркнутый, и т.п.)
+\end_layout
+
+\begin_layout Standard
+Несмотря на то, что всё это поддерживается в \SpecialChar LyX
+, обычно оно вам не нужно.
+ Обо всём этом за вас позаботится \SpecialChar LyX
+, в зависимости от того, что вы делаете.
+ Различные части документа автоматически принимают различные гарнитуры и
+ размеры шрифтов.
+ Отступы абзацев зависят от того, где абзацы располагаются.
+ Различные типы абзацев имеют различные отступы.
+ Разбиение на страницы также производится автоматически.
+ В общем случае пространство между строками, между словами и между абзацами
+ непостоянно, и определяется \SpecialChar LyX
+.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Существуют способы всё это скорректировать (только некоторые из них требуют
+ знания \SpecialChar LaTeX
+), либо в целом для документа, либо для отдельной части документа.
+ Подробности смотрите в руководствах 
+\emph on
+Руководство пользователя
+\emph default
+ и/или 
+\emph on
+Дополнительные возможности
+\emph default
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+И, наконец, есть несколько областей, где, как мы уверены, \SpecialChar LyX
+ (и \SpecialChar LaTeX
+) превосходит
+ многие текстовые процессоры:
+\end_layout
+
+\begin_layout Itemize
+Переносы
+\end_layout
+
+\begin_layout Itemize
+Списки любого типа
+\end_layout
+
+\begin_layout Itemize
+Математические формулы
+\end_layout
+
+\begin_layout Itemize
+Таблицы
+\end_layout
+
+\begin_layout Itemize
+Перекрёстные ссылки
+\end_layout
+
+\begin_layout Standard
+Конечно, многие современные текстовые процессоры могут работать с математическим
+и символами, таблицами и переносами, и многие продвинулись по направлению
+ к определению стилей и концепции WYSIWYM.
+ Однако, они поддерживают их только с недавних пор, в то время как \SpecialChar LyX
+ построен
+ поверх системы подготовки документов \SpecialChar LaTeX
+, которая существует уже более 15-ти
+ лет, и 
+\emph on
+работает
+\emph default
+.
+ Все ошибки давно уже устранены.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Конечно мы знаем, что нет ничего идеального, но \SpecialChar LaTeX
+ настолько близок к отсутствию
+ ошибок, насколько вообще может быть близка к этому компьютерная программа.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Что же такое \SpecialChar LaTeX
+? (И почему я должен быть осторожен?)
+\end_layout
+
+\begin_layout Standard
+\SpecialChar LaTeX
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+ произносится как 
+\begin_inset Quotes fld
+\end_inset
+
+лат
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+'
+\end_layout
+
+\end_inset
+
+ех
+\begin_inset Quotes frd
+\end_inset
+
+ — 
+\emph on
+прим.
+ ред.
+ 
+\end_layout
+
+\end_inset
+
+ — система подготовки документов разработанная Лэсли Лампортом (
+\lang english
+Leslie Lamport
+\lang russian
+) в 1985 году.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Источником этого раздела послужила книга 
+\begin_inset Quotes fld
+\end_inset
+
+
+\emph on
+A Guide to \SpecialChar LaTeX2e
+
+\emph default
+
+\begin_inset Quotes frd
+\end_inset
+
+ авторов Helmut Kopka и Patrick Daly, на которую есть ссылка в библиографии
+ 
+\emph on
+Руководства пользователя
+\emph default
+\SpecialChar endofsentence
+
+\end_layout
+
+\end_inset
+
+ Она, в свою очередь, была построена на языке полиграфического оформления,
+ называемом \SpecialChar TeX
+,
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar TeX
+ произносится как 
+\begin_inset Quotes fld
+\end_inset
+
+т
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+'
+\end_layout
+
+\end_inset
+
+ех
+\begin_inset Quotes frd
+\end_inset
+
+ — 
+\emph on
+прим.
+ пер.
+ 
+\end_layout
+
+\end_inset
+
+ созданном Дональдом Кнутом (
+\lang english
+Donald Knuth
+\lang russian
+) в 1984 году.
+ 
+\begin_inset Quotes fld
+\end_inset
+
+\SpecialChar TeX
+
+\begin_inset Quotes frd
+\end_inset
+
+ произносится как 
+\begin_inset Quotes fld
+\end_inset
+
+blech!
+\begin_inset Quotes frd
+\end_inset
+
+ (пузырь), так его и воспринимают многие люди.
+ Однако большинство людей не понимают, чем на самом деле является \SpecialChar TeX
+.
+ \SpecialChar TeX
+ берет последовательность команд полиграфического оформления, записанных
+ в простом текстовом файле, и выполняет их.
+ Это устроено немного сложнее, чем простая пишущая машинка, но и не особенно
+ близко к настоящему печатному станку.
+ Однако, многие приёмы печатного дела смоделированы Кнутом в виде компьютерных
+ алгоритмов и объединены в \SpecialChar TeX
+, таким образом, это великолепное печатное явление.
+ Так или иначе, \SpecialChar TeX
+ выдаёт так называемый 
+\begin_inset Quotes fld
+\end_inset
+
+device independent
+\begin_inset Quotes frd
+\end_inset
+
+ (
+\begin_inset Quotes fld
+\end_inset
+
+независимый от устройства
+\begin_inset Quotes frd
+\end_inset
+
+) формат файла, если коротко — 
+\family typewriter
+\emph on
+dvi
+\family default
+.
+ Вы можете передать
+\emph default
+ 
+\family typewriter
+\emph on
+dvi
+\family default
+\emph default
+ 
+\emph on
+файл какой-либо программе понимающей
+\emph default
+ 
+\family typewriter
+\emph on
+dvi
+\family default
+, или преобразовать
+\emph default
+ 
+\family typewriter
+\emph on
+dvi
+\family default
+\emph default
+ 
+\emph on
+в другие форматы, такие как PostScript, PDF, и т.п.
+ 
+\end_layout
+
+\begin_layout Standard
+Если бы у \SpecialChar TeX
+ не было других свойств, он был бы просто механизмом для типографского
+ набора.
+ Однако \SpecialChar TeX
+ также позволяет определять макросы
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+наименованная последовательность команд — 
+\emph on
+прим
+\emph default
+.
+ 
+\emph on
+пер
+\emph default
+.
+\end_layout
+
+\end_inset
+
+.
+ Тут-то всё и начинается.
+\end_layout
+
+\begin_layout Standard
+Большинство людей, использующих \SpecialChar TeX
+, в действительности используют пакет макросов,
+ созданный Кнутом для сокрытия многих деталей полиграфического оформления,
+ который люди и считают \SpecialChar TeX
+\SpecialChar endofsentence
+ Обычные пользователи не работают непосредственно
+ с \SpecialChar TeX
+, который представляет из себя просто набор команд для полиграфического
+ оформления, это делают люди, создающие новые пакеты макросов.
+ И тут в нашей истории появляется Лэсли Лампорт.
+ Ему был нужен пакет макросов, который был бы ориентирован на пользователя,
+ а не на методы оформления, набор команд, который единообразно оформляет
+ разделы, таблицы и математические формулы последовательно и с наименьшими
+ хлопотами.
+ Так родился \SpecialChar LaTeX
+.
+\end_layout
+
+\begin_layout Standard
+Сейчас, параллельно с разработкой и ростом \SpecialChar LaTeX
+, другие люди создали свои собственны
+е пакеты макросов для \SpecialChar TeX
+, которые позволяют создавать слайды, статьи для математич
+еских журналов и так далее.
+ Некоторые используют для этого возможности \SpecialChar TeX
+ в чистом виде, другие модифицируют
+ \SpecialChar LaTeX
+.
+ Для унификации этого беспорядка, команда \SpecialChar LaTeX
+'ников (разумеется, включая Лампорта)
+ в конце 80-х годов XX века начала работу над \SpecialChar LaTeX2e
+, текущей версией \SpecialChar LaTeX
+.
+ Эта новая версия \SpecialChar LaTeX
+ содержит команды для предоставления простого интерфейса
+ к макрокомандам \SpecialChar TeX
+ (помните \SpecialChar TeX
+?), поддержку новых шрифтов и так далее.
+ На самом деле \SpecialChar LaTeX
+ — довольно расширяемый язык! Пользователи всего мира создают
+ свои собственные дополнения к \SpecialChar LaTeX
+ помимо стандартных.
+ 
+\end_layout
+
+\begin_layout Standard
+Есть два способа расширения \SpecialChar LaTeX
+: классы и стили.
+ 
+\emph on
+Класс
+\emph default
+ — это набор макрокоманд \SpecialChar LaTeX
+ (и \SpecialChar TeX
+), описывающих новый тип документа, например
+ такой как книга или статья.
+ Есть классы для слайдов, журналов по физике и математике\SpecialChar ldots
+ многие университеты
+ даже создали классы для дипломных работ их собственного формата! 
+\emph on
+Стиль
+\emph default
+ отличается от класса тем, что он определяет не новый тип документа, а другой
+ вариант 
+\emph on
+поведения,
+\emph default
+ который можно использовать в любом документе.
+ Например, \SpecialChar LyX
+ устанавливает поля страниц и междустрочные интервалы с помощью
+ двух различных стилевых файлов \SpecialChar LaTeX
+.
+ Есть различные стилевые файлы: для печати этикеток или конвертов, изменения
+ поведения отступов, добавления новых шрифтов, манипулирования графикой,
+ создание необычных колонтитулов, специализированных библиографий, изменения
+ расположения и появления сносок, таблиц и рисунков, настройки списков,
+ и так далее, и так далее, и так далее.
+\end_layout
+
+\begin_layout Standard
+Вот обобщение:
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+\SpecialChar TeX
+: Язык полиграфического оформления с возможностью использования макросов.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+\SpecialChar LaTeX
+: Пакет макросов, основанный на \SpecialChar TeX
+\SpecialChar endofsentence
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+классы: Описания типов документов с использованием \SpecialChar LaTeX
+\SpecialChar endofsentence
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+стили: Изменяют поведение \SpecialChar LaTeX
+ по умолчанию.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+\SpecialChar LyX
+: Визуальный текстовый процессор WYSIWYM, который использует для печати
+ \SpecialChar LaTeX
+ во всём его великолепии.
+\end_layout
+
+\begin_layout Standard
+Идея этого раздела — попытаться объяснить, 
+\emph on
+почему
+\emph default
+ \SpecialChar LyX
+ работает не так, как другие текстовые процессоры.
+ Причина проста: для печати \SpecialChar LyX
+ использует \SpecialChar LaTeX
+.
+ Так же как и \SpecialChar LaTeX
+, \SpecialChar LyX
+ сосредотачивается на контексте вашего написания — 
+\emph on
+что
+\emph default
+ вы набираете.
+ А 
+\emph on
+как
+\emph default
+ это всё должно выглядеть, компьютер потом сам поймёт.
+\end_layout
+
+\begin_layout Standard
+И ещё одна вещь.
+ \SpecialChar LaTeX
+ произносится сходно с \SpecialChar TeX
+.
+ Он рифмуется с 
+\begin_inset Quotes fld
+\end_inset
+
+hey blech.
+\begin_inset Quotes frd
+\end_inset
+
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+или 
+\begin_inset Quotes fld
+\end_inset
+
+ha blech
+\begin_inset Quotes frd
+\end_inset
+
+, в зависимости от того, как вы произносите 
+\begin_inset Quotes fld
+\end_inset
+
+a
+\begin_inset Quotes frd
+\end_inset
+
+\SpecialChar ldots
+
+\end_layout
+
+\end_inset
+
+ Лампорт говорит в своей книге, что также возможно 
+\begin_inset Quotes fld
+\end_inset
+
+
+\emph on
+lay
+\emph default
+-tecks
+\begin_inset Quotes frd
+\end_inset
+
+.
+ 
+\begin_inset Quotes fld
+\end_inset
+
+\SpecialChar LyX
+
+\begin_inset Quotes frd
+\end_inset
+
+ же произносится как 
+\begin_inset Quotes fld
+\end_inset
+
+licks
+\begin_inset Quotes frd
+\end_inset
+
+.
+ Или 
+\begin_inset Quotes fld
+\end_inset
+
+lucks
+\begin_inset Quotes frd
+\end_inset
+
+, или 
+\begin_inset Quotes fld
+\end_inset
+
+looks
+\begin_inset Quotes frd
+\end_inset
+
+, в зависимости от вашей страны\SpecialChar ldots
+ из-за этого начинались многочисленные стычки
+ и обсуждения в почтовых рассылках по \SpecialChar LyX
+, так что произносите его как вам
+ удобнее.
+ Просто не произносите его как 
+\begin_inset Quotes fld
+\end_inset
+
+word
+\begin_inset Quotes frd
+\end_inset
+
+.
+ 
+\family typewriter
+:-)
+\end_layout
+
+\begin_layout Section
+Обзор документации
+\end_layout
+
+\begin_layout Standard
+Чтобы упростить вам поиск ответов на вопросы и описать все возможности \SpecialChar LyX
+,
+ документация была разделена на несколько различных файлов.
+ Каждый из них имеет свою цель, как описано ниже.
+ Однако перед тем, как открыть любой из этих файлов, сначала вам следует
+ до конца прочитать эту главу, так как она содержит много полезной информации
+ и комментариев, которые помогут сохранить вам время.
+\end_layout
+
+\begin_layout Standard
+Не смотря на то, что \SpecialChar LyX
+ уже прошёл отметку 
+\begin_inset Quotes fld
+\end_inset
+
+версия 1.0
+\begin_inset Quotes frd
+\end_inset
+
+, некоторые части документации могут быть неполными или устаревшими, хотя
+ мы очень стараемся поддерживать её в актуальном состоянии.
+ Как и весь \SpecialChar LyX
+, руководства к нему — результат работы группы добровольцев,
+ у которых есть основная работа, семьи, мытьё посуды, уборка за котёнком,
+ и так далее.
+ Мы делаем всё возможное для поддержания руководств в наилучшей форме, но
+ не всегда можем успешно с этим справляться, так как разработчики добавляют
+ новые функции в то время, как мы всё ещё документируем старые! (Если вы
+ желаете помочь исправить эту ситуацию, прочтите раздел
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Contrib"
+
+\end_inset
+
+ в конце этого документа.)
+\end_layout
+
+\begin_layout Standard
+Также, будьте любезны — если что-либо в этих руководствах вас смущает, неясно
+ или неправильно, сразу же дайте нам знать! Вы можете обратиться к тем,
+ кто сейчас занимается документированием, по адресу 
+\begin_inset CommandInset href
+LatexCommand href
+target "lyx-docs@lists.lyx.org"
+type "mailto:"
+
+\end_inset
+
+.
+ Если у вас есть вопросы, которые плохо освещены в документации, и вам нужна
+ быстрая помощь, есть список рассылки пользователей \SpecialChar LyX
+, который доступен по
+ адресу 
+\begin_inset CommandInset href
+LatexCommand href
+target "lyx-users@lists.lyx.org"
+type "mailto:"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Формат руководств
+\end_layout
+
+\begin_layout Standard
+Некоторые из вас могут иметь печатную версию руководства.
+ Другие — читают электронную версию с помощью \SpecialChar LyX
+.
+ Для тех, кто читает электронную версию, есть некоторые отличия от печатной
+ версии.
+ Во-первых, заголовок в начале документа не расположен на отдельной странице,
+ как в печатной версии.
+ Не видны ни сноски, ни Содержание.
+ Для открытия сноски, которая выглядит вот так,
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Привет! 
+\end_layout
+
+\begin_layout Plain Layout
+Чтобы закрыть меня, нажмите на серый прямоугольник слева вверху с надписью
+ 
+\begin_inset Quotes fld
+\end_inset
+
+сноска
+\begin_inset Quotes frd
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+ нажмите на ней левой кнопкой мыши.
+ Для просмотра Содержания либо нажмите на серый прямоугольник, либо войдите
+ в меню 
+\family sans
+Перейти
+\family default
+, где содержимое отображается автоматически\SpecialChar endofsentence
+ (Попробуйте!)
+\end_layout
+
+\begin_layout Standard
+В печатных руководствах все перекрёстные ссылки появляются с соответствующими
+ номерами глав, разделов, подразделов, и так далее.
+ Однако в электронной версии все перекрёстные ссылки выглядят как серые
+ прямоугольники, вот так:
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Contrib"
+
+\end_inset
+
+.
+ (Вместо этого в печатной версии печатается число.) Если вы нажмёте на этот
+ прямоугольник левой кнопкой мыши, появится диалоговое окно со списком всех
+ перекрёстных ссылок документа.
+ Данное введение содержит только одну ссылку с именем 
+\begin_inset Quotes fld
+\end_inset
+
+sec:Contrib
+\begin_inset Quotes frd
+\end_inset
+
+.
+ Вы можете перейти к указанному разделу, нажав на кнопку "Перейти к ссылке".
+ Вернуться назад очень просто.
+ Для возврата в предыдущую позицию нажмите на 
+\begin_inset Quotes fld
+\end_inset
+
+Вернуться назад
+\begin_inset Quotes frd
+\end_inset
+
+ или нажмите 
+\family sans
+C-<
+\family default
+.
+ (Что обозначает 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+C-<
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+? Смотрите ниже.)
+\end_layout
+
+\begin_layout Standard
+Теперь, когда мы рассмотрели различия между печатной и электронной версиями
+ этого файла, мы можем начать рассмотрение формата этого документа.
+ Вы будете замечать использование разных шрифтов:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Выделительный шрифт
+\emph default
+ используется для общего выделения, общих аргументов, заголовков книг, наименова
+ний разделов других руководств и авторских заметок;
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Машинописный шрифт
+\family default
+ используется для названий программ и файлов, кода \SpecialChar LaTeX
+, и кода и функций \SpecialChar LyX
+ ;
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+Рубленый шрифт
+\family default
+ используется для меню, кнопок, названий диалоговых окон, и названий клавиш
+ клавиатуры.
+\end_layout
+
+\begin_layout Itemize
+
+\noun on
+Шрифт Имён Собственных
+\noun default
+ используется для имён людей.
+\end_layout
+
+\begin_layout Standard
+Чтобы больше узнать о клавишах акселераторов меню и других более загадочных
+ комбинаций клавиш, вам следует перейти к разделу 
+\emph on
+Комбинации клавиш
+\emph default
+ в 
+\begin_inset Quotes fld
+\end_inset
+
+
+\emph on
+Дополнительные возможности
+\emph default
+
+\begin_inset Quotes frd
+\end_inset
+
+ (файл 
+\family typewriter
+Additional.lyx
+\family default
+).
+ Когда нам нужно указать комбинацию клавиш, мы используем следующее соглашение
+ о префиксах:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+C-
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+ обозначает клавишу 
+\family sans
+Control;
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+S-
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+ обозначает клавишу 
+\family sans
+Shift;
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+M-
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+ обозначает клавишу 
+\family sans
+Meta
+\family default
+, которая на большинстве клавиатур будет клавишей 
+\family sans
+Alt;
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+F1
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+ \SpecialChar ldots
+ 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+F12
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+ — функциональные клавиши;
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+Esc
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+ — клавиша выхода;
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+Влево
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+, 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+Вправо
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+, 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+Вверх
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+, 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+Вниз
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+: стрелки влево, вправо, вверх и вниз соответственно;
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+\begin_inset Quotes fld
+\end_inset
+
+Insert
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+, 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+Delete
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+, 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+Home
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+, 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+End
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+, 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+PageUp
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+, 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+PageDown
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+: эти 6 клавиш на большинстве PC-клавиатур расположены выше клавиш управления
+ курсором.
+ На некоторых клавиатурах 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+PageUp
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+ и 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+PageDown
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+ называются 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+Prior
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+ и 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family sans
+Next
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+;
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+Return
+\family default
+ и 
+\family sans
+Enter
+\family default
+ обозначают одну и ту же клавишу.
+ На некоторых клавиатурах клавиша 
+\family sans
+Return
+\family default
+ обозначена как 
+\begin_inset Quotes fld
+\end_inset
+
+Return
+\begin_inset Quotes frd
+\end_inset
+
+, на других как 
+\begin_inset Quotes fld
+\end_inset
+
+Enter
+\begin_inset Quotes frd
+\end_inset
+
+, прочие имеют обе клавиши.
+ \SpecialChar LyX
+ обрабатывает все их одинаково, так что мы будем чередовать использование
+ 
+\family sans
+Return
+\family default
+ и 
+\family sans
+Enter
+\family default
+.
+\end_layout
+
+\begin_layout Standard
+Время от времени вы будете видеть что-то вроде 
+\begin_inset Quotes fld
+\end_inset
+
+(Смотрите 
+\emph on
+
+\begin_inset Quotes els
+\end_inset
+
+Руководство
+\emph default
+
+\begin_inset Quotes ers
+\end_inset
+
+)
+\begin_inset Quotes frd
+\end_inset
+
+.
+ Мы поместили описание всех возможных комбинаций клавиш по умолчанию в 
+\begin_inset Quotes fld
+\end_inset
+
+
+\emph on
+Дополнительные возможности
+\emph default
+
+\begin_inset Quotes frd
+\end_inset
+
+, так что ищите их там.
+ Обратите внимание, что в сообществе пользователей \SpecialChar LyX
+ используются две различные
+ клавиатурные раскладки: установленного по умолчанию 
+\begin_inset Quotes fld
+\end_inset
+
+CUA
+\begin_inset Quotes frd
+\end_inset
+
+-стиля, который близок пришедшим из мира PC, и 
+\begin_inset Quotes fld
+\end_inset
+
+emacs
+\begin_inset Quotes frd
+\end_inset
+
+-стиля, который общепринят среди тех, кто 
+\begin_inset Quotes fld
+\end_inset
+
+вырос
+\begin_inset Quotes frd
+\end_inset
+
+ на Unix системах и использует редактор Emacs.
+ Пока явно не указано, по умолчанию раскладка клавиатуры в документации
+ CUA.
+ Если вам нравится Emacs, вы должны быть достаточно подготовлены, чтобы
+ прочесть документацию и найти ваши комбинации клавиш.
+\end_layout
+
+\begin_layout Subsection
+Руководства
+\end_layout
+
+\begin_layout Standard
+Следующий список описывает содержимое каждого файла документации:
+\end_layout
+
+\begin_layout Description
+
+\emph on
+Введение
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Этот файл, который вы уже почти прочитали :).
+\end_layout
+
+\end_deeper
+\begin_layout Description
+
+\emph on
+Самоучитель 
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Если вы новичок в \SpecialChar LyX
+, и никогда ранее не использовали \SpecialChar LaTeX
+, вы должны начать отсюда.
+ Если вы думаете, что \SpecialChar LaTeX
+ — это такая краска, вам определённо следует прочесть
+ первую главу 
+\emph on
+Самоучителя
+\emph default
+.
+ Обратите внимание, что после этого вы, возможно, всё ещё будете думать,
+ что \SpecialChar LaTeX
+ какое-то тянущееся вещество,— но вы 
+\emph on
+узн
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+'
+\end_layout
+
+\end_inset
+
+аете
+\emph default
+, как использовать \SpecialChar LyX
+.
+\end_layout
+
+\begin_layout Standard
+Если вы 
+\emph on
+использовали
+\emph default
+ \SpecialChar LaTeX
+ ранее, вы всё равно должны прочесть 
+\emph on
+Самоучитель
+\emph default
+, начиная с раздела 
+\begin_inset Quotes fld
+\end_inset
+
+\SpecialChar LyX
+ для пользователей \SpecialChar LaTeX
+
+\begin_inset Quotes frd
+\end_inset
+
+.
+ (В любом случае, не повредит пройтись и по оставшейся части документа.)
+\end_layout
+
+\begin_layout Standard
+Если однажды вы обнаружите, что знаете слишком мало о \SpecialChar LyX
+, то перед тем, как
+ читать прочие руководства, попробуйте внимательно прочесть 
+\emph on
+Самоучитель
+\emph default
+.
+ Он содержит все необходимые базовые знания.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+
+\emph on
+Руководство
+\begin_inset space ~
+\end_inset
+
+пользователя
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Первичная документация.
+ Здесь рассматриваются 
+\emph on
+большинство
+\emph default
+ основных функций и возможностей \SpecialChar LyX
+ в предположении, что вы уже прочли 
+\emph on
+Самоучитель
+\emph default
+.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+
+\emph on
+Дополнительные
+\begin_inset space ~
+\end_inset
+
+возможности
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Расширение 
+\emph on
+Руководства пользователя
+\emph default
+.
+ В нём описывается непосредственное использование команд \SpecialChar LaTeX
+, классов документов,
+ и особых возможностей по редактированию, также там содержатся некоторые
+ из (довольно затейливых, но остроумных) приёмов знатоков \SpecialChar LaTeX
+.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+
+\emph on
+Руководство
+\begin_inset space ~
+\end_inset
+
+по
+\begin_inset space ~
+\end_inset
+
+настройке
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Описание дополнительных возможностей \SpecialChar LyX
+, включая настройку общего поведения
+ \SpecialChar LyX
+, которое включает в себя: комбинации клавиш, интернационализацию и конфигураци
+онные файлы.
+ Даже не думайте приступать к нему до прочтения 
+\emph on
+Самоучителя
+\emph default
+.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+
+\emph on
+Текущая
+\begin_inset space ~
+\end_inset
+
+конфигурация
+\begin_inset space ~
+\end_inset
+
+\SpecialChar LaTeX
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Этот файл содержит информацию о том, что \SpecialChar LyX
+ узнал о вашей системе \SpecialChar LaTeX
+ при установке.
+ Прочтите его и проверьте, что вы ничего не упустили из того, что могли
+ бы получить.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Перечисленные файлы документации при необходимости будут ссылаться один
+ на другой.
+ Например, 
+\emph on
+Руководство пользователя
+\emph default
+ содержит 
+\emph on
+некоторую
+\emph default
+ информацию по установке и настройке, но для более подробной информации
+ отсылает читателя к 
+\emph on
+Руководству по настройке
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+Мы должны сделать важное замечание:
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+Если вы новичок в \SpecialChar LyX
+, читайте 
+\emph on
+Самоучитель
+\emph default
+.
+ Сейчас же\SpecialChar endofsentence
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Иначе вы можете напрасно расстроиться.
+ \SpecialChar LyX
+ делает всё, что требуется от текстового процессора, но использует иной
+ подход.
+\end_layout
+
+\begin_layout Section
+Содействие проекту \SpecialChar LyX
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Contrib"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Содействие \SpecialChar LyX
+
+\end_layout
+
+\begin_layout Standard
+\SpecialChar LyX
+ по большей части написан на C++ (фильтр импорта документов \SpecialChar LaTeX
+ написан на
+ Perl).
+ Это большой проект, и вследствие этого результат не свободен от ошибок
+ и необходимости совершенствования исходного кода.
+\end_layout
+
+\begin_layout Subsubsection
+Извещение об ошибках
+\end_layout
+
+\begin_layout Standard
+Используя \SpecialChar LyX
+, вы можете заметить, что в некоторых ситуациях он ведет себя
+ неправильно, и это поведение можно расценивать как ошибку.
+ Аварийные завершения, хотя и редки, но могут случаться.
+ Проблемы в пользовательском интерфейсе рассматриваются командой разработчиков
+ \SpecialChar LyX
+ как крупные ошибки: особенно полезны указания частей пользовательского
+ интерфейса \SpecialChar LyX
+, которые вас смущают или непонятны.
+\end_layout
+
+\begin_layout Standard
+Для \SpecialChar LyX
+ существует система отслеживания ошибок, которую вы можете найти по
+ адресу 
+\family typewriter
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.lyx.org/trac/wiki/BugTrackerHome
+\end_layout
+
+\end_inset
+
+
+\family default
+.
+ Перед тем как сообщать об ошибке, удостоверьтесь, что об этой ошибке ещё
+ никто не сообщал в систему отслеживания ошибок.
+ Если у вас есть комментарий к существующей ошибке, или вы хотите сообщить
+ о новой ошибке, вы можете либо использовать систему отслеживания ошибок,
+ либо отослать электронное письмо в список рассылки для разработчиков 
+\family typewriter
+lyx-devel@lists.lyx.org
+\family default
+.
+ К архивам этого списка вы можете перейти с главного сайта по \SpecialChar LyX
+ 
+\family typewriter
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.lyx.org/
+\end_layout
+
+\end_inset
+
+
+\family default
+.
+\end_layout
+
+\begin_layout Standard
+Чтобы сообщение об ошибке могло быть полезным, оно должно содержать, как
+ минимум, используемую версию \SpecialChar LyX
+, в которой обнаружена проблема.
+ Предпочтительно точное детальное описание — ведь чем больше времени разработчик
+и тратят на установление источника ошибки, тем меньше времени у них есть
+ на другие усовершенствования.
+ Указывайте тип и версию операционной системы, на которой вы запускаете
+ \SpecialChar LyX
+.
+ Приводите версии установленных в вашей системе библиотек, и, если это важно,
+ версии внешних программ, используемых \SpecialChar LyX
+.
+ Если проблема возникает при компиляции или конфигурации, включите в ваше
+ сообщение файл 
+\family typewriter
+config.log
+\family default
+, и укажите используемый вами компилятор.
+ 
+\end_layout
+
+\begin_layout Standard
+Если вы можете 
+\begin_inset Quotes fld
+\end_inset
+
+свалить
+\begin_inset Quotes frd
+\end_inset
+
+ \SpecialChar LyX
+, пожалуйста, найдите время для отслеживания исполняемого файла lyx, из
+ которого не удалена отладочная информация.
+ Построенный из исходных кодов файл по умолчанию содержит отладочную информацию,
+ но при установке она удаляется.
+ Итак, запустите \SpecialChar LyX
+ из gdb набрав, например, 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family typewriter
+\size small
+gdb /users/steve/lyx-1.6.x/src/lyx
+\family default
+\size default
+
+\begin_inset Quotes frd
+\end_inset
+
+ и затем 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family typewriter
+\size small
+run
+\family default
+\size default
+
+\begin_inset Quotes frd
+\end_inset
+
+.
+ 
+\begin_inset Quotes fld
+\end_inset
+
+Завалите
+\begin_inset Quotes frd
+\end_inset
+
+ \SpecialChar LyX
+ и вернитесь в gdb.
+ Используйте 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family typewriter
+\size small
+bt
+\family default
+\size default
+
+\begin_inset Quotes frd
+\end_inset
+
+ для отслеживания и и включите вывод в сообщение об ошибке.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Для полноты картины используйте команды 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family typewriter
+info locals
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+ и 
+\begin_inset Quotes fld
+\end_inset
+
+
+\family typewriter
+up
+\family default
+
+\begin_inset Quotes frd
+\end_inset
+
+, они печатают значения локальных переменных на нескольких уровня стека.
+\end_layout
+
+\end_inset
+
+ Если возможно описать путь воспроизведения ошибки, то это более важно,
+ чем её отслеживание, так как у нас будет возможность самим выполнить отслеживан
+ие.
+ Если ошибку сложно воспроизвести, отслеживание особенно важно, потому что
+ это всё, что мы можем знать об ошибке.
+\end_layout
+
+\begin_layout Subsubsection
+Содействие в исправлении и добавлении новых возможностей
+\end_layout
+
+\begin_layout Standard
+Если вы внесли исправления в исходный код \SpecialChar LyX
+'а, которые, как вы считаете,
+ должны стать частью \SpecialChar LyX
+, отправьте ваши изменения в виде diff файла (в унифицирова
+нном формате) в список рассылки для разработчиков, адрес которого был указан
+ выше, вместе со списком изменений и описанием того, что делает ваша заплатка.
+\end_layout
+
+\begin_layout Subsection
+Содействие в документировании
+\end_layout
+
+\begin_layout Standard
+Документация по \SpecialChar LyX
+ охватывает всё его стороны; однако \SpecialChar LyX
+ находится в постоянной
+ разработке, и каждый новый выпуск дополняется новыми возможностями.
+ Возможно вы посчитаете, что некоторые части документации требуют дополнения.
+ Этот раздел описывает, что делать, если вы обнаружили ошибку, или у вас
+ есть предложения по усовершенствованию документации.
+\end_layout
+
+\begin_layout Subsubsection
+Извещение об ошибках в документации
+\end_layout
+
+\begin_layout Standard
+Если вы обнаружите какую-либо проблему в документации к \SpecialChar LyX
+, отправьте сообщение
+ в список рассылки 
+\family typewriter
+lyx-docs@lists.lyx.org
+\family default
+.
+ Команда документирования внесёт необходимые изменения.
+\end_layout
+
+\begin_layout Subsubsection
+Присоединение к команде документирования
+\end_layout
+
+\begin_layout Standard
+Проекту документирования \SpecialChar LyX
+, как и всему остальному в проекте \SpecialChar LyX
+, всегда нужна
+ помощь! Если вы заинтересованы в содействии проекту документирования, 
+\emph on
+сначала
+\emph default
+ вам следует выполнить следующие требования:
+\end_layout
+
+\begin_layout Enumerate
+Получите исходный код последней версии \SpecialChar LyX
+ и распакуйте его.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Более предприимчивые могут взять последнюю версию документации с анонимного
+ \SpecialChar LyX
+ CVS-репозитория — она содержится в модуле 
+\family typewriter
+lyxdoc
+\family default
+.
+\end_layout
+
+\end_inset
+
+ В основном дереве вы найдёте каталог под названием 
+\family typewriter
+lib/doc/
+\family default
+.
+\end_layout
+
+\begin_layout Enumerate
+Отдохните день или два, затем снова прочтите 
+\family typewriter
+DocStyle.lyx
+\family default
+.
+\end_layout
+
+\begin_layout Enumerate
+Далее прочтите 
+\emph on
+Руководство пользователя
+\emph default
+ и 
+\emph on
+Самоучитель
+\emph default
+, чтобы получить общее представление о предмете.
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\emph on
+Самоучитель
+\emph default
+ и 
+\emph on
+Руководство пользователя,
+\emph default
+ вероятно, наиболее современные и обновляемые части документации.
+ Вы должны быть способны получить некоторое представление о том, как мы
+ хотели бы, чтобы выглядела и читалась документация.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Свяжитесь с командой документаторов \SpecialChar LyX
+ по адресу: 
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+target "lyx-docs@lists.lyx.org"
+type "mailto:"
+
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+чтобы обсудить намеченные изменения и послушать мнение команды о них.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Вы можете выполнять любые изменения — от усовершенствования доходчивости
+ текста, до выполнения значительной реструктуризации документации.
+ Все усовершенствования принимаются с радостью.
+\end_layout
+
+\end_body
+\end_document

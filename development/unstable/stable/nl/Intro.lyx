@@ -1,0 +1,1264 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+% DO NOT ALTER THIS PREAMBLE!!! 
+%
+%This preamble is designed to ensure that the document prints
+% out as advertised. If you mess with this preamble,
+% parts of the document may not print out as expected. If you
+% have problems LaTeXing this file, please contact 
+% the documentation team
+% email: lyx-docs@lists.lyx.org
+
+% the pages of the TOC is numbered roman
+% and a pdf-bookmark for the TOC is added
+\pagenumbering{roman}
+\let\myTOC\tableofcontents
+\renewcommand\tableofcontents{%
+\pdfbookmark[1]{\contentsname}{}
+\myTOC
+\cleardoublepage
+\pagenumbering{arabic} }
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language dutch
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "palatino" "default"
+\font_sans "helvet" "default"
+\font_typewriter "courier" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format pdf2
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref true
+\pdf_title "Inleiding tot LyX"
+\pdf_author "LyX Team"
+\pdf_subject "LyX-documentation Intro"
+\pdf_keywords "LyX, documentation"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered true
+\pdf_bookmarksopen true
+\pdf_bookmarksopenlevel 2
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle false
+\pdf_quoted_options "linkcolor=black, citecolor=black, urlcolor=blue, filecolor=blue, pdfpagelayout=OneColumn, pdfnewwindow=true, pdfstartview=XYZ, plainpages=false"
+\papersize a4paper
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 0
+\use_package mathdots 1
+\use_package mathtools 0
+\use_package mhchem 1
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Trefwoord
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 2
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Inleiding tot \SpecialChar LyX
+
+\begin_inset Newline newline
+\end_inset
+
+of
+\begin_inset Newline newline
+\end_inset
+
+Hoe gebruik je de Documentatie!!
+\end_layout
+
+\begin_layout Author
+door het \SpecialChar LyX
+ Team
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Door de Documentatie Navigeren
+\end_layout
+
+\begin_layout Standard
+Welkom bij \SpecialChar LyX
+!
+\end_layout
+
+\begin_layout Standard
+Om het beantwoorden van je vragen gemakkelijker te maken en om alle mogelijkhede
+n van \SpecialChar LyX
+ te beschrijven, is de documentatie opgesplitst in een aantal verschillend
+e delen.
+ Elk onderdeel heeft een eigen functie die verderop zal worden beschreven.
+ Echter, voordat je de documentatie begint door te ploegen, zou je eerst
+ grondig deze inleiding moeten doorlezen.
+ Er staat veel nuttige informatie in en het bevat tips die je veel tijd
+ kunnen besparen.
+\end_layout
+
+\begin_layout Standard
+Alhoewel het versienummer van \SpecialChar LyX
+ nu 1.0 (of hoger) is, kan de documentatie
+ gedeeltelijk incompleet zijn of een versie achter lopen.
+ Net als de rest van \SpecialChar LyX
+, is de documentatie het product van een groep vrijwilliger
+s die 
+\begin_inset Quotes eld
+\end_inset
+
+echte banen
+\begin_inset Quotes erd
+\end_inset
+
+ hebben, en families, en afwas te doen, kattebak te legen, enzovoort, enzovoort,
+ enzovoort.
+ We doen ons best om de handleidingen picco-bello in orde te houden, maar
+ mogelijk lukt dit ons niet altijd.
+ (Als je ons wilt helpen deze situatie te verbeteren, lees dan in ieder
+ geval paragraaf
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Contrib"
+
+\end_inset
+
+ in aanvulling op de rest van dit document.)
+\end_layout
+
+\begin_layout Standard
+Nog een verzoekje—als iets in deze handleidingen je verwart, of als het
+ onduidelijk is of fout, aarzel dan niet het ons te laten weten! Je kunt
+ de huidige documentatiebeheerders bereiken door naar 
+\begin_inset CommandInset href
+LatexCommand href
+target "lyx-docs@lists.lyx.org"
+type "mailto:"
+
+\end_inset
+
+ te mailen.
+ Als je vragen hebt die niet in de documentatie worden beantwoord, en je
+ hebt snel hulp nodig, is er een actieve mailing list die je kunt bereiken
+ op 
+\begin_inset CommandInset href
+LatexCommand href
+target "lyx-users@lists.lyx.org"
+type "mailto:"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Het formaat van de Handleidingen
+\end_layout
+
+\begin_layout Standard
+Misschien hebben sommigen van jullie de handleiding(en) uitgeprint.
+ Anderen lezen het misschien online, als een bestand binnen \SpecialChar LyX
+.
+ Voor diegenen die het online lezen zijn er enkele verschillen met de uitgeprint
+e versie.
+ Ten eerste, staat de titel gewoon bovenaan het document en niet geformatteerd
+ op een aparte pagina zoals in sommige van de uitgeprinte versies.
+ Ook zijn de voetnoten onzichtbaar, en de inhoudsopgave ontbreekt.
+ Een voetnoot ziet er uit als volgt: 
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Hoi!
+\end_layout
+
+\begin_layout Plain Layout
+Om mij te sluiten, moet je op het grijze vakje links drukken, daar waar
+ je het woord 
+\begin_inset Quotes eld
+\end_inset
+
+foot
+\begin_inset Quotes erd
+\end_inset
+
+ ziet staan.
+\end_layout
+
+\end_inset
+
+.
+ Om de inhoud van een voetnoot te bekijken moet je er met de linker muisknop
+ op drukken.
+ Voor de inhoudsopgave kun je op de grijze knop 
+\begin_inset Quotes eld
+\end_inset
+
+Table of Contents
+\begin_inset Quotes erd
+\end_inset
+
+ drukken (hiet te vinden onder de titel) of je kunt het Navigate menu gebruiken
+ waar de inhoud automatisch staat weergegeven.
+ (Probeer het maar!)
+\end_layout
+
+\begin_layout Standard
+In de uitgeprinte handleidingen wijzen alle kruisverwijzingen naar de feitelijke
+ nummers van een hoofdstuk, paragraaf, subparagraaf, enzovoort.
+ Online, verschijnen kruisverwijzingen echter als een grijze knop zoals
+ hier: 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Contrib"
+
+\end_inset
+
+.
+ (De uitgeprinte handleidingen laten hier een nummer zien).
+ Als je hier met je linker muisknop drukt, verschijnt er een popup scherm
+ met daarin een lijst van alle kruisverwijzingen in het document.
+ Deze inleiding heeft er slechts een, genaamd Contrib.
+ Je kunt naar de plek gaan waar de kruisverwijzing naar wijst door op de
+ knop met het label 
+\begin_inset Quotes eld
+\end_inset
+
+Go to reference
+\begin_inset Quotes erd
+\end_inset
+
+ te drukken.
+ Teruggaan naar de plek waar je vandaan kwam is net zo makkelijk.
+ 
+\end_layout
+
+\begin_layout Standard
+Nu we een aantal verschillen hebben verduidelijkt tussen uitgeprinte en
+ de online versies van dit bestand, kunnen we naar de vorm van dit document
+ gaan kijken.
+ Nu en dan zul je dingen in een verschillend lettertype tegenkomen: 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Cursieve Stijl
+\emph default
+ wordt over het algemeen gebruikt om nadruk te geven, voor algemene argumenten,
+ boektitels, titels van paragrafen van andere handleidingen, en opmerkingen
+ van de auteurs.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Typemachine
+\family default
+ wordt gebruikt voor programma,- en bestandsnamen, \SpecialChar LaTeX
+-code, en \SpecialChar LyX
+-code en functies.
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+Sans Serif
+\family default
+ wordt gebruikt voor het aanduiden van menu(onderdelen), knoppen, titels
+ van popup-vensters, en voor de toetsen van het toetsenbord.
+\end_layout
+
+\begin_layout Itemize
+
+\noun on
+Hoofdletter stijl
+\noun default
+ wordt gebruikt voor eigennamen.
+\end_layout
+
+\begin_layout Standard
+Toetsen en toetscombinaties worden behandeld in de paragraaf 
+\emph on
+Toetscombinaties
+\emph default
+ van de 
+\begin_inset Quotes eld
+\end_inset
+
+
+\emph on
+Referentiehandleiding
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+ (het bestand 
+\family typewriter
+Reference.lyx
+\family default
+).
+ Als we evenwel toch naar toetsen moeten refereren, zullen we de volgende
+ afspraken hanteren: 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+C-
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ betekent de 
+\family sans
+Control-
+\family default
+ toets.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+S-
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ betekent de 
+\family sans
+Shift-
+\family default
+ toets.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+M-
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ betekent de 
+\family sans
+Meta-
+\family default
+ toets, wat op veel toetsenborden de 
+\family sans
+Alt-
+\family default
+ toets is.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+F1
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ \SpecialChar ldots
+ 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+F12
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ zijn de funcitie toetsen.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+Esc
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ is de escape toets.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+L
+\family default
+inks
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+Rechts
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+Op
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+Neer
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+: de cursortoetsen.
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+\begin_inset Quotes eld
+\end_inset
+
+Insert
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+Delete
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+Home
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+End
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+PageUp
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+PageDown
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+: dit zijn de 6 toetsen die bij veel toetsenborden boven de cursortoetsen
+ zitten.
+ Op sommige toetsenborden heten de 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+PageUp
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ en 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+PageDown
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ toetsen: 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+Prior
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ en 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family sans
+Next
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+Return
+\family default
+ en 
+\family sans
+Enter
+\family default
+ refereren beiden naar dezelfde toets.
+ Op sommige toestenborden is deze gelabeld met 
+\begin_inset Quotes eld
+\end_inset
+
+Enter
+\begin_inset Quotes erd
+\end_inset
+
+ of 
+\begin_inset Quotes eld
+\end_inset
+
+Return
+\begin_inset Quotes erd
+\end_inset
+
+, op anderen staat een geknikte pijl.
+ Weer andere toetsenborden hebben beide toetsen.
+ Voor \SpecialChar LyX
+ zijn beide toetsen gelijkwaardig dus zullen we beiden door elkaar
+ gebruiken.
+\end_layout
+
+\begin_layout Standard
+Af en toe zal je aanwijzingen als 
+\begin_inset Quotes eld
+\end_inset
+
+[Zie de 
+\emph on
+
+\begin_inset Quotes els
+\end_inset
+
+Referentie Handleiding
+\emph default
+
+\begin_inset Quotes ers
+\end_inset
+
+]
+\begin_inset Quotes erd
+\end_inset
+
+ zien.
+ Daar zijn, voor elke functie, alle mogelijke toetsencombinaties opgesomd.
+ Je kunt daar dus altijd kijken.
+ Merk op dat er twee verschillende sets toetscombinaties in gebruik zijn
+ bij de \SpecialChar LyX
+ gemeenschap: de 
+\begin_inset Quotes eld
+\end_inset
+
+CUA
+\begin_inset Quotes erd
+\end_inset
+
+ stijl is de standaard en vertrouwd voor degenen die uit de PC-wereld komen.
+ De andere stijl is de 
+\begin_inset Quotes eld
+\end_inset
+
+emacs
+\begin_inset Quotes erd
+\end_inset
+
+ stijl die vertrouwd is voor degenen die zijn opgegroeid met een Unix systeem
+ en de Emacs editor gebruiken.
+ Tenzij er specifiek op wordt gewezen zijn de toetscombinaties beschreven
+ in de documentatie die van de standaard CUA set.
+ Als je Emacs gewend bent zul je vast en zeker slim genoeg zijn om de documentat
+ie te lezen en zelf de toetscombinaties uit te vogelen.
+\end_layout
+
+\begin_layout Section
+De Handleidingen
+\end_layout
+
+\begin_layout Standard
+De volgende lijst beschrijft de inhoud van elk onderdeel van de documentatie:
+ 
+\end_layout
+
+\begin_layout Description
+
+\emph on
+Inleiding 
+\begin_inset space ~
+\end_inset
+
+
+\emph default
+
+\begin_inset Newline newline
+\end_inset
+
+Dit bestand.
+\end_layout
+
+\begin_layout Description
+
+\emph on
+Tutorial 
+\begin_inset space ~
+\end_inset
+
+
+\emph default
+
+\begin_inset Newline newline
+\end_inset
+
+Als \SpecialChar LyX
+ nieuw voor je is en je nog nooit eerder \SpecialChar LaTeX
+ hebt gebruikt, zou je hier
+ moeten beginnen.
+ Als je denkt dat \SpecialChar LaTeX
+ het spul is waar condooms van worden gemaakt, moet je
+ hier zeker beginnen.
+ Waarschijnlijk ben je na het lezen van de 
+\emph on
+Tutorial
+\emph default
+ nog steeds van mening dat \SpecialChar LaTeX
+ rekbaar materiaal is maar je weet dan in ieder
+ geval hoe je met \SpecialChar LyX
+ om moet gaan.
+ 
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Als je \SpecialChar LaTeX
+ 
+\emph on
+wel
+\emph default
+ eerder hebt gebruikt, zou je nog steeds de 
+\emph on
+Tutorial
+\emph default
+ moeten lezen, beginnend bij de paragraaf over 
+\begin_inset Quotes eld
+\end_inset
+
+\SpecialChar LyX
+ voor \SpecialChar LaTeX
+ gebruikers.
+\begin_inset Quotes erd
+\end_inset
+
+ (Het vluchtig doornemen van de rest kan natuurlijk nooit kwaad.) 
+\end_layout
+
+\begin_layout Standard
+Mocht je ooit in de situatie zitten dat je het even helmaal niet meer snapt,
+ probeer dan eens de 
+\emph on
+Tutorial
+\emph default
+ aandachtig door te lezen voordat je in de andere handleidingen duikt.
+ Het is een goede springplank.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+
+\emph on
+Gebruikshandleiding 
+\begin_inset space ~
+\end_inset
+
+
+\emph default
+
+\begin_inset Newline newline
+\end_inset
+
+Het belangrijkste deel van de documentatie.
+ We zullen trachten hier alle basismogelijkheden en functies van \SpecialChar LyX
+ te beschrijven.
+ Deze handleiding gaat er van uit dat je de 
+\emph on
+Tutorial
+\emph default
+ hebt gelezen.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar ldots
+of dat je oppervlakkig bekend bent met \SpecialChar LaTeX
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+
+\emph on
+Uitgebreide
+\begin_inset space ~
+\end_inset
+
+Mogelijkheden 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\emph default
+Uitbreiding van de 
+\emph on
+Gebruikshandleiding
+\emph default
+.
+ Documenteert aanvullende layouts en specifieke bewerkingsmogelijkheden,
+ inclusief enkele trucjes van de \SpecialChar LaTeX
+ tovenaars.
+ 
+\end_layout
+
+\begin_layout Description
+
+\emph on
+Instellingen 
+\begin_inset space ~
+\end_inset
+
+
+\emph default
+
+\begin_inset Newline newline
+\end_inset
+
+Een beschrijving van geavanceerde \SpecialChar LyX
+ mogelijkheden, inclusief het instellen
+ van het globale gedrag van van \SpecialChar LyX
+ zoals toetscombinaties, internationalisatie,
+ en configuratiebestanden.
+ Peins er zelfs niet over om hier te komen voordat je de 
+\emph on
+Tutorial
+\emph default
+ hebt gelezen.
+\end_layout
+
+\begin_layout Description
+
+\emph on
+Referentie
+\begin_inset space ~
+\end_inset
+
+Handleiding 
+\begin_inset space ~
+\end_inset
+
+
+\emph default
+
+\begin_inset Newline newline
+\end_inset
+
+Dit bevat een volledige en gedetailleerde beschrijving van de mogelijkheden
+ van \SpecialChar LyX
+, maar zonder de handige gebruiksaanwijzingen en beschrijvingen zoals
+ je die vindt in de 
+\emph on
+Gebruikshandleiding
+\emph default
+, de 
+\emph on
+Tutorial
+\emph default
+, of andere handleidingen.
+ 
+\end_layout
+
+\begin_layout Description
+
+\emph on
+Bekende
+\begin_inset space ~
+\end_inset
+
+fouten 
+\begin_inset space ~
+\end_inset
+
+
+\emph default
+
+\begin_inset Newline newline
+\end_inset
+
+Dit bestand bevat een lijst van bekende fouten van \SpecialChar LyX
+, en tevens informatie
+ over wat je moet doen als je een fout in \SpecialChar LyX
+ hebt gevonden.
+ 
+\end_layout
+
+\begin_layout Description
+
+\emph on
+\SpecialChar LaTeX
+
+\begin_inset space ~
+\end_inset
+
+configuratie 
+\begin_inset space ~
+\end_inset
+
+
+\emph default
+
+\begin_inset Newline newline
+\end_inset
+
+Bij het installeren onderzoekt \SpecialChar LyX
+ je systeem.
+ Dit bestand bevat de tijdens de installatie gevonden informatie.
+ Bekijk het eens, om te zien of er mogelijk ontbrekende \SpecialChar LaTeX
+ pakketten tussen
+ zitten die je graag geinstalleerd zou willen hebben.
+ 
+\end_layout
+
+\begin_layout Standard
+Daar waar nodig, refereren deze bestanden naar elkaar.
+ Bijvoorbeeld, de 
+\emph on
+Gebruikshandleiding
+\emph default
+ bevat 
+\emph on
+wat
+\emph default
+ informatie over het installeren en het instellen, maar verwijst de lezer
+ naar de handleiding 
+\emph on
+Instellingen
+\emph default
+ voor meer informatie.
+ 
+\end_layout
+
+\begin_layout Standard
+We zullen het nog een keer zeggen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 0.51cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+Als je voor het eerst met \SpecialChar LyX
+ werkt, lees dan de Tutorial.
+ En wel nu meteen\SpecialChar endofsentence
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 0.51cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Je zou jezelf nodeloos kunnen frustreren als je het niet doet.
+ \SpecialChar LyX
+ doet alles wat je van een tekstverwerker mag verwachten, maar het heeft
+ een andere aanpak.
+\end_layout
+
+\begin_layout Section
+Meehelpen met het Documentation Project
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Contrib"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Fouten in de Handleidingen Rapporteren
+\end_layout
+
+\begin_layout Standard
+Dat is makkelijk genoeg.
+ Je zou een bericht kunnen sturen naar de Developer's Mailing List of de
+ User's Mailing List.
+ Het Documentatie Team heeft echter liever dat je een bericht stuurt naar
+ 
+\begin_inset CommandInset href
+LatexCommand href
+target "lyx-docs@lists.lyx.org"
+type "mailto:"
+
+\end_inset
+
+.
+ Als het kleine aanpassingen zijn zal iemand dit veranderen.
+ Als het grote veranderingen zijn, stellen we voor dat je je bij de mailing
+ list aanmeldt en enige tijd met ons praat voordat je iets doet.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 1.06cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\emph on
+Verander nooit iets in een handleiding zonder toestemming van het Documentatie
+ Team!
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 1.06cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\SpecialChar LyX
+ has a bug tracking system, which you can find at
+\lang dutch
+ 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.lyx.org/trac/wiki/BugTrackerHome
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Je veranderingen zouden anders nooit in de documentatie terechtkomen, omdat
+ het Documentatie Team de originelen beheert via het CVS systeem.
+ 
+\end_layout
+
+\begin_layout Subsection
+Jezelf Aanmelden bij het Documentation Team.
+\end_layout
+
+\begin_layout Standard
+Net als de rest van het \SpecialChar LyX
+ Project, kan het Documentatie Project altijd hulp
+ gebruiken! Als je geïnteresseerd bent om mee te helpen met het Documentatie
+ Project, zorg dan dat je het volgende 
+\emph on
+eerst
+\emph default
+ doet:
+\end_layout
+
+\begin_layout Enumerate
+Haal de broncode op van de meest recente versie van \SpecialChar LyX
+, en pak het uit.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Als je avontuurlijk bent ingesteld kun je ook anoniem meest actuele \SpecialChar LyX
+ broncode
+ ophalen via CVS systeem.
+\end_layout
+
+\end_inset
+
+ Je zult hierin een map vinden getitelt 
+\family typewriter
+development
+\family default
+.
+\end_layout
+
+\begin_layout Enumerate
+Lees hierna de 
+\emph on
+Gebruikshandleiding
+\emph default
+ en de 
+\emph on
+Tutorial
+\emph default
+.
+ 
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Het idee hierachter is, om je op ideeën te brengen.
+ De 
+\emph on
+Tutorial
+\emph default
+ en de 
+\emph on
+Gebruikshandleiding
+\emph default
+ zullen altijd het meest up-to-date van alle documentatie zijn.
+ Je zult op deze manier wat inzicht vergaren in hoe wij ons een handleiding
+ voorstellen.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Lees 
+\family typewriter
+DocStyle.lyx
+\family default
+ opnieuw.
+\end_layout
+
+\begin_layout Enumerate
+En als laatste; neem contact op met het team: 
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+target "lyx-docs@lists.lyx.org"
+type "mailto:"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We willen ons ervan verzekeren dat je de stijl begrijpt 
+\emph on
+voordat
+\emph default
+ je met schrijven begint, anders zul je je teksten moeten herschrijven.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Begin pas met schrijven 
+\emph on
+nadat
+\emph default
+ we via email contact met elkaar hebben gehad.
+ Op de webpagina van het Documentatie Team, of via de archieven van de mailingli
+jsten op 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.lyx.org
+\end_layout
+
+\end_inset
+
+ kun je zien wat er op het gebied van documentatie gaande is.
+ 
+\end_layout
+
+\end_body
+\end_document

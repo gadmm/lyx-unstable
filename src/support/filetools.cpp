@@ -21,6 +21,7 @@
 
 #include <config.h>
 
+#include "LyX.h"
 #include "LyXRC.h"
 
 #include "support/filetools.h"
@@ -995,6 +996,11 @@ cmd_ret const runCommand(string const & cmd)
 	// pstream (process stream), with the
 	// variants ipstream, opstream
 
+	if (verbose)
+		lyxerr << "\nRunning: " << cmd << endl;
+	else
+		LYXERR(Debug::INFO,"Running: " << cmd);
+
 #if defined (_WIN32)
 	STARTUPINFO startup;
 	PROCESS_INFORMATION process;
@@ -1065,10 +1071,14 @@ cmd_ret const runCommand(string const & cmd)
 
 #if defined (_WIN32)
 	WaitForSingleObject(process.hProcess, INFINITE);
+	DWORD pret;
+	if (!GetExitCodeProcess(process.hProcess, &pret))
+		pret = -1;
 	if (!infile.empty())
 		CloseHandle(startup.hStdInput);
 	CloseHandle(process.hProcess);
-	int const pret = fclose(inf);
+	if (fclose(inf) != 0)
+		pret = -1;
 #elif defined (HAVE_PCLOSE)
 	int const pret = pclose(inf);
 #elif defined (HAVE__PCLOSE)

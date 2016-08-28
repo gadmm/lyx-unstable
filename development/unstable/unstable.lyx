@@ -93,8 +93,9 @@ A.
 \begin_layout Description
 B.
  Can the development of this version be made directly on the master branch
- instead of a separate branch? (And therefore ask the developer of a file
- format change to encapsulate his changes directly.)
+ instead of a separate branch? (For two reasons: then the developer of a
+ file format change can be asked to encapsulate his changes directly, which
+ is safer; and it will ease the job of translating.)
 \end_layout
 
 \begin_layout Section
@@ -160,9 +161,16 @@ LYX_FORMAT_LYX
 There is a script that checks that LyX unstable writes the same files as
  LyX stable in 
 \family typewriter
-lib/doc/tests/check_fileformat.sh
+development/unstable/check_fileformat.sh
 \family default
-.
+ (see step 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "enu:Check-that-there"
+
+\end_inset
+
+ below).
 \end_layout
 
 \end_deeper
@@ -202,6 +210,7 @@ TL;DR: merge the commit on master that introduces the file format change
  into unstable, then introduce a commit that disables the changes only at
  the interfaces: I/O, GUI (Qt & LFUNs).
  The philosophy is to introduce the most minimal change in code possible.
+ For most of the items below, no change is necessary.
 \end_layout
 
 \begin_layout Enumerate
@@ -452,6 +461,12 @@ Check that the diff with X / master is reasonable.
 \end_layout
 
 \begin_layout Enumerate
+\begin_inset CommandInset label
+LatexCommand label
+name "enu:Check-that-there"
+
+\end_inset
+
 Check that there is no change after opening and saving 
 \family typewriter
 lyx 

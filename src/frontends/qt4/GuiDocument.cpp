@@ -767,7 +767,7 @@ GuiDocument::GuiDocument(GuiView & lv)
 	masterChildModule->childrenTW->resizeColumnToContents(2);
 
 
-	// Format
+	// Formats
 	outputModule = new UiWidget<Ui::OutputUi>;
 
 	connect(outputModule->defaultFormatCO, SIGNAL(activated(int)),
@@ -1445,7 +1445,7 @@ GuiDocument::GuiDocument(GuiView & lv)
 	docPS->addPanel(listingsModule, N_("Listings[[inset]]"));
 	docPS->addPanel(bulletsModule, N_("Bullets"));
 	docPS->addPanel(branchesModule, N_("Branches"));
-	docPS->addPanel(outputModule, N_("Format"));
+	docPS->addPanel(outputModule, N_("Formats[[output]]"));
 	docPS->addPanel(preambleModule, N_("LaTeX Preamble"));
 	docPS->setCurrentPanel("Document Class");
 // FIXME: hack to work around resizing bug in Qt >= 4.2
@@ -2554,14 +2554,12 @@ void GuiDocument::updateDefaultFormat()
 	outputModule->defaultFormatCO->clear();
 	outputModule->defaultFormatCO->addItem(qt_("Default"),
 				QVariant(QString("default")));
-	typedef vector<Format const *> Formats;
-	Formats formats = param_copy.exportableFormats(true);
+	vector<Format const *> formats = param_copy.exportableFormats(true);
 	sort(formats.begin(), formats.end(), Format::formatSorter);
-	Formats::const_iterator cit = formats.begin();
-	Formats::const_iterator end = formats.end();
-	for (; cit != end; ++cit)
-		outputModule->defaultFormatCO->addItem(qt_((*cit)->prettyname()),
-				QVariant(toqstr((*cit)->name())));
+	for (Format const * f : formats)
+		outputModule->defaultFormatCO->addItem
+			(toqstr(translateIfPossible(f->prettyname())),
+			 QVariant(toqstr(f->name())));
 	outputModule->defaultFormatCO->blockSignals(false);
 }
 
@@ -2849,7 +2847,7 @@ void GuiDocument::applyView()
 	bp_.listings_params =
 		InsetListingsParams(fromqstr(listingsModule->listingsED->toPlainText())).params();
 
-	// Format
+	// Formats
 	bp_.default_output_format = fromqstr(outputModule->defaultFormatCO->itemData(
 		outputModule->defaultFormatCO->currentIndex()).toString());
 
@@ -3409,7 +3407,7 @@ void GuiDocument::paramsToDialog()
 		fontModule->fontencLE->setText(toqstr(bp_.fontenc));
 	}
 
-	// Format
+	// Formats
 	// This must be set _after_ fonts since updateDefaultFormat()
 	// checks osFontsCB settings.
 	// update combobox with formats

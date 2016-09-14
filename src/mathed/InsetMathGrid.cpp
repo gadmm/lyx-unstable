@@ -82,7 +82,7 @@ static void resetGrid(InsetMathGrid & grid)
 
 
 InsetMathGrid::CellInfo::CellInfo()
-	: multi_(CELL_NORMAL), glue_(0), begin_(0), end_(0)
+	: multi_(CELL_NORMAL)
 {}
 
 
@@ -618,7 +618,7 @@ void InsetMathGrid::drawWithMargin(PainterInfo & pi, int x, int y,
 			col_type const c = col(idx);
 			if (r > 0 && r < nrows()) {
 				for (unsigned int i = 0; i < rowinfo_[r].lines_; ++i) {
-					int yy = y + rowinfo_[r].offset_
+					int const yy = y + rowinfo_[r].offset_
 						- rowinfo_[r].ascent_
 						- i * hlinesep()
 						- hlinesep()/2 - rowsep()/2;
@@ -631,14 +631,20 @@ void InsetMathGrid::drawWithMargin(PainterInfo & pi, int x, int y,
 			}
 			if (c > 0 && c < ncols()) {
 				for (unsigned int i = 0; i < colinfo_[c].lines_; ++i) {
-					int xx = x + lmargin
+					int const xx = x + lmargin
 						+ colinfo_[c].offset_
 						- i * vlinesep()
 						- vlinesep()/2 - colsep()/2;
-					pi.pain.line(xx,
-						rowinfo_[r].offset_ - rowinfo_[r].ascent_,
-						xx,
-						rowinfo_[r].offset_ + rowinfo_[r].descent_,
+					int top_offset;
+					// prevRowHasLine needs to be changed if multicolumn lines are supported
+					bool const prevRowHasLine(r > 0);
+					if (prevRowHasLine)
+						// start from offset of previous row to create a continous line
+						top_offset = rowinfo_[r - 1].offset_ + rowinfo_[r - 1].descent_;
+					else
+						top_offset = rowinfo_[r].offset_- rowinfo_[r].ascent_;
+					pi.pain.line(xx, y + top_offset,
+						xx, y + rowinfo_[r].offset_ + rowinfo_[r].descent_,
 						Color_foreground);
 				}
 			}

@@ -231,8 +231,8 @@ static docstring const papersizepdf_def = from_ascii(
 
 static docstring const papersizepdflua_def = from_ascii(
 	"% Backwards compatibility for LuaTeX < 0.90\n"
-	"\\@ifundefined{pageheight}{\\let\\pageheight\\pdfpageheight}\n"
-	"\\@ifundefined{pagewidth}{\\let\\pagewidth\\pdfpagewidth}\n"
+	"\\@ifundefined{pageheight}{\\let\\pageheight\\pdfpageheight}{}\n"
+	"\\@ifundefined{pagewidth}{\\let\\pagewidth\\pdfpagewidth}{}\n"
 	"\\pageheight\\paperheight\n"
 	"\\pagewidth\\paperwidth\n");
 
@@ -296,7 +296,7 @@ static docstring const textcommaabove_def = from_ascii(
 
 static docstring const textcommaaboveright_def = from_ascii(
         "\\ProvideTextCommandDefault{\\textcommaaboveright}[1]{%%\n"
-        "  \\LyxTextAccent[.5ex]{\\LyxAccentSize\\ `}{#1}}\n");
+        "  \\LyxTextAccent[.5ex]{\\LyxAccentSize\\ '}{#1}}\n");
 
 // Baltic languages use a comma-accent instead of a cedilla
 static docstring const textbaltic_def = from_ascii(
@@ -953,6 +953,8 @@ string const LaTeXFeatures::getPackages() const
 		packages << "\\usepackage{tipa}\n";
 	if (mustProvide("tipx") && !params_.useNonTeXFonts)
 		packages << "\\usepackage{tipx}\n";
+	if (mustProvide("extraipa") && !params_.useNonTeXFonts)
+		packages << "\\usepackage{extraipa}\n";
 	if (mustProvide("tone") && !params_.useNonTeXFonts)
 		packages << "\\usepackage{tone}\n";
 
@@ -1875,6 +1877,26 @@ void LaTeXFeatures::resolveAlternatives()
 			// would be more confusing
 			if (ita == end)
 				require(alternatives.front());
+			features_.erase(it);
+			it = features_.begin();
+		} else
+			++it;
+	}
+}
+
+
+void LaTeXFeatures::expandMultiples()
+{
+	for (Features::iterator it = features_.begin(); it != features_.end();) {
+		if (contains(*it, ',')) {
+			vector<string> const multiples = getVectorFromString(*it, ",");
+			vector<string>::const_iterator const end = multiples.end();
+			vector<string>::const_iterator itm = multiples.begin();
+			// Do nothing if any multiple is already required
+			for (; itm != end; ++itm) {
+				if (!isRequired(*itm))
+					require(*itm);
+			}
 			features_.erase(it);
 			it = features_.begin();
 		} else

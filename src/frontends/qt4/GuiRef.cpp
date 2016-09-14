@@ -251,7 +251,8 @@ void GuiRef::updateContents()
 	nameL->setHidden(!nameAllowed());
 
 	// restore type settings for new insets
-	if (params_["reference"].empty())
+	bool const new_inset = params_["reference"].empty();
+	if (new_inset)
 		typeCO->setCurrentIndex(orig_type);
 	else
 		typeCO->setCurrentIndex(InsetRef::getType(params_.getCmdName()));
@@ -269,7 +270,7 @@ void GuiRef::updateContents()
 
 	int const thebuffer = theBufferList().bufferNum(buffer().fileName());
 	// restore the buffer combo setting for new insets
-	if (params_["reference"].empty() && restored_buffer_ != -1
+	if (new_inset && restored_buffer_ != -1
 	    && restored_buffer_ < bufferCO->count() && thebuffer == active_buffer_)
 		bufferCO->setCurrentIndex(restored_buffer_);
 	else {
@@ -281,7 +282,9 @@ void GuiRef::updateContents()
 	active_buffer_ = thebuffer;
 
 	updateRefs();
-	bc().setValid(false);
+	// Activate OK/Apply buttons if the users inserts a new ref
+	// and we have a valid pre-setting.
+	bc().setValid(isValid() && new_inset);
 }
 
 

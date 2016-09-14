@@ -614,6 +614,11 @@ void MathMacro::draw(PainterInfo & pi, int x, int y) const
 		drawMarkers2(pi, expx, expy);
 	} else {
 		bool drawBox = lyxrc.macro_edit_style == LyXRC::MACRO_EDIT_INLINE_BOX;
+		MacroData const * macro = MacroTable::globalMacros().get(name());
+		bool upshape = macro && macro->symbol()
+				&& macro->symbol()->extra == "textmode";
+		Changer dummy = pi.base.font.changeShape(upshape ? UP_SHAPE
+							: pi.base.font.shape());
 
 		// warm up cells
 		for (size_t i = 0; i < nargs(); ++i)
@@ -925,7 +930,13 @@ bool MathMacro::folded() const
 
 void MathMacro::write(WriteStream & os) const
 {
-	MathEnsurer ensurer(os, d->macro_ != 0, true);
+	MacroData const * macro = MacroTable::globalMacros().get(name());
+	bool textmode_macro = macro && macro->symbol()
+				&& macro->symbol()->extra == "textmode";
+	bool needs_mathmode = macro && (!macro->symbol()
+				|| macro->symbol()->extra != "textmode");
+
+	MathEnsurer ensurer(os, needs_mathmode, true, textmode_macro);
 
 	// non-normal mode
 	if (d->displayMode_ != DISPLAY_NORMAL) {

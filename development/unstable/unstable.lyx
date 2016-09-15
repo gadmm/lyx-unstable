@@ -235,7 +235,24 @@ Merge X into unstable (git merge X), or merge master if there is no new
 \begin_deeper
 \begin_layout Itemize
 Check that the diff with X (resp.
- master) is reasonable as a safety measure.
+ master) is reasonable as a safety measure:
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+git diff X src/
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+When there is no file format change, go to 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "enu:Check-that-there"
+
+\end_inset
+
+.
 \end_layout
 
 \end_deeper
@@ -250,7 +267,7 @@ Use
 
 \begin_deeper
 \begin_layout LyX-Code
-diff X~..X
+git diff X~..X
 \end_layout
 
 \begin_layout Standard
@@ -460,6 +477,12 @@ LYXRC.cpp
 Check that the diff with X / master is reasonable.
 \end_layout
 
+\begin_deeper
+\begin_layout LyX-Code
+git diff X src/
+\end_layout
+
+\end_deeper
 \begin_layout Enumerate
 \begin_inset CommandInset label
 LatexCommand label
@@ -494,7 +517,7 @@ Ignored differences are determined by the multiline PCRE regex in
 
 \end_deeper
 \begin_layout Enumerate
-goto 1.
+If X is different from master, goto 1.
 \end_layout
 
 \begin_layout Section
@@ -565,7 +588,7 @@ development/unstable/stable/
 \family default
  and use the script
 \family typewriter
- lib/doc/tests/setup_fileformat_check.sh 
+ development/unstable/setup_fileformat_check.sh 
 \family default
 to ensure that all the lyx files in
 \family typewriter

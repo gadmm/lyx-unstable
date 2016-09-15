@@ -1426,8 +1426,9 @@ bool Cursor::macroModeClose()
 	InsetMathNest * const in = inset().asInsetMath()->asNestInset();
 	if (in && in->interpretString(*this, s))
 		return true;
-	MathAtom atom = buffer()->getMacro(name, *this, false) ?
-		MathAtom(new MathMacro(buffer(), name)) : createInsetMath(name, buffer());
+	bool const ert_macro = !buffer()->getMacro(name, *this, false);
+	MathAtom atom = ert_macro ? createInsetMath(name, buffer())
+				  : MathAtom(new MathMacro(buffer(), name));
 
 	// try to put argument into macro, if we just inserted a macro
 	bool macroArg = false;
@@ -1449,7 +1450,11 @@ bool Cursor::macroModeClose()
 	else if (atom.nucleus()->nargs() > 0)
 		atom.nucleus()->cell(0).append(selection);
 
-	bool ert_macro = atomAsMacro && !atomAsMacro->macro();
+	MathWordList const & words = mathedWordList();
+	MathWordList::const_iterator it = words.find(name);
+	bool keep_mathmode = it != words.end() && (it->second.inset == "font"
+						|| it->second.inset == "oldfont"
+						|| it->second.inset == "mbox");
 
 	if (in && in->currentMode() == Inset::TEXT_MODE
 	    && atom.nucleus()->currentMode() == Inset::MATH_MODE
@@ -1460,7 +1465,7 @@ bool Cursor::macroModeClose()
 		posForward();
 	} else if (in && in->currentMode() == Inset::MATH_MODE
 		   && atom.nucleus()->currentMode() == Inset::TEXT_MODE
-		   && name != from_ascii("text")) {
+		   && !keep_mathmode) {
 		MathAtom at = createInsetMath("text", buffer());
 		at.nucleus()->cell(0).push_back(atom);
 		niceInsert(at);

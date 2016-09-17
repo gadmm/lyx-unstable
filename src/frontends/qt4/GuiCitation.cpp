@@ -104,7 +104,7 @@ GuiCitation::GuiCitation(GuiView & lv)
 	filter_->setAutoHideButton(FancyLineEdit::Right, true);
 #endif
 #if QT_VERSION >= 0x040700
-	filter_->setPlaceholderText(qt_("Filter available"));
+	filter_->setPlaceholderText(qt_("All avail. citations"));
 #endif
 
 	filterBarL->addWidget(filter_, 0);
@@ -307,7 +307,8 @@ void GuiCitation::updateStyles(BiblioInfo const & bi)
 	citationStyleCO->blockSignals(true);
 
 	// save old index
-	int const oldIndex = citationStyleCO->currentIndex();
+	int const curindex = citationStyleCO->currentIndex();
+	int const oldIndex = (curindex < 0) ? style_ : curindex;
 	citationStyleCO->clear();
 	citationStyleCO->insertItems(0, sty);
 	citationStyleCO->setEnabled(true);
@@ -368,9 +369,11 @@ void GuiCitation::updateInfo(BiblioInfo const & bi, QModelIndex const & idx)
 {
 	if (!idx.isValid() || bi.empty()) {
 		infoML->document()->clear();
+		infoML->setToolTip(qt_("Displays a sketchy preview if a citation is selected above"));
 		return;
 	}
 
+	infoML->setToolTip(qt_("Sketchy preview of the selected citation"));
 	QString const keytxt = toqstr(
 		bi.getInfo(qstring_to_ucs4(idx.data().toString()), documentBuffer(), true));
 	infoML->document()->setHtml(keytxt);
@@ -479,8 +482,8 @@ void GuiCitation::regexChanged()
 void GuiCitation::updateFilterHint()
 {
 	QString const hint = instant_->isChecked() ?
-		qt_("Enter the text to search for") :
-		qt_("Enter the text to search for and press Enter");
+		qt_("Enter string to filter the list of available citations") :
+		qt_("Enter string to filter the list of available citations and press <Enter>");
 	filter_->setToolTip(hint);
 }
 
@@ -820,6 +823,8 @@ void GuiCitation::saveSession() const
 		sessionKey() + "/casesensitive", casesense_->isChecked());
 	settings.setValue(
 		sessionKey() + "/autofind", instant_->isChecked());
+	settings.setValue(
+		sessionKey() + "/citestyle", style_);
 }
 
 
@@ -830,6 +835,7 @@ void GuiCitation::restoreSession()
 	regexp_->setChecked(settings.value(sessionKey() + "/regex").toBool());
 	casesense_->setChecked(settings.value(sessionKey() + "/casesensitive").toBool());
 	instant_->setChecked(settings.value(sessionKey() + "/autofind").toBool());
+	style_ = settings.value(sessionKey() + "/citestyle").toInt();
 	updateFilterHint();
 }
 

@@ -1858,22 +1858,22 @@ bool GuiView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 
 	case LFUN_MASTER_BUFFER_UPDATE:
 	case LFUN_MASTER_BUFFER_VIEW:
-		enable = doc_buffer
-			&& (doc_buffer->parent() != 0
-			    || doc_buffer->hasChildren())
-			&& !d.processing_thread_watcher_.isRunning();
-		break;
-
 	case LFUN_BUFFER_UPDATE:
 	case LFUN_BUFFER_VIEW: {
 		if (!doc_buffer || d.processing_thread_watcher_.isRunning()) {
 			enable = false;
 			break;
 		}
+		// current or master buffer
+		Buffer const * buf =
+			(cmd.action() == LFUN_MASTER_BUFFER_UPDATE ||
+			 cmd.action() == LFUN_MASTER_BUFFER_VIEW)
+			? doc_buffer->masterBuffer()
+			: doc_buffer;
 		string format = to_utf8(cmd.argument());
 		if (cmd.argument().empty())
-			format = doc_buffer->params().getDefaultOutputFormat();
-		enable = doc_buffer->params().isExportable(format, true);
+			format = buf->params().getDefaultOutputFormat();
+		enable = buf->params().isExportable(format, true);
 		break;
 	}
 

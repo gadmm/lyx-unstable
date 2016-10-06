@@ -1,5 +1,5 @@
-#LyX 2.2 created this file. For more info see http://www.lyx.org/
-\lyxformat 508
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 512
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -7,10 +7,21 @@
 \textclass seminar
 \begin_preamble
 \renewcommand{\printlandscape}{\special{landscape}}
+
+% if slides come out in the viewer upside down, try:
 %\sliderotation{right}
+
+% translation of toc title
+% as slidesec does not provide a toc name, 
+% just redefine the slidesec macro
+\def\listofslides{\section*{Liste des transparents%
+  \@mkboth{LISTE DES TRANSPARENTS}{LISTE DES TRANSPARENTS}}%
+  \def\l@slide##1##2##3{%
+    \slide@undottedcline{\slidenumberline{##3}{##2}}{}}%
+  \let\l@subslide\l@slide
+  \@startlos}
 \end_preamble
-\options a4paper, semrot, slidesec
-\use_default_options false
+\use_default_options true
 \maintain_unincluded_children false
 \language french
 \language_package babel
@@ -26,15 +37,25 @@
 \font_osf false
 \font_sf_scale 100 100
 \font_tt_scale 100 100
-\graphics dvips
+\use_microtype false
+\graphics default
 \default_output_format default
 \output_sync 0
 \bibtex_command default
 \index_command default
 \paperfontsize default
 \spacing single
-\use_hyperref false
-\papersize default
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder true
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize a4paper
 \use_geometry false
 \use_package amsmath 1
 \use_package amssymb 1
@@ -53,7 +74,7 @@
 \use_indices false
 \paperorientation portrait
 \suppress_date false
-\justification true
+\justification false
 \use_refstyle 0
 \index Index
 \shortcut idx
@@ -77,63 +98,10 @@
 \begin_body
 
 \begin_layout Standard
-\begin_inset Note Note
+\begin_inset Flex LandscapeSlide
 status open
 
-\begin_layout Plain Layout
-
-\series bold
-Note:
-\series default
- Il s'est avéré que la méthode 
-\family sans
-PDF (dvipdfm)
-\family default
- fonctionne correctement sur toutes les distributions \SpecialChar LaTeX
- pour visionner/exporter
- en PDF.
- Visionner et exporter en DVI ou PS les documents 
-\family typewriter
-seminar
-\family default
- peut produire des résultats incorrects, en fonction de la distribution
- \SpecialChar LaTeX
- et des visionneurs DVI ou PostScript
-\end_layout
-
-\begin_layout Plain Layout
-
-\series bold
-Note:
-\series default
- La classe 
-\family sans
-seminar
-\family default
- est conçue pour produire des transparents, et non pas des présentations
- à la powerpoint.
- Pour ces dernières, utiliser une classe appropriée comme 
-\family sans
-beamer
-\family default
- ou
-\family sans
- powerdot
-\family default
-.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout LandscapeSlide
-
-\end_layout
-
-\begin_deeper
-\begin_layout SlideHeading
+\begin_layout Title
 Transparents et notes avec la classe 
 \family sans
 \noun on
@@ -145,7 +113,7 @@ Seminar
 status collapsed
 
 \begin_layout Plain Layout
-écrit par Günter Milde, traduction francophone Jean-Pierre Chrétien
+traduction francophone Jean-Pierre Chrétien, mise à jour 09/2016
 \end_layout
 
 \end_inset
@@ -154,311 +122,16 @@ status collapsed
 \end_layout
 
 \begin_layout Author
-Harry Testman
+Günter Milde
 \end_layout
 
 \begin_layout Date
-10/10/2010
+2016/09/29
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
-\end_layout
-
-\begin_layout LandscapeSlide
-
-\end_layout
-
-\begin_deeper
-\begin_layout SlideHeading
-Quelques points essentiels pour commencer:
-\end_layout
-
-\begin_layout Itemize
-Commencer un transparent par un paragraphe de style 
-\family typewriter
-DiapoPaysage
-\family default
- or 
-\family typewriter
-DiapoPortrait
-\family default
-.
-\end_layout
-
-\begin_layout Itemize
-Il est vraiment utile de lire le manuel de seminar: 
-\family typewriter
-sem-user.pdf
-\family default
- (ou 
-\family typewriter
-sem-user.dvi
-\family default
-)
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
-\end_inset
-
-
-\end_layout
-
-\begin_layout PortraitSlide
-
-\end_layout
-
-\begin_deeper
-\begin_layout SlideHeading
-Écrire quelque chose sur un transparent 
-\end_layout
-
-\begin_layout Standard
-Si un paragraphe doit apparaître dans un transparent, il doit être:
-\end_layout
-
-\begin_layout Itemize
-soit dans le paragraphe d'ouverture 
-\family sans
-DiapoPaysage
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-soit emboîté à l'intérieur de l'environnement 
-\family sans
-DiapoPaysage
-\end_layout
-
-\begin_layout Standard
-Comment emboîter quelque chose est expliqué dans le 
-\emph on
-Guide de l'utilisateur
-\emph default
-, chapitre
-\begin_inset space ~
-\end_inset
-
-3.4.
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
-\end_inset
-
-
-\end_layout
-
-\begin_layout LandscapeSlide
-
-\end_layout
-
-\begin_deeper
-\begin_layout SlideSubHeading
-Que peut-on mettre dans un transparent?
-\end_layout
-
-\begin_layout Standard
-Pratiquement tout ce qui peut apparaître en \SpecialChar LaTeX
- ordinaire peut aussi figurer
- dans un transparent.
-\end_layout
-
-\begin_layout Standard
-(Enfin, sauf les flottants — qui en souhaiterait dans un transparent?)
-\end_layout
-
-\begin_layout Standard
-de plus, il y a les styles de paragraphe:
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-TitreDiapo,
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-SousTitreDiapo,
-\end_layout
-
-\begin_layout Itemize
-
-\family sans
-ListeDiapos,
-\end_layout
-
-\begin_layout Itemize
-
-\family sans
-ContenuDiapo,
-\family default
- et
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-SommaireProgression
-\family default
-.
-\end_layout
-
-\begin_layout Standard
-Ceux-ci figurent dans le menu déroulant des styles.
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
-\end_inset
-
-
-\end_layout
-
-\begin_layout LandscapeSlide
-Le texte dans l'environnement 
-\family sans
-DiapoPaysage
-\family default
- apparaîtra en haut du transparent comme un paragraphe ordinaire.
- 
-\end_layout
-
-\begin_deeper
-\begin_layout SlideHeading
-Que se passe-t-il, si vous voulez une liste ou un titre en premier? 
-\end_layout
-
-\begin_layout Standard
-Habituellement,\SpecialChar LyX
- n'apprécie pas les paragraphes vides et les fait disparaître
- avant que vous ayez le temps d'emboîter quelque chose dedans (si vous ne
- saisissez pas une commande vide ou une note).
- Le format 
-\family typewriter
-seminar
-\family default
-.
-\family typewriter
-layout
-\family default
- instruit \SpecialChar LyX
- de laisser un environnement 
-\family sans
-DiapoPaysage
-\family default
- or 
-\family sans
-DiapoPortrait
-\family default
-, et vous n'avez pas besoin de cette méthode détournée.
-\end_layout
-
-\begin_layout Standard
-Le style 
-\family sans
-–Séparateur–
-\family default
- après un transparent est nécessaire car \SpecialChar LyX
- fusionne deux environnements identique
-s s'ils se succèdent immédiatement (e.
-\begin_inset space \thinspace{}
-\end_inset
-
-g.
-\begin_inset space \space{}
-\end_inset
-
-deux paragraphes dans l'environnement 
-\family sans
-DiapoPaysage
-\family default
- seront sur un seul transparent, s'il n'y a rien entre eux).
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-La classe 
-\family typewriter
-seminar
-\family default
- met tout ce qui n'est pas emboîté dans un environnement 
-\family typewriter
-...
-\family sans
-Diapo
-\family default
- sur des pages supplémentaires en tant que 
-\emph on
-notes
-\emph default
- (voir le transparent
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sli:output-options"
-
-\end_inset
-
- pour les options de sortie).
-\end_layout
-
-\begin_layout Standard
-Le style 
-\family sans
-–Séparateur–
-\family default
- n'est pas nécessaire, si les notes suivent le transparent (ou si une 
-\family sans
-DiapoPaysage
-\family default
- est suivie par une 
-\family sans
-DiapoPortrait
-\family default
-).
-\end_layout
-
-\begin_layout Section
-Sommaire
-\end_layout
-
-\begin_layout Standard
-
-\family typewriter
-seminar
-\family default
- définit des commandes pour créer un sommaire, car la table des matières
- n'affiche que les titres et sous-titres de section 
-\begin_inset Quotes fld
-\end_inset
-
-normaux
-\begin_inset Quotes frd
-\end_inset
-
-:
 \end_layout
 
 \begin_layout Standard
@@ -470,98 +143,141 @@ LatexCommand tableofcontents
 
 \end_layout
 
-\begin_layout Subsection
-Contenu des transparents
+\begin_layout Standard
+\begin_inset Flex LandscapeSlide
+status open
+
+\begin_layout SlideHeading
+Seminar
 \end_layout
 
-\begin_layout Standard
-Le style de paragraphe 
+\begin_layout Itemize
+La classe 
+\begin_inset CommandInset href
+LatexCommand href
+name "seminar"
+target "http://www.ctan.org/pkg/seminar"
+
+\end_inset
+
+ est conçue pour créer des transparents pour rétroprojecteur.
+ Pour des présentations à la PowerPoint, une classe de document appropriée
+ comme
 \family sans
-ContenuDiapo
+ beamer
 \family default
- est similaire à la table des matières, mais n'affiche que les 
-\family typewriter
-TitreDiapo
-\family default
-.
- Il a des problèmes avec les 
-\family typewriter
-SousTitreDiapo
-\family default
-, cependant, qui ne s'affichent pas dans la liste (sans doute à cause d'un
- bogue dans 
-\family typewriter
-slidesec.sty
-\family default
-):
-\end_layout
-
-\begin_layout SlideContents
-
-\end_layout
-
-\begin_layout Subsection
-Liste des transparents
-\end_layout
-
-\begin_layout Standard
-Similaire à la liste des tableaux, la Analogue to a list of tables, le style
- 
+ ou
 \family sans
-ListeDiapos
+ powerdot
 \family default
- affiche tous les transparents du document (pour créer un transparent avec
- la liste, emboîter le style dans un paragraphe 
-\family typewriter
-...Diapo
+ peut mieux convenir.
+\end_layout
+
+\begin_layout Itemize
+Insérer un transparent via un insert 
+\family sans
+DiapoPaysage
 \family default
-):
-\end_layout
-
-\begin_layout ListOfSlides
-
-\end_layout
-
-\begin_layout Subsection
-Progression
-\end_layout
-
-\begin_layout Standard
-Si vous souhaitez assurer à l'auditoire que la présentation est bientôt
- terminée, insérez un transparent avec 
-\family typewriter
-SommaireProgression
+ ou 
+\family sans
+DiapoPortrait
 \family default
-:
+ (
+\family sans
+Insertion\SpecialChar menuseparator
+Inserts personnalisables
+\family default
+).
 \end_layout
 
-\begin_layout LandscapeSlide
-
+\begin_layout Itemize
+Pratiquement tout ce qui peut apparaître en \SpecialChar LaTeX
+ ordinaire peut aussi figurer
+ dans un transparent (sauf les flottants).
 \end_layout
 
 \begin_deeper
-\begin_layout ProgressContents
-
+\begin_layout Plain Layout
+Styles complémentaires: 
+\family sans
+TitreDiapo, SousTitreDiapo
 \end_layout
 
 \end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
+\begin_layout Itemize
+Le manuel de seminar 
+\begin_inset CommandInset href
+LatexCommand href
+name "sem-user.pdf"
+target "https://www.ctan.org/tex-archive/macros/latex/contrib/seminar/doc/seminar-doc.pdf"
+
+\end_inset
+
+ est un peu daté mais reste utile à consulter.
+\end_layout
+
 \end_inset
 
 
 \end_layout
 
-\begin_layout LandscapeSlide
+\begin_layout Standard
+\begin_inset Flex LandscapeSlide
+status open
+
+\begin_layout SlideHeading
+Attention
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+Seminar
+\family default
+ utilise les directives particulières de 
+\begin_inset CommandInset href
+LatexCommand href
+name "PGF"
+target "http://ctan.org/pkg/pgf"
+
+\end_inset
+
+: la taille et l'orientation des transparents présente des problèmes suivant
+ les formats de sortie et l'utilitaire d'affichage (voir le transparent
+ 
+\begin_inset Quotes fld
+\end_inset
+
+En cas de problèmes\SpecialChar ldots
+
+\begin_inset Quotes frd
+\end_inset
+
+ et l'annexe ci-après).
+\end_layout
+
+\begin_layout Itemize
+Assurez-vous que les marges du document sont positionnées à 
+\begin_inset Quotes fld
+\end_inset
+
+Implicites
+\begin_inset Quotes frd
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
 
 \end_layout
 
-\begin_deeper
-\begin_layout SlideHeading
+\begin_layout Section
 Configuration
 \end_layout
 
-\begin_layout SlideSubHeading
+\begin_layout SlideHeading
 Options d'impression
 \begin_inset CommandInset label
 LatexCommand label
@@ -583,7 +299,8 @@ de
 \begin_inset space ~
 \end_inset
 
-classe
+classe\SpecialChar menuseparator
+Réglable
 \family default
  du menu 
 \family sans
@@ -600,6 +317,10 @@ de
 document
 \family default
 :
+\end_layout
+
+\begin_layout Description
+notes notes et transparents sont imprimés (réglage implicite)
 \end_layout
 
 \begin_layout Description
@@ -621,48 +342,50 @@ notesonly
 \begin_layout Description
 
 \lang english
-notes
-\lang french
- notes et transparents sont imprimés
-\end_layout
-
-\begin_layout Description
-
-\lang english
 notesonly
 \lang french
-* crée un marqueur de transparent pour chaque environnement 
-\family typewriter
-...Slide
+* crée un marqueur de transparent pour chaque environnement
 \end_layout
 
 \begin_layout Description
+portrait orientation portrait (orientation implicite: paysage)
+\end_layout
 
-\lang english
-article
-\lang french
- imprime comme un article (2 par page)
+\begin_layout Description
+article imprime comme un article (2 par page avec PDF (dvipdfm) et l'option
+\family typewriter
+ portrait).
+
+\family sans
+ 
+\end_layout
+
+\begin_layout Description
+semrot pivote les transparents dont l'orientation ne correspond pas au réglage
+ pour le document.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Newpage newpage
-\end_inset
+\begin_inset Flex LandscapeSlide
+status open
 
-
+\begin_layout SlideHeading
+Commandes du préambule
 \end_layout
 
-\begin_layout SlideSubHeading
-Commandes du préambule
+\begin_layout Plain Layout
+Les options suivantes peuvent être ajoutés à 
+\family sans
+Document\SpecialChar menuseparator
+Paramètres\SpecialChar menuseparator
+Préambule LaTeX 
 \end_layout
 
 \begin_layout Description
 
-\lang english
-
 \backslash
-onlyslides{8,9,11}
-\lang french
- imprime seulement les transparents numéro 8, 9 et 11 (e.
+onlyslides{8,9,11} imprime seulement les transparents numéro 8, 9 et 11
+ (e.
 \begin_inset space \thinspace{}
 \end_inset
 
@@ -675,59 +398,154 @@ les tracés en couleur)
 
 \begin_layout Description
 
-\lang english
-
 \backslash
-notslides{4,8,9,11}
-\lang french
- n'imprime pas ces transparents
+notslides{4,8,9,11} n'imprime pas ces transparents
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
+\begin_layout Plain Layout
+Pour plus d'options de configuration, voir 
+\begin_inset CommandInset href
+LatexCommand href
+name "sem-user.pdf"
+target "https://www.ctan.org/tex-archive/macros/latex/contrib/seminar/doc/seminar-doc.pdf"
+
+\end_inset
+
+.
+\end_layout
+
 \end_inset
 
 
 \end_layout
 
-\begin_layout SlideSubHeading
-Mise en page plus sophistiquée
+\begin_layout Section
+Listes/TdM
+\end_layout
+
+\begin_layout Standard
+
+\family sans
+Seminar
+\family default
+ définit des commandes pour créer un sommaire, car la table des matières
+ n'affiche que les titres et sous-titres de section 
+\begin_inset Quotes fld
+\end_inset
+
+normaux
+\begin_inset Quotes frd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex LandscapeSlide
+status open
+
+\begin_layout Plain Layout
+L'insert 
+\family sans
+ContenuDiapo
+\family default
+ est similaire à la table des matières, mais n'affiche que la liste des
+ 
+\family sans
+TitreDiapo
+\family default
+ (pas les
+\family sans
+ SousTitreDiapo
+\family default
+)
+\end_layout
+
+\begin_layout SlideContents
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Similaire à une liste des tableaux, le style 
+\family sans
+ListeDiapos
+\family default
+ affiche tous les transparents du document :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex LandscapeSlide
+status open
+
+\begin_layout ListOfSlides
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Si vous souhaitez assurer à l'auditoire que la présentation est bientôt
+ terminée, insérez un transparent avec 
+\family typewriter
+SommaireProgression
+\family default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex LandscapeSlide
+status open
+
+\begin_layout ProgressContents
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Mise en page 
+\end_layout
+
+\begin_layout Standard
+Vous pouvez spécifier une famille sans empattements et une police adéquate
+ via 
+\family sans
+Document\SpecialChar menuseparator
+Paramètres...\SpecialChar menuseparator
+Polices
+\family default
+.
 \end_layout
 
 \begin_layout Standard
 Le préambule \SpecialChar LaTeX
  est l'endroit adéquat pour ajouter de nombreuses options pour
- sophistiquer la présentation, e.
+ enrichir la présentation, e.
 \begin_inset space \thinspace{}
 \end_inset
 
-g.:
+g.
+ des encadrements esthétiques:
 \end_layout
 
-\begin_layout Itemize
-polices différentes, e.
-\begin_inset space \thinspace{}
-\end_inset
-
-g.les polices Iwona: 
-\end_layout
-
-\begin_deeper
-\begin_layout LyX-Code
-
-\lang english
-
-\backslash
-usepackage{iwona}
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-encadrements plus esthétiques:
-\end_layout
-
-\begin_deeper
 \begin_layout LyX-Code
 
 \lang english
@@ -755,29 +573,53 @@ slideframe[
 \backslash
 setlength{
 \backslash
-shadowsize}{1pt}]{shadow} framecolor "black"backgroundcolor "none"
+shadowsize}{1pt}]{shadow}%
 \end_layout
 
-\end_deeper
+\begin_layout LyX-Code
+
+\lang english
+           framecolor "black" backgroundcolor
+\end_layout
+
 \begin_layout Standard
-\begin_inset Separator plain
+Voir 
+\begin_inset CommandInset href
+LatexCommand href
+name "sem-user.pdf"
+target "https://www.ctan.org/tex-archive/macros/latex/contrib/seminar/doc/seminar-doc.pdf"
+
 \end_inset
 
-
+ pour les détails
+\family typewriter
+.
 \end_layout
 
-\begin_layout LandscapeSlide
-
-\end_layout
-
-\begin_deeper
-\begin_layout SlideHeading
+\begin_layout Section
 En cas de problèmes\SpecialChar ldots
 
 \end_layout
 
 \begin_layout Itemize
-les versions de 
+Lyx-2.2.0 échoue avec l'erreur 
+\begin_inset Quotes fld
+\end_inset
+
+
+\lang english
+missing characters in font nullfont
+\begin_inset Quotes frd
+\end_inset
+
+
+\lang french
+.
+ Cette erreur provient d'un bogue PGF et peut être ignorée.
+\end_layout
+
+\begin_layout Itemize
+Les versions de 
 \family typewriter
 seminar.cls
 \family default
@@ -786,107 +628,2026 @@ seminar.cls
 a4paper
 \family default
 .
- Si vous utilisez un format A4 avec une telle version, allez dans le menu
- 
+\end_layout
+
+\begin_layout Itemize
+Initialement, 
+\family typewriter
+seminar.cls
+\family default
+ utilisait pstricks pour les graphiques.
+ Ceci échouait avec pdfTeX et LuaTeX.
+ Faites une mise à jour avec la version courante utilisant 
+\begin_inset CommandInset href
+LatexCommand href
+name "PGF"
+target "http://ctan.org/pkg/pgf"
+
+\end_inset
+
+, si vous voulez utiliser des polices non-TeX.
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+Seminar 
+\family default
+positionne implicitement l'orientation à 
+\begin_inset Quotes fld
+\end_inset
+
+paysage
+\begin_inset Quotes frd
+\end_inset
+
+.
+ De ce fait, 
 \family sans
 Document\SpecialChar menuseparator
 Paramètres\SpecialChar menuseparator
-Format
-\begin_inset space ~
-\end_inset
-
-de
-\begin_inset space ~
-\end_inset
-
-la
-\begin_inset space ~
-\end_inset
-
-page
+Format de la page\SpecialChar menuseparator
+Orientation
 \family default
-, positionnez
-\family sans
- Format
-\begin_inset space ~
-\end_inset
-
-papier
+ n'a pas d'effet sur le résultat imprimable.
+ A la place, ajouter l'option de classe 
+\family typewriter
+portrait
 \family default
- sur 
-\family sans
+ pour obtenir des transparents portrait.
+\end_layout
 
+\begin_layout Itemize
+Une taille et une orientation correcte des transparents est quelque peu
+ problématique.
+ En fonction des cas, différents réglages et options d'exportation sont
+ plus appropriées.
+ voir l'annexe pour les détails.
+\end_layout
+
+\begin_layout Itemize
+Ne mélangez pas des transparents portrait et des transparents paysage, si
+ vous voulez utiliser un vidéoprojecteur.
+\end_layout
+
+\begin_layout Itemize
+La compilation avec Xe/LuaTeX fonctionne aussi bien avec les polices TeX
+ qu'Unicode.
+\end_layout
+
+\begin_layout Section
+\start_of_appendix
+Formats de sortie et options diverses
+\end_layout
+
+\begin_layout Itemize
+Les réglages implicites fonctionnent correctement pour des transparents
+ projetés sur un écran avec PDF (dvipdfm), PDF (pdflatex), et PDF (XeTeX).
+ 
+\end_layout
+
+\begin_layout Itemize
+Pour l'impression sur transparents, les transparents portait et paysage
+ peuvent être mélangés si l'option 
+\family typewriter
+semrot
+\family default
+ est saisie et l'exportation faite via PDF (dvipdfm).
+\end_layout
+
+\begin_layout Itemize
+LuaTeX effectue une mise à l'échelle d'un facteur 0,5 pour le format PDF.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+L'option 
 \begin_inset Quotes fld
 \end_inset
 
-A4
-\family default
-
+trim margins
 \begin_inset Quotes frd
 \end_inset
 
- (si ce n'est pas le format implicite de votre distribution \SpecialChar LaTeX
-), et supprimez
- l'option 
-\family sans
+ de l'afficheur PDF (e.g.
+ Okular), peut être utilisée pour contourner cet obstacle pour des diapositives
+ portait et paysage mélangées.
+\end_layout
 
-\begin_inset Quotes fld
-\end_inset
-
-a4paper
+\end_deeper
+\begin_layout Itemize
+Les formats de sortie DVI, DVI (LuaTeX), Postscript, et PDF (ps2pdf) nécessitent
+ les options 
+\family typewriter
+portrait
 \family default
+ ou 
+\family typewriter
+article
+\family default
+.
+\end_layout
 
-\begin_inset Quotes frd
-\end_inset
+\begin_layout Subsection
+Transparents paysage à l'écran
+\end_layout
 
- si nécessaire dans le champ 
-\family sans
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
 Options
 \begin_inset space ~
 \end_inset
 
-de
-\begin_inset space ~
-\end_inset
+requises: [] (aucune)
+\end_layout
 
-classe du 
-\family default
-menu 
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="4">
+<features booktabs="true" tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0pt">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Export
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Transparent paysage
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Transparent portrait
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Notes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \family sans
-Document\SpecialChar menuseparator
-Paramètres\SpecialChar menuseparator
-Classe
-\begin_inset space ~
-\end_inset
-
-de
-\begin_inset space ~
-\end_inset
-
-document
+DVI
 \end_layout
 
-\begin_layout Itemize
-si vous rencontrez des problèmes d'orientation des transparents, voyez les
- recommandations dans l'appendice
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+DVI (LuaTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+Postscript
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (ps2pdf)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (dvipdfm)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (pdflatex)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (XeTeX)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹/✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (LuaTeX)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(✓)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(✓)¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(✓)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+¹ zone de texte paysage dans une page portrait (avec XeTeX seulement sur
+ la page de titre)
+\end_layout
+
+\begin_layout Standard
+² débordement de page
+\end_layout
+
+\begin_layout Standard
+
+\family sans
+³ 
+\family default
+zone de texte portrait dans une page paysage
+\end_layout
+
+\begin_layout Subsection
+Impression/affichage paysage
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Options
 \begin_inset space ~
 \end_inset
 
-E du manuel de 
-\family typewriter
-seminar
+requises: [semrot] 
 \end_layout
 
-\begin_layout Itemize
-assurez-vous que les marges des pages du document sont positionnées sur
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="4">
+<features booktabs="true" tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0pt">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Export
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Transparent paysage
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Transparent portrait
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Notes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+DVI
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗² 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+DVI (LuaTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗² 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+Postscript
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ ³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (ps2pdf)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ ³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (dvipdfm)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (pdflatex)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗² 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (XeTeX)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹/✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (LuaTeX)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(✓)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ ³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(✓)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+¹ zone de texte paysage dans une page portrait (avec XeTeX seulement sur
+ la page de titre) 
+\end_layout
+
+\begin_layout Standard
+² débordement de page
+\end_layout
+
+\begin_layout Standard
+³ transparents pivotés
+\end_layout
+
+\begin_layout Subsection
+Transparents portrait pour écran/impression
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Options
+\begin_inset space ~
+\end_inset
+
+requises: [portrait]
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="4">
+<features booktabs="true" tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0pt">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Export
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Transparent paysage
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Transparent portrait
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Notes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+DVI
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ ✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+DVI (LuaTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ ✓ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+Postscript 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (ps2pdf) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (dvipdfm) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (pdflatex) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (XeTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (LuaTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(✓)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(✓)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(✓)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+¹ zone de texte paysage dans une page portrait
+\end_layout
+
+\begin_layout Subsection
+Impression
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Options
+\begin_inset space ~
+\end_inset
+
+requises: [semrot,portrait] 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="4">
+<features booktabs="true" tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0pt">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Export
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Transparent paysage
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Transparent portrait
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Notes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+DVI
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ ✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+DVI (LuaTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ ✓ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+Postscript 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (ps2pdf) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (dvipdfm) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (pdflatex) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (XeTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (LuaTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(✓) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(✓)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+² débordement de page
+\end_layout
+
+\begin_layout Standard
+³ transparents pivotés 2/page
+\end_layout
+
+\begin_layout Subsection
+Impression d'une liasse
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Options
+\begin_inset space ~
+\end_inset
+
+requises: [article] ou [article,portrait]
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="3">
+<features booktabs="true" tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0pt">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Export
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ [article]
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2/page [article,portrait]
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+DVI
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ ✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+DVI (LuaTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ ✓ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+Postscript 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (ps2pdf) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (dvipdfm) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (pdflatex) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (XeTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family sans
+PDF (LuaTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+¹ zone de texte paysage dans une page portrait
+\end_layout
+
+\begin_layout Standard
+²
+\family sans
  
-\family typewriter
-implicite
-\end_layout
-
-\end_deeper
-\begin_layout LandscapeSlide
-
+\family default
+zone de texte portrait dans une page paysage
 \end_layout
 
 \end_body

@@ -578,17 +578,7 @@ GuiView::GuiView(int id)
 	QFontMetrics const fm(statusBar()->fontMetrics());
 	int const roheight = max(int(d.normalIconSize), fm.height());
 	QSize const rosize(roheight, roheight);
-	QPixmap readonly = QPixmap(rosize);
-	QString imagedir = "images/";
-	FileName fname = imageLibFileSearch(imagedir, "emblem-readonly", "svgz");
-	QSvgRenderer renderer(toqstr(fname.absFileName()));
-	if (renderer.isValid()) {
-		readonly.fill(statusBar()->palette().color(QWidget::backgroundRole()));
-		QPainter painter(&readonly);
-		renderer.render(&painter);
-	} else {
-		readonly = getPixmap("images/", "emblem-readonly", "png").scaled(rosize, Qt::KeepAspectRatio);
-	}
+	QPixmap readonly = QIcon(getPixmap("images/", "emblem-readonly", "svgz,png")).pixmap(rosize);
 	read_only_ = new QLabel(statusBar());
 	read_only_->setPixmap(readonly);
 	read_only_->setScaledContents(true);
@@ -1173,8 +1163,7 @@ void GuiView::updateWindowTitle(GuiWorkArea * wa)
 	// Set the windows title
 	docstring title = buf.fileName().displayName(130) + from_ascii("[*]");
 #ifndef Q_WS_MAC
-	// — U+2014 EM DASH
-	title += from_ascii(" ") + char_type(0x2014) + from_ascii(" LyX");
+	title += from_ascii(" - LyX");
 #endif
 	setWindowTitle(toqstr(title));
 	// Sets the path for the window: this is used by OSX to

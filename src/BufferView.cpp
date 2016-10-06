@@ -495,9 +495,7 @@ void BufferView::processUpdateFlags(Update::flags flags)
 
 	// updateMetrics() does not update paragraph position
 	// This is done at draw() time. So we need a redraw!
-	// We pass true so that metrics are computed for the sake
-	// of having MacroData updated.
-	buffer_.changed(true);
+	buffer_.changed(false);
 
 	if (needsFitCursor()) {
 		// The cursor is off screen so ensure it is visible.
@@ -2167,9 +2165,7 @@ void BufferView::updateHoveredInset() const
 
 		// This event (moving without mouse click) is not passed further.
 		// This should be changed if it is further utilized.
-		// We pass true so that metrics are computed for the sake
-		// of having MacroData updated.
-		buffer_.changed(true);
+		buffer_.changed(false);
 	}
 }
 
@@ -2341,49 +2337,27 @@ void BufferView::setCursorFromRow(int row)
 
 void BufferView::setCursorFromRow(int row, TexRow const & texrow)
 {
-	int tmpid;
-	int tmppos;
-	pit_type newpit = 0;
-	pos_type newpos = 0;
-
-	texrow.getIdFromRow(row, tmpid, tmppos);
-
-	bool posvalid = (tmpid != -1);
-	if (posvalid) {
-		// we need to make sure that the row and position
-		// we got back are valid, because the buffer may well
-		// have changed since we last generated the LaTeX.
-		DocIterator dit = buffer_.getParFromID(tmpid);
-		if (dit == doc_iterator_end(&buffer_))
-			posvalid = false;
-		else if (dit.depth() > 1) {
-			// We are in an inset.
-			pos_type lastpos = dit.lastpos();
-			dit.pos() = tmppos > lastpos ? lastpos : tmppos;
-			setCursor(dit);
-			recenter();
-			return;
-		} else {
-			newpit = dit.pit();
-			// now have to check pos.
-			newpos = tmppos;
-			Paragraph const & par = buffer_.text().getPar(newpit);
-			if (newpos > par.size()) {
-				LYXERR0("Requested position no longer valid.");
-				newpos = par.size() - 1;
-			}
-		}
-	}
-	if (!posvalid) {
+	DocIterator start, end;
+	tie(start,end) = texrow.getDocIteratorFromRow(row, buffer_);
+	// we need to make sure that the DocIterators
+	// we got back are valid, because the buffer may well
+	// have changed since we last generated the LaTeX.
+	if (!start) {
+		LYXERR(Debug::LATEX,
+		       "setCursorFromRow: invalid position for row " << row);
 		frontend::Alert::error(_("Inverse Search Failed"),
-			_("Invalid position requested by inverse search.\n"
-		    "You need to update the viewed document."));
+		                       _("Invalid position requested by inverse search.\n"
+		                         "You may need to update the viewed document."));
 		return;
 	}
-	d->cursor_.reset();
-	buffer_.text().setCursor(d->cursor_, newpit, newpos);
-	d->cursor_.selection(false);
-	d->cursor_.resetAnchor();
+	// Setting selection start
+	d->cursor_.clearSelection();
+	setCursor(start);
+	// Setting selection end
+	if (end) {
+		d->cursor_.resetAnchor();
+		setCursorSelectionTo(end);
+	}
 	recenter();
 }
 
@@ -2478,6 +2452,18 @@ void BufferView::setCursor(DocIterator const & dit)
 }
 
 
+void BufferView::setCursorSelectionTo(DocIterator const & dit)
+{
+	size_t const n = dit.depth();
+	for (size_t i = 0; i < n; ++i)
+		dit[i].inset().edit(d->cursor_, true);
+
+	d->cursor_.selection(true);
+	d->cursor_.setCursorSelectionTo(dit);
+	d->cursor_.setCurrentFont();
+}
+
+
 bool BufferView::checkDepm(Cursor & cur, Cursor & old)
 {
 	// Would be wrong to delete anything if we have a selection.
@@ -2505,7 +2491,7 @@ bool BufferView::checkDepm(Cursor & cur, Cursor & old)
 }
 
 
-bool BufferView::mouseSetCursor(Cursor & cur, bool select)
+bool BufferView::mouseSetCursor(Cursor & cur, bool const select)
 {
 	LASSERT(&cur.bv() == this, return false);
 
@@ -2523,27 +2509,23 @@ bool BufferView::mouseSetCursor(Cursor & cur, bool select)
 	if (leftinset)
 		d->cursor_.fixIfBroken();
 
-	// FIXME: shift-mouse selection doesn't work well across insets.
-	bool const do_selection =
-			select && &d->cursor_.normalAnchor().inset() == &cur.inset();
-
 	// do the dEPM magic if needed
 	// FIXME: (1) move this to InsetText::notifyCursorLeaves?
 	// FIXME: (2) if we had a working InsetText::notifyCursorLeaves,
 	// the leftinset bool would not be necessary (badcursor instead).
 	bool update = leftinset;
-	if (!do_selection && d->cursor_.inTexted())
-		update |= checkDepm(cur, d->cursor_);
 
-	if (!do_selection)
-		d->cursor_.resetAnchor();
-	d->cursor_.setCursor(cur);
-	d->cursor_.boundary(cur.boundary());
-	if (do_selection)
+	if (select) {
 		d->cursor_.setSelection();
-	else
+		d->cursor_.setCursorSelectionTo(cur);
+	} else {
+		if (d->cursor_.inTexted())
+			update |= checkDepm(cur, d->cursor_);
+		d->cursor_.resetAnchor();
+		d->cursor_.setCursor(cur);
 		d->cursor_.clearSelection();
-
+	}
+	d->cursor_.boundary(cur.boundary());
 	d->cursor_.finishUndo();
 	d->cursor_.setCurrentFont();
 	if (update)

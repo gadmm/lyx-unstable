@@ -1387,7 +1387,7 @@ void Paragraph::Private::validate(LaTeXFeatures & features) const
 		// output is wrong if this paragraph contains content
 		// that needs to switch encoding.
 		odocstringstream ods;
-		otexstream os(ods, false);
+		otexstream os(ods);
 		if (is_command) {
 			os << '\\' << from_ascii(layout_->latexname());
 			// we have to provide all the optional arguments here, even though
@@ -2441,6 +2441,8 @@ void Paragraph::latex(BufferParams const & bparams,
 							running_lang);
 				os << from_ascii(end_tag);
 				column += end_tag.length();
+				if (runparams.use_polyglossia)
+					popPolyglossiaLang();
 		}
 
 		// Switch file encoding if necessary (and allowed)

@@ -17,7 +17,7 @@ Columns	1
 
 ClassOptions
 	FontSize	8|9|10|11|12|14|17
-	Other		"slidesec,semrot,portrait"
+	Other		"slidesec"
 End
 
 # Input general definitions: (seminar is based on the article class)
@@ -57,13 +57,16 @@ Style SlideSubHeading
 	Align			Center
 End
 
+
 InsetLayout Flex:ListOfSlides
 	CopyStyle		Flex:LandscapeSlide
 	LabelString		"List of Slides"
 	LatexType		Command
+	LyxType			custom
 	LatexName		listofslides
 	BgColor			listingsbg
-	Spellcheck		0
+	MultiPar		false
+	Spellcheck		false
 End
 
 InsetLayout Flex:SlideContents
@@ -84,7 +87,7 @@ End
 # It is recommended to use the custom insets instead of paragraph styles.
 
 Style LandscapeSlide
-	Category		MainText
+	Category		Slides
 	KeepEmpty		1
 	LatexType		Environment
 	LatexName		slide
@@ -119,7 +122,7 @@ Style Slide*
 End
 
 Style ListOfSlides
-	Category		MainText
+	Category		"List/TOC"
 	KeepEmpty		1
 	LatexType		Command
 	LatexName		listofslides

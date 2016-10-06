@@ -3,18 +3,13 @@
 \begin_document
 \begin_header
 \save_transient_properties true
-\origin /systemlyxdir/examples/
+\origin unavailable
 \textclass seminar
 \begin_preamble
 \renewcommand{\printlandscape}{\special{landscape}}
 
 % if slides come out in the viewer upside down, try:
 %\sliderotation{right}
-
-%\AtBeginDocument{%
-%  \pdfpageheight = \paperheight
-%  \pdfpagewidth = \paperwidth
-%}
 \end_preamble
 \use_default_options true
 \maintain_unincluded_children false
@@ -33,7 +28,7 @@
 \font_sf_scale 100 100
 \font_tt_scale 100 100
 \graphics default
-\default_output_format pdf
+\default_output_format pdf2
 \output_sync 0
 \bibtex_command default
 \index_command default
@@ -68,7 +63,7 @@
 \use_indices false
 \paperorientation portrait
 \suppress_date false
-\justification true
+\justification false
 \use_refstyle 0
 \index Index
 \shortcut idx
@@ -82,11 +77,12 @@
 \papercolumns 1
 \papersides 1
 \paperpagestyle empty
-\tracking_changes false
+\tracking_changes true
+\output_changes false
 \html_math_output 0
 \html_css_as_file 0
-\output_changes false
 \html_be_strict false
+\author -1402925745 "Günter Milde"
 \end_header
 
 \begin_body
@@ -110,7 +106,13 @@ Günter Milde
 \end_layout
 
 \begin_layout Date
-10/10/2010
+2016/09/2
+\change_inserted -1402925745 1475175780
+9
+\change_deleted -1402925745 1475175779
+6
+\change_unchanged
+
 \end_layout
 
 \end_inset
@@ -119,16 +121,14 @@ Günter Milde
 \end_layout
 
 \begin_layout Standard
+
+\change_inserted -1402925745 1475174784
 \begin_inset CommandInset toc
 LatexCommand tableofcontents
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Section
-Basics
 \end_layout
 
 \begin_layout Standard
@@ -149,11 +149,7 @@ target "http://www.ctan.org/pkg/seminar"
 \end_inset
 
  class is designed to produce overhead slides (transparencies).
- For powerpoint-like presentations, use a 
-\emph on
-presentation
-\emph default
- document class like
+ For PowerPoint-like presentations, a document class like
 \family sans
  beamer
 \family default
@@ -161,7 +157,7 @@ presentation
 \family sans
  powerdot
 \family default
-.
+ may be better suited.
 \end_layout
 
 \begin_layout Itemize
@@ -179,13 +175,24 @@ Custom
 \end_inset
 
 Insets).
- 
 \end_layout
 
 \begin_layout Itemize
-It is really helpful to read the seminar handbook: 
-\family typewriter
+Virtually everything that can appear in normal \SpecialChar LaTeX
+ (except floats) can also
+ be on a slide.
+\end_layout
 
+\begin_deeper
+\begin_layout Plain Layout
+Additional styles: 
+\family sans
+SlideHeading, SlideSubheading
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+The seminar handbook 
 \begin_inset CommandInset href
 LatexCommand href
 name "sem-user.pdf"
@@ -193,7 +200,7 @@ target "https://www.ctan.org/tex-archive/macros/latex/contrib/seminar/doc/semina
 
 \end_inset
 
-
+ is somewhat outdated but still a helpful reading.
 \end_layout
 
 \end_inset
@@ -202,6 +209,40 @@ target "https://www.ctan.org/tex-archive/macros/latex/contrib/seminar/doc/semina
 \end_layout
 
 \begin_layout Standard
+\begin_inset Flex LandscapeSlide
+status open
+
+\begin_layout SlideHeading
+Warnings
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+Seminar
+\family default
+ uses 
+\begin_inset CommandInset href
+LatexCommand href
+name "PGF"
+target "http://ctan.org/pkg/pgf"
+
+\end_inset
+
+ graphic specials: size and orientation of the slides show problems depending
+ on the output format and viewing application (see Troubleshooting
+\change_inserted -1402925745 1475174131
+ and the Appendix
+\change_unchanged
+ below).
+\end_layout
+
+\begin_layout Itemize
+Assure that the document page margins are set to default.
+\end_layout
+
+\end_inset
+
 
 \family sans
 Seminar
@@ -219,15 +260,15 @@ notes.
  
 \end_layout
 
+\begin_layout Section
+Configuration
+\end_layout
+
 \begin_layout Standard
 \begin_inset Flex LandscapeSlide
 status open
 
 \begin_layout SlideHeading
-Configuration
-\end_layout
-
-\begin_layout SlideSubHeading
 Output options
 \begin_inset CommandInset label
 LatexCommand label
@@ -240,8 +281,17 @@ name "sli:output-options"
 
 \begin_layout Plain Layout
 The following options can be added to the 
+\change_inserted -1402925745 1475174296
+
 \family sans
+Class 
+\change_unchanged
 Options
+\change_inserted -1402925745 1475174312
+\SpecialChar menuseparator
+Custom
+\change_unchanged
+
 \family default
  field in 
 \family sans
@@ -257,53 +307,68 @@ Class
 \end_layout
 
 \begin_layout Description
+notes Both notes and slides are printed (default).
+\end_layout
+
+\begin_layout Description
 slidesonly Only the slides are printed.
 \end_layout
 
 \begin_layout Description
-notesonly Only the notes are printed
+notesonly Only the notes are printed.
 \end_layout
 
 \begin_layout Description
-notes Both notes and slides are printed.
+notesonly* Produces a slide marker for each slide environment.
+\change_inserted -1402925745 1475174199
+
 \end_layout
 
 \begin_layout Description
-notesonly* Produces a slide marker for each slide environment
+
+\change_inserted -1402925745 1475174214
+portrait Portrait page orientation (default is landscape).
+\change_unchanged
+
 \end_layout
 
 \begin_layout Description
-article Print as article (two-up).
+article Print as article (two-up with PDF (dvipdfm) and option 
+\family typewriter
+portrait
+\family default
+).
 \end_layout
 
-\begin_layout Plain Layout
-\begin_inset Newpage newpage
+\begin_layout Description
+semrot Rotate slides if orientation does not match the document 
+\change_deleted -1402925745 1475174223
+default
+\change_inserted -1402925745 1475174225
+setting
+\change_unchanged
+.
+\end_layout
+
 \end_inset
 
 
 \end_layout
 
-\begin_layout SlideSubHeading
+\begin_layout Standard
+\begin_inset Flex LandscapeSlide
+status open
+
+\begin_layout SlideHeading
 Preamble commands 
 \end_layout
 
 \begin_layout Plain Layout
-The following options can be added to the 
-\family sans
-\SpecialChar LaTeX
- preambel
-\family default
- in 
+The following options can be added to 
 \family sans
 Document\SpecialChar menuseparator
 Settings\SpecialChar menuseparator
-Document
-\begin_inset space ~
-\end_inset
-
-Class
-\family default
-:
+LaTeX Preamble:
 \end_layout
 
 \begin_layout Description
@@ -326,121 +391,25 @@ color plots),
 notslides{4,8,9,11} don't print these slides.
 \end_layout
 
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex PortraitSlide
-status open
-
-\begin_layout SlideHeading
-Slide contents
-\end_layout
-
-\begin_layout Plain Layout
-Virtually everything that can appear in normal \SpecialChar LaTeX
- (except floats) can also
- be on a slide.
-\end_layout
-
-\begin_layout Plain Layout
-Additional styles:
-\end_layout
-
-\begin_layout Itemize
-
-\family sans
-SlideHeading
-\end_layout
-
-\begin_layout Itemize
-
-\family sans
-SlideSubheading
-\end_layout
+\begin_layout Description
+For more configuration options and commands see 
+\begin_inset CommandInset href
+LatexCommand href
+name "sem-user.pdf"
+target "https://www.ctan.org/tex-archive/macros/latex/contrib/seminar/doc/seminar-doc.pdf"
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex LandscapeSlide
-status open
-
-\begin_layout SlideHeading
-Warnings
-\end_layout
-
-\begin_layout Plain Layout
-
-\family sans
-seminar
-\family default
- uses Postscript specials: size and orientation of the slides show problems
- depending on the output format and viewing application:
-\end_layout
-
-\begin_layout Itemize
-Landscape slides do not work with 
-\family sans
-DVI, DVI (luatex), PDF (pdflatex),
-\family default
- and 
-\family sans
-PDF (luatex)
-\family default
 .
 \end_layout
 
-\begin_layout Itemize
-Compiling with XeTeX works (with both, TeX-fonts and Unicode fonts) but
- requires Babel (not Polyglossia) as language package.
-\end_layout
-
-\begin_layout Plain Layout
-With the current configuration in Document\SpecialChar menuseparator
-Settings,
-\end_layout
-
-\begin_layout Itemize
-
-\family sans
-PDF (ps2pdf)
-\family default
- adapts the page orientation → online viewing and presentation.
-\end_layout
-
-\begin_layout Itemize
-
-\family sans
-Postscript
-\family default
- and 
-\family sans
-PDF (dvipdfm)
-\family default
- rotate landscape slides → hardcopies.
-\end_layout
-
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
-Seminar uses non-standard ways to deal with paper layout and orientation.
- Therefore, also Document\SpecialChar menuseparator
-Settings\SpecialChar menuseparator
-Page Layout\SpecialChar menuseparator
-Orientation has no effect on
- the output.
-\end_layout
-
 \begin_layout Section
-Outline
+Lists/ToC
 \end_layout
 
 \begin_layout Standard
@@ -454,18 +423,12 @@ normal
 \end_inset
 
  headings and subheadings.
- (To get a slide with the listings, nest themt in a 
-\family sans
-slide 
-\family default
-inset.)
-\end_layout
-
-\begin_layout Subsection
-Slide contents
+ 
 \end_layout
 
 \begin_layout Standard
+
+\change_deleted -1402925745 1475176180
 The 
 \family sans
 SlideContents
@@ -478,11 +441,31 @@ s (no
 \family sans
 SlideSubheading
 \family default
-s): 
-\begin_inset Flex SlideContents
-status collapsed
+s)
+\change_unchanged
+: 
+\begin_inset Flex LandscapeSlide
+status open
 
 \begin_layout Plain Layout
+
+\change_inserted -1402925745 1475176187
+The 
+\family sans
+SlideContents
+\family default
+ inset is an analogue to the table of contents but lists only 
+\family sans
+SlideHeading
+\family default
+s (no 
+\family sans
+SlideSubheading
+\family default
+s)
+\end_layout
+
+\begin_layout SlideContents
 
 \end_layout
 
@@ -491,8 +474,12 @@ status collapsed
 
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Standard
+
+\change_deleted -1402925745 1475176205
 List of slides
+\change_unchanged
+
 \end_layout
 
 \begin_layout Standard
@@ -501,26 +488,49 @@ Analogue to a list of tables, the
 ListOfSlides
 \family default
  style lists all slides in your document: 
+\change_inserted -1402925745 1475176541
+
+\end_layout
+
+\begin_layout ListOfSlides
+
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex ListOfSlides
-status collapsed
 
-\begin_layout Plain Layout
+\change_deleted -1402925745 1475176536
+\begin_inset Flex LandscapeSlide
+status open
+
+\begin_layout ListOfSlides
+
+\change_inserted -1402925745 1475176245
 
 \end_layout
 
 \end_inset
 
 
-\end_layout
+\change_unchanged
 
-\begin_layout Subsection
-Progress Contents
 \end_layout
 
 \begin_layout Standard
+
+\change_deleted -1402925745 1475176270
+Progress Contents
+\change_unchanged
+
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475176848
+\begin_inset VSpace defskip
+\end_inset
+
+
+\change_unchanged
 If you want to assure the audience, that the presentation is almost over,
  insert a slide with 
 \family sans
@@ -533,12 +543,7 @@ ProgressContents
 \begin_inset Flex LandscapeSlide
 status open
 
-\begin_layout Plain Layout
-\align center
-\begin_inset Flex ProgressContents
-status collapsed
-
-\begin_layout Plain Layout
+\begin_layout ProgressContents
 
 \end_layout
 
@@ -547,13 +552,17 @@ status collapsed
 
 \end_layout
 
-\end_inset
-
-
+\begin_layout Section
+Formatting
 \end_layout
 
-\begin_layout SlideSubHeading
-Fancier formatting
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159887
+You can set sans-serif as default font family and select suitable fonts
+ under Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+Fonts.
 \end_layout
 
 \begin_layout Standard
@@ -563,29 +572,7 @@ The \SpecialChar LaTeX
 \begin_inset space \thinspace{}
 \end_inset
 
-g.:
-\end_layout
-
-\begin_layout Itemize
-different font sets, e.
-\begin_inset space \thinspace{}
-\end_inset
-
-g.
-\begin_inset space \space{}
-\end_inset
-
-the Iwona fonts: 
-\end_layout
-
-\begin_layout LyX-Code
-
-\backslash
-usepackage{iwona}
-\end_layout
-
-\begin_layout Itemize
-fancy frames:
+g., fancy frames:
 \end_layout
 
 \begin_layout LyX-Code
@@ -609,13 +596,15 @@ slideframe[
 \backslash
 setlength{
 \backslash
-shadowsize}{1pt}]{shadow} framecolor "black"backgroundcolor "none"
+shadowsize}{1pt}]{shadow}%
+\end_layout
+
+\begin_layout LyX-Code
+           framecolor "black" backgroundcolor "none"
 \end_layout
 
 \begin_layout Standard
 See 
-\family typewriter
-
 \begin_inset CommandInset href
 LatexCommand href
 name "sem-user.pdf"
@@ -623,11 +612,37 @@ target "https://www.ctan.org/tex-archive/macros/latex/contrib/seminar/doc/semina
 
 \end_inset
 
- for details.
+ for details
+\family typewriter
+.
 \end_layout
 
-\begin_layout SlideHeading
+\begin_layout Standard
+
+\change_deleted -1402925745 1475159883
+You can set sans-serif as default font family and select suitable fonts
+ under Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+Fonts.
+\change_unchanged
+
+\end_layout
+
+\begin_layout Section
 Troubleshooting
+\end_layout
+
+\begin_layout Itemize
+LyX 2.2.0 reports a 
+\begin_inset Quotes eld
+\end_inset
+
+missing characters in font nullfont
+\begin_inset Quotes erd
+\end_inset
+
+ error.
+ This error is caused by a bug in PGF and can be ignored.
 \end_layout
 
 \begin_layout Itemize
@@ -636,90 +651,2908 @@ Troubleshooting
 seminar.cls
 \family default
  versions before 1.5 (2008-10-15) contained a bug regarding the a4paper option.
- If you use A4 paper with such a version, set in the menu 
-\family sans
-Document\SpecialChar menuseparator
-Settings\SpecialChar menuseparator
-Page
-\begin_inset space ~
-\end_inset
-
-Layout
-\family default
- the 
-\family sans
-Paper
-\begin_inset space ~
-\end_inset
-
-Size
-\family default
- to 
-\begin_inset Quotes eld
-\end_inset
-
-
-\family sans
-A4
-\family default
-
-\begin_inset Quotes erd
-\end_inset
-
- (unless it is the default layout of your \SpecialChar LaTeX
- distribution), and delete the
- option 
-\begin_inset Quotes eld
-\end_inset
-
-
-\family sans
-a4paper
-\family default
-
-\begin_inset Quotes erd
-\end_inset
-
- if necessary in the 
-\family sans
-Options
-\family default
- field in the menu 
-\family sans
-Document\SpecialChar menuseparator
-Settings\SpecialChar menuseparator
-Document
-\begin_inset space ~
-\end_inset
-
-Class
-\family default
-.
 \end_layout
 
 \begin_layout Itemize
-If you have problems with the orientation of the slides/page, try the recommenda
-tions in Apppendix
-\begin_inset space ~
-\end_inset
-
-E of the seminar handbook 
+Originally, 
 \family typewriter
-
+seminar.cls
+\family default
+ used pstricks for the graphics.
+ This failed with pdfTeX and LuaTeX.
+ Update to a current version using 
 \begin_inset CommandInset href
 LatexCommand href
-name "sem-user.pdf"
-target "https://www.ctan.org/tex-archive/macros/latex/contrib/seminar/doc/seminar-doc.pdf"
+name "PGF"
+target "http://ctan.org/pkg/pgf"
 
 \end_inset
 
+, if you want to use non-TeX fonts.
+\end_layout
 
+\begin_layout Standard
+
+\change_deleted -1402925745 1475176930
+Correct size and orientation of the slides is somewhat tricky.
+ Depending on the use case, different settings and export routes work best:
+\change_unchanged
+
+\end_layout
+
+\begin_layout Itemize
+
+\family sans
+Seminar
+\family default
+ defaults to landscape orientation.
+ Therefore, Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+Page Layout\SpecialChar menuseparator
+Orientation has no effect on the
+ output.
+ Instead, add the 
+\family typewriter
+portrait
+\family default
+ class option for portrait mode.
+\end_layout
+
+\begin_layout Itemize
+
+\change_inserted -1402925745 1475177584
+Correct size and orientation of the slides is somewhat tricky.
+ Depending on the use case, different settings and export routes work best.
+ 
+\change_deleted -1402925745 1475177618
+The default settings work nice for landscape slides on screen with PDF (dvipdfm)
+, PDF (pdflatex), and PDF (XeTeX).
+
+\change_inserted -1402925745 1475177581
+ For details see the Appendix.
+
+\change_deleted -1402925745 1475177509
+ 
+\change_inserted -1402925745 1475175241
+
+\end_layout
+
+\begin_layout Itemize
+Do not mix LandscapeSlide and PortraitSlide, if you want to present on screen
+ or with a video projector.
+\change_inserted -1402925745 1475175252
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\change_deleted -1402925745 1475177669
+LuaTeX scales the content by a factor 0.5 when generating PDF.
+\end_layout
+
+\begin_layout Standard
+
+\change_deleted -1402925745 1475177669
+With the option “trim margins” in the PDF viewer (e.g.
+ Okular), this can be used as a workaround for mixed slides on screen.
+\change_inserted -1402925745 1475175433
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\change_inserted -1402925745 1475175433
+Compiling with Xe/LuaTeX works with both, TeX-fonts and Unicode fonts.
+\change_unchanged
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\change_deleted -1402925745 1475175399
+When printing on transparencies, LandscapeSlides and PortraitSlide can be
+ mixed if the option 
+\family typewriter
+semrot
+\family default
+ is set and the export is done with PDF (dvipdfm).
+\change_unchanged
+
+\end_layout
+
+\begin_layout Standard
+
+\change_deleted -1402925745 1475177705
+Output formats DVI, DVI (LuaTeX), Postscript, and PDF (ps2pdf) require the
+ option 
+\family typewriter
+portrait
+\family default
+ or 
+\family typewriter
+article
+\family default
+.
+
+\change_unchanged
+ 
+\change_deleted -1402925745 1475175420
+Printing of (rotated) landscape slides is possible with options 
+\family typewriter
+portrait,semrot
+\family default
+.
+\change_inserted -1402925745 1475175375
+
+\end_layout
+
+\end_deeper
+\begin_layout Section
+\start_of_appendix
+
+\change_inserted -1402925745 1475177623
+Output formats and supported options
+\end_layout
+
+\begin_layout Itemize
+
+\change_inserted -1402925745 1475177674
+The default settings work nice for landscape slides on screen with PDF (dvipdfm)
+, PDF (pdflatex), and PDF (XeTeX).
+\end_layout
+
+\begin_layout Itemize
+
+\change_inserted -1402925745 1475177676
+When printing on transparencies, LandscapeSlides and PortraitSlides can
+ be mixed if the option 
+\family typewriter
+semrot
+\family default
+ is set and the export is done with PDF (dvipdfm).
+\end_layout
+
+\begin_layout Itemize
+
+\change_inserted -1402925745 1475177676
+LuaTeX scales the content by a factor 0.5 when generating PDF.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\change_inserted -1402925745 1475177708
+With the option “trim margins” in the PDF viewer (e.g.
+ Okular), this can be used as a workaround for mixed slides on screen.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\change_inserted -1402925745 1475177708
+Output formats DVI, DVI (LuaTeX), Postscript, and PDF (ps2pdf) require the
+ option 
+\family typewriter
+portrait
+\family default
+ or 
+\family typewriter
+article
 \family default
 .
 \end_layout
 
-\begin_layout Itemize
-Assure that the document page margins are set to default.
+\begin_layout Subsection
+
+\change_inserted -1402925745 1475160032
+Landscape Slides on screen
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+
+\change_inserted -1402925745 1475173900
+Custom
+\begin_inset space ~
+\end_inset
+
+Options: [] (none)
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159802
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="4">
+<features booktabs="true" tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0pt">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Export
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Landscape Slide
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Portrait Slide
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Notes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+DVI
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+DVI (LuaTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Postscript
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (ps2pdf)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (dvipdfm)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (pdflatex)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (XeTeX)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹/✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (LuaTeX)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+(✓)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+(✓)¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+(✓)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159802
+¹ landscape text area on portrait page (with XeTeX only title page)
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159802
+² off page
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+³ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+portrait text area on landscape page
+\end_layout
+
+\begin_layout Subsection
+
+\change_inserted -1402925745 1475160100
+Landscape printing/viewing
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+
+\change_inserted -1402925745 1475173906
+Custom
+\begin_inset space ~
+\end_inset
+
+Options: [semrot] 
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159802
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="4">
+<features booktabs="true" tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0pt">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Export
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Landscape Slide
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Portrait Slide
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Notes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+DVI
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗² 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+DVI (LuaTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗² 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Postscript
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ ³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (ps2pdf)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ ³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (dvipdfm)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (pdflatex)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗² 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (XeTeX)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹/✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (LuaTeX)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+(✓)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ ³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+(✓)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159802
+¹ landscape text area on portrait page (with XeTeX only title page)
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159802
+² off page
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159802
+³ rotated
+\end_layout
+
+\begin_layout Subsection
+
+\change_inserted -1402925745 1475160192
+Portrait Slides on screen/print
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+
+\change_inserted -1402925745 1475173917
+Custom
+\begin_inset space ~
+\end_inset
+
+Options: [portrait]
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159802
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="4">
+<features booktabs="true" tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0pt">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Export
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Landscape Slide
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Portrait Slide
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Notes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+DVI
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+ ✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+DVI (LuaTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+ ✓ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Postscript 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (ps2pdf) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (dvipdfm) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (pdflatex) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (XeTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (LuaTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+(✓)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+(✓)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+(✓)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159802
+¹ landscape text area on portrait page
+\end_layout
+
+\begin_layout Subsection
+
+\change_inserted -1402925745 1475173951
+printing
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+
+\change_inserted -1402925745 1475173962
+Custom
+\begin_inset space ~
+\end_inset
+
+Options: [semrot,portrait] 
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159802
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="4">
+<features booktabs="true" tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0pt">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Export
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Landscape Slide
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Portrait Slide
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Notes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+DVI
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+ ✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+DVI (LuaTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+ ✓ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Postscript 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (ps2pdf) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (dvipdfm) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (pdflatex) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (XeTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓³
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (LuaTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+(✓) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+(✓)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159802
+² off page
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159802
+³ rotated
+\end_layout
+
+\begin_layout Subsection
+
+\change_inserted -1402925745 1475173986
+handout printing
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+
+\change_inserted -1402925745 1475174001
+Custom
+\begin_inset space ~
+\end_inset
+
+Options [article] or [article,portrait]
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159802
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="3">
+<features booktabs="true" tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0pt">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+Export
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+ [article]
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+two up [article,portrait]
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+DVI
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+ ✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+DVI (LuaTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+ ✓ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Postscript 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (ps2pdf) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (dvipdfm) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✓
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (pdflatex) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (XeTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+
+\family sans
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+PDF (LuaTeX) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗²
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\change_inserted -1402925745 1475159802
+✗¹
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159802
+¹ landscape text area on portrait page
+\end_layout
+
+\begin_layout Standard
+
+\change_inserted -1402925745 1475159802
+² portrait text area on landscape page
 \end_layout
 
 \end_body

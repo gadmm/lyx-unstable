@@ -5,9 +5,6 @@
 \save_transient_properties true
 \origin unavailable
 \textclass article
-\begin_preamble
-\usepackage{keystroke}
-\end_preamble
 \use_default_options true
 \maintain_unincluded_children false
 \language english
@@ -52,7 +49,7 @@
 \use_indices false
 \paperorientation portrait
 \suppress_date false
-\justification true
+\justification false
 \use_refstyle 1
 \branch na
 \selected 0
@@ -124,13 +121,13 @@ status collapsed
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2310 ⌐ 
+2310 ⌐ ⌑ 
 \begin_inset Branch na
 inverted 0
 status collapsed
 
 \begin_layout Standard
-⌑ ⌒ ⌓ ⌔
+⌒ ⌓ ⌔
 \end_layout
 
 \end_inset
@@ -228,23 +225,34 @@ inverted 0
 status collapsed
 
 \begin_layout Standard
-⌰ ⌱ ⌲ ⌳ ⌴ ⌵ ⌶ ⌷ ⌸ ⌹ ⌺ ⌻ ⌼ ⌽ ⌾ ⌿
+⌰ ⌱ ⌲ ⌳ ⌴ ⌵ ⌶ ⌷ ⌸
 \end_layout
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-2340 
+ ⌹ 
 \begin_inset Branch na
 inverted 0
 status collapsed
 
 \begin_layout Standard
-⍀ ⍁ ⍂ ⍃ ⍄ ⍅ ⍆ ⍇ ⍈ ⍉ ⍊ ⍋ ⍌ ⍍ ⍎ ⍏
+⌺ ⌻ ⌼ ⌽ ⌾
+\end_layout
+
+\end_inset
+
+ ⌿
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+2340 ⍀ 
+\begin_inset Branch na
+inverted 0
+status collapsed
+
+\begin_layout Standard
+⍁ ⍂ ⍃ ⍄ ⍅ ⍆ ⍇ ⍈ ⍉ ⍊ ⍋ ⍌ ⍍ ⍎ ⍏
 \end_layout
 
 \end_inset
@@ -324,33 +332,7 @@ status collapsed
 
 \end_inset
 
- 
-\end_layout
 
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-TODO: use 
-\begin_inset Quotes eld
-\end_inset
-
-keystroke
-\begin_inset Quotes erd
-\end_inset
-
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-Esc
-\end_layout
-
-\end_inset
-
- or simply wrap in braces [Esc] (of course for all Qt::Key_* hacks)?
 \end_layout
 
 \begin_layout Labeling

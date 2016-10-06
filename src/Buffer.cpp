@@ -420,8 +420,8 @@ Buffer::Impl::Impl(Buffer * owner, FileName const & file, bool readonly_,
 	  file_fully_loaded(false), file_format(LYX_FORMAT), need_format_backup(false),
 	  ignore_parent(false),  toc_backend(owner), macro_lock(false), timestamp_(0),
 	  checksum_(0), wa_(0),  gui_(0), undo_(*owner), bibinfo_cache_valid_(false),
-	  bibfile_cache_valid_(false), cite_labels_valid_(false), inset(0),
-	  preview_loader_(0), cloned_buffer_(cloned_buffer), clone_list_(0),
+	  bibfile_cache_valid_(false), cite_labels_valid_(false), preview_error_(false),
+	  inset(0), preview_loader_(0), cloned_buffer_(cloned_buffer), clone_list_(0),
 	  doing_export(false), parent_buffer(0),
 	  word_count_(0), char_count_(0), blank_count_(0)
 {
@@ -1322,7 +1322,7 @@ Buffer::ReadStatus Buffer::convertLyXFormat(FileName const & fn,
 FileName Buffer::getBackupName() const {
 	FileName const & fn = fileName();
 	string const fname = fn.onlyFileNameWithoutExt();
-	string const fext  = fn.extension();
+	string const fext  = fn.extension() + "~";
 	string const fpath = lyxrc.backupdir_path.empty() ?
 		fn.onlyPath().absFileName() :
 		lyxrc.backupdir_path;
@@ -1924,8 +1924,6 @@ void Buffer::writeLaTeXSource(otexstream & os,
 	}
 	runparams_in.encoding = runparams.encoding;
 
-	os.texrow().finalize();
-
 	LYXERR(Debug::INFO, "Finished making LaTeX file.");
 	LYXERR(Debug::INFO, "Row count was " << os.texrow().rows() - 1 << '.');
 }
@@ -1961,7 +1959,7 @@ void Buffer::writeDocBookSource(odocstream & os, string const & fname,
 	LaTeXFeatures features(*this, params(), runparams);
 	validate(features);
 
-	d->texrow.reset(false);
+	d->texrow.reset();
 
 	DocumentClass const & tclass = params().documentClass();
 	string const & top_element = tclass.latexname();
@@ -2877,11 +2875,9 @@ void Buffer::getLanguages(std::set<Language const *> & languages) const
 DocIterator Buffer::getParFromID(int const id) const
 {
 	Buffer * buf = const_cast<Buffer *>(this);
-	if (id < 0) {
-		// John says this is called with id == -1 from undo
-		lyxerr << "getParFromID(), id: " << id << endl;
+	if (id < 0)
+		// This means non-existent
 		return doc_iterator_end(buf);
-	}
 
 	for (DocIterator it = doc_iterator_begin(buf); !it.atEnd(); it.forwardPar())
 		if (it.paragraph().id() == id)
@@ -3724,7 +3720,6 @@ unique_ptr<TexRow> Buffer::getSourceCode(odocstream & os, string const & format,
 			// the real stuff
 			latexParagraphs(*this, text(), ots, runparams);
 			texrow = ots.releaseTexRow();
-			texrow->finalize();
 
 			// Restore the parenthood
 			if (!master)
@@ -3766,7 +3761,6 @@ unique_ptr<TexRow> Buffer::getSourceCode(odocstream & os, string const & format,
 				runparams.is_child = true;
 			writeLaTeXSource(ots, string(), runparams, output);
 			texrow = ots.releaseTexRow();
-			texrow->finalize();
 		}
 	}
 	return texrow;

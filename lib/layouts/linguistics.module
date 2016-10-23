@@ -7,14 +7,35 @@
 
 # Author: Jürgen Spitzmüller <spitz@lyx.org>
 
-Format 60
+Format 61
+
+Counter example
+	Within               chapter
+	LabelString          "(\arabic{example})"
+End
+
+Counter examplei
+	Within               chapter
+	LabelString          "(\arabic{examplei})"
+End
+
+Counter subexample
+	Within               examplei
+	LabelString          "\theexamplei (\alph{subexample})"
+End
+
+Counter subexamplei
+	Within               examplei
+	LabelString          "\theexamplei (\alph{subexamplei})"
+End
 
 # single numbered example with covington.sty
 Style Numbered_Example_(multiline)
 	LatexType             Environment
 	LatexName             covexample
 	NextNoIndent          1
-	Margin                Dynamic
+	Margin                First_Dynamic
+	ParIndent             (1)x
 	LabelSep              xx
 	ParSkip               0.0
 	ItemSep               0.2
@@ -24,9 +45,8 @@ Style Numbered_Example_(multiline)
 	Align                 Block
 	AlignPossible         Block, Left
 	LabelType             Static
-	LabelString           "Example:"
+	LabelCounter          "examplei"
 	LabelFont
-		Shape         Italic
 		Color         Blue
 	EndFont
 	Requires	      covington
@@ -46,7 +66,9 @@ Style Numbered_Examples_(consecutive)
 	CopyStyle	      Numbered_Example_(multiline)
 	LatexType             Item_Environment
 	LatexName             covexamples
-	LabelString           "Examples:"
+	LabelType             Enumerate
+	LabelCounter          "example"
+	ResumeCounter         true
 	Argument item:1
 		LabelString   "Custom Numbering|s"
 		Tooltip       "Customize the numeration"
@@ -65,7 +87,8 @@ End
 Style Subexample
 	CopyStyle	      Numbered_Examples_(consecutive)
 	LatexName             subexample
-	LabelString           "Subexample:"
+	LabelCounter          "subexample"
+	StepMasterCounter     true
 	Requires	      covington,enumitem
 	Preamble
 		\newenvironment{subexample}{%

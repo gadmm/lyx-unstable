@@ -461,6 +461,9 @@ private:
 	/// Statusbar widget that shows version control status
 	QLabel * version_control_;
 
+	/// Minimum zoom percentage
+	static unsigned int const zoom_min_ = 10;
+
 };
 
 } // namespace frontend

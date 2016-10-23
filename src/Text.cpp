@@ -376,8 +376,8 @@ void Text::readParToken(Paragraph & par, Lexer & lex,
 		if (added_one) {
 			// Warn the user.
 			docstring const s = bformat(_("Layout `%1$s' was not found."), layoutname);
-			errorList.push_back(
-				ErrorItem(_("Layout Not Found"), s, par.id(), 0, par.size()));
+			errorList.push_back(ErrorItem(_("Layout Not Found"), s,
+			                              {par.id(), 0}, {par.id(), -1}));
 		}
 
 		par.setLayout(bp.documentClass()[layoutname]);
@@ -403,7 +403,7 @@ void Text::readParToken(Paragraph & par, Lexer & lex,
 			lex.eatLine();
 			docstring line = lex.getDocString();
 			errorList.push_back(ErrorItem(_("Unknown Inset"), line,
-					    par.id(), 0, par.size()));
+			                              {par.id(), 0}, {par.id(), -1}));
 		}
 	} else if (token == "\\family") {
 		lex.next();
@@ -520,8 +520,7 @@ void Text::readParToken(Paragraph & par, Lexer & lex,
 				          "missing until the corresponding tracked changes "
 				          "are merged or this user edits the file again.\n"),
 				        aid),
-				par.id(), par.size(), par.size() + 1
-				));
+				{par.id(), par.size()}, {par.id(), par.size() + 1}));
 			bp.addAuthor(Author(aid));
 		}
 		if (token == "\\change_inserted")
@@ -531,9 +530,10 @@ void Text::readParToken(Paragraph & par, Lexer & lex,
 	} else {
 		lex.eatLine();
 		errorList.push_back(ErrorItem(_("Unknown token"),
-			bformat(_("Unknown token: %1$s %2$s\n"), from_utf8(token),
-			lex.getDocString()),
-			par.id(), 0, par.size()));
+		                              bformat(_("Unknown token: %1$s %2$s\n"),
+		                                      from_utf8(token),
+		                                      lex.getDocString()),
+		                              {par.id(), 0}, {par.id(), -1}));
 	}
 }
 
@@ -738,9 +738,13 @@ void Text::breakParagraph(Cursor & cur, bool inverse_logic)
 	Layout const & layout = cpar.layout();
 
 	if (cur.lastpos() == 0 && !cpar.allowEmpty()) {
-		if (changeDepthAllowed(cur, DEC_DEPTH))
+		if (changeDepthAllowed(cur, DEC_DEPTH)) {
 			changeDepth(cur, DEC_DEPTH);
-		else {
+			pit_type const prev = depthHook(cpit, cpar.getDepth());
+			docstring const & lay = pars_[prev].layout().name();
+			if (lay != layout.name())
+				setLayout(cur, lay);
+		} else {
 			docstring const & lay = cur.paragraph().usePlainLayout()
 			    ? tclass.plainLayoutName() : tclass.defaultLayoutName();
 			if (lay != layout.name())

@@ -449,6 +449,17 @@ int Changes::latexMarkChange(otexstream & os, BufferParams const & bparams,
 				       bparams.authors().get(change.author).name(),
 				       chgTime, runparams);
 	
+	// signature needed by \lyxsout to correctly strike out display math
+	if (change.type == Change::DELETED && runparams.inDisplayMath
+	    && (!LaTeXFeatures::isAvailable("dvipost")
+		|| (runparams.flavor != OutputParams::LATEX
+		    && runparams.flavor != OutputParams::DVILUATEX))) {
+		if (os.afterParbreak())
+			str += from_ascii("\\\\\\noindent\n");
+		else
+			str += from_ascii("\\\\\\\\\n");
+	}
+
 	os << str;
 	column += str.size();
 

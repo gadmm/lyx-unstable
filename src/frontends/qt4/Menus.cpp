@@ -319,8 +319,6 @@ public:
 	///
 	size_t size() const { return items_.size(); }
 	///
-	MenuItem const & operator[](size_t) const;
-	///
 	const_iterator begin() const { return items_.begin(); }
 	///
 	const_iterator end() const { return items_.end(); }
@@ -682,12 +680,6 @@ void MenuDefinition::read(Lexer & lex)
 }
 
 
-MenuItem const & MenuDefinition::operator[](size_type i) const
-{
-	return items_[i];
-}
-
-
 bool MenuDefinition::hasFunc(FuncRequest const & func) const
 {
 	for (const_iterator it = begin(), et = end(); it != et; ++it)
@@ -1034,8 +1026,7 @@ void MenuDefinition::expandFormats(MenuItem::Kind const kind, Buffer const * buf
 	if (!buf && kind != MenuItem::ImportFormats)
 		return;
 
-	typedef vector<Format const *> Formats;
-	Formats formats;
+	FormatList formats;
 	FuncCode action = LFUN_NOACTION;
 
 	switch (kind) {
@@ -1059,7 +1050,6 @@ void MenuDefinition::expandFormats(MenuItem::Kind const kind, Buffer const * buf
 		LATTEST(false);
 		return;
 	}
-	sort(formats.begin(), formats.end(), Format::formatSorter);
 
 	bool const view_update = (kind == MenuItem::ViewFormats
 			|| kind == MenuItem::UpdateFormats);

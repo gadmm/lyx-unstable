@@ -13,6 +13,8 @@
 #define MATH_MATHMLSTREAM_H
 
 #include "InsetMath.h"
+
+#include "TexRow.h"
 #include "texstream.h"
 
 #include "support/Changer.h"
@@ -26,7 +28,6 @@ class Encoding;
 class InsetMath;
 class MathAtom;
 class MathData;
-struct RowEntry;
 
 //
 // LaTeX/LyX
@@ -39,6 +40,12 @@ public:
 		wsDefault,
 		wsDryrun,
 		wsPreview
+	};
+	///
+	enum UlemCmdType {
+		NONE,
+		UNDERLINE,
+		STRIKEOUT
 	};
 	///
 	explicit WriteStream(otexrowstream & os, bool fragile = false,
@@ -70,6 +77,10 @@ public:
 	void strikeoutMath(bool mathsout) { mathsout_ = mathsout; }
 	/// tell whether we have to take care for striking out display math
 	bool strikeoutMath() const { return mathsout_; }
+	/// record which ulem command type we are inside
+	void ulemCmd(UlemCmdType ulemcmd) { ulemcmd_ = ulemcmd; }
+	/// tell which ulem command type we are inside
+	UlemCmdType ulemCmd() const { return ulemcmd_; }
 	/// writes space if next thing is isalpha()
 	void pendingSpace(bool how);
 	/// writes space if next thing is isalpha()
@@ -94,7 +105,7 @@ public:
 	Encoding const * encoding() const { return encoding_; }
 
 	/// Temporarily change the TexRow information about the outer row entry.
-	Changer changeRowEntry(RowEntry entry);
+	Changer changeRowEntry(TexRow::RowEntry entry);
 	/// TexRow::starts the innermost outer math inset
 	/// returns true if the outer row entry will appear at this line
 	bool startOuterRow();
@@ -123,13 +134,14 @@ private:
 	bool canbreakline_;
 	/// should we take care for striking out display math?
 	bool mathsout_;
+	/// what ulem command are we inside (none, underline, strikeout)?
+	UlemCmdType ulemcmd_;
 	///
 	int line_;
 	///
 	Encoding const * encoding_;
 	/// Row entry we are in
-	/// (it is a pointer to allow forward-declaration)
-	unique_ptr<RowEntry> row_entry_;
+	TexRow::RowEntry row_entry_;
 };
 
 ///

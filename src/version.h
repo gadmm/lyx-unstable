@@ -33,8 +33,8 @@ extern char const * const lyx_version_info;
 #ifdef FILEFORMAT
 // Do not remove the comment below, so we get merge conflict in
 // independent branches. Instead add your own.
-#define LYX_FORMAT_LYX 513 // uwestoehr: support for Bosnian, Friulan, Piedmontese, Romansh and Macedonian
-#define LYX_FORMAT_TEX2LYX 513
+#define LYX_FORMAT_LYX 514 // uwestoehr: support for Amharic etc.
+#define LYX_FORMAT_TEX2LYX 514
 
 #else
 // LyX 2.2 format

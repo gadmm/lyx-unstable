@@ -898,6 +898,29 @@ bool InsetMathHull::ams() const
 }
 
 
+bool InsetMathHull::outerDisplay() const
+{
+	switch (type_) {
+	case hullEquation:
+	case hullEqnArray:
+	case hullAlign:
+	case hullFlAlign:
+	case hullGather:
+	case hullMultline:
+		return true;
+	case hullNone:
+	case hullSimple:
+	case hullAlignAt:
+	case hullXAlignAt:
+	case hullXXAlignAt:
+	case hullUnknown:
+	case hullRegexp:
+		break;
+	}
+	return false;
+}
+
+
 Inset::DisplayType InsetMathHull::display() const
 {
 	switch (type_) {
@@ -953,26 +976,7 @@ void InsetMathHull::validate(LaTeXFeatures & features) const
 		if (ams())
 			features.require("amsmath");
 
-		switch(type_) {
-		case hullNone:
-		case hullSimple:
-		case hullAlignAt:
-		case hullXAlignAt:
-		case hullXXAlignAt:
-		case hullUnknown:
-			break;
-
-		case hullEquation:
-		case hullEqnArray:
-		case hullAlign:
-		case hullFlAlign:
-		case hullGather:
-		case hullMultline:
-			if (features.inDeletedInset() && !features.mustProvide("ct-dvipost"))
-				features.require("ct-tikz-math-sout");
-			break;
-
-		case hullRegexp:
+		if (type_ == hullRegexp) {
 			features.require("color");
 			docstring frcol = from_utf8(lcolor.getLaTeXName(Color_regexpframe));
 			docstring bgcol = from_ascii("white");
@@ -982,7 +986,9 @@ void InsetMathHull::validate(LaTeXFeatures & features) const
 				+ bgcol + "}{\\ensuremath{\\mathtt{#1}}}}");
 			features.addPreambleSnippet(
 				from_ascii("\\newcommand{\\endregexp}{}"));
-			break;
+		} else if (outerDisplay() && features.inDeletedInset()
+			   && !features.mustProvide("ct-dvipost")) {
+				features.require("ct-tikz-math-sout");
 		}
 
 		// Validation is necessary only if not using AMS math.
@@ -1014,6 +1020,8 @@ void InsetMathHull::header_write(WriteStream & os) const
 		break;
 
 	case hullSimple:
+		if (os.ulemCmd())
+			os << "\\mbox{";
 		os << '$';
 		os.startOuterRow();
 		if (cell(0).empty())
@@ -1021,8 +1029,14 @@ void InsetMathHull::header_write(WriteStream & os) const
 		break;
 
 	case hullEquation:
-		if (os.strikeoutMath())
-			os << "\\\\\\\\\n\\lyxmathsout{\\parbox{\\columnwidth}{";
+		if (os.strikeoutMath()) {
+			if (os.ulemCmd() == WriteStream::UNDERLINE)
+				os << "\\raisebox{1ex}{";
+			os << "\\lyxmathsout{\\parbox{\\columnwidth}{";
+		} else if (os.ulemCmd() == WriteStream::UNDERLINE)
+			os << "\\raisebox{-1ex}{\\parbox[b]{\\columnwidth}{";
+		else if (os.ulemCmd() == WriteStream::STRIKEOUT)
+			os << "\\parbox{\\columnwidth}{";
 		os << "\n";
 		os.startOuterRow();
 		if (n)
@@ -1036,8 +1050,14 @@ void InsetMathHull::header_write(WriteStream & os) const
 	case hullFlAlign:
 	case hullGather:
 	case hullMultline:
-		if (os.strikeoutMath())
-			os << "\\\\\\\\\n\\lyxmathsout{\\parbox{\\columnwidth}{";
+		if (os.strikeoutMath()) {
+			if (os.ulemCmd() == WriteStream::UNDERLINE)
+				os << "\\raisebox{1ex}{";
+			os << "\\lyxmathsout{\\parbox{\\columnwidth}{";
+		} else if (os.ulemCmd() == WriteStream::UNDERLINE)
+			os << "\\raisebox{-1ex}{\\parbox[b]{\\columnwidth}{";
+		else if (os.ulemCmd() == WriteStream::STRIKEOUT)
+			os << "\\parbox{\\columnwidth}{";
 		os << "\n";
 		os.startOuterRow();
 		os << "\\begin{" << hullName(type_) << star(n) << "}\n";
@@ -1082,6 +1102,8 @@ void InsetMathHull::footer_write(WriteStream & os) const
 
 	case hullSimple:
 		os << '$';
+		if (os.ulemCmd())
+			os << "}";
 		break;
 
 	case hullEquation:
@@ -1091,8 +1113,14 @@ void InsetMathHull::footer_write(WriteStream & os) const
 			os << "\\end{equation" << star(n) << "}\n";
 		else
 			os << "\\]\n";
-		if (os.strikeoutMath())
+		if (os.strikeoutMath()) {
+			if (os.ulemCmd() == WriteStream::UNDERLINE)
+				os << "}";
 			os << "}}\\\\\n";
+		} else if (os.ulemCmd() == WriteStream::UNDERLINE)
+			os << "}}\\\\\n";
+		else if (os.ulemCmd() == WriteStream::STRIKEOUT)
+			os << "}\\\\\n";
 		break;
 
 	case hullEqnArray:
@@ -1103,8 +1131,14 @@ void InsetMathHull::footer_write(WriteStream & os) const
 		os << "\n";
 		os.startOuterRow();
 		os << "\\end{" << hullName(type_) << star(n) << "}\n";
-		if (os.strikeoutMath())
+		if (os.strikeoutMath()) {
+			if (os.ulemCmd() == WriteStream::UNDERLINE)
+				os << "}";
 			os << "}}\\\\\n";
+		} else if (os.ulemCmd() == WriteStream::UNDERLINE)
+			os << "}}\\\\\n";
+		else if (os.ulemCmd() == WriteStream::STRIKEOUT)
+			os << "}\\\\\n";
 		break;
 
 	case hullAlignAt:

@@ -355,11 +355,16 @@ public:
 	VSpace defskip;
 	PDFOptions pdfoptions;
 	LayoutFileIndex baseClass_;
+	FormatList exportableFormatList;
+	FormatList viewableFormatList;
+	bool isViewCacheValid;
+	bool isExportCacheValid;
 };
 
 
 BufferParams::Impl::Impl()
-	: defskip(VSpace::MEDSKIP), baseClass_(string(""))
+	: defskip(VSpace::MEDSKIP), baseClass_(string("")),
+	  isViewCacheValid(false), isExportCacheValid(false)
 {
 	// set initial author
 	// FIXME UNICODE
@@ -1644,7 +1649,7 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 		   << from_ascii(fonts_default_family) << "}\n";
 
 	// set font encoding
-	// XeTeX and LuaTeX (with OS fonts) do not need fontenc
+	// XeTeX and LuaTeX with Unicode fonts do not need fontenc
 	if (!useNonTeXFonts && !features.isProvided("fontenc")
 	    && font_encoding() != "default") {
 		// get main font encodings
@@ -2253,6 +2258,7 @@ void BufferParams::setDocumentClass(DocumentClassConstPtr tc)
 {
 	// evil, but this function is evil
 	doc_class_ = const_pointer_cast<DocumentClass>(tc);
+	invalidateConverterCache();
 }
 
 
@@ -2311,6 +2317,7 @@ void BufferParams::makeDocumentClass(bool const clone)
 	if (!baseClass())
 		return;
 
+	invalidateConverterCache();
 	LayoutModuleList mods;
 	LayoutModuleList::iterator it = layout_modules_.begin();
 	LayoutModuleList::iterator en = layout_modules_.end();
@@ -2386,49 +2393,46 @@ string BufferParams::bufferFormat() const
 }
 
 
-bool BufferParams::isExportable(string const & format) const
+bool BufferParams::isExportable(string const & format, bool need_viewable) const
 {
-	vector<string> backs = backends();
-	for (vector<string>::const_iterator it = backs.begin();
-	     it != backs.end(); ++it)
-		if (theConverters().isReachable(*it, format))
+	FormatList const & formats = exportableFormats(need_viewable);
+	FormatList::const_iterator fit = formats.begin();
+	FormatList::const_iterator end = formats.end();
+	for (; fit != end ; ++fit) {
+		if ((*fit)->name() == format)
 			return true;
+	}
 	return false;
 }
 
 
-vector<Format const *> BufferParams::exportableFormats(bool only_viewable) const
+FormatList const & BufferParams::exportableFormats(bool only_viewable) const
 {
+	FormatList & cached = only_viewable ?
+			pimpl_->viewableFormatList : pimpl_->exportableFormatList;
+	bool & valid = only_viewable ? 
+			pimpl_->isViewCacheValid : pimpl_->isExportCacheValid;
+	if (valid)
+		return cached;
+
 	vector<string> const backs = backends();
 	set<string> excludes;
 	if (useNonTeXFonts) {
 		excludes.insert("latex");
 		excludes.insert("pdflatex");
 	}
-	vector<Format const *> result =
+	FormatList result =
 		theConverters().getReachable(backs[0], only_viewable, true, excludes);
 	for (vector<string>::const_iterator it = backs.begin() + 1;
 	     it != backs.end(); ++it) {
-		vector<Format const *>  r =
-			theConverters().getReachable(*it, only_viewable, false, excludes);
+		FormatList r = theConverters().getReachable(*it, only_viewable, 
+				false, excludes);
 		result.insert(result.end(), r.begin(), r.end());
 	}
-	return result;
-}
-
-
-bool BufferParams::isExportableFormat(string const & format) const
-{
-	typedef vector<Format const *> Formats;
-	Formats formats;
-	formats = exportableFormats(true);
-	Formats::const_iterator fit = formats.begin();
-	Formats::const_iterator end = formats.end();
-	for (; fit != end ; ++fit) {
-		if ((*fit)->name() == format)
-			return true;
-	}
-	return false;
+	sort(result.begin(), result.end(), Format::formatSorter);
+	cached = result;
+	valid = true;
+	return cached;
 }
 
 
@@ -2518,7 +2522,7 @@ string BufferParams::getDefaultOutputFormat() const
 		return default_output_format;
 	if (isDocBook()
 	    || encoding().package() == Encoding::japanese) {
-		vector<Format const *> const formats = exportableFormats(true);
+		FormatList const & formats = exportableFormats(true);
 		if (formats.empty())
 			return string();
 		// return the first we find
@@ -2940,7 +2944,7 @@ vector<string> const BufferParams::font_encodings() const
 
 	vector<string> fontencs;
 
-	// "default" means "no explicit font encoding"
+	// "default" means "no explicit font encoding, don't load fontenc.sty"
 	if (doc_fontenc != "default") {
 		fontencs = getVectorFromString(doc_fontenc);
 		if (!language->fontenc().empty()
@@ -3284,6 +3288,12 @@ vector<CitationStyle> BufferParams::citeStyles() const
 	if (styles.empty())
 		styles.push_back(default_style);
 	return styles;
+}
+
+void BufferParams::invalidateConverterCache() const
+{
+	pimpl_->isExportCacheValid = false;
+	pimpl_->isViewCacheValid = false;
 }
 
 } // namespace lyx

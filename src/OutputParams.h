@@ -79,6 +79,8 @@ public:
 	    This esentially seems to mean whether InsetInclude, InsetGraphics
 	    and InsetExternal should add the absolute path to any external
 	    files or not.
+	    Non-nice LaTeX also includes additional safe line breaks in order to
+	    increase the precision of forward/reverse search and error reporting.
 	*/
 	bool nice;
 
@@ -184,6 +186,11 @@ public:
 	    OutputParams instances.
 	*/
 	std::shared_ptr<ExportData> exportdata;
+
+	/** Whether we are inside a display math inset.
+	 *  Needed to correctly strike out deleted math in change tracking.
+	 */
+	mutable bool inDisplayMath;
 
 	/** Whether we are inside a comment inset. Insets that are including
 	 *  external files like InsetGraphics, InsetInclude and InsetExternal

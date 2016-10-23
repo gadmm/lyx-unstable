@@ -1182,12 +1182,7 @@ void GuiView::updateWindowTitle(GuiWorkArea * wa)
 
 	if (buf.lyxvc().inUse()) {
 		version_control_->show();
-		if (buf.lyxvc().locking())
-			version_control_->setText(
-				toqstr(bformat(_("%1$s lock"),
-				               from_ascii(buf.lyxvc().vcname()))));
-		else
-			version_control_->setText(toqstr(buf.lyxvc().vcname()));
+		version_control_->setText(toqstr(buf.lyxvc().vcstatus()));
 	} else
 		version_control_->hide();
 }
@@ -1849,7 +1844,7 @@ bool GuiView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 		string format = to_utf8(cmd.argument());
 		if (cmd.argument().empty())
 			format = doc_buffer->params().getDefaultOutputFormat();
-		enable = doc_buffer->params().isExportableFormat(format);
+		enable = doc_buffer->params().isExportable(format, true);
 		break;
 	}
 

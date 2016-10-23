@@ -66,11 +66,15 @@ void TexString::validate()
 
 bool TexRow::RowEntryList::addEntry(RowEntry entry)
 {
-	if (!entry.is_math) {
+	switch (entry.type) {
+	case text_entry:
 		if (isNone(text_entry_))
 			text_entry_ = entry.text;
 		else if (!v_.empty() && TexRow::sameParOrInsetMath(v_.back(), entry))
 			return false;
+		break;
+	default:
+		break;
 	}
 	forceAddEntry(entry);
 	return true;
@@ -84,7 +88,7 @@ void TexRow::RowEntryList::forceAddEntry(RowEntry entry)
 }
 
 
-TextEntry TexRow::RowEntryList::getTextEntry() const
+TexRow::TextEntry TexRow::RowEntryList::getTextEntry() const
 {
 	if (!isNone(text_entry_))
 		return text_entry_;
@@ -106,8 +110,8 @@ TexRow::TexRow()
 }
 
 
-TextEntry const TexRow::text_none = { -1, 0 };
-RowEntry const TexRow::row_none = { false, { TexRow::text_none } };
+TexRow::TextEntry const TexRow::text_none = { -1, 0 };
+TexRow::RowEntry const TexRow::row_none = TexRow::textEntry(-1, 0);
 
 
 //static
@@ -120,7 +124,7 @@ bool TexRow::isNone(TextEntry t)
 //static
 bool TexRow::isNone(RowEntry r)
 {
-	return !r.is_math && isNone(r.text);
+	return r.type == text_entry && isNone(r.text);
 }
 
 
@@ -138,10 +142,10 @@ TexRow::RowEntryList & TexRow::currentRow()
 
 
 //static
-RowEntry TexRow::textEntry(int id, pos_type pos)
+TexRow::RowEntry TexRow::textEntry(int id, pos_type pos)
 {
 	RowEntry entry;
-	entry.is_math = false;
+	entry.type = text_entry;
 	entry.text.pos = pos;
 	entry.text.id = id;
 	return entry;
@@ -149,24 +153,42 @@ RowEntry TexRow::textEntry(int id, pos_type pos)
 
 
 //static
-RowEntry TexRow::mathEntry(uid_type id, idx_type cell)
+TexRow::RowEntry TexRow::mathEntry(uid_type id, idx_type cell)
 {
 	RowEntry entry;
-	entry.is_math = true;
+	entry.type = math_entry;
 	entry.math.cell = cell;
 	entry.math.id = id;
 	return entry;
 }
 
 
-bool operator==(RowEntry entry1, RowEntry entry2)
+//static
+TexRow::RowEntry TexRow::beginDocument()
 {
-	return entry1.is_math == entry2.is_math
-		&& (entry1.is_math
-		    ? (entry1.math.id == entry2.math.id
-		       && entry1.math.cell == entry2.math.cell)
-		    : (entry1.text.id == entry2.text.id
-		       && entry1.text.pos == entry2.text.pos));
+	RowEntry entry;
+	entry.type = begin_document;
+	entry.begindocument = {};
+	return entry;
+}
+
+
+bool operator==(TexRow::RowEntry entry1, TexRow::RowEntry entry2)
+{
+	if (entry1.type != entry2.type)
+		return false;
+	switch (entry1.type) {
+	case TexRow::text_entry:
+		return entry1.text.id == entry2.text.id
+			&& entry1.text.pos == entry2.text.pos;
+	case TexRow::math_entry:
+		return entry1.math.id == entry2.math.id
+			&& entry1.math.cell == entry2.math.cell;
+	case TexRow::begin_document:
+		return true;
+	default:
+		return false;
+	}
 }
 
 
@@ -217,45 +239,66 @@ void TexRow::append(TexRow other)
 }
 
 
-bool TexRow::getIdFromRow(int row, int & id, int & pos) const
+pair<TexRow::TextEntry, TexRow::TextEntry>
+TexRow::getEntriesFromRow(int const row) const
 {
-	LYXERR(Debug::LATEX, "getIdFromRow: row " << row << " requested");
-	TextEntry t = text_none;
-	if (row <= int(rowlist_.size()))
-		while (row > 0 && isNone(t = rowlist_[row - 1].getTextEntry()))
-			--row;
-	id = t.id;
-	pos = t.pos;
-	return !isNone(t);
-}
-
-
-pair<TextEntry, TextEntry> TexRow::getEntriesFromRow(int const row) const
-{
+	// FIXME: Take math entries into account, take table cells into account and
+	//        get rid of the ad hoc special text entry for each row.
+	//
+	// FIXME: A yellow note alone on its paragraph makes the reverse-search on
+	//        the subsequent line inaccurate. Get rid of text entries that
+	//        correspond to no output by delaying their addition, at the level
+	//        of otexrowstream, until a character is actually output.
+	//
 	LYXERR(Debug::LATEX, "getEntriesFromRow: row " << row << " requested");
+
 	// check bounds for row - 1, our target index
 	if (row <= 0)
 		return {text_none, text_none};
 	size_t const i = static_cast<size_t>(row - 1);
 	if (i >= rowlist_.size())
 		return {text_none, text_none};
+
 	// find the start entry
-	size_t j = i;
-	while (j > 0 && isNone(rowlist_[j].getTextEntry()))
-		--j;
-	TextEntry start = rowlist_[j].getTextEntry();
+	TextEntry const start = [&]() {
+		for (size_t j = i; j > 0; --j) {
+			if (!isNone(rowlist_[j].getTextEntry()))
+				return rowlist_[j].getTextEntry();
+			// Check the absence of begin_document at row j. The begin_document row
+			// entry is used to prevent mixing of body and preamble.
+			for (RowEntry entry : rowlist_[j])
+				if (entry.type == begin_document)
+					return text_none;
+		}
+		return text_none;
+	} ();
+
 	// find the end entry
-	j = i + 1;
-	while (j < rowlist_.size() && isNone(rowlist_[j].getTextEntry()))
-		++j;
-	TextEntry end =
-		(j < rowlist_.size()) ? rowlist_[j].getTextEntry()
-		                      : TextEntry{start.id, -1}; // last position
+	TextEntry end = [&]() {
+		if (isNone(start))
+			return text_none;
+		// select up to the last position of the starting paragraph as a
+		// fallback
+		TextEntry last_pos = {start.id, -1};
+		// find the next occurence of paragraph start.id
+		for (size_t j = i + 1; j < rowlist_.size(); ++j) {
+			for (RowEntry entry : rowlist_[j]) {
+				if (entry.type == begin_document)
+					// what happens in the preamble remains in the preamble
+					return last_pos;
+				if (entry.type == text_entry && entry.text.id == start.id)
+					return entry.text;
+			}
+		}
+		return last_pos;
+	} ();
+
 	// The following occurs for a displayed math inset for instance (for good
 	// reasons involving subtleties of the algorithm in getRowFromDocIterator).
 	// We want this inset selected.
 	if (start.id == end.id && start.pos == end.pos)
 		++end.pos;
+
 	return {start, end};
 }
 
@@ -312,24 +355,29 @@ FuncRequest TexRow::goToFunc(TextEntry start, TextEntry end)
 }
 
 
-//static
-FuncRequest TexRow::goToFunc(std::pair<TextEntry,TextEntry> entries)
+FuncRequest TexRow::goToFuncFromRow(int const row) const
 {
-	return goToFunc(entries.first, entries.second);
+	TextEntry start, end;
+	tie(start,end) = getEntriesFromRow(row);
+	LYXERR(Debug::LATEX,
+	       "goToFuncFromRow: for row " << row << ", TexRow has found "
+	       "start (id=" << start.id << ",pos=" << start.pos << "), "
+	       "end (id=" << end.id << ",pos=" << end.pos << ")");
+	return goToFunc(start, end);
 }
 
 
 //static
-RowEntry TexRow::rowEntryFromCursorSlice(CursorSlice const & slice)
+TexRow::RowEntry TexRow::rowEntryFromCursorSlice(CursorSlice const & slice)
 {
 	RowEntry entry;
 	InsetMath * insetMath = slice.asInsetMath();
 	if (insetMath) {
-		entry.is_math = 1;
+		entry.type = math_entry;
 		entry.math.id = insetMath->id();
 		entry.math.cell = slice.idx();
 	} else if (slice.text()) {
-		entry.is_math = 0;
+		entry.type = text_entry;
 		entry.text.id = slice.paragraph().id();
 		entry.text.pos = slice.pos();
 	} else
@@ -341,10 +389,18 @@ RowEntry TexRow::rowEntryFromCursorSlice(CursorSlice const & slice)
 //static
 bool TexRow::sameParOrInsetMath(RowEntry entry1, RowEntry entry2)
 {
-	return entry1.is_math == entry2.is_math
-		&& (entry1.is_math
-		    ? (entry1.math.id == entry2.math.id)
-		    : (entry1.text.id == entry2.text.id));
+	if (entry1.type != entry2.type)
+		return false;
+	switch (entry1.type) {
+	case TexRow::text_entry:
+		return entry1.text.id == entry2.text.id;
+	case TexRow::math_entry:
+		return entry1.math.id == entry2.math.id;
+	case TexRow::begin_document:
+		return true;
+	default:
+		return false;
+	}
 }
 
 
@@ -352,10 +408,16 @@ bool TexRow::sameParOrInsetMath(RowEntry entry1, RowEntry entry2)
 int TexRow::comparePos(RowEntry entry1, RowEntry entry2)
 {
 	// assume it is sameParOrInsetMath
-	if (entry1.is_math)
-		return entry2.math.cell - entry1.math.cell;
-	else
+	switch (entry1.type /* equal to entry2.type */) {
+	case TexRow::text_entry:
 		return entry2.text.pos - entry1.text.pos;
+	case TexRow::math_entry:
+		return entry2.math.cell - entry1.math.cell;
+	case TexRow::begin_document:
+		return 0;
+	default:
+		return 0;
+	}
 }
 
 
@@ -465,6 +527,7 @@ TexRow::RowListIterator TexRow::end() const
 
 pair<int,int> TexRow::rowFromDocIterator(DocIterator const & dit) const
 {
+	// Do not change anything in this algorithm if unsure.
 	bool beg_found = false;
 	bool end_is_next = true;
 	int end_offset = 1;
@@ -576,10 +639,19 @@ void TexRow::setRows(size_t r)
 docstring TexRow::asString(RowEntry entry)
 {
 	odocstringstream os;
-	if (entry.is_math)
-		os << "(1," << entry.math.id << "," << entry.math.cell << ")";
-	else
-		os << "(0," << entry.text.id << "," << entry.text.pos << ")";
+	switch (entry.type) {
+	case TexRow::text_entry:
+		os << "(par " << entry.text.id << "," << entry.text.pos << ")";
+		break;
+	case TexRow::math_entry:
+		os << "(" << entry.math.id << "," << entry.math.cell << ")";
+		break;
+	case TexRow::begin_document:
+		os << "(begin_document)";
+		break;
+	default:
+		break;
+	}
 	return os.str();
 }
 

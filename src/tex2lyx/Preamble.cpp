@@ -45,6 +45,7 @@ namespace {
 
 // CJK languages are handled in text.cpp, polyglossia languages are listed
 // further down.
+#ifdef FILEFORMAT
 /**
  * known babel language names (including synonyms)
  * not in standard babel: arabic, arabtex, armenian, belarusian, serbian-latin, thai
@@ -67,6 +68,26 @@ const char * const known_languages[] = {"acadian", "afrikaans", "albanian",
 "vietnam", "welsh",
 0};
 
+#else
+const char * const known_languages[] = {"acadian", "afrikaans", "albanian",
+"american", "arabic", "arabtex", "australian", "austrian", "bahasa", "bahasai",
+"bahasam", "basque", "belarusian", "brazil", "brazilian", "breton", "british",
+"bulgarian", "canadian", "canadien", "catalan", "croatian", "czech", "danish",
+"dutch", "english", "esperanto", "estonian", "farsi", "finnish", "francais",
+"french", "frenchb", "frenchle", "frenchpro", "galician", "german", "germanb",
+"georgian", "greek", "hebrew", "hungarian", "icelandic", "indon", "indonesian",
+"interlingua", "irish", "italian", "japanese", "kazakh", "kurmanji", "latin",
+"latvian", "lithuanian", "lowersorbian", "lsorbian", "magyar", "malay", "meyalu",
+"mongolian", "naustrian", "newzealand", "ngerman", "ngermanb", "norsk", "nswissgerman",
+"nynorsk", "polutonikogreek", "polish", "portuges", "portuguese", "romanian", "russian",
+"russianb", "samin", "scottish", "serbian", "serbian-latin", "slovak",
+"slovene", "spanish", "swedish", "swissgerman", "thai", "turkish", "turkmen",
+"ukraineb", "ukrainian", "uppersorbian", "UKenglish", "USenglish", "usorbian",
+"vietnam", "welsh",
+0};
+#endif
+
+#ifdef FILEFORMAT
 /**
  * the same as known_languages with .lyx names
  * please keep this in sync with known_languages line by line!
@@ -88,6 +109,25 @@ const char * const known_coded_languages[] = {"french", "afrikaans", "albanian",
 "vietnamese", "welsh",
 0};
 
+#else
+const char * const known_coded_languages[] = {"french", "afrikaans", "albanian",
+"american", "arabic_arabi", "arabic_arabtex", "australian", "austrian", "bahasa", "bahasa",
+"bahasam", "basque", "belarusian", "brazilian", "brazilian", "breton", "british",
+"bulgarian", "canadian", "canadien", "catalan", "croatian", "czech", "danish",
+"dutch", "english", "esperanto", "estonian", "farsi", "finnish", "french",
+"french", "french", "french", "french", "galician", "german", "german",
+"georgian", "greek", "hebrew", "magyar", "icelandic", "bahasa", "bahasa",
+"interlingua", "irish", "italian", "japanese", "kazakh", "kurmanji", "latin",
+"latvian", "lithuanian", "lowersorbian", "lowersorbian", "magyar", "bahasam", "bahasam",
+"mongolian", "naustrian", "newzealand", "ngerman", "ngerman", "norsk", "german-ch",
+"nynorsk", "polutonikogreek", "polish", "portuguese", "portuguese", "romanian", "russian",
+"russian", "samin", "scottish", "serbian", "serbian-latin", "slovak",
+"slovene", "spanish", "swedish", "german-ch-old", "thai", "turkish", "turkmen",
+"ukrainian", "ukrainian", "uppersorbian", "english", "english", "uppersorbian",
+"vietnamese", "welsh",
+0};
+#endif
+
 /// languages with danish quotes (.lyx names)
 const char * const known_danish_quotes_languages[] = {"danish", 0};
 
@@ -97,6 +137,7 @@ const char * const known_english_quotes_languages[] = {"american", "australian",
 "esperanto", "hebrew", "irish", "korean", "newzealand", "portuguese", "scottish",
 "thai", 0};
 
+#ifdef FILEFORMAT
 /// languages with french quotes (.lyx names)
 const char * const known_french_quotes_languages[] = {"albanian",
 "arabic_arabi", "arabic_arabtex", "basque", "canadien", "catalan", "french", "friulan",
@@ -104,15 +145,36 @@ const char * const known_french_quotes_languages[] = {"albanian",
 "russian", "spanish", "spanish-mexico", "turkish", "turkmen", "ukrainian",
 "vietnamese", 0};
 
+#else
+const char * const known_french_quotes_languages[] = {"albanian",
+"arabic_arabi", "arabic_arabtex", "basque", "canadien", "catalan", "french",
+"galician", "greek", "italian", "norsk", "nynorsk", "polutonikogreek",
+"russian", "spanish", "spanish-mexico", "turkish", "turkmen", "ukrainian",
+"vietnamese", 0};
+#endif
+
+#ifdef FILEFORMAT
 /// languages with german quotes (.lyx names)
 const char * const known_german_quotes_languages[] = {"austrian", "bulgarian",
 "czech", "german", "georgian", "icelandic", "lithuanian", "lowersorbian", "macedonian",
 "naustrian", "ngerman", "romansh", "serbian", "serbian-latin", "slovak", "slovene",
 "uppersorbian", 0};
 
+#else
+const char * const known_german_quotes_languages[] = {"austrian", "bulgarian",
+"czech", "german", "georgian", "icelandic", "lithuanian", "lowersorbian", "naustrian",
+"ngerman", "serbian", "serbian-latin", "slovak", "slovene", "uppersorbian", 0};
+#endif
+
+#ifdef FILEFORMAT
 /// languages with polish quotes (.lyx names)
 const char * const known_polish_quotes_languages[] = {"afrikaans", "bosnian", "croatian",
 "dutch", "estonian", "magyar", "polish", "romanian", 0};
+
+#else
+const char * const known_polish_quotes_languages[] = {"afrikaans", "croatian",
+"dutch", "estonian", "magyar", "polish", "romanian", 0};
+#endif
 
 /// languages with swedish quotes (.lyx names)
 const char * const known_swedish_quotes_languages[] = {"finnish",

@@ -15,7 +15,6 @@
 
 #include "GuiView.h"
 
-#include "Dialog.h"
 #include "DispatchResult.h"
 #include "FileDialog.h"
 #include "FontLoader.h"
@@ -513,6 +512,9 @@ GuiView::GuiView(int id)
 	: d(*new GuiViewPrivate(this)), id_(id), closing_(false), busy_(0),
 	  command_execute_(false), minibuffer_focus_(false)
 {
+	connect(this, SIGNAL(bufferViewChanged()),
+	        this, SLOT(on_bufferViewChanged()));
+
 	// GuiToolbars *must* be initialised before the menu bar.
 	normalSizedIcons(); // at least on Mac the default is 32 otherwise, which is huge
 	constructToolbars();
@@ -1194,23 +1196,27 @@ void GuiView::updateWindowTitle(GuiWorkArea * wa)
 void GuiView::on_currentWorkAreaChanged(GuiWorkArea * wa)
 {
 	if (d.current_work_area_)
-		QObject::disconnect(d.current_work_area_, SIGNAL(busy(bool)),
-			this, SLOT(setBusy(bool)));
+		// disconnect the current work area from all slots
+		QObject::disconnect(d.current_work_area_, 0, this, 0);
 	disconnectBuffer();
 	disconnectBufferView();
 	connectBufferView(wa->bufferView());
 	connectBuffer(wa->bufferView().buffer());
 	d.current_work_area_ = wa;
 	QObject::connect(wa, SIGNAL(titleChanged(GuiWorkArea *)),
-		this, SLOT(updateWindowTitle(GuiWorkArea *)));
-	QObject::connect(wa, SIGNAL(busy(bool)), this, SLOT(setBusy(bool)));
-	updateWindowTitle(wa);
+	                 this, SLOT(updateWindowTitle(GuiWorkArea *)));
+	QObject::connect(wa, SIGNAL(busy(bool)),
+	                 this, SLOT(setBusy(bool)));
+	QObject::connect(wa, SIGNAL(bufferViewChanged()),
+	                 this, SIGNAL(bufferViewChanged()));
+	Q_EMIT updateWindowTitle(wa);
+	Q_EMIT bufferViewChanged();
+}
 
+
+void GuiView::on_bufferViewChanged()
+{
 	structureChanged();
-
-	// The document settings needs to be reinitialised.
-	updateDialog("document", "");
-
 	// Buffer-dependent dialogs must be updated. This is done here because
 	// some dialogs require buffer()->text.
 	updateDialogs();
@@ -1228,9 +1234,7 @@ void GuiView::on_lastWorkAreaRemoved()
 		return;
 
 	// Reset and updates the dialogs.
-	d.toc_models_.reset(0);
-	updateDialog("document", "");
-	updateDialogs();
+	Q_EMIT bufferViewChanged();
 
 	resetWindowTitle();
 	updateStatusBar();
@@ -1310,19 +1314,10 @@ bool GuiView::event(QEvent * e)
 			cap::saveSelection(old_view->currentBufferView()->cursor());
 		}
 		guiApp->setCurrentView(this);
-		if (d.current_work_area_) {
-			BufferView & bv = d.current_work_area_->bufferView();
-			connectBufferView(bv);
-			connectBuffer(bv.buffer());
-			// The document structure, name and dialogs might have
-			// changed in another view.
-			structureChanged();
-			// The document settings needs to be reinitialised.
-			updateDialog("document", "");
-			updateDialogs();
-		} else {
+		if (d.current_work_area_)
+			on_currentWorkAreaChanged(d.current_work_area_);
+		else
 			resetWindowTitle();
-		}
 		setFocus();
 		return QMainWindow::event(e);
 	}
@@ -1477,6 +1472,7 @@ void GuiView::setCurrentWorkArea(GuiWorkArea * wa)
 	if (!wa) {
 		d.current_work_area_ = 0;
 		d.setBackground();
+		Q_EMIT bufferViewChanged();
 		return;
 	}
 
@@ -3400,8 +3396,15 @@ bool GuiView::goToFileRow(string const & argument)
 		return false;
 	}
 	setBuffer(buf);
-	documentBufferView()->setCursorFromRow(row);
-	return true;
+	bool success = documentBufferView()->setCursorFromRow(row);
+	if (!success) {
+		LYXERR(Debug::LATEX,
+		       "setCursorFromRow: invalid position for row " << row);
+		frontend::Alert::error(_("Inverse Search Failed"),
+		                       _("Invalid position requested by inverse search.\n"
+		                         "You may need to update the viewed document."));
+	}
+	return success;
 }
 
 
@@ -4010,7 +4013,8 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 			break;
 
 		case LFUN_SERVER_GOTO_FILE_ROW:
-			goToFileRow(to_utf8(cmd.argument()));
+			if(goToFileRow(to_utf8(cmd.argument())))
+				dr.screenUpdate(Update::Force | Update::FitCursor);
 			break;
 
 		case LFUN_LYX_ACTIVATE:

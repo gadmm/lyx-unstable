@@ -1082,9 +1082,9 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 	// then the preamble
 	if (!preamble.empty()) {
 		// remove '\n' from the end of preamble
-		string const tmppreamble = rtrim(preamble, "\n");
+		docstring const tmppreamble = rtrim(preamble, "\n");
 		os << "\\begin_preamble\n"
-		   << tmppreamble
+		   << to_utf8(tmppreamble)
 		   << "\n\\end_preamble\n";
 	}
 
@@ -1135,20 +1135,20 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 	   << convert<string>(maintain_unincluded_children) << '\n';
 
 	// local layout information
-	string const local_layout = getLocalLayout(false);
+	docstring const local_layout = getLocalLayout(false);
 	if (!local_layout.empty()) {
 		// remove '\n' from the end
-		string const tmplocal = rtrim(local_layout, "\n");
+		docstring const tmplocal = rtrim(local_layout, "\n");
 		os << "\\begin_local_layout\n"
-		   << tmplocal
+		   << to_utf8(tmplocal)
 		   << "\n\\end_local_layout\n";
 	}
-	string const forced_local_layout = getLocalLayout(true);
+	docstring const forced_local_layout = getLocalLayout(true);
 	if (!forced_local_layout.empty()) {
 		// remove '\n' from the end
-		string const tmplocal = rtrim(forced_local_layout, "\n");
+		docstring const tmplocal = rtrim(forced_local_layout, "\n");
 		os << "\\begin_forced_local_layout\n"
-		   << tmplocal
+		   << to_utf8(tmplocal)
 		   << "\n\\end_forced_local_layout\n";
 	}
 
@@ -1901,21 +1901,20 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	}
 
 	// Now insert the LyX specific LaTeX commands...
-	docstring lyxpreamble;
 	features.resolveAlternatives();
 	features.expandMultiples();
 
 	if (output_sync) {
 		if (!output_sync_macro.empty())
-			lyxpreamble += from_utf8(output_sync_macro) +"\n";
+			os << from_utf8(output_sync_macro) +"\n";
 		else if (features.runparams().flavor == OutputParams::LATEX)
-			lyxpreamble += "\\usepackage[active]{srcltx}\n";
+			os << "\\usepackage[active]{srcltx}\n";
 		else if (features.runparams().flavor == OutputParams::PDFLATEX)
-			lyxpreamble += "\\synctex=-1\n";
+			os << "\\synctex=-1\n";
 	}
 
 	// The package options (via \PassOptionsToPackage)
-	lyxpreamble += from_ascii(features.getPackageOptions());
+	os << from_ascii(features.getPackageOptions());
 
 	// due to interferences with babel and hyperref, the color package has to
 	// be loaded (when it is not already loaded) before babel when hyperref
@@ -1923,7 +1922,7 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	// http://www.lyx.org/trac/ticket/5291
 	// we decided therefore to load color always before babel, see
 	// http://www.mail-archive.com/lyx-devel@lists.lyx.org/msg144349.html
-	lyxpreamble += from_ascii(features.getColorOptions());
+	os << from_ascii(features.getColorOptions());
 
 	// If we use hyperref, jurabib, japanese, varioref or vietnamese,
 	// we have to call babel before
@@ -1933,15 +1932,15 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 		|| features.isRequired("varioref")
 		|| features.isRequired("vietnamese")
 		|| features.isRequired("japanese"))) {
+			os << features.getBabelPresettings();
 			// FIXME UNICODE
-			lyxpreamble += from_utf8(features.getBabelPresettings());
-			lyxpreamble += from_utf8(babelCall(language_options.str(),
-							   features.needBabelLangOptions())) + '\n';
-			lyxpreamble += from_utf8(features.getBabelPostsettings());
+			os << from_utf8(babelCall(language_options.str(),
+			                          features.needBabelLangOptions())) + '\n';
+			os << features.getBabelPostsettings();
 	}
 
 	// The optional packages;
-	lyxpreamble += from_ascii(features.getPackages());
+	os << from_ascii(features.getPackages());
 
 	// Additional Indices
 	if (features.isRequired("splitidx")) {
@@ -1959,16 +1958,16 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 						  "representable in the current encoding and therefore have been omitted:\n%1$s."),
 						indexname_latex.second));
 			}
-			lyxpreamble += "\\newindex[";
-			lyxpreamble += indexname_latex.first;
-			lyxpreamble += "]{";
-			lyxpreamble += escape(iit->shortcut());
-			lyxpreamble += "}\n";
+			os << "\\newindex[";
+			os << indexname_latex.first;
+			os << "]{";
+			os << escape(iit->shortcut());
+			os << "}\n";
 		}
 	}
 
 	// Line spacing
-	lyxpreamble += from_utf8(spacing().writePreamble(features.isProvided("SetSpace")));
+	os << from_utf8(spacing().writePreamble(features.isProvided("SetSpace")));
 
 	// PDF support.
 	// * Hyperref manual: "Make sure it comes last of your loaded
@@ -1980,66 +1979,62 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	//   avoid errors with algorithm floats.
 	// use hyperref explicitly if it is required
 	if (features.isRequired("hyperref")) {
-		// pass what we have to stream here, since we need
-		// to access the stream itself in PDFOptions.
-		os << lyxpreamble;
-
 		OutputParams tmp_params = features.runparams();
 		pdfoptions().writeLaTeX(tmp_params, os,
 					features.isProvided("hyperref"));
-		// set back for the rest
-		lyxpreamble.clear();
 		// correctly break URLs with hyperref and dvi output
 		if (features.runparams().flavor == OutputParams::LATEX
 		    && features.isAvailable("breakurl"))
-			lyxpreamble += "\\usepackage{breakurl}\n";
+			os << "\\usepackage{breakurl}\n";
 	} else if (features.isRequired("nameref"))
 		// hyperref loads this automatically
-		lyxpreamble += "\\usepackage{nameref}\n";
+		os << "\\usepackage{nameref}\n";
 
 	// bibtopic needs to be loaded after hyperref.
 	// the dot provides the aux file naming which LyX can detect.
 	if (features.mustProvide("bibtopic"))
-		lyxpreamble += "\\usepackage[dot]{bibtopic}\n";
+		os << "\\usepackage[dot]{bibtopic}\n";
 
 	// Will be surrounded by \makeatletter and \makeatother when not empty
-	docstring atlyxpreamble;
+	otexstringstream atlyxpreamble;
 
 	// Some macros LyX will need
-	docstring tmppreamble(features.getMacros());
-
-	if (!tmppreamble.empty())
-		atlyxpreamble += "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% "
-			"LyX specific LaTeX commands.\n"
-			+ tmppreamble + '\n';
-
+	{
+		TexString tmppreamble = features.getMacros();
+		if (!tmppreamble.str.empty())
+			atlyxpreamble << "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% "
+			                 "LyX specific LaTeX commands.\n"
+			              << move(tmppreamble)
+			              << '\n';
+	}
 	// the text class specific preamble
-	tmppreamble = features.getTClassPreamble();
-	if (!tmppreamble.empty())
-		atlyxpreamble += "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% "
-			"Textclass specific LaTeX commands.\n"
-			+ tmppreamble + '\n';
-
+	{
+		docstring tmppreamble = features.getTClassPreamble();
+		if (!tmppreamble.empty())
+			atlyxpreamble << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% "
+			                 "Textclass specific LaTeX commands.\n"
+			              << tmppreamble
+			              << '\n';
+	}
 	// suppress date if selected
 	// use \@ifundefined because we cannot be sure that every document class
 	// has a \date command
 	if (suppress_date)
-		atlyxpreamble += "\\@ifundefined{date}{}{\\date{}}\n";
+		atlyxpreamble << "\\@ifundefined{date}{}{\\date{}}\n";
 
 	/* the user-defined preamble */
 	if (!containsOnly(preamble, " \n\t")) {
 		// FIXME UNICODE
-		atlyxpreamble += "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% "
-			"User specified LaTeX commands.\n";
+		atlyxpreamble << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% "
+		                 "User specified LaTeX commands.\n";
 
 		// Check if the user preamble contains uncodable glyphs
-		docstring const u_preamble = from_utf8(preamble);
 		odocstringstream user_preamble;
 		docstring uncodable_glyphs;
 		Encoding const * const enc = features.runparams().encoding;
 		if (enc) {
-			for (size_t n = 0; n < u_preamble.size(); ++n) {
-				char_type c = u_preamble[n];
+			for (size_t n = 0; n < preamble.size(); ++n) {
+				char_type c = preamble[n];
 				if (!enc->encodable(c)) {
 					docstring const glyph(1, c);
 					LYXERR0("Uncodable character '"
@@ -2056,7 +2051,7 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 					user_preamble.put(c);
 			}
 		} else
-			user_preamble << u_preamble;
+			user_preamble << preamble;
 
 		// On BUFFER_VIEW|UPDATE, warn user if we found uncodable glyphs
 		if (!features.runparams().dryrun && !uncodable_glyphs.empty()) {
@@ -2074,7 +2069,7 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 				    "preamble code accordingly."),
 				  uncodable_glyphs));
 		}
-		atlyxpreamble += user_preamble.str() + '\n';
+		atlyxpreamble << user_preamble.str() << '\n';
 	}
 
 	// footmisc must be loaded after setspace
@@ -2082,7 +2077,7 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	// preamble. For that reason we also pass the options via
 	// \PassOptionsToPackage in getPreamble() and not here.
 	if (features.mustProvide("footmisc"))
-		atlyxpreamble += "\\usepackage{footmisc}\n";
+		atlyxpreamble << "\\usepackage{footmisc}\n";
 
 	// subfig loads internally the LaTeX package "caption". As
 	// caption is a very popular package, users will load it in
@@ -2094,11 +2089,10 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	// koma's own caption commands are used instead of caption. We
 	// use \PassOptionsToPackage here because the user could have
 	// already loaded subfig in the preamble.
-	if (features.mustProvide("subfig")) {
-		atlyxpreamble += "\\@ifundefined{showcaptionsetup}{}{%\n"
-			" \\PassOptionsToPackage{caption=false}{subfig}}\n"
-			"\\usepackage{subfig}\n";
-	}
+	if (features.mustProvide("subfig"))
+		atlyxpreamble << "\\@ifundefined{showcaptionsetup}{}{%\n"
+		                 " \\PassOptionsToPackage{caption=false}{subfig}}\n"
+		                 "\\usepackage{subfig}\n";
 
 	// Itemize bullet settings need to be last in case the user
 	// defines their own bullets that use a package included
@@ -2133,11 +2127,12 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	}
 
 	if (!bullets_def.empty())
-		atlyxpreamble += bullets_def + "}\n\n";
+		atlyxpreamble << bullets_def << "}\n\n";
 
 	if (!atlyxpreamble.empty())
-		lyxpreamble += "\n\\makeatletter\n"
-			+ atlyxpreamble + "\\makeatother\n\n";
+		os << "\n\\makeatletter\n"
+		   << atlyxpreamble.release()
+		   << "\\makeatother\n\n";
 
 	// We try to load babel late, in case it interferes with other packages.
 	// Jurabib, hyperref, varioref, bicaption and listings (bug 8995) have to be
@@ -2147,24 +2142,24 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 		&& !features.isRequired("varioref")
 	    && !features.isRequired("vietnamese")
 	    && !features.isRequired("japanese")) {
+		os << features.getBabelPresettings();
 		// FIXME UNICODE
-		lyxpreamble += from_utf8(features.getBabelPresettings());
-		lyxpreamble += from_utf8(babelCall(language_options.str(),
-						   features.needBabelLangOptions())) + '\n';
-		lyxpreamble += from_utf8(features.getBabelPostsettings());
+		os << from_utf8(babelCall(language_options.str(),
+		                          features.needBabelLangOptions())) + '\n';
+		os << features.getBabelPostsettings();
 	}
 	if (features.isRequired("bicaption"))
-		lyxpreamble += "\\usepackage{bicaption}\n";
+		os << "\\usepackage{bicaption}\n";
 	if (!listings_params.empty() || features.mustProvide("listings"))
-		lyxpreamble += "\\usepackage{listings}\n";
+		os << "\\usepackage{listings}\n";
 	if (!listings_params.empty()) {
-		lyxpreamble += "\\lstset{";
+		os << "\\lstset{";
 		// do not test validity because listings_params is
 		// supposed to be valid
 		string par =
 			InsetListingsParams(listings_params).separatedParams(true);
-		lyxpreamble += from_utf8(par);
-		lyxpreamble += "}\n";
+		os << from_utf8(par);
+		os << "}\n";
 	}
 
 	// xunicode needs to be loaded at least after amsmath, amssymb,
@@ -2172,44 +2167,42 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	// The package only supports XeTeX currently.
 	if (features.runparams().flavor == OutputParams::XETEX
 	    && useNonTeXFonts)
-		lyxpreamble += "\\usepackage{xunicode}\n";
+		os << "\\usepackage{xunicode}\n";
 
 	// Polyglossia must be loaded last
 	if (use_polyglossia) {
 		// call the package
-		lyxpreamble += "\\usepackage{polyglossia}\n";
+		os << "\\usepackage{polyglossia}\n";
 		// set the main language
-		lyxpreamble += "\\setdefaultlanguage";
+		os << "\\setdefaultlanguage";
 		if (!language->polyglossiaOpts().empty())
-			lyxpreamble += "[" + from_ascii(language->polyglossiaOpts()) + "]";
-		lyxpreamble += "{" + from_ascii(language->polyglossia()) + "}\n";
+			os << "[" << from_ascii(language->polyglossiaOpts()) << "]";
+		os << "{" << from_ascii(language->polyglossia()) << "}\n";
 		// now setup the other languages
 		std::map<std::string, std::string> const polylangs =
 			features.getPolyglossiaLanguages();
 		for (std::map<std::string, std::string>::const_iterator mit = polylangs.begin();
 		     mit != polylangs.end() ; ++mit) {
-			lyxpreamble += "\\setotherlanguage";
+			os << "\\setotherlanguage";
 			if (!mit->second.empty())
-				lyxpreamble += "[" + from_ascii(mit->second) + "]";
-			lyxpreamble += "{" + from_ascii(mit->first) + "}\n";
+				os << "[" << from_ascii(mit->second) << "]";
+			os << "{" << from_ascii(mit->first) << "}\n";
 		}
 	}
 
 	// Load custom language package here
 	if (features.langPackage() == LaTeXFeatures::LANG_PACK_CUSTOM) {
 		if (lang_package == "default")
-			lyxpreamble += from_utf8(lyxrc.language_custom_package);
+			os << from_utf8(lyxrc.language_custom_package);
 		else
-			lyxpreamble += from_utf8(lang_package);
-		lyxpreamble += '\n';
+			os << from_utf8(lang_package);
+		os << '\n';
 	}
 
 	docstring const i18npreamble =
 		features.getTClassI18nPreamble(use_babel, use_polyglossia);
 	if (!i18npreamble.empty())
-		lyxpreamble += i18npreamble + '\n';
-
-	os << lyxpreamble;
+		os << i18npreamble + '\n';
 
 	return use_babel;
 }
@@ -2333,10 +2326,11 @@ void BufferParams::makeDocumentClass(bool const clone)
 
 	TextClass::ReturnValues success = TextClass::OK;
 	if (!forced_local_layout_.empty())
-		success = doc_class_->read(forced_local_layout_, TextClass::MODULE);
+		success = doc_class_->read(to_utf8(forced_local_layout_),
+		                           TextClass::MODULE);
 	if (!local_layout_.empty() &&
 	    (success == TextClass::OK || success == TextClass::OK_OLDFORMAT))
-		success = doc_class_->read(local_layout_, TextClass::MODULE);
+		success = doc_class_->read(to_utf8(local_layout_), TextClass::MODULE);
 	if (success != TextClass::OK && success != TextClass::OK_OLDFORMAT) {
 		docstring const msg = _("Error reading internal layout information");
 		frontend::Alert::warning(_("Read Error"), msg);
@@ -2356,16 +2350,16 @@ bool BufferParams::citationModuleCanBeAdded(string const & modName) const
 }
 
 
-std::string BufferParams::getLocalLayout(bool forced) const
+docstring BufferParams::getLocalLayout(bool forced) const
 {
 	if (forced)
-		return doc_class_->forcedLayouts();
+		return from_utf8(doc_class_->forcedLayouts());
 	else
 		return local_layout_;
 }
 
 
-void BufferParams::setLocalLayout(string const & layout, bool forced)
+void BufferParams::setLocalLayout(docstring const & layout, bool forced)
 {
 	if (forced)
 		forced_local_layout_ = layout;
@@ -2578,7 +2572,7 @@ void BufferParams::readPreamble(Lexer & lex)
 		lyxerr << "Error (BufferParams::readPreamble):"
 			"consistency check failed." << endl;
 
-	preamble = lex.getLongString("\\end_preamble");
+	preamble = lex.getLongString(from_ascii("\\end_preamble"));
 }
 
 
@@ -2592,9 +2586,9 @@ void BufferParams::readLocalLayout(Lexer & lex, bool forced)
 
 	if (forced)
 		forced_local_layout_ =
-			lex.getLongString("\\end_forced_local_layout");
+			lex.getLongString(from_ascii("\\end_forced_local_layout"));
 	else
-		local_layout_ = lex.getLongString("\\end_local_layout");
+		local_layout_ = lex.getLongString(from_ascii("\\end_local_layout"));
 }
 
 

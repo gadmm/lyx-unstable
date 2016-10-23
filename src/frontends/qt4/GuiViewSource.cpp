@@ -21,6 +21,8 @@
 #include "BufferView.h"
 #include "Cursor.h"
 #include "Format.h"
+#include "FuncRequest.h"
+#include "LyX.h"
 #include "Paragraph.h"
 #include "TexRow.h"
 
@@ -45,10 +47,10 @@ using namespace std;
 namespace lyx {
 namespace frontend {
 
-ViewSourceWidget::ViewSourceWidget()
-	:	bv_(0), document_(new QTextDocument(this)),
-		highlighter_(new LaTeXHighlighter(document_)),
-		update_timer_(new QTimer(this))
+ViewSourceWidget::ViewSourceWidget(QWidget * parent)
+	:	QWidget(parent),
+		document_(new QTextDocument(this)),
+		highlighter_(new LaTeXHighlighter(document_))
 {
 	setupUi(this);
 
@@ -61,21 +63,9 @@ ViewSourceWidget::ViewSourceWidget()
 	connect(masterPerspectiveCB, SIGNAL(toggled(bool)),
 		this, SLOT(contentsChanged()));
 	connect(updatePB, SIGNAL(clicked()),
-		this, SLOT(updateViewNow()));
+		this, SIGNAL(needUpdate()));
 	connect(outputFormatCO, SIGNAL(activated(int)),
 		this, SLOT(setViewFormat(int)));
-	connect(outputFormatCO, SIGNAL(activated(int)),
-		this, SLOT(contentsChanged()));
-#ifdef DEVEL_VERSION
-	if (lyx::lyxerr.debugging(Debug::LATEX))
-		connect(viewSourceTV, SIGNAL(cursorPositionChanged()),
-				this, SLOT(gotoCursor()));
-#endif
-
-	// setting the update timer
-	update_timer_->setSingleShot(true);
-	connect(update_timer_, SIGNAL(timeout()),
-		this, SLOT(realUpdateView()));
 
 	// setting a document at this point trigger an assertion in Qt
 	// so we disable the signals here:
@@ -90,10 +80,13 @@ ViewSourceWidget::ViewSourceWidget()
 	viewSourceTV->setFont(guiApp->typewriterSystemFont());
 	// again, personal taste
 	viewSourceTV->setWordWrapMode(QTextOption::NoWrap);
+
+	// catch double click events
+	viewSourceTV->viewport()->installEventFilter(this);
 }
 
 
-void ViewSourceWidget::getContent(BufferView const * view,
+void ViewSourceWidget::getContent(BufferView const & view,
 			Buffer::OutputWhat output, docstring & str, string const & format,
 			bool master)
 {
@@ -102,30 +95,20 @@ void ViewSourceWidget::getContent(BufferView const * view,
 	pit_type par_begin;
 	pit_type par_end;
 
-	if (!view->cursor().selection()) {
-		par_begin = view->cursor().bottom().pit();
+	if (!view.cursor().selection()) {
+		par_begin = view.cursor().bottom().pit();
 		par_end = par_begin;
 	} else {
-		par_begin = view->cursor().selectionBegin().bottom().pit();
-		par_end = view->cursor().selectionEnd().bottom().pit();
+		par_begin = view.cursor().selectionBegin().bottom().pit();
+		par_end = view.cursor().selectionEnd().bottom().pit();
 	}
 	if (par_begin > par_end)
 		swap(par_begin, par_end);
 	odocstringstream ostr;
-	texrow_ = view->buffer()
+	texrow_ = view.buffer()
 		.getSourceCode(ostr, format, par_begin, par_end + 1, output, master);
 	//ensure that the last line can always be selected in its full width
 	str = ostr.str() + "\n";
-}
-
-
-void ViewSourceWidget::setBufferView(BufferView const * bv)
-{
-	if (bv_ != bv) {
-		setText();
-		bv_ = bv;
-	}
-	setEnabled(bv ?  true : false);
 }
 
 
@@ -142,7 +125,7 @@ bool ViewSourceWidget::setText(QString const & qstr)
 void ViewSourceWidget::contentsChanged()
 {
 	if (autoUpdateCB->isChecked())
-		updateViewNow();
+		Q_EMIT needUpdate();
 }
 
 
@@ -152,31 +135,42 @@ void ViewSourceWidget::setViewFormat(int const index)
 	string format = fromqstr(outputFormatCO->itemData(index).toString());
 	if (view_format_ != format) {
 		view_format_ = format;
-		// emit signal
-		formatChanged();
+		Q_EMIT needUpdate();
 	}
 }
 
 
-void ViewSourceWidget::updateView()
+int ViewSourceWidget::updateDelay() const
 {
 	const int long_delay = 400;
 	const int short_delay = 60;
 	// a shorter delay if just the current paragraph is shown
-	update_timer_->start((contentsCO->currentIndex() == 0) ?
-						short_delay : long_delay);
+	return (contentsCO->currentIndex() == 0) ? short_delay : long_delay;
 }
 
 
-void ViewSourceWidget::updateViewNow()
+void GuiViewSource::scheduleUpdate()
+{
+	update_timer_->start(widget_->updateDelay());
+}
+
+
+void GuiViewSource::scheduleUpdateNow()
 {
 	update_timer_->start(0);
 }
 
 
-void ViewSourceWidget::realUpdateView()
+void GuiViewSource::realUpdateView()
 {
-	if (!bv_) {
+	widget_->updateView(bufferview());
+	updateTitle();
+}
+
+
+void ViewSourceWidget::updateView(BufferView const * bv)
+{
+	if (!bv) {
 		setText();
 		setEnabled(false);
 		return;
@@ -199,7 +193,7 @@ void ViewSourceWidget::realUpdateView()
 		output = Buffer::OnlyBody;
 
 	docstring content;
-	getContent(bv_, output, content, view_format_,
+	getContent(*bv, output, content, view_format_,
 	           masterPerspectiveCB->isChecked());
 	QString old = document_->toPlainText();
 	QString qcontent = toqstr(content);
@@ -218,7 +212,7 @@ void ViewSourceWidget::realUpdateView()
 	}
 #endif
 	// prevent gotoCursor()
-	viewSourceTV->blockSignals(true);
+	QSignalBlocker blocker(viewSourceTV);
 	bool const changed = setText(qcontent);
 
 	if (changed && !texrow_) {
@@ -254,7 +248,7 @@ void ViewSourceWidget::realUpdateView()
 	} else if (texrow_) {
 		// Use the available position-to-row conversion to highlight
 		// the current selection in the source
-		std::pair<int,int> rows = texrow_->rowFromCursor(bv_->cursor());
+		std::pair<int,int> rows = texrow_->rowFromCursor(bv->cursor());
 		int const beg_row = rows.first;
 		int const end_row = rows.second;
 
@@ -306,7 +300,6 @@ void ViewSourceWidget::realUpdateView()
 		viewSourceTV->setTextCursor(c);
 		viewSourceTV->horizontalScrollBar()->setValue(h_scroll);
 	} // else if (texrow)
-	viewSourceTV->blockSignals(false);
 }
 
 
@@ -320,30 +313,37 @@ docstring ViewSourceWidget::currentFormatName(BufferView const * bv) const
 }
 
 
-// only used in DEVEL_MODE for debugging
-// need a proper LFUN if we want to implement it in release mode
-void ViewSourceWidget::gotoCursor()
+bool ViewSourceWidget::eventFilter(QObject * obj, QEvent * ev)
 {
-	if (!bv_ || !texrow_)
+	// this event filter is installed on the viewport of the QTextView
+	if (obj == viewSourceTV->viewport() &&
+	    ev->type() == QEvent::MouseButtonDblClick) {
+		goToCursor();
+		return true;
+	}
+	return false;
+}
+
+
+void ViewSourceWidget::goToCursor() const
+{
+	if (!texrow_)
 		return;
 	int row = viewSourceTV->textCursor().blockNumber() + 1;
-	const_cast<BufferView *>(bv_)->setCursorFromRow(row, *texrow_);
+	dispatch(TexRow::goToFunc(texrow_->getEntriesFromRow(row)));
 }
 
 
 
-void ViewSourceWidget::updateDefaultFormat()
+void ViewSourceWidget::updateDefaultFormat(BufferView const & bv)
 {
-	if (!bv_)
-		return;
-
-	outputFormatCO->blockSignals(true);
+	QSignalBlocker blocker(outputFormatCO);
 	outputFormatCO->clear();
 	outputFormatCO->addItem(qt_("Default"),
 				QVariant(QString("default")));
 
 	int index = 0;
-	vector<string> tmp = bv_->buffer().params().backends();
+	vector<string> tmp = bv.buffer().params().backends();
 	vector<string>::const_iterator it = tmp.begin();
 	vector<string>::const_iterator en = tmp.end();
 	for (; it != en; ++it) {
@@ -360,8 +360,6 @@ void ViewSourceWidget::updateDefaultFormat()
 		   index = outputFormatCO->count() -1;
 	}
 	setViewFormat(index);
-
-	outputFormatCO->blockSignals(false);
 }
 
 
@@ -404,31 +402,39 @@ void ViewSourceWidget::restoreSession(QString const & session_key)
 		.toBool();
 	autoUpdateCB->setChecked(checked);
 	if (checked)
-		updateView();
+		Q_EMIT needUpdate();
 }
 
 
 GuiViewSource::GuiViewSource(GuiView & parent,
 		Qt::DockWidgetArea area, Qt::WindowFlags flags)
-	: DockView(parent, "view-source", qt_("Code Preview"), area, flags)
+	: DockView(parent, "view-source", qt_("Code Preview"), area, flags),
+	  widget_(new ViewSourceWidget(this)),
+	  update_timer_(new QTimer(this))
 {
-	widget_ = new ViewSourceWidget;
 	setWidget(widget_);
-	connect(widget_, SIGNAL(formatChanged()), this, SLOT(updateTitle()));
+
+	// setting the update timer
+	update_timer_->setSingleShot(true);
+	connect(update_timer_, SIGNAL(timeout()),
+	        this, SLOT(realUpdateView()));
+
+	connect(widget_, SIGNAL(needUpdate()), this, SLOT(scheduleUpdateNow()));
 }
 
 
-GuiViewSource::~GuiViewSource()
+void GuiViewSource::on_bufferViewChanged()
 {
-	delete widget_;
+	widget_->setText();
+	widget_->setEnabled((bool)bufferview());
 }
 
 
 void GuiViewSource::updateView()
 {
 	if (widget_->autoUpdateCB->isChecked()) {
-		widget_->setBufferView(bufferview());
-		widget_->updateView();
+		widget_->setEnabled((bool)bufferview());
+		scheduleUpdate();
 	}
 	widget_->masterPerspectiveCB->setEnabled(buffer().parent());
 	updateTitle();
@@ -437,8 +443,9 @@ void GuiViewSource::updateView()
 
 void GuiViewSource::enableView(bool enable)
 {
-	widget_->setBufferView(bufferview());
-	widget_->updateDefaultFormat();
+	widget_->setEnabled((bool)bufferview());
+	if (bufferview())
+		widget_->updateDefaultFormat(*bufferview());
 	if (!enable)
 		// In the opposite case, updateView() will be called anyway.
 		widget_->contentsChanged();

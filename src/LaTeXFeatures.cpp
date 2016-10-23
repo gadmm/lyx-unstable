@@ -30,6 +30,8 @@
 #include "Lexer.h"
 #include "LyXRC.h"
 #include "TextClass.h"
+#include "TexRow.h"
+#include "texstream.h"
 
 #include "insets/InsetLayout.h"
 
@@ -191,12 +193,25 @@ static docstring const changetracking_dvipost_def = from_ascii(
 static docstring const changetracking_xcolor_ulem_def = from_ascii(
 	"%% Change tracking with ulem\n"
 	"\\DeclareRobustCommand{\\lyxadded}[3]{{\\color{lyxadded}{}#3}}\n"
-	"\\DeclareRobustCommand{\\lyxdeleted}[3]{{\\color{lyxdeleted}\\sout{#3}}}\n");
+	"\\DeclareRobustCommand{\\lyxdeleted}[3]{{\\color{lyxdeleted}\\lyxsout{#3}}}\n"
+	"\\DeclareRobustCommand{\\lyxsout}[1]{\\ifx\\\\#1\\else\\sout{#1}\\fi}\n");
 
 static docstring const changetracking_xcolor_ulem_hyperref_def = from_ascii(
 	"%% Change tracking with ulem\n"
 	"\\DeclareRobustCommand{\\lyxadded}[3]{{\\texorpdfstring{\\color{lyxadded}{}}{}#3}}\n"
-	"\\DeclareRobustCommand{\\lyxdeleted}[3]{{\\texorpdfstring{\\color{lyxdeleted}\\sout{#3}}{}}}\n");
+	"\\DeclareRobustCommand{\\lyxdeleted}[3]{{\\texorpdfstring{\\color{lyxdeleted}\\lyxsout{#3}}{}}}\n"
+	"\\DeclareRobustCommand{\\lyxsout}[1]{\\ifx\\\\#1\\else\\sout{#1}\\fi}\n");
+
+static docstring const changetracking_tikz_math_sout_def = from_ascii(
+	"%% Strike out display math with tikz\n"
+	"\\usepackage{tikz}\n"
+	"\\usetikzlibrary{calc}\n"
+	"\\newcommand{\\lyxmathsout}[1]{\n"
+	"  \\tikz[baseline=(math.base)]{\n"
+	"    \\node[inner sep=0pt,outer sep=0pt](math){#1};\n"
+	"    \\draw($(math.south west)+(2em,.5em)$)--($(math.north east)-(2em,.5em)$);\n"
+	"  }\n"
+	"}\n");
 
 static docstring const changetracking_none_def = from_ascii(
 	"\\newcommand{\\lyxadded}[3]{#3}\n"
@@ -388,7 +403,8 @@ static docstring const lyxstrikeout_style = from_ascii(
 
 LaTeXFeatures::LaTeXFeatures(Buffer const & b, BufferParams const & p,
 			     OutputParams const & r)
-	: buffer_(&b), params_(p), runparams_(r), in_float_(false)
+	: buffer_(&b), params_(p), runparams_(r), in_float_(false),
+	  in_deleted_inset_(false)
 {}
 
 
@@ -586,23 +602,60 @@ bool LaTeXFeatures::isAvailable(string const & name)
 }
 
 
-void LaTeXFeatures::addPreambleSnippet(string const & preamble,
-		bool allowdupes)
+namespace {
+
+void addSnippet(std::list<TexString> & list, TexString ts, bool allow_dupes)
 {
-	SnippetList::const_iterator begin = preamble_snippets_.begin();
-	SnippetList::const_iterator end   = preamble_snippets_.end();
-	if (allowdupes || find(begin, end, preamble) == end)
-		preamble_snippets_.push_back(preamble);
+	if (allow_dupes ||
+	    // test the absense of duplicates, i.e. elements with same str
+	    none_of(list.begin(), list.end(), [&](TexString const & ts2){
+			    return ts.str == ts2.str;
+		    })
+	    )
+		list.push_back(move(ts));
+}
+
+
+TexString getSnippets(std::list<TexString> const & list)
+{
+	otexstringstream snip;
+	for (TexString const & ts : list)
+		snip << TexString(ts) << '\n';
+	return snip.release();
+}
+
+} //anon namespace
+
+
+void LaTeXFeatures::addPreambleSnippet(TexString ts, bool allow_dupes)
+{
+	addSnippet(preamble_snippets_, move(ts), allow_dupes);
+}
+
+
+void LaTeXFeatures::addPreambleSnippet(docstring const & str, bool allow_dupes)
+{
+	addSnippet(preamble_snippets_, TexString(str), allow_dupes);
 }
 
 
 void LaTeXFeatures::addCSSSnippet(std::string const & snippet)
 {
-	SnippetList::const_iterator begin = css_snippets_.begin();
-	SnippetList::const_iterator end   = css_snippets_.end();
-	if (find(begin, end, snippet) == end)
-		css_snippets_.push_back(snippet);
+	addSnippet(css_snippets_, TexString(from_ascii(snippet)), false);
 }
+
+
+TexString LaTeXFeatures::getPreambleSnippets() const
+{
+	return getSnippets(preamble_snippets_);
+}
+
+
+docstring LaTeXFeatures::getCSSSnippets() const
+{
+	return getSnippets(css_snippets_).str;
+}
+
 
 
 void LaTeXFeatures::useFloat(string const & name, bool subfloat)
@@ -1150,35 +1203,13 @@ string const LaTeXFeatures::getPackages() const
 }
 
 
-string LaTeXFeatures::getPreambleSnippets() const
+TexString LaTeXFeatures::getMacros() const
 {
-	ostringstream snip;
-	SnippetList::const_iterator pit  = preamble_snippets_.begin();
-	SnippetList::const_iterator pend = preamble_snippets_.end();
-	for (; pit != pend; ++pit)
-		snip << *pit << '\n';
-	return snip.str();
-}
-
-
-std::string LaTeXFeatures::getCSSSnippets() const
-{
-	ostringstream snip;
-	SnippetList::const_iterator pit  = css_snippets_.begin();
-	SnippetList::const_iterator pend = css_snippets_.end();
-	for (; pit != pend; ++pit)
-		snip << *pit << '\n';
-	return snip.str();
-}
-
-
-docstring const LaTeXFeatures::getMacros() const
-{
-	odocstringstream macros;
+	otexstringstream macros;
 
 	if (!preamble_snippets_.empty()) {
 		macros << '\n';
-		macros << from_utf8(getPreambleSnippets());
+		macros << getPreambleSnippets();
 	}
 
 	if (mustProvide("papersize")) {
@@ -1318,7 +1349,7 @@ docstring const LaTeXFeatures::getMacros() const
 		macros << changetracking_dvipost_def;
 
 	if (mustProvide("ct-xcolor-ulem")) {
-		streamsize const prec = macros.precision(2);
+		streamsize const prec = macros.os().precision(2);
 
 		RGBColor cadd = rgbFromHexName(lcolor.getX11Name(Color_addedtext));
 		macros << "\\providecolor{lyxadded}{rgb}{"
@@ -1328,7 +1359,7 @@ docstring const LaTeXFeatures::getMacros() const
 		macros << "\\providecolor{lyxdeleted}{rgb}{"
 		       << cdel.r / 255.0 << ',' << cdel.g / 255.0 << ',' << cdel.b / 255.0 << "}\n";
 
-		macros.precision(prec);
+		macros.os().precision(prec);
 
 		if (isRequired("hyperref"))
 			macros << changetracking_xcolor_ulem_hyperref_def;
@@ -1336,25 +1367,26 @@ docstring const LaTeXFeatures::getMacros() const
 			macros << changetracking_xcolor_ulem_def;
 	}
 
+	if (mustProvide("ct-tikz-math-sout"))
+			macros << changetracking_tikz_math_sout_def;
+
 	if (mustProvide("ct-none"))
 		macros << changetracking_none_def;
 
 	if (mustProvide("rtloutputdblcol"))
 		macros << rtloutputdblcol_def;
 
-	return macros.str();
+	return macros.release();
 }
 
 
-string const LaTeXFeatures::getBabelPresettings() const
+docstring const LaTeXFeatures::getBabelPresettings() const
 {
-	ostringstream tmp;
+	odocstringstream tmp;
 
-	LanguageList::const_iterator it  = UsedLanguages_.begin();
-	LanguageList::const_iterator end = UsedLanguages_.end();
-	for (; it != end; ++it)
-		if (!(*it)->babel_presettings().empty())
-			tmp << (*it)->babel_presettings() << '\n';
+	for (Language const * lang : UsedLanguages_)
+		if (!lang->babel_presettings().empty())
+			tmp << lang->babel_presettings() << '\n';
 	if (!params_.language->babel_presettings().empty())
 		tmp << params_.language->babel_presettings() << '\n';
 
@@ -1365,15 +1397,13 @@ string const LaTeXFeatures::getBabelPresettings() const
 }
 
 
-string const LaTeXFeatures::getBabelPostsettings() const
+docstring const LaTeXFeatures::getBabelPostsettings() const
 {
-	ostringstream tmp;
+	odocstringstream tmp;
 
-	LanguageList::const_iterator it  = UsedLanguages_.begin();
-	LanguageList::const_iterator end = UsedLanguages_.end();
-	for (; it != end; ++it)
-		if (!(*it)->babel_postsettings().empty())
-			tmp << (*it)->babel_postsettings() << '\n';
+	for (Language const * lang : UsedLanguages_)
+		if (!lang->babel_postsettings().empty())
+			tmp << lang->babel_postsettings() << '\n';
 	if (!params_.language->babel_postsettings().empty())
 		tmp << params_.language->babel_postsettings() << '\n';
 
@@ -1758,7 +1788,7 @@ void LaTeXFeatures::showStruct() const
 {
 	lyxerr << "LyX needs the following commands when LaTeXing:"
 	       << "\n***** Packages:" << getPackages()
-	       << "\n***** Macros:" << to_utf8(getMacros())
+	       << "\n***** Macros:" << to_utf8(getMacros().str)
 	       << "\n***** Textclass stuff:" << to_utf8(getTClassPreamble())
 	       << "\n***** done." << endl;
 }
@@ -1782,7 +1812,7 @@ BufferParams const & LaTeXFeatures::bufferParams() const
 }
 
 
-void LaTeXFeatures::getFloatDefinitions(odocstream & os) const
+void LaTeXFeatures::getFloatDefinitions(otexstream & os) const
 {
 	FloatList const & floats = params_.documentClass().floats();
 

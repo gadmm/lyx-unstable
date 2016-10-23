@@ -35,12 +35,12 @@
 
 namespace lyx {
 
-class LyXErr;
 class Buffer;
 class Cursor;
 class CursorSlice;
 class DocIterator;
 class docstring_list;
+class FuncRequest;
 
 /// types for cells and math insets
 typedef void const * uid_type;
@@ -89,6 +89,19 @@ public:
 	///
 	TexRow();
 
+#if !(defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ == 6))
+	/// Copy can be expensive and is not usually useful for TexRow.
+	/// Force explicit copy, prefer move instead. This also prevents
+	/// move()s from being converted into copy silently.
+	explicit TexRow(TexRow const & other) = default;
+	TexRow(TexRow && other) = default;
+	TexRow & operator=(TexRow const & other) = default;
+	TexRow & operator=(TexRow && other) = default;
+# else
+	//for gcc 4.6, nothing to do: it's enough to disable implicit copy during
+	// dev with more recent versions of gcc.
+#endif
+
 	/// Clears structure.
 	void reset();
 
@@ -132,7 +145,7 @@ public:
 
 	/**
 	 * getEntriesFromRow - find pids and position for a given row
-	 * @param row row number to find
+	 * @param row number to find
 	 * @return a pair of TextEntry denoting the start and end of the position.
 	 * The TextEntry values can be isNone(). If no row is found then the first
 	 * value isNone().
@@ -140,15 +153,30 @@ public:
 	std::pair<TextEntry,TextEntry> getEntriesFromRow(int row) const;
 
 	/**
+	 * getDocIteratorFromEntries - find pids and positions for a given row
+	 * @param buffer where to look
+	 * @return a pair of DocIterators denoting the start and end of the
+	 * position.  The DocIterators can be invalid.  The starting DocIterator
+	 * being invalid means that no location was found.  Note: there is no
+	 * guarantee that the DocIterators are in the same inset or even at the
+	 * same depth.
+	 */
+	static std::pair<DocIterator, DocIterator> getDocIteratorsFromEntries(
+	    TextEntry start,
+	    TextEntry end,
+	    Buffer const & buf);
+
+	// A FuncRequest to select from start to end
+	static FuncRequest goToFunc(TextEntry start, TextEntry end);
+	static FuncRequest goToFunc(std::pair<TextEntry,TextEntry> entries);
+
+	/**
 	 * getDocIteratorFromRow - find pids and positions for a given row
 	 * @param row number to find
-	 * @param buffer here to look
-	 * @return a pair of DocIterators the start and end of the position.
-	 * The DocIterators can be invalid. The starting DocIterator being invalid
-	 * means that no row was found. Note: there is no guarantee that the
-	 * DocIterators are in the same inset or even at the same depth.
+	 * @param buffer where to look
+	 * @return a pair of DocIterators as above.
 	 */
-	std::pair<DocIterator, DocIterator> getDocIteratorFromRow(
+	std::pair<DocIterator, DocIterator> getDocIteratorsFromRow(
 	    int row,
 	    Buffer const & buf) const;
 	//TODO: remove the following by replacing it with the above
@@ -164,7 +192,9 @@ public:
 	std::pair<int,int> rowFromCursor(Cursor const & dit) const;
 
 	/// Returns the number of rows contained
-	int rows() const;
+	size_t rows() const;
+	/// Fill or trim to reach the row count \param r
+	void setRows(size_t r);
 
 	/// appends texrow. the final line of this is merged with the first line of
 	/// texrow.
@@ -180,6 +210,40 @@ private:
 	/// assumes it is the sameParOrInsetMath
 	static int comparePos(RowEntry entry1, RowEntry entry2);
 
+};
+
+
+/// TexString : dumb struct to pass around docstrings with TexRow information.
+/// They are best created using otexstringstream.
+/// They can be output to otexrowstreams and otexstreams.
+/// A valid TexString has as many newlines in str as in texrow. Be careful not
+/// to introduce a mismatch between the line and the row counts, as this will
+/// assert in devel mode when outputting to a otexstream.
+struct TexString {
+	///
+	docstring str;
+	///
+	TexRow texrow;
+#if !(defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ == 6))
+	/// Copy can be expensive and is not usually useful for TexString.
+	/// Force explicit copy, prefer move instead. This also prevents
+	/// move()s from being converted into copy silently.
+	explicit TexString(TexString const &) = default;
+	TexString(TexString && other) = default;
+	TexString & operator=(TexString const & other) = default;
+	TexString & operator=(TexString && other) = default;
+# else
+	//for gcc 4.6, nothing to do: it's enough to disable implicit copy during
+	// dev with more recent versions of gcc.
+#endif
+	/// Empty TexString
+	TexString() = default;
+	/// Texstring containing str and TexRow with enough lines which are empty
+	explicit TexString(docstring str);
+	/// Texstring containing str and texrow. Must be valid.
+	TexString(docstring str, TexRow texrow);
+	/// Ensure that the string and the TexRow have as many newlines.
+	void validate();
 };
 
 
@@ -224,9 +288,6 @@ public:
 
 
 bool operator==(RowEntry entry1, RowEntry entry2);
-
-
-LyXErr & operator<<(LyXErr &, TexRow const &);
 
 
 } // namespace lyx

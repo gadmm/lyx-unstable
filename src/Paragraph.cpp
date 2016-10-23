@@ -1118,7 +1118,7 @@ void Paragraph::Private::latexInset(BufferParams const & bparams,
 		}
 	}
 
-	int prev_rows = os.texrow().rows();
+	size_t const previous_row_count = os.texrow().rows();
 
 	try {
 		runparams.lastid = id_;
@@ -1138,7 +1138,7 @@ void Paragraph::Private::latexInset(BufferParams const & bparams,
 				os << '}';
 	}
 
-	if (os.texrow().rows() > prev_rows) {
+	if (os.texrow().rows() > previous_row_count) {
 		os.texrow().start(owner_->id(), i + 1);
 		column = 0;
 	} else {
@@ -1386,8 +1386,7 @@ void Paragraph::Private::validate(LaTeXFeatures & features) const
 		// switching machinery of odocstream. Therefore the
 		// output is wrong if this paragraph contains content
 		// that needs to switch encoding.
-		odocstringstream ods;
-		otexstream os(ods);
+		otexstringstream os;
 		if (is_command) {
 			os << '\\' << from_ascii(layout_->latexname());
 			// we have to provide all the optional arguments here, even though
@@ -1400,20 +1399,19 @@ void Paragraph::Private::validate(LaTeXFeatures & features) const
 			}
 			os << from_ascii(layout_->latexparam());
 		}
-		docstring::size_type const length = ods.str().length();
+		size_t const length = os.length();
 		// this will output "{" at the beginning, but not at the end
 		owner_->latex(bp, f, os, features.runparams(), 0, -1, true);
-		if (ods.str().length() > length) {
+		if (os.length() > length) {
 			if (is_command) {
-				ods << '}';
+				os << '}';
 				if (!layout_->postcommandargs().empty()) {
 					OutputParams rp = features.runparams();
 					rp.local_font = &owner_->getFirstFontSettings(bp);
 					latexArgInsets(*owner_, os, rp, layout_->postcommandargs(), "post:");
 				}
 			}
-			string const snippet = to_utf8(ods.str());
-			features.addPreambleSnippet(snippet, true);
+			features.addPreambleSnippet(os.release(), true);
 		}
 	}
 
@@ -1441,7 +1439,9 @@ void Paragraph::Private::validate(LaTeXFeatures & features) const
 	InsetList::const_iterator iend = insetlist_.end();
 	for (; icit != iend; ++icit) {
 		if (icit->inset) {
+			features.inDeletedInset(owner_->isDeleted(icit->pos));
 			icit->inset->validate(features);
+			features.inDeletedInset(false);
 			if (layout_->needprotect &&
 			    icit->inset->lyxCode() == FOOT_CODE)
 				features.require("NeedLyXFootnoteCode");

@@ -15,11 +15,13 @@
 
 #include "Buffer.h"
 #include "Cursor.h"
+#include "FuncRequest.h"
 #include "Paragraph.h"
 #include "TexRow.h"
 
 #include "mathed/InsetMath.h"
 
+#include "support/convert.h"
 #include "support/debug.h"
 #include "support/docstring_list.h"
 #include "support/lassert.h"
@@ -34,13 +36,41 @@ using namespace std;
 namespace lyx {
 
 
+TexString::TexString(docstring s)
+	: str(move(s)), texrow(TexRow())
+{
+	texrow.setRows(1 + count(str.begin(), str.end(), '\n'));
+}
+
+
+TexString::TexString(docstring s, TexRow t)
+	: str(move(s)), texrow(move(t))
+{
+	validate();
+}
+
+
+void TexString::validate()
+{
+	size_t lines = 1 + count(str.begin(), str.end(), '\n');
+	size_t rows = texrow.rows();
+	bool valid = lines == rows;
+	if (!valid)
+		LYXERR0("TexString has " << lines << " lines but " << rows << " rows." );
+	// Assert in devel mode.  This is important to catch bugs early, otherwise
+	// they might be hard to notice and find.  Recover gracefully in release
+	// mode.
+	LASSERT(valid, texrow.setRows(lines));
+}
+
+
 bool TexRow::RowEntryList::addEntry(RowEntry entry)
 {
 	if (!entry.is_math) {
-		if (!isNone(text_entry_))
-			return false;
-		else
+		if (isNone(text_entry_))
 			text_entry_ = entry.text;
+		else if (!v_.empty() && TexRow::sameParOrInsetMath(v_.back(), entry))
+			return false;
 	}
 	forceAddEntry(entry);
 	return true;
@@ -219,7 +249,8 @@ pair<TextEntry, TextEntry> TexRow::getEntriesFromRow(int const row) const
 	while (j < rowlist_.size() && isNone(rowlist_[j].getTextEntry()))
 		++j;
 	TextEntry end =
-		(j < rowlist_.size()) ? rowlist_[j].getTextEntry() : text_none;
+		(j < rowlist_.size()) ? rowlist_[j].getTextEntry()
+		                      : TextEntry{start.id, -1}; // last position
 	// The following occurs for a displayed math inset for instance (for good
 	// reasons involving subtleties of the algorithm in getRowFromDocIterator).
 	// We want this inset selected.
@@ -229,26 +260,38 @@ pair<TextEntry, TextEntry> TexRow::getEntriesFromRow(int const row) const
 }
 
 
-pair<DocIterator, DocIterator> TexRow::getDocIteratorFromRow(
+pair<DocIterator, DocIterator> TexRow::getDocIteratorsFromRow(
     int const row,
     Buffer const & buf) const
 {
 	TextEntry start, end;
 	tie(start,end) = getEntriesFromRow(row);
-	LYXERR(Debug::LATEX,
-	       "getDocIteratorFromRow: for row " << row << ", TexRow has found "
-	       "start (id=" << start.id << ",pos=" << start.pos << "), "
-	       "end (id=" << end.id << ",pos=" << end.pos << ")");
+	return getDocIteratorsFromEntries(start, end, buf);
+}
+
+
+//static
+pair<DocIterator, DocIterator> TexRow::getDocIteratorsFromEntries(
+	    TextEntry start,
+	    TextEntry end,
+	    Buffer const & buf)
+{
+	auto set_pos = [](DocIterator & dit, pos_type pos) {
+		dit.pos() = (pos >= 0) ? min(pos, dit.lastpos())
+		                       // negative pos values are counted from the end
+		                       : max(dit.lastpos() + pos + 1, pos_type(0));
+	};
 	// Finding start
 	DocIterator dit_start = buf.getParFromID(start.id);
 	if (dit_start)
-		dit_start.pos() = min(start.pos, dit_start.lastpos());
+		set_pos(dit_start, start.pos);
 	// Finding end
 	DocIterator dit_end = buf.getParFromID(end.id);
 	if (dit_end) {
-		dit_end.pos() = min(end.pos, dit_end.lastpos());
-		// So far dit_end belongs to the next row. Step backwards.
-		if (!dit_end.top().at_cell_begin()) {
+		set_pos(dit_end, end.pos);
+		// Step backwards to prevent selecting the beginning of another
+		// paragraph.
+		if (dit_end.pos() == 0 && !dit_end.top().at_cell_begin()) {
 			CursorSlice end_top = dit_end.top();
 			end_top.backwardPos();
 			if (dit_start && end_top != dit_start.top())
@@ -257,6 +300,22 @@ pair<DocIterator, DocIterator> TexRow::getDocIteratorFromRow(
 		dit_end.boundary(true);
 	}
 	return {dit_start, dit_end};
+}
+
+
+//static
+FuncRequest TexRow::goToFunc(TextEntry start, TextEntry end)
+{
+	return {LFUN_PARAGRAPH_GOTO,
+			convert<string>(start.id) + " " + convert<string>(start.pos) + " " +
+			convert<string>(end.id) + " " + convert<string>(end.pos)};
+}
+
+
+//static
+FuncRequest TexRow::goToFunc(std::pair<TextEntry,TextEntry> entries)
+{
+	return goToFunc(entries.first, entries.second);
 }
 
 
@@ -499,9 +558,15 @@ pair<int,int> TexRow::rowFromCursor(Cursor const & cur) const
 }
 
 
-int TexRow::rows() const
+size_t TexRow::rows() const
 {
 	return rowlist_.size();
+}
+
+
+void TexRow::setRows(size_t r)
+{
+	rowlist_.resize(r, RowEntryList());
 }
 
 
@@ -538,21 +603,6 @@ void TexRow::prepend(docstring_list & tex) const
 		tex[i] = entry + "  " + tex[i];
 	}
 }
-
-
-
-LyXErr & operator<<(LyXErr & l, TexRow const & texrow)
-{
-	if (l.enabled()) {
-		for (int i = 0; i < texrow.rows(); i++) {
-			int id,pos;
-			if (texrow.getIdFromRow(i+1,id,pos) && id>0)
-				l << i+1 << ":" << id << ":" << pos << "\n";
-		}
-	}
-	return l;
-}
-
 
 
 } // namespace lyx

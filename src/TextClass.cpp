@@ -619,15 +619,15 @@ TextClass::ReturnValues TextClass::read(Lexer & lexrc, ReadType rt)
 			break;
 
 		case TC_PREAMBLE:
-			preamble_ = from_utf8(lexrc.getLongString("EndPreamble"));
+			preamble_ = lexrc.getLongString(from_ascii("EndPreamble"));
 			break;
 
 		case TC_HTMLPREAMBLE:
-			htmlpreamble_ = from_utf8(lexrc.getLongString("EndPreamble"));
+			htmlpreamble_ = lexrc.getLongString(from_ascii("EndPreamble"));
 			break;
 
 		case TC_HTMLSTYLES:
-			htmlstyles_ = from_utf8(lexrc.getLongString("EndStyles"));
+			htmlstyles_ = lexrc.getLongString(from_ascii("EndStyles"));
 			break;
 
 		case TC_HTMLTOCSECTION:
@@ -635,15 +635,15 @@ TextClass::ReturnValues TextClass::read(Lexer & lexrc, ReadType rt)
 			break;
 
 		case TC_ADDTOPREAMBLE:
-			preamble_ += from_utf8(lexrc.getLongString("EndPreamble"));
+			preamble_ += lexrc.getLongString(from_ascii("EndPreamble"));
 			break;
 
 		case TC_ADDTOHTMLPREAMBLE:
-			htmlpreamble_ += from_utf8(lexrc.getLongString("EndPreamble"));
+			htmlpreamble_ += lexrc.getLongString(from_ascii("EndPreamble"));
 			break;
 
 		case TC_ADDTOHTMLSTYLES:
-			htmlstyles_ += from_utf8(lexrc.getLongString("EndStyles"));
+			htmlstyles_ += lexrc.getLongString(from_ascii("EndStyles"));
 			break;
 
 		case TC_PROVIDES: {
@@ -1160,7 +1160,7 @@ bool TextClass::readFloat(Lexer & lexrc)
 
 	string ext;
 	string htmlattr;
-	string htmlstyle;
+	docstring htmlstyle;
 	string htmltag;
 	string listname;
 	string listcommand;
@@ -1264,7 +1264,7 @@ bool TextClass::readFloat(Lexer & lexrc)
 			break;
 		case FT_HTMLSTYLE:
 			lexrc.next();
-			htmlstyle = lexrc.getLongString("EndHTMLStyle");
+			htmlstyle = lexrc.getLongString(from_ascii("EndHTMLStyle"));
 			break;
 		case FT_HTMLTAG:
 			lexrc.next();

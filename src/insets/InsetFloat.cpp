@@ -330,7 +330,7 @@ void InsetFloat::latex(otexstream & os, OutputParams const & runparams_in) const
 
 		OutputParams rp = runparams_in;
 		rp.moving_arg = true;
-		getCaption(os, rp);
+		os << getCaption(rp);
 		os << '{';
 		// The main argument is the contents of the float. This is not a moving argument.
 		if (!paragraphs().empty())
@@ -494,37 +494,26 @@ bool InsetFloat::allowsCaptionVariation(std::string const & newtype) const
 }
 
 
-docstring InsetFloat::getCaption(OutputParams const & runparams) const
+TexString InsetFloat::getCaption(OutputParams const & runparams) const
 {
-	odocstringstream ods;
-	otexstream os(ods);
-	getCaption(os, runparams);
-	return ods.str();
-}
-
-
-void InsetFloat::getCaption(otexstream & os,
-							OutputParams const & runparams) const
-{
-	if (paragraphs().empty())
-		return;
-
 	InsetCaption const * ins = getCaptionInset();
 	if (ins == 0)
-		return;
+		return TexString();
 
+	otexstringstream os;
 	ins->getArgs(os, runparams);
 
 	os << '[';
-	odocstringstream ods;
-	otexstream oss(ods);
-	ins->getArgument(oss, runparams);
-	docstring arg = ods.str();
+	otexstringstream os2;
+	ins->getArgument(os2, runparams);
+	TexString ts = os2.release();
+	docstring & arg = ts.str;
 	// Protect ']'
 	if (arg.find(']') != docstring::npos)
 		arg = '{' + arg + '}';
-	os.append(arg, move(oss.texrow()));
+	os << move(ts);
 	os << ']';
+	return os.release();
 }
 
 

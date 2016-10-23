@@ -27,6 +27,7 @@ class Buffer;
 class BufferParams;
 class InsetLayout;
 class Language;
+class TexString;
 
 /** The packages and commands that a buffer needs. This class
  *  contains a list<string>.  Each of the LaTeX packages that a buffer needs
@@ -60,11 +61,11 @@ public:
 	/// The packages needed by the document
 	std::string const getPackages() const;
 	/// The macros definitions needed by the document
-	docstring const getMacros() const;
+	TexString getMacros() const;
 	/// Extra preamble code before babel is called
-	std::string const getBabelPresettings() const;
+	docstring const getBabelPresettings() const;
 	/// Extra preamble code after babel is called
-	std::string const getBabelPostsettings() const;
+	docstring const getBabelPostsettings() const;
 	/// Do we need to pass the languages to babel directly?
 	bool needBabelLangOptions() const;
 	/// Load AMS packages when appropriate
@@ -84,18 +85,19 @@ public:
 	/// Include a file for use with the SGML entities
 	void includeFile(docstring const & key, std::string const & name);
 	/// The float definitions.
-	void getFloatDefinitions(odocstream & os) const;
+	void getFloatDefinitions(otexstream & os) const;
 	/// Print requirements to lyxerr
 	void showStruct() const;
+	/// Add preamble snippet with TexRow information
+	void addPreambleSnippet(TexString snippet, bool allowdupes = false);
+	/// Add preamble snippet without TexRow information
+	void addPreambleSnippet(docstring const & snippet, bool allowdupes = false);
 	///
-	void addPreambleSnippet(std::string const & snippet, 
-	                        bool allowdupes = false);
-	///
-	std::string getPreambleSnippets() const;
+	TexString getPreambleSnippets() const;
 	///
 	void addCSSSnippet(std::string const &);
 	///
-	std::string getCSSSnippets() const;
+	docstring getCSSSnippets() const;
 	/// Add a feature name requirements
 	void require(std::string const & name);
 	/// Add a set of feature names requirements
@@ -152,6 +154,10 @@ public:
 	bool inFloat() const { return in_float_; }
 	/// are we in a float?
 	void inFloat(bool const b) { in_float_ = b; }
+	/// are we in a deleted inset?
+	bool inDeletedInset() const { return in_deleted_inset_; }
+	/// are we in a deleted inset?
+	void inDeletedInset(bool const b) { in_deleted_inset_ = b; }
 	/// Runparams that will be used for exporting this file.
 	OutputParams const & runparams() const { return runparams_; }
 	/// Resolve alternatives like "esint|amsmath|wasysym"
@@ -175,7 +181,7 @@ private:
 	///
 	Features features_;
 	/// Static preamble bits, from external templates, or anywhere else
-	typedef std::list<std::string> SnippetList;
+	typedef std::list<TexString> SnippetList;
 	///
 	SnippetList preamble_snippets_;
 	///
@@ -206,6 +212,8 @@ private:
 	OutputParams const & runparams_;
 	///
 	bool in_float_;
+	///
+	bool in_deleted_inset_;
 	///
 	docstring htmltitle_;
 };

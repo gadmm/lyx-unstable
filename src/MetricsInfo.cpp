@@ -37,9 +37,9 @@ namespace lyx {
 /////////////////////////////////////////////////////////////////////////
 
 MetricsBase::MetricsBase(BufferView * b, FontInfo f, int w)
-	: bv(b), font(move(f)), style(LM_ST_TEXT), fontname("mathnormal"),
-	  textwidth(w), solid_line_thickness_(1), solid_line_offset_(1),
-	  dotted_line_thickness_(1)
+	: bv(b), font(move(f)), fontname("mathnormal"),
+	  textwidth(w), macro_nesting(0),
+	  solid_line_thickness_(1), solid_line_offset_(1), dotted_line_thickness_(1)
 {
 	if (lyxrc.zoom >= 200) {
 		// derive the line thickness from zoom factor
@@ -58,24 +58,21 @@ MetricsBase::MetricsBase(BufferView * b, FontInfo f, int w)
 }
 
 
-Changer MetricsBase::changeFontSet(string const & name, bool cond)
+Changer MetricsBase::changeFontSet(string const & name)
 {
 	RefChanger<MetricsBase> rc = make_save(*this);
-	if (!cond)
-		rc->keep();
-	else {
-		ColorCode oldcolor = font.color();
-		string const oldname = fontname;
-		fontname = name;
-		if (isMathFont(name) || isMathFont(oldname))
-			font = sane_font;
-		augmentFont(font, name);
-		font.setSize(rc->old.font.size());
-		if (name != "lyxtex"
-		    && ((isTextFont(oldname) && oldcolor != Color_foreground)
-		        || (isMathFont(oldname) && oldcolor != Color_math)))
-			font.setColor(oldcolor);
-	}
+	ColorCode oldcolor = font.color();
+	string const oldname = fontname;
+	fontname = name;
+	if (isMathFont(name) || isMathFont(oldname))
+		font = sane_font;
+	augmentFont(font, name);
+	font.setSize(rc->old.font.size());
+	font.setStyle(rc->old.font.style());
+	if (name != "lyxtex"
+	    && ((isTextFont(oldname) && oldcolor != Color_foreground)
+	        || (isMathFont(oldname) && oldcolor != Color_math)))
+		font.setColor(oldcolor);
 	return move(rc);
 }
 
@@ -151,58 +148,41 @@ Color PainterInfo::textColor(Color const & color) const
 }
 
 
-Changer MetricsBase::changeScript(bool cond)
+Changer MetricsBase::changeScript()
 {
-	switch (style) {
+	switch (font.style()) {
 	case LM_ST_DISPLAY:
 	case LM_ST_TEXT:
-		return changeStyle(LM_ST_SCRIPT, cond);
+		return font.changeStyle(LM_ST_SCRIPT);
 	case LM_ST_SCRIPT:
 	case LM_ST_SCRIPTSCRIPT:
-		return changeStyle(LM_ST_SCRIPTSCRIPT, cond);
-	}
-	//remove Warning
-	LASSERT(false, return Changer());
-}
-
-
-Changer MetricsBase::changeFrac(bool cond)
-{
-	switch (style) {
-	case LM_ST_DISPLAY:
-		return changeStyle(LM_ST_TEXT, cond);
-	case LM_ST_TEXT:
-		return changeStyle(LM_ST_SCRIPT, cond);
-	case LM_ST_SCRIPT:
-	case LM_ST_SCRIPTSCRIPT:
-		return changeStyle(LM_ST_SCRIPTSCRIPT, cond);
+		return font.changeStyle(LM_ST_SCRIPTSCRIPT);
 	}
 	//remove Warning
 	return Changer();
 }
 
 
-Changer MetricsBase::changeStyle(Styles new_style, bool cond)
+Changer MetricsBase::changeFrac()
 {
-	static const int diff[4][4] =
-		{ { 0, 0, -3, -5 },
-		  { 0, 0, -3, -5 },
-		  { 3, 3,  0, -2 },
-		  { 5, 5,  2,  0 } };
-	int t = diff[style][new_style];
-	RefChanger<MetricsBase> rc = make_save(*this);
-	if (!cond)
-		rc->keep();
-	else {
-		if (t > 0)
-			while (t--)
-				font.incSize();
-		else
-			while (t++)
-				font.decSize();
-		style = new_style;
+	switch (font.style()) {
+	case LM_ST_DISPLAY:
+		return font.changeStyle(LM_ST_TEXT);
+	case LM_ST_TEXT:
+		return font.changeStyle(LM_ST_SCRIPT);
+	case LM_ST_SCRIPT:
+	case LM_ST_SCRIPTSCRIPT:
+		return font.changeStyle(LM_ST_SCRIPTSCRIPT);
 	}
-	return move(rc);
+	//remove Warning
+	return Changer();
+}
+
+
+Changer MetricsBase::changeArray()
+{
+	return (font.style() == LM_ST_DISPLAY) ? font.changeStyle(LM_ST_TEXT)
+		: Changer();
 }
 
 

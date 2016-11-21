@@ -1,5 +1,5 @@
 #LyX 2.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 512
+\lyxformat 515
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -49,7 +49,7 @@
 \use_indices false
 \paperorientation portrait
 \suppress_date false
-\justification false
+\justification true
 \use_refstyle 1
 \branch na
 \selected 0
@@ -78,34 +78,18 @@
 \begin_body
 
 \begin_layout Subsection*
-79 General Punctuation
+80 Enclosed Alphanumerics
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-1F00                       ​ ‌ 
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-2010 ‐ ‑ ‒ – — ― ‖ ‗ ‘ ’ ‚ 
+2460 ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ 
 \begin_inset Branch na
 inverted 0
 status collapsed
 
 \begin_layout Standard
-‛
-\end_layout
-
-\end_inset
-
- “ ” „ 
-\begin_inset Branch na
-inverted 0
-status collapsed
-
-\begin_layout Standard
-‟
+⑪ ⑫ ⑬ ⑭ ⑮ ⑯
 \end_layout
 
 \end_inset
@@ -115,13 +99,13 @@ status collapsed
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2020 † ‡ • ‣ ․ ‥ … 
+2470 
 \begin_inset Branch na
 inverted 0
 status collapsed
 
 \begin_layout Standard
-‧     ‪ ‫ ‬ ‭ ‮  
+⑰ ⑱ ⑲ ⑳ ⑴ ⑵ ⑶ ⑷ ⑸ ⑹ ⑺ ⑻ ⑼ ⑽ ⑾ ⑿
 \end_layout
 
 \end_inset
@@ -131,51 +115,13 @@ status collapsed
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2030 ‰ ‱ ′ ″ 
+2480 
 \begin_inset Branch na
 inverted 0
 status collapsed
 
 \begin_layout Standard
-‴
-\end_layout
-
-\end_inset
-
- ‵ ‶ 
-\begin_inset Branch na
-inverted 0
-status collapsed
-
-\begin_layout Standard
-‷
-\end_layout
-
-\end_inset
-
- ‸ ‹ › ※ ‼ ‽ ‾ ‿
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-2040 
-\begin_inset Branch na
-inverted 0
-status collapsed
-
-\begin_layout Standard
-⁀ ⁁ ⁂ ⁃
-\end_layout
-
-\end_inset
-
- ⁄ ⁅ ⁆ ⁇ ⁈ ⁉ 
-\begin_inset Branch na
-inverted 0
-status collapsed
-
-\begin_layout Standard
-⁊ ⁋ ⁌ ⁍ ⁎ ⁏
+⒀ ⒁ ⒂ ⒃ ⒄ ⒅ ⒆ ⒇ ⒈ ⒉ ⒊ ⒋ ⒌ ⒍ ⒎ ⒏
 \end_layout
 
 \end_inset
@@ -185,35 +131,13 @@ status collapsed
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2050 
+2490 
 \begin_inset Branch na
 inverted 0
 status collapsed
 
 \begin_layout Standard
-⁐ ⁑
-\end_layout
-
-\end_inset
-
- ⁒ 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⁓ ⁔ ⁕ ⁖ ⁗ ⁘ ⁙ ⁚ ⁛ ⁜ 
-\end_layout
-
-\end_inset
-
- ⁝ 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⁞  
+⒐ ⒑ ⒒ ⒓ ⒔ ⒕ ⒖ ⒗ ⒘ ⒙ ⒚ ⒛ ⒜ ⒝ ⒞ ⒟
 \end_layout
 
 \end_inset
@@ -223,107 +147,13 @@ status open
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2060 
+24A0 
 \begin_inset Branch na
 inverted 0
 status collapsed
 
 \begin_layout Standard
-⁠ ⁡ ⁢ ⁣ ⁪ ⁫ ⁬ ⁭ ⁮ ⁯
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection*
-71 Superscripts and Subscripts
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-2070 ⁰ ⁱ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹ ⁺ ⁻ ⁼ ⁽ ⁾ ⁿ
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-2080 ₀ ₁ ₂ ₃ ₄ ₅ ₆ ₇ ₈ ₉ ₊ ₋ ₌ ₍ ₎ 
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-2090 ₐ ₑ ₒ ₓ ₔ 
-\end_layout
-
-\begin_layout Subsection*
-72 Currency Symbols
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-20A0 
-\begin_inset Branch na
-inverted 0
-status collapsed
-
-\begin_layout Standard
-₠
-\end_layout
-
-\end_inset
-
- ₡ 
-\begin_inset Branch na
-inverted 0
-status collapsed
-
-\begin_layout Standard
-₢ ₣
-\end_layout
-
-\end_inset
-
- ₤ 
-\begin_inset Branch na
-inverted 0
-status collapsed
-
-\begin_layout Standard
-₥
-\end_layout
-
-\end_inset
-
- ₦ 
-\begin_inset Branch na
-inverted 0
-status collapsed
-
-\begin_layout Standard
-₧ ₨
-\end_layout
-
-\end_inset
-
- ₩ 
-\begin_inset Branch na
-inverted 0
-status collapsed
-
-\begin_layout Standard
-₪
-\end_layout
-
-\end_inset
-
- ₫ € 
-\begin_inset Branch na
-inverted 0
-status collapsed
-
-\begin_layout Standard
-₭ ₮ ₯
+⒠ ⒡ ⒢ ⒣ ⒤ ⒥ ⒦ ⒧ ⒨ ⒩ ⒪ ⒫ ⒬ ⒭ ⒮ ⒯
 \end_layout
 
 \end_inset
@@ -333,24 +163,13 @@ status collapsed
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-20B0 
+24B0 
 \begin_inset Branch na
 inverted 0
 status collapsed
 
 \begin_layout Standard
-₰
-\end_layout
-
-\end_inset
-
- ₱ ₲ 
-\begin_inset Branch na
-inverted 0
-status collapsed
-
-\begin_layout Standard
-₳ ₴ ₵ 
+⒰ ⒱ ⒲ ⒳ ⒴ ⒵ Ⓐ Ⓑ Ⓒ Ⓓ Ⓔ Ⓕ Ⓖ Ⓗ Ⓘ Ⓙ
 \end_layout
 
 \end_inset
@@ -360,7 +179,66 @@ status collapsed
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-20C0 
+24C0 
+\begin_inset Branch na
+inverted 0
+status collapsed
+
+\begin_layout Standard
+Ⓚ Ⓛ Ⓜ Ⓝ Ⓞ Ⓟ Ⓠ Ⓡ Ⓢ Ⓣ Ⓤ Ⓥ Ⓦ Ⓧ Ⓨ Ⓩ
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+24D0 
+\begin_inset Branch na
+inverted 0
+status collapsed
+
+\begin_layout Standard
+ⓐ ⓑ ⓒ ⓓ ⓔ ⓕ ⓖ ⓗ ⓘ ⓙ ⓚ ⓛ ⓜ ⓝ ⓞ ⓟ
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+24E0 
+\begin_inset Branch na
+inverted 0
+status collapsed
+
+\begin_layout Standard
+ⓠ ⓡ ⓢ ⓣ ⓤ ⓥ ⓦ ⓧ ⓨ ⓩ ⓪ ⓫ ⓬ ⓭ ⓮ ⓯
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+24F0 
+\begin_inset Branch na
+inverted 0
+status collapsed
+
+\begin_layout Standard
+⓰ ⓱ ⓲ ⓳ ⓴ ⓵ ⓶ ⓷ ⓸ ⓹ ⓺ ⓻ ⓼ ⓽ ⓾ ⓿
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body

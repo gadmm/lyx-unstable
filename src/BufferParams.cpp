@@ -1454,7 +1454,7 @@ void BufferParams::validate(LaTeXFeatures & features) const
 
 	// some languages are only available via polyglossia
 	if (features.hasPolyglossiaExclusiveLanguages())
-	   features.require("polyglossia");
+		features.require("polyglossia");
 
 	if (useNonTeXFonts && fontsMath() != "auto")
 		features.require("unicode-math");
@@ -2184,14 +2184,17 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 			os << "[" << from_ascii(language->polyglossiaOpts()) << "]";
 		os << "{" << from_ascii(language->polyglossia()) << "}\n";
 		// now setup the other languages
-		std::map<std::string, std::string> const polylangs =
+		set<string> const polylangs =
 			features.getPolyglossiaLanguages();
-		for (std::map<std::string, std::string>::const_iterator mit = polylangs.begin();
+		for (set<string>::const_iterator mit = polylangs.begin();
 		     mit != polylangs.end() ; ++mit) {
+			// We do not output the options here; they are output in
+			// the language switch commands. This is safer if multiple
+			// varieties are used.
+			if (*mit == language->polyglossia())
+				continue;
 			os << "\\setotherlanguage";
-			if (!mit->second.empty())
-				os << "[" << from_ascii(mit->second) << "]";
-			os << "{" << from_ascii(mit->first) << "}\n";
+			os << "{" << from_ascii(*mit) << "}\n";
 		}
 	}
 

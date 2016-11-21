@@ -18,6 +18,7 @@
 
 namespace lyx {
 
+class MetricsBase;
 class MetricsInfo;
 class PainterInfo;
 class FontInfo;
@@ -25,15 +26,18 @@ class Dimension;
 class MathData;
 class MathAtom;
 class InsetMath;
+class latexkeys;
 
 
 int mathed_font_em(FontInfo const &);
 
-int mathed_thinmuskip(FontInfo font);
+int mathed_mu(FontInfo const & font, double mu);
 
-int mathed_medmuskip(FontInfo font);
+int mathed_thinmuskip(FontInfo const & font);
 
-int mathed_thickmuskip(FontInfo font);
+int mathed_medmuskip(FontInfo const & font);
+
+int mathed_thickmuskip(FontInfo const & font);
 
 int mathed_char_width(FontInfo const &, char_type c);
 
@@ -47,6 +51,10 @@ void mathed_string_dim(FontInfo const & font,
 		       Dimension & dim);
 
 int mathed_string_width(FontInfo const &, docstring const & s);
+
+void mathedSymbolDim(MetricsBase & mb, Dimension & dim, latexkeys const * sym);
+
+void mathedSymbolDraw(PainterInfo & pi, int x, int y, latexkeys const * sym);
 
 void metricsStrRedBlack(MetricsInfo & mi, Dimension & dim, docstring const & s);
 

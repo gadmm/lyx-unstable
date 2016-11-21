@@ -15,7 +15,6 @@
 #include "InsetMathChar.h"
 #include "InsetMathColor.h"
 #include "InsetMathFrac.h"
-#include "InsetMathGrid.h"
 #include "InsetMathNest.h"
 #include "InsetMathScript.h"
 #include "MathExtern.h"
@@ -109,7 +108,7 @@ namespace {
 	size_t firstRelOp(MathData const & ar)
 	{
 		for (MathData::const_iterator it = ar.begin(); it != ar.end(); ++it)
-			if ((*it)->isMathRel())
+			if ((*it)->mathClass() == MC_REL)
 				return it - ar.begin();
 		return ar.size();
 	}
@@ -521,9 +520,9 @@ void InsetMathHull::metrics(MetricsInfo & mi, Dimension & dim) const
 		return;
 	}
 
-	// FIXME: Changing the same object repeatedly is inefficient.
 	Changer dummy1 = mi.base.changeFontSet(standardFont());
-	Changer dummy2 = mi.base.changeStyle(display() ? LM_ST_DISPLAY : LM_ST_TEXT);
+	Changer dummy2 = mi.base.font.changeStyle(display() ? LM_ST_DISPLAY
+	                                                    : LM_ST_TEXT);
 
 	// let the cells adjust themselves
 	InsetMathGrid::metrics(mi, dim);
@@ -601,7 +600,8 @@ void InsetMathHull::draw(PainterInfo & pi, int x, int y) const
 	if (previewState(bv)) {
 		// Do not draw change tracking cue if taken care of by RowPainter
 		// already.
-		Changer dummy = make_change(pi.change_, Change(), !canPaintChange(*bv));
+		Changer dummy = !canPaintChange(*bv) ? make_change(pi.change_, Change())
+			: Changer();
 		if (previewTooSmall(dim)) {
 			// we have an extra frame
 			preview_->draw(pi, x + ERROR_FRAME_WIDTH, y);
@@ -616,9 +616,11 @@ void InsetMathHull::draw(PainterInfo & pi, int x, int y) const
 	ColorCode color = pi.selected && lyxrc.use_system_colors
 				? Color_selectiontext : standardColor();
 	bool const really_change_color = pi.base.font.color() == Color_none;
-	Changer dummy0 = pi.base.font.changeColor(color, really_change_color);
+	Changer dummy0 = really_change_color ? pi.base.font.changeColor(color)
+		: Changer();
 	Changer dummy1 = pi.base.changeFontSet(standardFont());
-	Changer dummy2 = pi.base.changeStyle(display() ? LM_ST_DISPLAY : LM_ST_TEXT);
+	Changer dummy2 = pi.base.font.changeStyle(display() ? LM_ST_DISPLAY
+	                                                    : LM_ST_TEXT);
 
 	InsetMathGrid::draw(pi, x + 1, y);
 

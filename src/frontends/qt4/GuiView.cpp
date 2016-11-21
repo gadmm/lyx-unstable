@@ -513,7 +513,7 @@ GuiView::GuiView(int id)
 	  command_execute_(false), minibuffer_focus_(false)
 {
 	connect(this, SIGNAL(bufferViewChanged()),
-	        this, SLOT(on_bufferViewChanged()));
+	        this, SLOT(onBufferViewChanged()));
 
 	// GuiToolbars *must* be initialised before the menu bar.
 	normalSizedIcons(); // at least on Mac the default is 32 otherwise, which is huge
@@ -1202,6 +1202,7 @@ void GuiView::on_currentWorkAreaChanged(GuiWorkArea * wa)
 	                 this, SLOT(updateWindowTitle(GuiWorkArea *)));
 	QObject::connect(wa, SIGNAL(busy(bool)),
 	                 this, SLOT(setBusy(bool)));
+	// connection of a signal to a signal
 	QObject::connect(wa, SIGNAL(bufferViewChanged()),
 	                 this, SIGNAL(bufferViewChanged()));
 	Q_EMIT updateWindowTitle(wa);
@@ -1209,7 +1210,7 @@ void GuiView::on_currentWorkAreaChanged(GuiWorkArea * wa)
 }
 
 
-void GuiView::on_bufferViewChanged()
+void GuiView::onBufferViewChanged()
 {
 	structureChanged();
 	// Buffer-dependent dialogs must be updated. This is done here because
@@ -4072,7 +4073,7 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 
 		case LFUN_SPELLING_CONTINUOUSLY:
 			lyxrc.spellcheck_continuously = !lyxrc.spellcheck_continuously;
-			dr.screenUpdate(Update::Force | Update::FitCursor);
+			dr.screenUpdate(Update::Force);
 			break;
 
 		default:

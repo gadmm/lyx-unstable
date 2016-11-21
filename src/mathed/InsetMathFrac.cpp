@@ -14,14 +14,17 @@
 
 #include "InsetMathFrac.h"
 
-#include "Cursor.h"
-#include "LaTeXFeatures.h"
 #include "MathData.h"
+#include "MathParser.h"
 #include "MathStream.h"
 #include "MathSupport.h"
+
+#include "Cursor.h"
+#include "LaTeXFeatures.h"
 #include "MetricsInfo.h"
 #include "TextPainter.h"
 
+#include "frontends/FontMetrics.h"
 #include "frontends/Painter.h"
 
 #include "support/lassert.h"
@@ -123,66 +126,147 @@ bool InsetMathFrac::idxBackward(Cursor & cur) const
 }
 
 
+MathClass InsetMathFrac::mathClass() const
+{
+	// Generalized fractions are of inner class (see The TeXbook, p. 292)
+	// But stuff from the unit/nicefrac packages are not real fractions.
+	MathClass mc = MC_ORD;
+	switch (kind_) {
+	case ATOP:
+	case OVER:
+	case FRAC:
+	case DFRAC:
+	case TFRAC:
+	case CFRAC:
+	case CFRACLEFT:
+	case CFRACRIGHT:
+		mc = MC_INNER;
+		break;
+	case NICEFRAC:
+	case UNITFRAC:
+	case UNIT:
+		break;
+	}
+	return mc;
+}
+
+
+
+namespace {
+
+// align frac to minus character
+int dy_for_frac(MetricsBase & mb)
+{
+	Changer dummy = mb.changeFontSet("mathnormal");
+	return theFontMetrics(mb.font).ascent('-') - 1;
+}
+
+
+// align the top of M in the cell with the top of M in the surrounding font
+int dy_for_nicefrac(MetricsBase & mb)
+{
+	// this is according to nicefrac.sty
+	int big_m = theFontMetrics(mb.font).ascent('M');
+	Changer dummy = mb.changeScript();
+	int small_m = theFontMetrics(mb.font).ascent('M');
+	return big_m - small_m;
+}
+
+
+// symbol for nicefrac solidus
+latexkeys const * slash_symbol()
+{
+	return in_word_set(from_ascii("slash"));
+}
+
+} // anon namespace
+
+
+
 void InsetMathFrac::metrics(MetricsInfo & mi, Dimension & dim) const
 {
 	Dimension dim0, dim1, dim2;
 
-	// This could be simplified, including avoiding useless recalculation of
-	// cell metrics
-	if (kind_ == UNIT || (kind_ == UNITFRAC && nargs() == 3)) {
-		if (nargs() == 1) {
-			Changer dummy = mi.base.font.changeShape(UP_SHAPE);
-			cell(0).metrics(mi, dim0);
-			dim.wid = dim0.width()+ 3;
-			dim.asc = dim0.asc;
-			dim.des = dim0.des;
-		} else if (nargs() == 2) {
-			cell(0).metrics(mi, dim0);
-			Changer dummy = mi.base.font.changeShape(UP_SHAPE);
-			cell(1).metrics(mi, dim1);
-			dim.wid = dim0.width() + dim1.wid + 5;
-			dim.asc = max(dim0.asc, dim1.asc);
-			dim.des = max(dim0.des, dim1.des);
-		} else {
-			cell(2).metrics(mi, dim2);
-			Changer dummy = mi.base.font.changeShape(UP_SHAPE);
-			Changer dummy2 = mi.base.changeFrac();
-			cell(0).metrics(mi, dim0);
-			cell(1).metrics(mi, dim1);
-			dim.wid = dim0.width() + dim1.wid + dim2.wid + 10;
-			dim.asc = max(dim2.asc, dim0.height() + 5);
-			dim.des = max(dim2.des, dim1.height() - 5);
+	switch (kind_) {
+	case UNIT: {
+		// \unitone, \unittwo
+		dim.wid = 0;
+		int unit_cell = 0;
+		// is there an extra cell holding the value being given a dimension?
+		// (this is \unittwo)
+		if (nargs() == 2) {
+			cell(0).metrics(mi, dim1);
+			dim.wid += dim1.wid + 4;
+			unit_cell = 1;
 		}
-	} else {
-		// general cell metrics used for \frac
-		Changer dummy = mi.base.changeFrac();
+		Changer dummy = mi.base.font.changeShape(UP_SHAPE);
+		cell(unit_cell).metrics(mi, dim0);
+		dim.wid += dim0.width() + 1;
+		dim.asc = max(dim0.asc, dim1.asc);
+		dim.des = max(dim0.des, dim1.des);
+	}
+		break;
+
+	case UNITFRAC:
+	case NICEFRAC: {
+		// \unitfrac, \unitfracthree, \nicefrac
+		dim.wid = 0;
+		dim.asc = 0;
+		dim.des = 0;
+		int const dy = dy_for_nicefrac(mi.base);
+		// is there an extra cell holding the value being given a dimension?
+		// (this is \unitfracthree)
+		if (kind_ == UNITFRAC && nargs() == 3) {
+			cell(2).metrics(mi, dim2);
+			dim.wid += dim2.wid + 4;
+			dim.asc = dim2.asc;
+			dim.des = dim2.des;
+		}
+		Changer dummy = (kind_ == UNITFRAC) ? mi.base.font.changeShape(UP_SHAPE)
+			: Changer();
+		Changer dummy2 = mi.base.changeScript();
+		if (latexkeys const * slash = slash_symbol()) {
+			Dimension dimslash;
+			mathedSymbolDim(mi.base, dimslash, slash);
+			dim.wid += dimslash.wid - mathed_mu(mi.base.font, 3.0);
+			dim.asc = max(dim.asc, dimslash.asc);
+			dim.des = max(dim.des, dimslash.des);
+		}
 		cell(0).metrics(mi, dim0);
 		cell(1).metrics(mi, dim1);
-		if (nargs() == 3)
-			cell(2).metrics(mi, dim2);
-		// metrics for special fraction types
-		if (kind_ == NICEFRAC || kind_ == UNITFRAC) {
-			Changer dummy2 = mi.base.font.changeShape(UP_SHAPE, kind_ == UNITFRAC);
-			dim.wid = dim0.width() + dim1.wid + 5;
-			dim.asc = dim0.height() + 5;
-			dim.des = dim1.height() - 5;
-		} else {
-			if (kind_ == CFRAC || kind_ == CFRACLEFT || kind_ == CFRACRIGHT
-			    || kind_ == DFRAC || kind_ == TFRAC) {
-				// \cfrac and \dfrac are always in display size
-				// \tfrac is in always in text size
-				Changer dummy2 = mi.base.changeStyle((kind_ == TFRAC)
-				                                     ? LM_ST_SCRIPT
-				                                     : LM_ST_DISPLAY);
-				cell(0).metrics(mi, dim0);
-				cell(1).metrics(mi, dim1);
-			}
-			dim.wid = max(dim0.wid, dim1.wid) + 2;
-			dim.asc = dim0.height() + 2 + 5;
-			dim.des = dim1.height() + 2 - 5;
-		}
+		dim.wid += dim0.wid + dim1.wid + 2;
+		dim.asc = max(max(dim.asc, dim0.asc + dy), dim1.asc);
+		dim.des = max(max(dim.des, dim0.des - dy), dim1.des);
 	}
-	metricsMarkers(dim);
+		break;
+
+	case FRAC:
+	case CFRAC:
+	case CFRACLEFT:
+	case CFRACRIGHT:
+	case DFRAC:
+	case TFRAC:
+	case OVER:
+	case ATOP: {
+		int const dy = dy_for_frac(mi.base);
+		Changer dummy =
+			// \tfrac is always in text size
+			(kind_ == TFRAC) ? mi.base.font.changeStyle(LM_ST_SCRIPT) :
+			// \cfrac and \dfrac are always in display size
+			(kind_ == CFRAC
+			 || kind_ == CFRACLEFT
+			 || kind_ == CFRACRIGHT
+			 || kind_ == DFRAC) ? mi.base.font.changeStyle(LM_ST_DISPLAY) :
+			// all others
+			                      mi.base.changeFrac();
+		cell(0).metrics(mi, dim0);
+		cell(1).metrics(mi, dim1);
+		dim.wid = max(dim0.wid, dim1.wid) + 2;
+		dim.asc = dim0.height() + dy/2 + dy;
+		dim.des = max(0, dim1.height() + dy/2 - dy);
+	}
+	} //switch (kind_)
+	metricsMarkers(mi, dim);
 }
 
 
@@ -191,73 +275,94 @@ void InsetMathFrac::draw(PainterInfo & pi, int x, int y) const
 	setPosCache(pi, x, y);
 	Dimension const dim = dimension(*pi.base.bv);
 	Dimension const dim0 = cell(0).dimension(*pi.base.bv);
-	if (kind_ == UNIT || (kind_ == UNITFRAC && nargs() == 3)) {
-		if (nargs() == 1) {
-			Changer dummy = pi.base.font.changeShape(UP_SHAPE);
+	switch (kind_) {
+	case UNIT: {
+		// \unitone, \unittwo
+		int xx = x;
+		int unit_cell = 0;
+		// is there an extra cell holding the value being given a dimension?
+		// (this is \unittwo)
+		if (nargs() == 2) {
 			cell(0).draw(pi, x + 1, y);
-		} else if (nargs() == 2) {
-			cell(0).draw(pi, x + 1, y);
-			Changer dummy = pi.base.font.changeShape(UP_SHAPE);
-			cell(1).draw(pi, x + dim0.width() + 5, y);
-		} else {
-			cell(2).draw(pi, x + 1, y);
-			Changer dummy = pi.base.font.changeShape(UP_SHAPE);
-			Changer dummy2 = pi.base.changeFrac();
-			Dimension const dim1 = cell(1).dimension(*pi.base.bv);
-			Dimension const dim2 = cell(2).dimension(*pi.base.bv);
-			int xx = x + dim2.wid + 5;
-			cell(0).draw(pi, xx + 2, 
-					 y - dim0.des - 5);
-			cell(1).draw(pi, xx  + dim0.width() + 5, 
-					 y + dim1.asc / 2);
+			xx += dim0.wid + 4;
+			unit_cell = 1;
 		}
-	} else {
-		Changer dummy = pi.base.changeFrac();
+		Changer dummy = pi.base.font.changeShape(UP_SHAPE);
+		cell(unit_cell).draw(pi, xx + 1, y);
+	}
+		break;
+
+	case UNITFRAC:
+	case NICEFRAC: {
+		// \unitfrac, \unitfracthree, \nicefrac
+		int xx = x;
+		int const dy = dy_for_nicefrac(pi.base);
+		// is there an extra cell holding the value being given a dimension?
+		// (this is \unitfracthree)
+		if (kind_ == UNITFRAC && nargs() == 3) {
+			cell(2).draw(pi, x + 1, y);
+			xx += cell(2).dimension(*pi.base.bv).wid + 4;
+		}
+		Changer dummy = (kind_ == UNITFRAC) ? pi.base.font.changeShape(UP_SHAPE)
+			: Changer();
+		// nice fraction
+		Changer dummy2 = pi.base.changeScript();
+		cell(0).draw(pi, xx + 2, y - dy);
+		// reference LaTeX code from nicefrac.sty:
+		//    \mkern-2mu/\mkern-1mu
+		if (latexkeys const * slash = slash_symbol()) {
+			int mkern = mathed_mu(pi.base.font, 2.0);
+			mathedSymbolDraw(pi, xx + 2 + dim0.wid - mkern, y, slash);
+			Dimension dimslash;
+			mathedSymbolDim(pi.base, dimslash, slash);
+			xx += dimslash.wid - mathed_mu(pi.base.font, 3.0);
+		}
+		cell(1).draw(pi, xx + 2 + dim0.wid, y);
+	}
+		break;
+
+	case FRAC:
+	case CFRAC:
+	case CFRACLEFT:
+	case CFRACRIGHT:
+	case DFRAC:
+	case TFRAC:
+	case OVER:
+	case ATOP: {
+		int const dy = dy_for_frac(pi.base);
+		Changer dummy =
+			// \tfrac is always in text size
+			(kind_ == TFRAC) ? pi.base.font.changeStyle(LM_ST_SCRIPT) :
+			// \cfrac and \dfrac are always in display size
+			(kind_ == CFRAC
+			 || kind_ == CFRACLEFT
+			 || kind_ == CFRACRIGHT
+			 || kind_ == DFRAC) ? pi.base.font.changeStyle(LM_ST_DISPLAY) :
+			// all others
+			                      pi.base.changeFrac();
 		Dimension const dim1 = cell(1).dimension(*pi.base.bv);
 		int m = x + dim.wid / 2;
-		if (kind_ == NICEFRAC) {
-			cell(0).draw(pi, x + 2,
-					y - dim0.des - 5);
-			cell(1).draw(pi, x + dim0.width() + 5,
-					y + dim1.asc / 2);
-		} else if (kind_ == UNITFRAC) {
-			Changer dummy2 = pi.base.font.changeShape(UP_SHAPE);
-			cell(0).draw(pi, x + 2,	y - dim0.des - 5);
-			cell(1).draw(pi, x + dim0.width() + 5, y + dim1.asc / 2);
-		} else if (kind_ == FRAC || kind_ == ATOP || kind_ == OVER
-		           || kind_ == TFRAC) {
-			// tfrac is in always in text size
-			Changer dummy2 = pi.base.changeStyle(LM_ST_SCRIPT, kind_ == TFRAC);
-			cell(0).draw(pi, m - dim0.wid / 2, y - dim0.des - 2 - 5);
-			cell(1).draw(pi, m - dim1.wid / 2, y + dim1.asc + 2 - 5);
-		} else {
-			// \cfrac and \dfrac are always in display size
-			Changer dummy2 = pi.base.changeStyle(LM_ST_DISPLAY);
-			if (kind_ == CFRAC || kind_ == DFRAC)
-				cell(0).draw(pi, m - dim0.wid / 2, y - dim0.des - 2 - 5);
-			else if (kind_ == CFRACLEFT)
-				cell(0).draw(pi, x + 2, y - dim0.des - 2 - 5);
-			else if (kind_ == CFRACRIGHT)
-				cell(0).draw(pi, x + dim.wid - dim0.wid - 2,
-					y - dim0.des - 2 - 5);
-			cell(1).draw(pi, m - dim1.wid / 2, y + dim1.asc + 2 - 5);
-		}
+		int xx =
+			// align left
+			(kind_ == CFRACLEFT) ? x + 2 :
+			// align right
+			(kind_ == CFRACRIGHT) ? x + dim.wid - dim0.wid - 2 :
+			// center
+			                        m - dim0.wid / 2;
+		// take dy/2 for the spacing around the horizontal line. This is
+		// arbitrary. In LaTeX it is more complicated to ensure that displayed
+		// fractions line up next to each other.
+		cell(0).draw(pi, xx, y - dim0.des - dy/2 - dy);
+		// center
+		cell(1).draw(pi, m - dim1.wid / 2, y + dim1.asc + dy/2 - dy);
+		// horizontal line
+		if (kind_ != ATOP)
+			pi.pain.line(x + 1, y - dy,
+			             x + dim.wid - 2, y - dy,
+			             pi.base.font.color(), pi.pain.line_solid,
+			             pi.base.solidLineThickness());
 	}
-	if (kind_ == NICEFRAC || kind_ == UNITFRAC) {
-		// Diag line:
-		int xx = x;
-		if (nargs() == 3)
-			xx += cell(2).dimension(*pi.base.bv).wid + 5;
-		pi.pain.line(xx + dim0.wid,
-				y + dim.des - 2,
-				xx + dim0.wid + 5,
-				y - dim.asc + 2, pi.base.font.color());
-	}
-	if (kind_ == FRAC || kind_ == CFRAC || kind_ == CFRACLEFT
-		|| kind_ == CFRACRIGHT || kind_ == DFRAC
-		|| kind_ == TFRAC || kind_ == OVER)
-		pi.pain.line(x + 1, y - 5,
-				x + dim.wid - 2, y - 5, pi.base.font.color());
+	} //switch (kind_)
 	drawMarkers(pi, x, y);
 }
 
@@ -548,16 +653,17 @@ int InsetMathBinom::dw(int height) const
 void InsetMathBinom::metrics(MetricsInfo & mi, Dimension & dim) const
 {
 	Dimension dim0, dim1;
+	int const dy = dy_for_frac(mi.base);
 	Changer dummy =
-		(kind_ == DBINOM) ? mi.base.changeStyle(LM_ST_DISPLAY) :
-		(kind_ == TBINOM) ? mi.base.changeStyle(LM_ST_SCRIPT) :
+		(kind_ == DBINOM) ? mi.base.font.changeStyle(LM_ST_DISPLAY) :
+		(kind_ == TBINOM) ? mi.base.font.changeStyle(LM_ST_SCRIPT) :
 		                    mi.base.changeFrac();
 	cell(0).metrics(mi, dim0);
 	cell(1).metrics(mi, dim1);
-	dim.asc = dim0.height() + 4 + 5;
-	dim.des = dim1.height() + 4 - 5;
+	dim.asc = dim0.height() + 1 + dy/2 + dy;
+	dim.des = max(0, dim1.height() + 1 + dy/2 - dy);
 	dim.wid = max(dim0.wid, dim1.wid) + 2 * dw(dim.height()) + 4;
-	metricsMarkers2(dim);
+	metricsMarkers2(mi, dim);
 }
 
 
@@ -566,6 +672,7 @@ void InsetMathBinom::draw(PainterInfo & pi, int x, int y) const
 	Dimension const dim = dimension(*pi.base.bv);
 	Dimension const & dim0 = cell(0).dimension(*pi.base.bv);
 	Dimension const & dim1 = cell(1).dimension(*pi.base.bv);
+	int const dy = dy_for_frac(pi.base);
 	// define the binom brackets
 	docstring const bra = kind_ == BRACE ? from_ascii("{") :
 		kind_ == BRACK ? from_ascii("[") : from_ascii("(");
@@ -575,11 +682,13 @@ void InsetMathBinom::draw(PainterInfo & pi, int x, int y) const
 	int m = x + dim.width() / 2;
 	{
 		Changer dummy =
-			(kind_ == DBINOM) ? pi.base.changeStyle(LM_ST_DISPLAY) :
-			(kind_ == TBINOM) ? pi.base.changeStyle(LM_ST_SCRIPT) :
+			(kind_ == DBINOM) ? pi.base.font.changeStyle(LM_ST_DISPLAY) :
+			(kind_ == TBINOM) ? pi.base.font.changeStyle(LM_ST_SCRIPT) :
 			                    pi.base.changeFrac();
-		cell(0).draw(pi, m - dim0.wid / 2, y - dim0.des - 3 - 5);
-		cell(1).draw(pi, m - dim1.wid / 2, y + dim1.asc + 3 - 5);
+		// take dy both for the vertical alignment and for the spacing between
+		// cells
+		cell(0).draw(pi, m - dim0.wid / 2, y - dim0.des - dy/2 - dy);
+		cell(1).draw(pi, m - dim1.wid / 2, y + dim1.asc + dy/2 - dy);
 	}
 	// draw the brackets and the marker
 	mathed_draw_deco(pi, x, y - dim.ascent(), dw(dim.height()),

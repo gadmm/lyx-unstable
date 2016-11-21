@@ -1,5 +1,5 @@
 #LyX 2.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 512
+\lyxformat 515
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -9,7 +9,7 @@
 \maintain_unincluded_children false
 \language english
 \language_package default
-\inputencoding ascii
+\inputencoding utf8
 \fontencoding global
 \font_roman "lmodern" "default"
 \font_sans "lmss" "default"
@@ -78,18 +78,34 @@
 \begin_body
 
 \begin_layout Subsection*
-125 Modifier tone letters
+79 General Punctuation
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-A700 
+1F00                       ​ ‌ 
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+2010 ‐ ‑ ‒ – — ― ‖ ‗ ‘ ’ ‚ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-꜀ ꜁ ꜂ ꜃ ꜄ ꜅ ꜆ ꜇ ꜈ ꜉ ꜊ ꜋ ꜌ ꜍ ꜎ ꜏
+‛
+\end_layout
+
+\end_inset
+
+ “ ” „ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+‟
 \end_layout
 
 \end_inset
@@ -99,24 +115,121 @@ status open
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-A710 
+2020 † ‡ • ‣ ․ ‥ … 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-꜐ ꜑ ꜒ ꜓ ꜔ ꜕ ꜖ ꜗ ꜘ ꜙ ꜚ 
+‧     ‪ ‫ ‬ ‭ ‮  
 \end_layout
 
 \end_inset
 
- ꜛ ꜜ 
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+2030 ‰ ‱ ′ ″ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-ꜝ ꜞ ꜟ
+‴
+\end_layout
+
+\end_inset
+
+ ‵ ‶ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+‷
+\end_layout
+
+\end_inset
+
+ ‸ ‹ › ※ ‼ ‽ ‾ ‿
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+2040 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⁀ ⁁ ⁂ ⁃
+\end_layout
+
+\end_inset
+
+ ⁄ ⁅ ⁆ ⁇ ⁈ ⁉ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⁊ ⁋ ⁌ ⁍ ⁎ ⁏
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+2050 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⁐ ⁑
+\end_layout
+
+\end_inset
+
+ ⁒ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⁓ ⁔ ⁕ ⁖ ⁗ ⁘ ⁙ ⁚ ⁛ ⁜ 
+\end_layout
+
+\end_inset
+
+ ⁝ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⁞  
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+2060 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⁠ ⁡ ⁢ ⁣ ⁪ ⁫ ⁬ ⁭ ⁮ ⁯
 \end_layout
 
 \end_inset
@@ -125,18 +238,92 @@ status open
 \end_layout
 
 \begin_layout Subsection*
-152 Alphabetic Presentation Forms
+71 Superscripts and Subscripts
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-FB00 ﬀ ﬁ ﬂ ﬃ ﬄ 
+2070 ⁰ ⁱ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹ ⁺ ⁻ ⁼ ⁽ ⁾ ⁿ
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+2080 ₀ ₁ ₂ ₃ ₄ ₅ ₆ ₇ ₈ ₉ ₊ ₋ ₌ ₍ ₎ 
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+2090 ₐ ₑ ₒ ₓ ₔ 
+\end_layout
+
+\begin_layout Subsection*
+72 Currency Symbols
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+20A0 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-ﬅ ﬆ
+₠
+\end_layout
+
+\end_inset
+
+ ₡ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+₢ ₣
+\end_layout
+
+\end_inset
+
+ ₤ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+₥
+\end_layout
+
+\end_inset
+
+ ₦ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+₧ ₨
+\end_layout
+
+\end_inset
+
+ ₩ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+₪
+\end_layout
+
+\end_inset
+
+ ₫ € 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+₭ ₮ ₯
 \end_layout
 
 \end_inset
@@ -146,13 +333,24 @@ status open
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-FB10 
+20B0 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-ﬓ ﬔ ﬕ ﬖ ﬗ יִ ﬞ ײַ
+₰
+\end_layout
+
+\end_inset
+
+ ₱ ₲ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+₳ ₴ ₵ 
 \end_layout
 
 \end_inset
@@ -162,50 +360,7 @@ status open
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-FB20 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-ﬠ ﬡ ﬢ ﬣ ﬤ ﬥ ﬦ ﬧ ﬨ ﬩ שׁ שׂ שּׁ שּׂ אַ אָ
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-FB30 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-אּ בּ גּ דּ הּ וּ זּ טּ יּ ךּ כּ לּ מּ
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-FB40 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-נּ סּ ףּ פּ צּ קּ רּ שּ תּ וֹ בֿ כֿ פֿ ﭏ
-\end_layout
-
-\end_inset
-
-
+20C0 
 \end_layout
 
 \end_body

@@ -49,9 +49,16 @@ int InsetMathXYMatrix::rowsep() const
 
 void InsetMathXYMatrix::metrics(MetricsInfo & mi, Dimension & dim) const
 {
-	if (mi.base.style == LM_ST_DISPLAY)
-		mi.base.style = LM_ST_TEXT;
+	Changer dummy = mi.base.changeArray();
 	InsetMathGrid::metrics(mi, dim);
+}
+
+
+void InsetMathXYMatrix::draw(PainterInfo & pi, int x, int y) const
+{
+	setPosCache(pi, x, y);
+	Changer dummy = pi.base.changeArray();
+	InsetMathGrid::draw(pi, x, y);
 }
 
 

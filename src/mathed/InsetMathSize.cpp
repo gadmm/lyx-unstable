@@ -31,7 +31,8 @@ using namespace std;
 namespace lyx {
 
 InsetMathSize::InsetMathSize(Buffer * buf, latexkeys const * l)
-	: InsetMathNest(buf, 1), key_(l), style_(Styles(convert<int>(l->extra)))
+	: InsetMathNest(buf, 1), key_(l),
+	  style_(MathStyle(convert<int>(l->extra)))
 {}
 
 
@@ -43,15 +44,15 @@ Inset * InsetMathSize::clone() const
 
 void InsetMathSize::metrics(MetricsInfo & mi, Dimension & dim) const
 {
-	Changer dummy = mi.base.changeStyle(style_);
+	Changer dummy = mi.base.font.changeStyle(style_);
 	cell(0).metrics(mi, dim);
-	metricsMarkers(dim);
+	metricsMarkers(mi, dim);
 }
 
 
 void InsetMathSize::draw(PainterInfo & pi, int x, int y) const
 {
-	Changer dummy = pi.base.changeStyle(style_);
+	Changer dummy = pi.base.font.changeStyle(style_);
 	cell(0).draw(pi, x + 1, y);
 	drawMarkers(pi, x, y);
 }

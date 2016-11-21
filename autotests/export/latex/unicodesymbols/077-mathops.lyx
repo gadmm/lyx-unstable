@@ -1,15 +1,18 @@
 #LyX 2.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 512
+\lyxformat 515
 \begin_document
 \begin_header
 \save_transient_properties true
 \origin unavailable
 \textclass article
+\begin_preamble
+\usepackage{keystroke}
+\end_preamble
 \use_default_options true
 \maintain_unincluded_children false
 \language english
 \language_package default
-\inputencoding ascii
+\inputencoding utf8
 \fontencoding global
 \font_roman "lmodern" "default"
 \font_sans "lmss" "default"
@@ -49,7 +52,7 @@
 \use_indices false
 \paperorientation portrait
 \suppress_date false
-\justification false
+\justification true
 \use_refstyle 1
 \branch na
 \selected 0
@@ -78,153 +81,148 @@
 \begin_body
 
 \begin_layout Subsection*
-87 Miscellaneous Mathematical Symbols-A
+77 Mathematical Operators
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-27C0 
+2200 ∀ ∁ ∂ ∃ ∄ ∅ ∆ ∇ ∈ ∉ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⟀ ⟁
+∊
 \end_layout
 
 \end_inset
 
- ⟂ 
+ ∋ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⟃ ⟄
+∌ ∍ ∎
 \end_layout
 
 \end_inset
 
- ⟅ ⟆ 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⟇ ⟈ ⟉ ⟊ 
-\end_layout
-
-\end_inset
-
-
+ ∏
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-27D0 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⟐ ⟑ ⟒ ⟓ ⟔ ⟕ ⟖ ⟗ ⟘ ⟙ ⟚ ⟛ ⟜ ⟝ ⟞ ⟟
-\end_layout
-
-\end_inset
-
-
+2210 ∐ ∑ − ∓ ∔ ∕ ∖ ∗ ∘ ∙ √ ∛ ∜ ∝ ∞ ∟
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-27E0 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⟠ ⟡ ⟢ ⟣ ⟤ ⟥
-\end_layout
-
-\end_inset
-
- ⟦ ⟧ ⟨ ⟩ 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⟪ ⟫ ⟬ ⟭ ⟮ ⟯
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection*
-88 Supplemental Arrows-A
+2220 ∠ ∡ ∢ ∣ ∤ ∥ ∦ ∧ ∨ ∩ ∪ ∫ ∬ ∭ ∮ ∯
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-27F0 
+2230 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⟰ ⟱ ⟲ ⟳ ⟴
+∰ ∱
 \end_layout
 
 \end_inset
 
- ⟵ ⟶ ⟷ ⟸ ⟹ ⟺ ⟻ ⟼ ⟽ ⟾ 
+ ∲ ∳ ∴ ∵ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⟿
+∶
 \end_layout
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Subsection*
-89 Braille Patterns
-\end_layout
+ ∷ 
+\begin_inset Branch na
+inverted 0
+status open
 
 \begin_layout Standard
-not supported
+∸
 \end_layout
 
-\begin_layout Subsection*
-90 Supplemental Arrows-B
+\end_inset
+
+ ∹ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+∺ ∻
+\end_layout
+
+\end_inset
+
+ ∼ ∽ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+∾
+\end_layout
+
+\end_inset
+
+ ∿
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2900 
+2240 ≀ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⤀ ⤁ ⤂ ⤃ ⤄ ⤅
+≁
 \end_layout
 
 \end_inset
 
- ⤆ ⤇ 
+ ≂ ≃ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⤈ ⤉ ⤊ ⤋ ⤌ ⤍ ⤎ ⤏
+≄ ≅ ≆ ≇
+\end_layout
+
+\end_inset
+
+ ≈ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+≉ ≊ ≋ ≌
+\end_layout
+
+\end_inset
+
+ ≍ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+≎ ≏
 \end_layout
 
 \end_inset
@@ -234,13 +232,35 @@ status open
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2910 
+2250 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⤐ ⤑ ⤒ ⤓ ⤔ ⤕ ⤖ ⤗ ⤘ ⤙ ⤚ ⤛ ⤜ ⤝ ⤞ ⤟
+≐
+\end_layout
+
+\end_inset
+
+ ≑ ≒ ≓ ≔ ≕ ≖ ≗ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+≘ ≙ ≚ ≛
+\end_layout
+
+\end_inset
+
+ ≜ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+≝ ≞ ≟
 \end_layout
 
 \end_inset
@@ -250,13 +270,132 @@ status open
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2920 
+2260 ≠ ≡ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⤠ ⤡ ⤢ ⤣ ⤤ ⤥ ⤦ ⤧ ⤨ ⤩ ⤪ ⤫ ⤬ ⤭ ⤮ ⤯
+≢ ≣
+\end_layout
+
+\end_inset
+
+ ≤ ≥ ≦ ≧ ≨ ≩ ≪ ≫ ≬ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+≭
+\end_layout
+
+\end_inset
+
+ ≮ ≯
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+2270 ≰ ≱ ≲ ≳ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+≴ ≵
+\end_layout
+
+\end_inset
+
+ ≶ ≷ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+≸ ≹
+\end_layout
+
+\end_inset
+
+ ≺ ≻ ≼ ≽ ≾ ≿
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+2280 ⊀ ⊁ ⊂ ⊃ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⊄ ⊅
+\end_layout
+
+\end_inset
+
+ ⊆ ⊇ ⊈ ⊉ ⊊ ⊋ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⊌ ⊍
+\end_layout
+
+\end_inset
+
+ ⊎ ⊏
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+2290 ⊐ ⊑ ⊒ ⊓ ⊔ ⊕ ⊖ ⊗ ⊘ ⊙ ⊚ ⊛ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⊜
+\end_layout
+
+\end_inset
+
+ ⊝ ⊞ ⊟
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+22A0 ⊠ ⊡ ⊢ ⊣ ⊤ ⊥ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⊦ ⊧
+\end_layout
+
+\end_inset
+
+ ⊨ ⊩ ⊪ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⊫
+\end_layout
+
+\end_inset
+
+ ⊬ ⊭ ⊮ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⊯
 \end_layout
 
 \end_inset
@@ -266,13 +405,46 @@ status open
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2930 
+22B0 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⤰ ⤱ ⤲ ⤳ ⤴ ⤵ ⤶ ⤷ ⤸ ⤹ ⤺ ⤻ ⤼ ⤽ ⤾ ⤿
+⊰ ⊱
+\end_layout
+
+\end_inset
+
+ ⊲ ⊳ ⊴ ⊵ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⊶ ⊷
+\end_layout
+
+\end_inset
+
+ ⊸ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⊹
+\end_layout
+
+\end_inset
+
+ ⊺ ⊻ ⊼ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⊽ ⊾ ⊿
 \end_layout
 
 \end_inset
@@ -282,66 +454,88 @@ status open
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2940 
+22C0 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⥀ ⥁ ⥂ ⥃ ⥄ ⥅ ⥆ ⥇ ⥈ ⥉ ⥊ ⥋ ⥌ ⥍ ⥎ ⥏
+⋀ ⋁ ⋂ ⋃ ⋄ ⋅
 \end_layout
 
 \end_inset
 
+ ⋆ ⋇ ⋈ ⋉ ⋊ ⋋ ⋌ 
+\begin_inset Branch na
+inverted 0
+status open
 
+\begin_layout Standard
+⋍
+\end_layout
+
+\end_inset
+
+ ⋎ ⋏
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2950 
+22D0 ⋐ ⋑ ⋒ ⋓ ⋔ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⥐ ⥑ ⥒ ⥓ ⥔ ⥕ ⥖ ⥗ ⥘ ⥙ ⥚ ⥛ ⥜ ⥝ ⥞ ⥟
+⋕
 \end_layout
 
 \end_inset
 
+ ⋖ ⋗ ⋘ ⋙ ⋚ ⋛ 
+\begin_inset Branch na
+inverted 0
+status open
 
+\begin_layout Standard
+⋜ ⋝
+\end_layout
+
+\end_inset
+
+ ⋞ ⋟
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2960 
+22E0 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⥠ ⥡ ⥢ ⥣ ⥤ ⥥ ⥦ ⥧ ⥨ ⥩ ⥪ ⥫ ⥬ ⥭ ⥮ ⥯
+⋠ ⋡ ⋢ ⋣ ⋤ ⋥ ⋦ ⋧ ⋨ ⋩ ⋪ ⋫
 \end_layout
 
 \end_inset
 
-
+ ⋬ ⋭ ⋮ ⋯
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2970 
+22F0 ⋰ ⋱ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⥰ ⥱ ⥲ ⥳ ⥴ ⥵ ⥶ ⥷ ⥸ ⥹ ⥺ ⥻ ⥼ ⥽ ⥾ ⥿
+⋲ ⋳ ⋴ ⋵ ⋶ ⋷ ⋸ ⋹ ⋺ ⋻ ⋼ ⋽ ⋾ ⋿
 \end_layout
 
 \end_inset
 
- 
+
 \end_layout
 
 \end_body

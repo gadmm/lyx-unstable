@@ -15,6 +15,7 @@
 
 #include "InsetMathFont.h"
 #include "InsetMathSymbol.h"
+#include "Length.h"
 #include "MathData.h"
 #include "MathParser.h"
 #include "MathStream.h"
@@ -27,6 +28,7 @@
 
 #include "support/debug.h"
 #include "support/docstream.h"
+#include "support/lassert.h"
 #include "support/lyxlib.h"
 
 #include <map>
@@ -527,27 +529,20 @@ int mathed_font_em(FontInfo const & font)
  * punctuation, and is put around inner objects, except where these
  * are followed by a close or preceded by an open symbol, and except
  * if the other object is a large operator or a binary relation.
+ *
+ * See the file MathClass.cpp for a formal implementation of the rules
+ * above.
  */
 
-int mathed_thinmuskip(FontInfo font)
+int mathed_mu(FontInfo const & font, double mu)
 {
-	font.setFamily(SYMBOL_FAMILY);
-	return support::iround(3.0 / 18 * theFontMetrics(font).em());
+	MetricsBase mb(nullptr, font);
+	return Length(mu, Length::MU).inPixels(mb);
 }
 
-
-int mathed_medmuskip(FontInfo font)
-{
-	font.setFamily(SYMBOL_FAMILY);
-	return support::iround(4.0 / 18 * theFontMetrics(font).em());
-}
-
-
-int mathed_thickmuskip(FontInfo font)
-{
-	font.setFamily(SYMBOL_FAMILY);
-	return support::iround(5.0 / 18 * theFontMetrics(font).em());
-}
+int mathed_thinmuskip(FontInfo const & font) { return mathed_mu(font, 3.0); }
+int mathed_medmuskip(FontInfo const & font) { return mathed_mu(font, 4.0); }
+int mathed_thickmuskip(FontInfo const & font) { return mathed_mu(font, 5.0); }
 
 
 int mathed_char_width(FontInfo const & font, char_type c)
@@ -656,6 +651,41 @@ void mathed_draw_deco(PainterInfo & pi, int x, int y, int w, int h,
 }
 
 
+void mathedSymbolDim(MetricsBase & mb, Dimension & dim, latexkeys const * sym)
+{
+	LASSERT((bool)sym, return);
+	//lyxerr << "metrics: symbol: '" << sym->name
+	//	<< "' in font: '" << sym->inset
+	//	<< "' drawn as: '" << sym->draw
+	//	<< "'" << endl;
+
+	bool const italic_upcase_greek = sym->inset == "cmr" &&
+		sym->extra == "mathalpha" &&
+		mb.fontname == "mathit";
+	std::string const font = italic_upcase_greek ? "cmm" : sym->inset;
+	Changer dummy = mb.changeFontSet(font);
+	mathed_string_dim(mb.font, sym->draw, dim);
+}
+
+
+void mathedSymbolDraw(PainterInfo & pi, int x, int y, latexkeys const * sym)
+{
+	LASSERT((bool)sym, return);
+	//lyxerr << "drawing: symbol: '" << sym->name
+	//	<< "' in font: '" << sym->inset
+	//	<< "' drawn as: '" << sym->draw
+	//	<< "'" << endl;
+
+	bool const italic_upcase_greek = sym->inset == "cmr" &&
+		sym->extra == "mathalpha" &&
+		pi.base.fontname == "mathit";
+	std::string const font = italic_upcase_greek ? "cmm" : sym->inset;
+
+	Changer dummy = pi.base.changeFontSet(font);
+	pi.draw(x, y, sym->draw);
+}
+
+
 void metricsStrRedBlack(MetricsInfo & mi, Dimension & dim, docstring const & str)
 {
 	FontInfo font = mi.base.font;
@@ -708,6 +738,7 @@ FontShape  const inh_shape  = INHERIT_SHAPE;
 // does not work
 fontinfo fontinfos[] = {
 	// math fonts
+	// Color_math determines which fonts are math (see isMathFont)
 	{"mathnormal",    ROMAN_FAMILY, MEDIUM_SERIES,
 			  ITALIC_SHAPE, Color_math},
 	{"mathbf",        inh_family, BOLD_SERIES,

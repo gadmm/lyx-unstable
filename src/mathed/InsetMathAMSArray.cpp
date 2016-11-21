@@ -85,8 +85,7 @@ char const * InsetMathAMSArray::name_right() const
 
 void InsetMathAMSArray::metrics(MetricsInfo & mi, Dimension & dim) const
 {
-	Changer dummy =
-		mi.base.changeStyle(LM_ST_TEXT, mi.base.style == LM_ST_DISPLAY);
+	Changer dummy = mi.base.changeArray();
 	InsetMathGrid::metrics(mi, dim);
 }
 
@@ -98,8 +97,7 @@ void InsetMathAMSArray::draw(PainterInfo & pi, int x, int y) const
 	// Drawing the deco after changeStyle does not work
 	mathed_draw_deco(pi, x + 1, yy, 5, dim.height(), from_ascii(name_left()));
 	mathed_draw_deco(pi, x + dim.width() - 8, yy, 5, dim.height(), from_ascii(name_right()));
-	Changer dummy =
-		pi.base.changeStyle(LM_ST_TEXT, pi.base.style == LM_ST_DISPLAY);
+	Changer dummy = pi.base.changeArray();
 	InsetMathGrid::draw(pi, x, y);
 }
 

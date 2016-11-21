@@ -625,18 +625,14 @@ void TextMetrics::computeRowMetrics(Row & row, int width) const
 		// Common case : there is no hfill, and the alignment will be
 		// meaningful
 		switch (getAlign(par, row)) {
-		case LYX_ALIGN_BLOCK: {
-			int const ns = row.countSeparators();
-			// If we have separators, then stretch the row
-			if (ns) {
-				row.setSeparatorExtraWidth(double(w) / ns);
-				row.dimension().wid += w;
-			} else if (text_->isRTL(par)) {
+		case LYX_ALIGN_BLOCK:
+			// Expand expanding characters by a total of w
+			if (!row.setExtraWidth(w) && text_->isRTL(par)) {
+				// Justification failed and the text is RTL: align to the right
 				row.left_margin += w;
 				row.dimension().wid += w;
 			}
 			break;
-		}
 		case LYX_ALIGN_RIGHT:
 			row.left_margin += w;
 			row.dimension().wid += w;
@@ -655,6 +651,7 @@ void TextMetrics::computeRowMetrics(Row & row, int width) const
 		return;
 	}
 
+	// Case nh > 0. There are hfill separators.
 	hfill = w / nh;
 	hfill_rem = w % nh;
 	row.dimension().wid += w;
@@ -867,7 +864,23 @@ bool TextMetrics::breakRow(Row & row, int const right_margin) const
 		} else if (c == '\t')
 			row.addSpace(i, theFontMetrics(*fi).width(from_ascii("    ")),
 				     *fi, par.lookupChange(i));
-		else {
+		else if (c == 0x2028 || c == 0x2029) {
+			/**
+			 * U+2028 LINE SEPARATOR
+			 * U+2029 PARAGRAPH SEPARATOR
+
+			 * These are special unicode characters that break
+			 * lines/pragraphs. Not handling them lead to trouble wrt
+			 * Qt QTextLayout formatting. We add a visible character
+			 * on screen so that the user can see that something is
+			 * happening.
+			*/
+			row.finalizeLast();
+			// ⤶ U+2936 ARROW POINTING DOWNWARDS THEN CURVING LEFTWARDS
+			// ¶ U+00B6 PILCROW SIGN
+			char_type const screen_char = (c == 0x2028) ? 0x2936 : 0x00B6;
+			row.add(i, screen_char, *fi, par.lookupChange(i));
+		} else {
 			// FIXME: please someone fix the Hebrew/Arabic parenthesis mess!
 			// see also Paragraph::getUChar.
 			if (fi->language()->lang() == "hebrew") {
@@ -928,6 +941,7 @@ bool TextMetrics::breakRow(Row & row, int const right_margin) const
 		BufferParams const & bparams
 			= text_->inset().buffer().params();
 		f.setLanguage(par.getParLanguage(bparams));
+		// ¶ U+00B6 PILCROW SIGN
 		row.addVirtual(end, docstring(1, char_type(0x00B6)), f, Change());
 	}
 

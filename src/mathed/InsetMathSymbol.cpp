@@ -60,38 +60,19 @@ docstring InsetMathSymbol::name() const
 
 void InsetMathSymbol::metrics(MetricsInfo & mi, Dimension & dim) const
 {
-	//lyxerr << "metrics: symbol: '" << sym_->name
-	//	<< "' in font: '" << sym_->inset
-	//	<< "' drawn as: '" << sym_->draw
-	//	<< "'" << endl;
-
-	bool const italic_upcase_greek = sym_->inset == "cmr" &&
-					 sym_->extra == "mathalpha" &&
-					 mi.base.fontname == "mathit";
-	std::string const font = italic_upcase_greek ? "cmm" : sym_->inset;
-	Changer dummy = mi.base.changeFontSet(font);
-	mathed_string_dim(mi.base.font, sym_->draw, dim);
-	docstring::const_reverse_iterator rit = sym_->draw.rbegin();
-	kerning_ = mathed_char_kerning(mi.base.font, *rit);
+	// set dim
+	mathedSymbolDim(mi.base, dim, sym_);
+	// set kerning_
+	kerning_ = mathed_char_kerning(mi.base.font, *sym_->draw.rbegin());
 	// correct height for broken cmex and wasy font
 	if (sym_->inset == "cmex" || sym_->inset == "wasy") {
 		h_ = 4 * dim.des / 5;
 		dim.asc += h_;
 		dim.des -= h_;
 	}
-	// seperate things a bit
-	if (isMathBin())
-		dim.wid += 2 * mathed_medmuskip(mi.base.font);
-	else if (isMathRel())
-		dim.wid += 2 * mathed_thickmuskip(mi.base.font);
-	else if (isMathPunct())
-		dim.wid += mathed_thinmuskip(mi.base.font);
-	// FIXME: I see no reason for this
-	//else
-	//	dim.wid += support::iround(0.1667 * em);
-
+	// set scriptable_
 	scriptable_ = false;
-	if (mi.base.style == LM_ST_DISPLAY)
+	if (mi.base.font.style() == LM_ST_DISPLAY)
 		if (sym_->inset == "cmex" || sym_->inset == "esint" ||
 		    sym_->extra == "funclim" ||
 		    (sym_->inset == "stmry" && sym_->extra == "mathop"))
@@ -101,25 +82,7 @@ void InsetMathSymbol::metrics(MetricsInfo & mi, Dimension & dim) const
 
 void InsetMathSymbol::draw(PainterInfo & pi, int x, int y) const
 {
-	//lyxerr << "metrics: symbol: '" << sym_->name
-	//	<< "' in font: '" << sym_->inset
-	//	<< "' drawn as: '" << sym_->draw
-	//	<< "'" << endl;
-
-	bool const italic_upcase_greek = sym_->inset == "cmr" &&
-					 sym_->extra == "mathalpha" &&
-					 pi.base.fontname == "mathit";
-	std::string const font = italic_upcase_greek ? "cmm" : sym_->inset;
-	if (isMathBin())
-		x += mathed_medmuskip(pi.base.font);
-	else if (isMathRel())
-		x += mathed_thickmuskip(pi.base.font);
-	// FIXME: I see no reason for this
-	//else
-	//	x += support::iround(0.0833 * em);
-
-	Changer dummy = pi.base.changeFontSet(font);
-	pi.draw(x, y - h_, sym_->draw);
+	mathedSymbolDraw(pi, x, y - h_, sym_);
 }
 
 
@@ -129,27 +92,18 @@ InsetMath::mode_type InsetMathSymbol::currentMode() const
 }
 
 
-bool InsetMathSymbol::isMathBin() const
-{
-	return sym_->extra == "mathbin";
-}
-
-
-bool InsetMathSymbol::isMathRel() const
-{
-	return sym_->extra == "mathrel";
-}
-
-
-bool InsetMathSymbol::isMathPunct() const
-{
-	return sym_->extra == "mathpunct";
-}
-
-
 bool InsetMathSymbol::isOrdAlpha() const
 {
 	return sym_->extra == "mathord" || sym_->extra == "mathalpha";
+}
+
+
+MathClass InsetMathSymbol::mathClass() const
+{
+	if (sym_->extra == "func" || sym_->extra == "funclim")
+		return MC_OP;
+	MathClass const mc = string_to_class(sym_->extra);
+	return (mc == MC_UNKNOWN) ? MC_ORD : mc;
 }
 
 

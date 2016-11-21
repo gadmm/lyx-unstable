@@ -1,15 +1,37 @@
 #LyX 2.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 512
+\lyxformat 515
 \begin_document
 \begin_header
 \save_transient_properties true
 \origin unavailable
 \textclass article
+\begin_preamble
+\usepackage{textalpha}
+
+% definitions for utf8x:
+\DeclareTextAccentDefault{\textdasia}{LGR}
+\DeclareTextAccentDefault{\textpsili}{LGR} 
+\DeclareTextAccentDefault{\texttonos}{LGR} 
+\DeclareTextAccentDefault{\textvaria}{LGR} 
+\DeclareTextAccentDefault{\textperispomeni}{LGR} 
+\DeclareTextAccentDefault{\textdialytika}{LGR}
+\DeclareTextAccentDefault{\textdasiaoxia}{LGR} 
+\DeclareTextAccentDefault{\textdasiavaria}{LGR} 
+\DeclareTextAccentDefault{\textdasiaperispomeni}{LGR} 
+\DeclareTextAccentDefault{\textpsilioxia}{LGR} 
+\DeclareTextAccentDefault{\textpsilivaria}{LGR} 
+\DeclareTextAccentDefault{\textpsiliperispomeni}{LGR} 
+\DeclareTextAccentDefault{\textdialytikatonos}{LGR} 
+\DeclareTextAccentDefault{\textdialytikavaria}{LGR} 
+\DeclareTextAccentDefault{\textdialytikaperispomeni}{LGR}
+% ... does not suffice ...
+% also for subiote required...
+\end_preamble
 \use_default_options true
 \maintain_unincluded_children false
 \language english
 \language_package default
-\inputencoding ascii
+\inputencoding utf8
 \fontencoding global
 \font_roman "lmodern" "default"
 \font_sans "lmss" "default"

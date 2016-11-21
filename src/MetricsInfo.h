@@ -32,20 +32,6 @@ class Inset;
 class MacroContext;
 
 
-/// Standard Sizes (mode styles)
-/// note: These values are hard-coded in changeStyle
-enum Styles {
-	///
-	LM_ST_DISPLAY = 0,
-	///
-	LM_ST_TEXT,
-	///
-	LM_ST_SCRIPT,
-	///
-	LM_ST_SCRIPTSCRIPT
-};
-
-
 //
 // This is the part common to MetricsInfo and PainterInfo
 //
@@ -59,21 +45,21 @@ public:
 	BufferView * bv;
 	/// current font
 	FontInfo font;
-	/// current math style (display/text/script/..)
-	Styles style;
 	/// name of current font - mathed specific
 	std::string fontname;
 	/// This is the width available in pixels
 	int textwidth;
+	/// count wether the current mathdata is nested in macro(s)
+	int macro_nesting;
 
 	/// Temporarily change a full font.
-	Changer changeFontSet(std::string const & font, bool cond = true);
-	/// Temporarily change the font size and the math style.
-	Changer changeStyle(Styles style, bool cond = true);
+	Changer changeFontSet(std::string const & font);
 	// Temporarily change to the style suitable for use in fractions
-	Changer changeFrac(bool cond = true);
+	Changer changeFrac();
+	// Temporarily change to the style suitable for use in arrays
+	Changer changeArray();
 	// Temporarily change the style to (script)script style
-	Changer changeScript(bool cond = true);
+	Changer changeScript();
 	///
 	int solidLineThickness() const { return solid_line_thickness_; }
 	///

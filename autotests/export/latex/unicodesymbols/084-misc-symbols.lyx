@@ -1,15 +1,15 @@
 #LyX 2.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 512
+\lyxformat 515
 \begin_document
 \begin_header
 \save_transient_properties true
 \origin unavailable
 \textclass article
-\use_default_options true
+\use_default_options false
 \maintain_unincluded_children false
 \language english
 \language_package default
-\inputencoding ascii
+\inputencoding utf8
 \fontencoding global
 \font_roman "lmodern" "default"
 \font_sans "lmss" "default"
@@ -30,7 +30,16 @@
 \paperfontsize default
 \spacing single
 \use_hyperref false
-\papersize default
+\pdf_bookmarks false
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder true
+\pdf_colorlinks true
+\pdf_backref section
+\pdf_pdfusetitle true
+\papersize a4paper
 \use_geometry false
 \use_package amsmath 1
 \use_package amssymb 1
@@ -50,13 +59,13 @@
 \paperorientation portrait
 \suppress_date false
 \justification false
-\use_refstyle 1
+\use_refstyle 0
 \branch na
 \selected 0
 \filename_suffix 0
 \color #faf0e6
 \end_branch
-\index Index
+\index Stichwortverzeichnis
 \shortcut idx
 \color #008000
 \end_index
@@ -78,138 +87,40 @@
 \begin_body
 
 \begin_layout Subsection*
-78 Miscellaneous Technical 
+84 Miscellaneous Symbols
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2300 ⌀ 
+2600 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⌁
+☀ ☁ ☂ ☃ ☄
 \end_layout
 
 \end_inset
 
- ⌂ 
+ ★ ☆ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⌃ ⌄ ⌅ ⌆ ⌇
+☇ ☈
 \end_layout
 
 \end_inset
 
- ⌈ ⌉ ⌊ ⌋ 
+ ☉ ☊ ☋ ☌ ☍ ☎ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⌌ ⌍ ⌎ ⌏
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-2310 ⌐ ⌑ 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⌒ ⌓ ⌔
-\end_layout
-
-\end_inset
-
- ⌕ 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⌖ ⌗ ⌘ ⌙
-\end_layout
-
-\end_inset
-
- ⌚ 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⌛
-\end_layout
-
-\end_inset
-
- ⌜ ⌝ ⌞ ⌟
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-2320 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⌠ ⌡
-\end_layout
-
-\end_inset
-
- ⌢ ⌣ 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⌤ ⌥
-\end_layout
-
-\end_inset
-
- ⌦ 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⌧
-\end_layout
-
-\end_inset
-
- ⌨ 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-〈 〉
-\end_layout
-
-\end_inset
-
- ⌫ 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⌬ ⌭ ⌮ ⌯
+☏
 \end_layout
 
 \end_inset
@@ -219,56 +130,46 @@ status open
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2330 
+2610 ☐ ☑ ☒ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⌰ ⌱ ⌲ ⌳ ⌴ ⌵ ⌶ ⌷ ⌸
+☓ ☔ 
 \end_layout
 
 \end_inset
 
- ⌹ 
+ ☕ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⌺ ⌻ ⌼ ⌽ ⌾
+☖ ☗ ☘ ☙
 \end_layout
 
 \end_inset
 
- ⌿
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-2340 ⍀ 
+ ☚ ☛ ☜ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⍁ ⍂ ⍃ ⍄ ⍅ ⍆ ⍇ ⍈ ⍉ ⍊ ⍋ ⍌ ⍍ ⍎ ⍏
+☝
 \end_layout
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-2350 
+ ☞ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⍐ ⍑ ⍒ ⍓ ⍔ ⍕ ⍖ ⍗ ⍘ ⍙ ⍚ ⍛ ⍜ ⍝ ⍞ ⍟
+☟
 \end_layout
 
 \end_inset
@@ -278,13 +179,72 @@ status open
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2360 
+2620 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⍠ ⍡ ⍢ ⍣ ⍤ ⍥ ⍦ ⍧ ⍨ ⍩ ⍪ ⍫ ⍬ ⍭ ⍮ ⍯
+☠ ☡
+\end_layout
+
+\end_inset
+
+ ☢ ☣ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+☤
+\end_layout
+
+\end_inset
+
+ ☥ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+☦ ☧ ☨ ☩ ☪ ☫ ☬ ☭ ☮
+\end_layout
+
+\end_inset
+
+ ☯
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+2630 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+☰ ☱ ☲ ☳ ☴ ☵ ☶ ☷ ☸
+\end_layout
+
+\end_inset
+
+ ☹ ☺ ☻ ☼ ☽ ☾ ☿
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+2640 ♀ ♁ ♂ ♃ ♄ ♅ ♆ ♇ ♈ ♉ ♊ ♋ ♌ ♍ ♎ ♏
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+2650 ♐ ♑ ♒ ♓ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+♔ ♕ ♖ ♗ ♘ ♙ ♚ ♛ ♜ ♝ ♞ ♟
 \end_layout
 
 \end_inset
@@ -294,161 +254,89 @@ status open
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2370 
+2660 ♠ ♡ ♢ ♣ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⍰ ⍱ ⍲ ⍳ ⍴ ⍵ ⍶ ⍷ ⍸ ⍹ ⍺ ⍻ ⍼ ⍽ ⍾ ⍿
+♤
 \end_layout
 
 \end_inset
 
+ ♥ ♦ 
+\begin_inset Branch na
+inverted 0
+status open
 
+\begin_layout Standard
+♧ ♨
+\end_layout
+
+\end_inset
+
+ ♩ ♪ ♫ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+♬
+\end_layout
+
+\end_inset
+
+ ♭ ♮ ♯
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2380 
+2670 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⎀ ⎁ ⎂ ⎃ ⎄ ⎅ ⎆ ⎇ ⎈ ⎉ ⎊
+♰ ♱
 \end_layout
 
 \end_inset
 
- ⎋ 
+ ♲ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⎌ ⎍ ⎎ ⎏
+♳ ♴ ♵ ♶ ♷ ♸ ♹ ♺ ♻ ♼ ♽ ♾
 \end_layout
 
 \end_inset
 
-
+ ♿
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2390 
+2680 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-⎐ ⎑ ⎒ ⎓ ⎔ ⎕ ⎖ ⎗ ⎘ ⎙ ⎚ ⎛ ⎜ ⎝ ⎞ ⎟
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-23A0 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⎠ ⎡ ⎢ ⎣ ⎤ ⎥ ⎦ ⎧ ⎨ ⎩ ⎪ ⎫ ⎬ ⎭ ⎮ ⎯
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-23B0 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⎰ ⎱ ⎲ ⎳ ⎴ ⎵ ⎶ ⎷ ⎸ ⎹ ⎺ ⎻ ⎼ ⎽ ⎾ ⎿
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-23C0 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⏀ ⏁ ⏂ ⏃ ⏄ ⏅ ⏆ ⏇ ⏈ ⏉ ⏊ ⏋ ⏌ ⏍ ⏎ ⏏
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-23D0 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⏐ ⏑ ⏒ ⏓ ⏔ ⏕ ⏖ ⏗ ⏘ ⏙ ⏚ ⏛ ⏜ ⏝ ⏞ ⏟
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-23E0 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-⏠ ⏡ ⏢ ⏣ ⏤ ⏥ ⏦ ⏧
+⚀ ⚁ ⚂ ⚃ ⚄ ⚅
 \end_layout
 
 \end_inset
 
  
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-23F0 
-\end_layout
-
-\begin_layout Subsection*
-79 Control Pictures 
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-2400 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-␀ ␁ ␂ ␃ ␄ ␅ ␆ ␇ ␈ ␉ ␊ ␋ ␌ ␍ ␎ ␏
+⚆ ⚇ ⚈ ⚉ ⚊ ⚋ ⚌ ⚍ ⚎ ⚏
 \end_layout
 
 \end_inset
@@ -458,50 +346,169 @@ status open
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2410 
+2690 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-␐ ␑ ␒ ␓ ␔ ␕ ␖ ␗ ␘ ␙ ␚ ␛ ␜ ␝ ␞ ␟
+⚐ ⚑
 \end_layout
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-2420 
+ ⚒ 
 \begin_inset Branch na
 inverted 0
 status open
 
 \begin_layout Standard
-␠ ␡
-\end_layout
-
-\end_inset
-
- ␢ ␣ 
-\begin_inset Branch na
-inverted 0
-status open
-
-\begin_layout Standard
-␤ ␥ ␦
+⚓ ⚔ ⚕ ⚖ ⚗ ⚘ ⚙ ⚚ ⚛
 \end_layout
 
 \end_inset
 
  
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⚜ ⚝ ⚞ ⚟
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-2430 
+26A0 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⚠ ⚡
+\end_layout
+
+\end_inset
+
+ ⚢ ⚣ ⚤ ⚥ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⚦ ⚧ ⚨ ⚩ 
+\end_layout
+
+\end_inset
+
+⚪ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⚫ ⚬
+\end_layout
+
+\end_inset
+
+ ⚭ ⚮ 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⚯
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+26B0 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⚰ ⚱ ⚲ ⚳ ⚴ ⚵ ⚶ ⚷ ⚸ ⚹ ⚺ ⚻ ⚼ ⚽ ⚾ ⚿
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+26C0 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⛀ ⛁ ⛂ ⛃ ⛄ ⛅ ⛆ ⛇ ⛈ ⛉ ⛊ ⛋ ⛌ ⛍ ⛎ ⛏
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+26D0 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⛐ ⛑ ⛒ ⛓ ⛔ ⛕ ⛖ ⛗ ⛘ ⛙ ⛚ ⛛ ⛜ ⛝ ⛞ ⛟
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+26E0 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⛠ ⛡ ⛢ ⛣ ⛤ ⛥ ⛦ ⛧ ⛨ ⛩ ⛪ ⛫ ⛬ ⛭ ⛮ ⛯
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+26F0 
+\begin_inset Branch na
+inverted 0
+status open
+
+\begin_layout Standard
+⛰ ⛱ ⛲ ⛳ ⛴ ⛵ ⛶ ⛷ ⛸ ⛹ ⛺ ⛻ ⛼ ⛽ ⛾ ⛿
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body

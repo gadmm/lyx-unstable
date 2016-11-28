@@ -657,6 +657,7 @@ void InsetMathBinom::metrics(MetricsInfo & mi, Dimension & dim) const
 	dim.asc = dim0.height() + 1 + dy/2 + dy;
 	dim.des = max(0, dim1.height() + 1 + dy/2 - dy);
 	dim.wid = max(dim0.wid, dim1.wid) + 2 * dw(dim.height()) + 4;
+	mathed_deco_metrics(mi.base, dim, 2, 1);
 }
 
 
@@ -673,6 +674,8 @@ void InsetMathBinom::draw(PainterInfo & pi, int x, int y) const
 	docstring const ket = kind_ == BRACE ? from_ascii("}") :
 		kind_ == BRACK ? from_ascii("]") : from_ascii(")");
 
+	int const t = mathed_deco_thickness(pi.base);
+
 	int m = x + dim.width() / 2;
 	{
 		Changer dummy =
@@ -685,10 +688,10 @@ void InsetMathBinom::draw(PainterInfo & pi, int x, int y) const
 		cell(1).draw(pi, m - dim1.wid / 2, y + dim1.asc + dy/2 - dy);
 	}
 	// draw the brackets and the marker
-	mathed_draw_deco(pi, x, y - dim.ascent(), dw(dim.height()),
-		dim.height(), bra);
-	mathed_draw_deco(pi, x + dim.width() - dw(dim.height()),
-		y - dim.ascent(), dw(dim.height()), dim.height(), ket);
+	mathed_draw_deco(pi, x + t/2, y - dim.ascent(),
+	                 dw(dim.height()) - t/2, dim.height() - t, bra);
+	mathed_draw_deco(pi, x + dim.width() - dw(dim.height()) - t, y - dim.ascent(),
+	                 dw(dim.height()) - t/2, dim.height() - t, ket);
 }
 
 

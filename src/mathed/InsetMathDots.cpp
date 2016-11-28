@@ -51,24 +51,29 @@ void InsetMathDots::metrics(MetricsInfo & mi, Dimension & dim) const
 	}
 	else if (key_->name == "ddots" || key_->name == "adots" || key_->name == "iddots")
 		dh_ = dim.asc;
+
+	mathed_deco_metrics(mi.base, dim);
 }
 
 
 void InsetMathDots::draw(PainterInfo & pi, int x, int y) const
 {
 	Dimension const dim = dimension(*pi.base.bv);
+	int const t = mathed_deco_thickness(pi.base);
 	if (key_->name == "adots" || key_->name == "iddots")
 		--y;
-	mathed_draw_deco(pi, x + 2, y - dh_, dim.width() - 2, dim.ascent(),
-			key_->name);
+	mathed_draw_deco(pi, x + 2, y - dh_,
+	                 dim.width() - t - 2, dim.ascent() - t/2,
+	                 key_->name);
 	if (key_->name == "vdots" || key_->name == "ddots" || key_->name == "adots" || key_->name == "iddots")
 		++x;
 	if (key_->name == "adots" || key_->name == "iddots")
 		++y;
 	else if (key_->name != "vdots")
 		--y;
-	mathed_draw_deco(pi, x + 2, y - dh_, dim.width() - 2, dim.ascent(),
-		key_->name);
+	mathed_draw_deco(pi, x + 2, y - dh_,
+	                 dim.width() - t - 2, dim.ascent() - t/2,
+	                 key_->name);
 }
 
 

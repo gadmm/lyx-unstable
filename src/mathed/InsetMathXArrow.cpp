@@ -44,28 +44,35 @@ Inset * InsetMathXArrow::clone() const
 void InsetMathXArrow::metrics(MetricsInfo & mi, Dimension & dim) const
 {
 	Changer dummy2 = mi.base.changeEnsureMath();
+	int const dy = axis_height(mi.base);
 	Changer dummy = mi.base.changeScript();
 	Dimension dim0;
 	cell(0).metrics(mi, dim0);
 	Dimension dim1;
 	cell(1).metrics(mi, dim1);
-	dim.wid = max(dim0.width(), dim1.width()) + 10;
-	dim.asc = dim0.height() + 10;
-	dim.des = dim1.height();
+	dim.wid = max(dim0.width(), dim1.width()) + mathed_mu(mi.base.font, 7.0);
+	dim.asc = dim0.height() + (3 * dy) / 2 + 1;
+	dim.des = dim1.height() - dy / 2 + 1;
+	// take into account the double spacing around the arrow
+	mathed_deco_metrics(mi.base, dim, 1, 2);
 }
 
 
 void InsetMathXArrow::draw(PainterInfo & pi, int x, int y) const
 {
 	Changer dummy2 = pi.base.changeEnsureMath();
+	int const dy = axis_height(pi.base);
 	Changer dummy = pi.base.changeScript();
 	Dimension const dim = dimension(*pi.base.bv);
 	Dimension const & dim0 = cell(0).dimension(*pi.base.bv);
+	int const t = mathed_deco_thickness(pi.base);
 	// center the cells with the decoration
-	cell(0).draw(pi, x + dim.width()/2 - dim0.width()/2, y - 10);
+	cell(0).draw(pi, x + dim.width()/2 - dim0.width()/2,
+	             y - 1 - (3 * dy) / 2 - dim0.des - t);
 	Dimension const & dim1 = cell(1).dimension(*pi.base.bv);
-	cell(1).draw(pi, x + dim.width()/2 - dim1.width()/2, y + dim1.height());
-	mathed_draw_deco(pi, x, y - 7, dim.wid, 5, name_);
+	cell(1).draw(pi, x + dim.width()/2 - dim1.width()/2,
+	             y + 1 + dim1.asc - dy / 2 + t);
+	mathed_draw_deco(pi, x, y - (3 * dy) / 2, dim.wid - 2, dy, name_);
 }
 
 

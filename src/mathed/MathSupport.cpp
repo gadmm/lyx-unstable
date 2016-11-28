@@ -583,12 +583,32 @@ int mathed_string_width(FontInfo const & font, docstring const & s)
 }
 
 
+int mathed_deco_thickness(MetricsBase & mb)
+{
+	return 3 * (mb.solidLineThickness() - 1);
+}
+
+
+void mathed_deco_metrics(MetricsBase & mb, Dimension & dim,
+                         int num_w, int num_h)
+{
+	int const t = mathed_deco_thickness(mb);
+	dim.wid += num_w * t;
+	int const dh = num_h * t;
+	dim.des += dh/2;
+	dim.asc += dh - dh/2;
+}
+
+
 void mathed_draw_deco(PainterInfo & pi, int x, int y, int w, int h,
 	docstring const & name)
 {
+	int const t = pi.base.solidLineThickness();
+	w += mathed_deco_thickness(pi.base);
+	h += mathed_deco_thickness(pi.base);
 	if (name == ".") {
 		pi.pain.line(x + w/2, y, x + w/2, y + h,
-			  Color_cursor, Painter::line_onoffdash);
+		             Color_cursor, Painter::line_onoffdash, t);
 		return;
 	}
 
@@ -630,7 +650,7 @@ void mathed_draw_deco(PainterInfo & pi, int x, int y, int w, int h,
 			pi.pain.line(
 				int(x + xx + 0.5), int(y + yy + 0.5),
 				int(x + x2 + 0.5), int(y + y2 + 0.5),
-				pi.base.font.color());
+				pi.base.font.color(), Painter::line_solid, t);
 		} else {
 			int xp[32];
 			int yp[32];
@@ -647,7 +667,7 @@ void mathed_draw_deco(PainterInfo & pi, int x, int y, int w, int h,
 				yp[j] = int(y + yy + 0.5);
 				//  lyxerr << "P[" << j ' ' << xx << ' ' << yy << ' ' << x << ' ' << y << ']';
 			}
-			pi.pain.lines(xp, yp, n, pi.base.font.color());
+			pi.pain.lines(xp, yp, n, pi.base.font.color(), Painter::fill_none, Painter::line_solid, t);
 		}
 	}
 }

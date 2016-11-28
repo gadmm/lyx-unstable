@@ -24,6 +24,10 @@
 #include "support/docstream.h"
 #include "support/lstrings.h"
 
+#include <algorithm>
+
+using namespace std;
+
 
 namespace lyx {
 
@@ -90,10 +94,12 @@ void InsetMathBig::metrics(MetricsInfo & mi, Dimension & dim) const
 {
 	Changer dummy = mi.base.changeEnsureMath();
 	double const h = theFontMetrics(mi.base.font).ascent('I');
-	double const f = increase();
-	dim.wid = 6;
-	dim.asc = int(h + f * h);
-	dim.des = int(f * h);
+	double const height = h * (1 + 2 * increase());
+	int const axis = axis_height(mi.base);
+	dim.wid = max(6, mathed_mu(mi.base.font, 6.0));
+	dim.asc = int(height/2 + axis);
+	dim.des = int(height/2 - axis);
+	mathed_deco_metrics(mi.base, dim);
 }
 
 
@@ -115,8 +121,9 @@ void InsetMathBig::draw(PainterInfo & pi, int x, int y) const
 {
 	Changer dummy = pi.base.changeEnsureMath();
 	Dimension const dim = dimension(*pi.base.bv);
-	mathed_draw_deco(pi, x + 1, y - dim.ascent(), 4, dim.height(),
-	                 word());
+	int const t = mathed_deco_thickness(pi.base);
+	mathed_draw_deco(pi, x + 1 + t/2, y - dim.ascent(),
+	                 dim.wid - 2*t - 2, dim.height(), word());
 }
 
 

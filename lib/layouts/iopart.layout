@@ -50,7 +50,6 @@ Input stdfloats.inc
 Input stdlists.inc
 Input stdsections.inc
 Input stdstarsections.inc
-Input stdlayouts.inc
 
 NoStyle Chapter
 NoCounter chapter

@@ -683,6 +683,16 @@ QString formatToolTip(QString text, int em)
 }
 
 
+QString qtHtmlToPlainText(QString const & html)
+{
+	if (!Qt::mightBeRichText(html))
+		return html;
+	QTextDocument td;
+	td.setHtml(html);
+	return td.toPlainText();
+}
+
+
 #ifdef FILEFORMAT
 void disable_widget_if_ndef_FILEFORMAT(QWidget *) {}
 #else
@@ -696,5 +706,6 @@ void disable_widget_if_ndef_FILEFORMAT(QWidget * w) {
 		w->setToolTip(QString("<i>(%1)</i> %2").arg(ff_reason).arg(tooltip));
 }
 #endif
+
 
 } // namespace lyx

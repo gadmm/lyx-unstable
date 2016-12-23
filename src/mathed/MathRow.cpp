@@ -36,18 +36,16 @@ using namespace std;
 namespace lyx {
 
 
-MathRow::Element::Element(Type t, MetricsInfo &mi)
-	: type(t), macro_nesting(mi.base.macro_nesting),
-	  inset(0), mclass(MC_ORD), before(0), after(0), compl_unique_to(0),
-	  macro(0), color(Color_red)
+MathRow::Element::Element(Type t, MathClass mc)
+	: type(t), mclass(mc), before(0), after(0), inset(0),
+	  compl_unique_to(0), macro(0), color(Color_red)
 {}
 
 
 MathRow::MathRow(MetricsInfo & mi, MathData const * ar)
 {
 	// First there is a dummy element of type "open"
-	push_back(Element(BEGIN, mi));
-	back().mclass = MC_OPEN;
+	push_back(Element(DUMMY, MC_OPEN));
 
 	// Then insert the MathData argument
 	bool const has_contents = ar->addToMathRow(*this, mi);
@@ -55,14 +53,13 @@ MathRow::MathRow(MetricsInfo & mi, MathData const * ar)
 	// empty arrays are visible when they are editable
 	// we reserve the necessary space anyway (even if nothing gets drawn)
 	if (!has_contents) {
-		Element e(BOX, mi);
-		e.color = Color_mathline;
+		Element e(BOX, MC_ORD);
+		e.color = mi.base.macro_nesting == 0 ? Color_mathline : Color_none;
 		push_back(e);
 	}
 
 	// Finally there is a dummy element of type "close"
-	push_back(Element(END, mi));
-	back().mclass = MC_CLOSE;
+	push_back(Element(DUMMY, MC_CLOSE));
 
 	/* Do spacing only in math mode. This test is a bit clumsy,
 	 * but it is used in other places for guessing the current mode.
@@ -72,7 +69,7 @@ MathRow::MathRow(MetricsInfo & mi, MathData const * ar)
 
 	// update classes
 	for (int i = 1 ; i != static_cast<int>(elements_.size()) - 1 ; ++i) {
-		if (elements_[i].type != INSET)
+		if (elements_[i].mclass == MC_UNKNOWN)
 			continue;
 		update_class(elements_[i].mclass, elements_[before(i)].mclass,
 		             elements_[after(i)].mclass);
@@ -81,7 +78,7 @@ MathRow::MathRow(MetricsInfo & mi, MathData const * ar)
 	// set spacing
 	// We go to the end to handle spacing at the end of equation
 	for (int i = 1 ; i != static_cast<int>(elements_.size()) ; ++i) {
-		if (elements_[i].type != INSET)
+		if (elements_[i].mclass == MC_UNKNOWN)
 			continue;
 		Element & bef = elements_[before(i)];
 		int spc = class_spacing(bef.mclass, elements_[i].mclass, mi.base);
@@ -101,8 +98,7 @@ int MathRow::before(int i) const
 {
 	do
 		--i;
-	while (elements_[i].type != BEGIN
-		   && elements_[i].type != INSET);
+	while (elements_[i].mclass == MC_UNKNOWN);
 
 	return i;
 }
@@ -112,8 +108,7 @@ int MathRow::after(int i) const
 {
 	do
 		++i;
-	while (elements_[i].type != END
-		   && elements_[i].type != INSET);
+	while (elements_[i].mclass == MC_UNKNOWN);
 
 	return i;
 }
@@ -127,13 +122,15 @@ void MathRow::metrics(MetricsInfo & mi, Dimension & dim) const
 	// arguments, it is necessary to keep track of them.
 	map<MathMacro const *, Dimension> dim_macros;
 	map<MathData const *, Dimension> dim_arrays;
+	// this vector remembers the stack of macro nesting values
+	vector<int> macro_nesting;
+	macro_nesting.push_back(mi.base.macro_nesting);
 	CoordCache & coords = mi.base.bv->coordCache();
 	for (Element const & e : elements_) {
+		mi.base.macro_nesting = macro_nesting.back();
 		Dimension d;
-		mi.base.macro_nesting = e.macro_nesting;
 		switch (e.type) {
-		case BEGIN:
-		case END:
+		case DUMMY:
 			break;
 		case INSET:
 			e.inset->metrics(mi, d);
@@ -141,12 +138,14 @@ void MathRow::metrics(MetricsInfo & mi, Dimension & dim) const
 			coords.insets().add(e.inset, d);
 			break;
 		case BEG_MACRO:
+			macro_nesting.push_back(e.macro->nesting());
 			e.macro->macro()->lock();
 			// Add a macro to current list
 			dim_macros[e.macro] = Dimension();
 			break;
 		case END_MACRO:
 			LATTEST(dim_macros.find(e.macro) != dim_macros.end());
+			macro_nesting.pop_back();
 			e.macro->macro()->unlock();
 			// Cache the dimension of the macro and remove it from
 			// tracking map.
@@ -155,14 +154,18 @@ void MathRow::metrics(MetricsInfo & mi, Dimension & dim) const
 			break;
 			// This is basically like macros
 		case BEG_ARG:
-			if (e.macro)
+			if (e.macro) {
+				macro_nesting.push_back(e.macro->nesting());
 				e.macro->macro()->unlock();
+			}
 			dim_arrays[e.ar] = Dimension();
 			break;
 		case END_ARG:
 			LATTEST(dim_arrays.find(e.ar) != dim_arrays.end());
-			if (e.macro)
+			if (e.macro) {
+				macro_nesting.pop_back();
 				e.macro->macro()->lock();
+			}
 			coords.arrays().add(e.ar, dim_arrays[e.ar]);
 			dim_arrays.erase(e.ar);
 			break;
@@ -195,7 +198,6 @@ void MathRow::draw(PainterInfo & pi, int x, int const y) const
 {
 	CoordCache & coords = pi.base.bv->coordCache();
 	for (Element const & e : elements_) {
-		pi.base.macro_nesting = e.macro_nesting;
 		switch (e.type) {
 		case INSET: {
 			// This is hackish: the math inset does not know that space
@@ -229,14 +231,13 @@ void MathRow::draw(PainterInfo & pi, int x, int const y) const
 		case BOX: {
 			Dimension const d = theFontMetrics(pi.base.font).dimension('I');
 			// the box is not visible in non-editable context (except for grey macro boxes).
-			if (e.macro_nesting == 0 || e.color == Color_mathmacroblend)
+			if (e.color != Color_none)
 				pi.pain.rectangle(x + e.before, y - d.ascent(),
-								  d.width(), d.height(), e.color);
-			x += d.wid;
+				                  d.width(), d.height(), e.color);
+			x += d.wid + e.before + e.after;
 			break;
 		}
-		case BEGIN:
-		case END:
+		case DUMMY:
 		case END_MACRO:
 			break;
 		}
@@ -278,11 +279,8 @@ int MathRow::kerning(BufferView const * bv) const
 ostream & operator<<(ostream & os, MathRow::Element const & e)
 {
 	switch (e.type) {
-	case MathRow::BEGIN:
-		os << "{";
-		break;
-	case MathRow::END:
-		os << "}";
+	case MathRow::DUMMY:
+		os << (e.mclass == MC_OPEN ? "{" : "}");
 		break;
 	case MathRow::INSET:
 		os << "<" << e.before << "-"
@@ -290,7 +288,8 @@ ostream & operator<<(ostream & os, MathRow::Element const & e)
 		   << "-" << e.after << ">";
 		break;
 	case MathRow::BEG_MACRO:
-		os << "\\" << to_utf8(e.macro->name()) << "[";
+		os << "\\" << to_utf8(e.macro->name())
+		   << "^" << e.macro->nesting() << "[";
 		break;
 	case MathRow::END_MACRO:
 		os << "]";
@@ -302,7 +301,7 @@ ostream & operator<<(ostream & os, MathRow::Element const & e)
 		os << ")";
 		break;
 	case MathRow::BOX:
-		os << "@";
+		os << "<" << e.before << "-[]-" << e.after << ">";
 		break;
 	}
 	return os;

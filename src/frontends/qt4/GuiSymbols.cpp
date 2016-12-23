@@ -152,16 +152,13 @@ const int no_blocks = sizeof(unicode_blocks) / sizeof(UnicodeBlocks);
 QString getBlock(char_type c)
 {
 	// store an educated guess for the next search
+	// 0 <= lastBlock < no_blocks
 	// FIXME THREAD
 	static int lastBlock = 0;
 
 	// "clever reset"
 	if (c < 0x7f)
 		lastBlock = 0;
-
-	// off the end already
-	if (lastBlock == no_blocks)
-		return QString();
 
 	// c falls into a covered area, and we can guess which
 	if (c >= unicode_blocks[lastBlock].start
@@ -177,10 +174,20 @@ QString getBlock(char_type c)
 	int i = 0;
 	while (i < no_blocks && c > unicode_blocks[i].end)
 		++i;
+
 	if (i == no_blocks)
 		return QString();
+
+	if (c < unicode_blocks[i].start) {
+		// 0 < i < no_blocks
+		// cache the previous block for guessing next time
+		lastBlock = i - 1;
+		return QString();
+	}
+
+	// 0 <= i < no_blocks
+	// cache the last block for guessing next time
 	lastBlock = i;
-	//LYXERR0("fail: " << int(c) << ' ' << lastBlock);
 	return unicode_blocks[lastBlock].qname;
 }
 
@@ -218,8 +225,8 @@ public:
 
 	QVariant data(QModelIndex const & index, int role) const
 	{
-		static QString const strCharacter = qt_("Character: ");
-		static QString const strCodePoint = qt_("Code Point: ");
+		if (!index.isValid())
+			return QVariant();
 
 		char_type c = symbols_.at(index.row());
 
@@ -229,10 +236,20 @@ public:
 		case Qt::DisplayRole:
 			return toqstr(c);
 		case Qt::ToolTipRole: {
-			char codeName[10];
-			sprintf(codeName, "0x%04x", c);
-			return strCharacter + toqstr(c) + '\n'
-				+ strCodePoint + QLatin1String(codeName);
+			QString latex;
+			if (encoding_) {
+				// how is the character output in the current encoding?
+				docstring const code = encoding_->latexChar(c).first;
+				// only show it when it is not coded by itself
+				if (code != docstring(1, c))
+					latex = qt_("<p>LaTeX code: %1</p>").arg(toqstr(code));
+			}
+			return formatToolTip(QString("<p align=center><span "
+			                             "style=\"font-size: xx-large;\">%1"
+			                             "</span><br>U+%2</p>%3")
+			                     .arg(toqstr(c))
+			                     .arg(QString("%1").arg(c, 0, 16).toUpper())
+			                     .arg(latex));
 		}
 		case Qt::SizeHintRole:
 			// Fix many symbols not displaying in combination with
@@ -243,12 +260,11 @@ public:
 		}
 	}
 
-	void setSymbols(QList<char_type> const & symbols)
+	void setSymbols(QList<char_type> const & symbols, Encoding const * encoding)
 	{
 		beginResetModel();
-		beginInsertRows(QModelIndex(), 0, symbols.size() - 1);
 		symbols_ = symbols;
-		endInsertRows();
+		encoding_ = encoding;
 		endResetModel();
 	}
 
@@ -256,6 +272,7 @@ private:
 	friend class GuiSymbols;
 
 	QList<char_type> symbols_;
+	Encoding const * encoding_;
 };
 
 
@@ -408,8 +425,7 @@ void GuiSymbols::scrollToItem(QString const & category)
 
 void GuiSymbols::updateSymbolList(bool update_combo)
 {
-	QString category = categoryCO->currentText();
-	bool const nocategory = category.isEmpty();
+	QString const category = categoryCO->currentText();
 	char_type range_start = 0x0000;
 	char_type range_end = 0x110000;
 	QList<char_type> s;
@@ -419,8 +435,10 @@ void GuiSymbols::updateSymbolList(bool update_combo)
 	}
 	bool const show_all = categoryFilterCB->isChecked();
 
+	Encoding const * const enc = encodings.fromLyXName(encoding_);
+
 	if (symbols_.empty() || update_combo)
-		symbols_ = encodings.fromLyXName(encoding_)->symbolsList();
+		symbols_ = enc->symbolsList();
 
 	if (!show_all) {
 		for (int i = 0 ; i < no_blocks; ++i)
@@ -431,11 +449,9 @@ void GuiSymbols::updateSymbolList(bool update_combo)
 			}
 	}
 
-	SymbolsList::const_iterator const end = symbols_.end();
 	int numItem = 0;
-	for (SymbolsList::const_iterator it = symbols_.begin(); it != end; ++it) {
-		char_type c = *it;
-		if (!update_combo && !show_all && (c <= range_start || c >= range_end))
+	for (char_type c : symbols_) {
+		if (!update_combo && !show_all && (c < range_start || c > range_end))
 			continue;
 		QChar::Category const cat = QChar::category(uint(c));
 		// we do not want control or space characters
@@ -446,13 +462,11 @@ void GuiSymbols::updateSymbolList(bool update_combo)
 			s.append(c);
 		if (update_combo) {
 			QString block = getBlock(c);
-			if (category.isEmpty())
-				category = block;
 			if (used_blocks.find(block) == used_blocks.end())
 				used_blocks[block] = numItem;
 		}
 	}
-	model_->setSymbols(s);
+	model_->setSymbols(s, enc);
 
 	if (update_combo) {
 		// update category combo
@@ -465,10 +479,12 @@ void GuiSymbols::updateSymbolList(bool update_combo)
 	int old = categoryCO->findText(category);
 	if (old != -1)
 		categoryCO->setCurrentIndex(old);
-	// update again in case the combo has not yet been filled
-	// on first cycle (at dialog initialization)
-	if (nocategory && !category.isEmpty())
-		updateSymbolList();
+	else if (update_combo) {
+		// restart with a non-empty block
+		// this happens when the encoding changes when moving the cursor
+		categoryCO->setCurrentIndex(0);
+		updateSymbolList(false);
+	}
 }
 
 

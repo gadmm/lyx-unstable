@@ -222,7 +222,8 @@ bool MathData::addToMathRow(MathRow & mrow, MetricsInfo & mi) const
 	BufferView * bv = mi.base.bv;
 	MathData * ar = const_cast<MathData*>(this);
 	ar->updateMacros(&bv->cursor(), mi.macrocontext,
-	                 InternalUpdate);
+	                 InternalUpdate, mi.base.macro_nesting);
+
 
 	// FIXME: for completion, try to insert the relevant data in the
 	// mathrow (like is done for text rows). We could add a pair of
@@ -341,7 +342,7 @@ void MathData::updateBuffer(ParIterator const & it, UpdateType utype)
 
 
 void MathData::updateMacros(Cursor * cur, MacroContext const & mc,
-		UpdateType utype)
+		UpdateType utype, int nesting)
 {
 	// If we are editing a macro, we cannot update it immediately,
 	// otherwise wrong undo steps will be recorded (bug 6208).
@@ -430,7 +431,7 @@ void MathData::updateMacros(Cursor * cur, MacroContext const & mc,
 		if (inset->asScriptInset())
 			inset = inset->asScriptInset()->nuc()[0].nucleus();
 		LASSERT(inset->asMacro(), continue);
-		inset->asMacro()->updateRepresentation(cur, mc, utype);
+		inset->asMacro()->updateRepresentation(cur, mc, utype, nesting + 1);
 	}
 }
 
@@ -659,12 +660,15 @@ void MathData::collectOptionalParameters(Cursor * cur,
 		if (operator[](pos)->getChar() != '[')
 			break;
 
-		// found possible optional argument, look for "]"
+		// found possible optional argument, look for pairing "]"
+		int count = 1;
 		size_t right = pos + 1;
 		for (; right < size(); ++right) {
 			MathAtom & cell = operator[](right);
 
-			if (cell->getChar() == ']')
+			if (cell->getChar() == '[')
+				++count;
+			else if (cell->getChar() == ']' && --count == 0)
 				// found right end
 				break;
 

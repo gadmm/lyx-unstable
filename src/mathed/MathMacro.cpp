@@ -38,6 +38,7 @@
 #include "support/gettext.h"
 #include "support/lassert.h"
 #include "support/lstrings.h"
+#include "support/RefChanger.h"
 #include "support/textutils.h"
 
 #include <ostream>
@@ -67,36 +68,42 @@ public:
 	MathMacro const * owner() { return mathMacro_; }
 	///
 	InsetCode lyxCode() const { return ARGUMENT_PROXY_CODE; }
+	/// The math data to use for display
+	MathData const & displayCell(BufferView const * bv) const
+	{
+		// handle default macro arguments
+		bool use_def_arg = !mathMacro_->editMetrics(bv)
+			&& mathMacro_->cell(idx_).empty();
+		return use_def_arg ? def_ : mathMacro_->cell(idx_);
+	}
 	///
 	bool addToMathRow(MathRow & mrow, MetricsInfo & mi) const
 	{
 		// macro arguments are in macros
-		LATTEST(mi.base.macro_nesting > 0);
-		if (mi.base.macro_nesting == 1)
-			mi.base.macro_nesting = 0;
+		LATTEST(mathMacro_->nesting() > 0);
+		/// The macro nesting can change display of insets. Change it locally.
+		Changer chg = make_change(mi.base.macro_nesting, mathMacro_->nesting());
 
-		MathRow::Element e_beg(MathRow::BEG_ARG, mi);
+		MathRow::Element e_beg(MathRow::BEG_ARG);
 		e_beg.macro = mathMacro_;
 		e_beg.ar = &mathMacro_->cell(idx_);
 		mrow.push_back(e_beg);
 
 		mathMacro_->macro()->unlock();
-		bool has_contents = mathMacro_->cell(idx_).addToMathRow(mrow, mi);
+		bool has_contents = displayCell(mi.base.bv).addToMathRow(mrow, mi);
 		mathMacro_->macro()->lock();
 
 		// if there was no contents, and the contents is editable,
 		// then we insert a box instead.
-		if (!has_contents && mi.base.macro_nesting == 0) {
-			MathRow::Element e(MathRow::BOX, mi);
+		if (!has_contents && mathMacro_->nesting() == 1) {
+			// mathclass is ord because it should be spaced as a normal atom
+			MathRow::Element e(MathRow::BOX, MC_ORD);
 			e.color = Color_mathline;
 			mrow.push_back(e);
 			has_contents = true;
 		}
 
-		if (mi.base.macro_nesting == 0)
-			mi.base.macro_nesting = 1;
-
-		MathRow::Element e_end(MathRow::END_ARG, mi);
+		MathRow::Element e_end(MathRow::END_ARG);
 		e_end.macro = mathMacro_;
 		e_end.ar = &mathMacro_->cell(idx_);
 
@@ -105,22 +112,19 @@ public:
 		return has_contents;
 	}
 	///
-	void metrics(MetricsInfo & mi, Dimension & dim) const {
-		// macro arguments are in macros
-		LATTEST(mi.base.macro_nesting > 0);
-		if (mi.base.macro_nesting == 1)
-			mi.base.macro_nesting = 0;
-
-		mathMacro_->macro()->unlock();
-		mathMacro_->cell(idx_).metrics(mi, dim);
-
-		if (!mathMacro_->editMetrics(mi.base.bv)
-		    && mathMacro_->cell(idx_).empty())
-			def_.metrics(mi, dim);
-
-		mathMacro_->macro()->lock();
-		if (mi.base.macro_nesting == 0)
-			mi.base.macro_nesting = 1;
+	void metrics(MetricsInfo &, Dimension &) const {
+		// This should never be invoked, since ArgumentProxy insets are linearized
+		LATTEST(false);
+	}
+	///
+	int kerning(BufferView const * bv) const
+	{
+		return displayCell(bv).kerning(bv);
+	}
+	///
+	void draw(PainterInfo &, int, int) const {
+		// This should never be invoked, since ArgumentProxy insets are linearized
+		LATTEST(false);
 	}
 	// write(), normalize(), infoize() and infoize2() are not needed since
 	// MathMacro uses the definition and not the expanded cells.
@@ -136,44 +140,6 @@ public:
 	void htmlize(HtmlStream & ms) const { ms << mathMacro_->cell(idx_); }
 	///
 	void octave(OctaveStream & os) const { os << mathMacro_->cell(idx_); }
-	///
-	void draw(PainterInfo & pi, int x, int y) const {
-		LATTEST(pi.base.macro_nesting > 0);
-		if (pi.base.macro_nesting == 1)
-			pi.base.macro_nesting = 0;
-
-		if (mathMacro_->editMetrics(pi.base.bv)) {
-			// The only way a ArgumentProxy can appear is in a cell of the
-			// MathMacro. Moreover the cells are only drawn in the DISPLAY_FOLDED
-			// mode and then, if the macro is edited the monochrome
-			// mode is entered by the MathMacro before calling the cells' draw
-			// method. Then eventually this code is reached and the proxy leaves
-			// monochrome mode temporarely. Hence, if it is not in monochrome
-			// here (and the assert triggers in pain.leaveMonochromeMode())
-			// it's a bug.
-			pi.pain.leaveMonochromeMode();
-			mathMacro_->cell(idx_).draw(pi, x, y);
-			pi.pain.enterMonochromeMode(Color_mathbg, Color_mathmacroblend);
-		} else if (mathMacro_->cell(idx_).empty()) {
-			mathMacro_->cell(idx_).setXY(*pi.base.bv, x, y);
-			def_.draw(pi, x, y);
-		} else
-			mathMacro_->cell(idx_).draw(pi, x, y);
-
-		if (pi.base.macro_nesting == 0)
-			pi.base.macro_nesting = 1;
-	}
-	///
-	size_t idx() const { return idx_; }
-	///
-	int kerning(BufferView const * bv) const
-	{
-		if (mathMacro_->editMetrics(bv)
-		    || !mathMacro_->cell(idx_).empty())
-			return mathMacro_->cell(idx_).kerning(bv);
-		else
-			return def_.kerning(bv);
-	}
 
 private:
 	///
@@ -238,6 +204,8 @@ public:
 	bool isUpdating_;
 	/// maximal number of arguments the macro is greedy for
 	size_t appetite_;
+	/// Level of nesting in macros (including this one)
+	int nesting_;
 };
 
 
@@ -323,15 +291,16 @@ bool MathMacro::addToMathRow(MathRow & mrow, MetricsInfo & mi) const
 	// This is the same as what is done in metrics().
 	d->editing_[mi.base.bv] = editMode(mi.base.bv);
 
+	/// The macro nesting can change display of insets. Change it locally.
+	Changer chg = make_change(mi.base.macro_nesting, d->nesting_);
+
 	if (displayMode() != MathMacro::DISPLAY_NORMAL
 	    || d->editing_[mi.base.bv])
 		return InsetMath::addToMathRow(mrow, mi);
 
-	MathRow::Element e_beg(MathRow::BEG_MACRO, mi);
+	MathRow::Element e_beg(MathRow::BEG_MACRO);
 	e_beg.macro = this;
 	mrow.push_back(e_beg);
-
-	++mi.base.macro_nesting;
 
 	d->macro_->lock();
 	bool has_contents = d->expanded_.addToMathRow(mrow, mi);
@@ -340,15 +309,14 @@ bool MathMacro::addToMathRow(MathRow & mrow, MetricsInfo & mi) const
 	// if there was no contents and the array is editable, then we
 	// insert a grey box instead.
 	if (!has_contents && mi.base.macro_nesting == 1) {
-		MathRow::Element e(MathRow::BOX, mi);
+		// mathclass is unknown because it is irrelevant for spacing
+		MathRow::Element e(MathRow::BOX);
 		e.color = Color_mathmacroblend;
 		mrow.push_back(e);
 		has_contents = true;
 	}
 
-	--mi.base.macro_nesting;
-
-	MathRow::Element e_end(MathRow::END_MACRO, mi);
+	MathRow::Element e_end(MathRow::END_MACRO);
 	e_end.macro = this;
 	mrow.push_back(e_end);
 
@@ -401,6 +369,12 @@ docstring MathMacro::macroName() const
 }
 
 
+int MathMacro::nesting() const
+{
+	return d->nesting_;
+}
+
+
 void MathMacro::cursorPos(BufferView const & bv,
 		CursorSlice const & sl, bool boundary, int & x,	int & y) const
 {
@@ -448,16 +422,18 @@ bool MathMacro::editMetrics(BufferView const * bv) const
 
 void MathMacro::metrics(MetricsInfo & mi, Dimension & dim) const
 {
-	// the macro contents is not editable (except the arguments)
-	++mi.base.macro_nesting;
+	/// The macro nesting can change display of insets. Change it locally.
+	Changer chg = make_change(mi.base.macro_nesting, d->nesting_);
 
 	// set edit mode for which we will have calculated metrics. But only
 	d->editing_[mi.base.bv] = editMode(mi.base.bv);
 
 	// calculate new metrics according to display mode
 	if (d->displayMode_ == DISPLAY_INIT || d->displayMode_ == DISPLAY_INTERACTIVE_INIT) {
+		Changer dummy = mi.base.changeFontSet("lyxtex");
 		mathed_string_dim(mi.base.font, from_ascii("\\") + name(), dim);
 	} else if (d->displayMode_ == DISPLAY_UNFOLDED) {
+		Changer dummy = mi.base.changeFontSet("lyxtex");
 		cell(0).metrics(mi, dim);
 		Dimension bsdim;
 		mathed_string_dim(mi.base.font, from_ascii("\\"), bsdim);
@@ -508,6 +484,10 @@ void MathMacro::metrics(MetricsInfo & mi, Dimension & dim) const
 	} else {
 		LBUFERR(d->macro_);
 
+		Changer dummy = (currentMode() == TEXT_MODE)
+			? mi.base.font.changeShape(UP_SHAPE)
+			: Changer();
+
 		// calculate metrics, hoping that all cells are seen
 		d->macro_->lock();
 		d->expanded_.metrics(mi, dim);
@@ -539,9 +519,6 @@ void MathMacro::metrics(MetricsInfo & mi, Dimension & dim) const
 			dim.des += 2;
 		}
 	}
-
-	// restore macro nesting
-	--mi.base.macro_nesting;
 }
 
 
@@ -588,7 +565,7 @@ private:
 
 
 void MathMacro::updateRepresentation(Cursor * cur, MacroContext const & mc,
-		UpdateType utype)
+	UpdateType utype, int nesting)
 {
 	// block recursive calls (bug 8999)
 	if (d->isUpdating_)
@@ -599,6 +576,9 @@ void MathMacro::updateRepresentation(Cursor * cur, MacroContext const & mc,
 	// known macro?
 	if (d->macro_ == 0)
 		return;
+
+	// remember nesting level of this macro
+	d->nesting_ = nesting;
 
 	// update requires
 	d->requires_ = d->macro_->requires();
@@ -631,7 +611,7 @@ void MathMacro::updateRepresentation(Cursor * cur, MacroContext const & mc,
 	// protected by UpdateLocker.
 	if (d->macro_->expand(values, d->expanded_)) {
 		if (utype == OutputUpdate && !d->expanded_.empty())
-			d->expanded_.updateMacros(cur, mc, utype);
+			d->expanded_.updateMacros(cur, mc, utype, nesting);
 	}
 	// get definition for list edit mode
 	docstring const & display = d->macro_->display();
@@ -710,13 +690,10 @@ void MathMacro::draw(PainterInfo & pi, int x, int y) const
 				  dim.height() - 2, Color_mathmacroframe);
 		drawMarkers2(pi, expx, expy);
 	} else {
-		// the macro contents is not editable (except the arguments)
-		++pi.base.macro_nesting;
-
 		bool drawBox = lyxrc.macro_edit_style == LyXRC::MACRO_EDIT_INLINE_BOX;
-		bool upshape = currentMode() == TEXT_MODE;
-		Changer dummy = pi.base.font.changeShape(upshape ? UP_SHAPE
-							: pi.base.font.shape());
+		Changer dummy = (currentMode() == TEXT_MODE)
+			? pi.base.font.changeShape(UP_SHAPE)
+			: Changer();
 
 		// warm up cells
 		for (size_t i = 0; i < nargs(); ++i)
@@ -746,8 +723,6 @@ void MathMacro::draw(PainterInfo & pi, int x, int y) const
 						  dim.height(), Color_mathmacroframe);
 		} else
 			d->expanded_.draw(pi, expx, expy);
-
-		--pi.base.macro_nesting;
 
 		if (!drawBox)
 			drawMarkers(pi, x, y);
@@ -1062,6 +1037,15 @@ void MathMacro::write(WriteStream & os) const
 	// we should be ok to continue even if this fails.
 	LATTEST(d->macro_);
 
+	// We may already be in the argument of a macro
+	bool const inside_macro = os.insideMacro();
+	os.insideMacro(true);
+
+	// Enclose in braces to avoid latex errors with xargs if we have
+	// optional arguments and are in the optional argument of a macro
+	if (d->optionals_ && inside_macro)
+		os << '{';
+
 	// Always protect macros in a fragile environment
 	if (os.fragile())
 		os << "\\protect";
@@ -1100,9 +1084,13 @@ void MathMacro::write(WriteStream & os) const
 		first = false;
 	}
 
-	// add space if there was no argument
-	if (first)
+	// Close the opened brace or add space if there was no argument
+	if (d->optionals_ && inside_macro)
+		os << '}';
+	else if (first)
 		os.pendingSpace(true);
+
+	os.insideMacro(inside_macro);
 }
 
 

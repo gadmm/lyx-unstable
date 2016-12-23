@@ -7,9 +7,10 @@
 # they are reported as failing if the export works without error.
 # https://cmake.org/cmake/help/v3.0/prop_test/WILL_FAIL.html
 
+# ======================================================================
 Sublabel: todo
-#
-# LyX bugs and problems with the sample documents that require attention.
+# LyX bugs and problems with the sample documents that require attention
+# ======================================================================
 # * minor issues to explore and properly sort,
 # * easyfix issues,
 # * LyX bugs to report at trac (move pattern to section "lyxbugs" once done).
@@ -38,11 +39,6 @@ export/doc/(|de/|es/|fr/)EmbeddedObjects_pdf4_systemF
 #   -> adapt template and style (GM)
 export/templates/IEEEtran-(Journal|TransMag)_pdf4_systemF
 
-# Requires ctex (Chinese).
-# Default output format is XeTeX. -> Only system fonts?
-#    Does (dvi|pdf3_texF|dvi3_texF) produce sensible results?
-export/templates/ctex_(pdf[23]?|pdf4_texF)
-
 # Example for lib/scripts/listerrors
 # Requires noweb. Seems to be restricted to plain "latex".
 # Find out why and whether the script could be improved.
@@ -53,47 +49,66 @@ export/examples/listerrors_(pdf[245]).*
 # (Also fails with Xe/LuaTeX and TeX-fonts -- as expected, see ignoredTests)
 export/examples/ko/splash_(dvi||pdf[23]?)
 
-# Following mathmacros tests fail
-# Why? -> sort and comment
-export/mathmacros/testcases_speed_(lyx16|lyx21|dvi|pdf|pdf[23]|(dvi3|pdf[45])_(texF|systemF))
-check_load/mathmacros/testcases_speed
+# input encoding tests
+# --------------------
+# Please test and correct!
 
-# input encoding tests: please test and correct:
-#
-# not (more?) supported by iconv, "uncodable character" LyX Warnings for all ASCII chars!
-# -> remove from lib/encodings (fileformat change)?
-# DOS code page, Western European:
-export/export/latex/unicodesymbols/.*_cp858_pdf2
-# Cyrillic
-export/export/latex/unicodesymbols/.*_pt254_pdf2
-#
-# Inputenc *.def files missing here [GM]  (which are standard?)
-# Hebrew:
-export/export/latex/unicodesymbols/.*_cp1255_pdf2
-export/export/latex/unicodesymbols/.*_iso8859-8_pdf2
-export/export/latex/unicodesymbols/.*_cp862_pdf2
+# Failing for unknown reason
+# Hebrew
+export/export/latex/unicodesymbols/001-4-latin_cp1255_pdf2
+export/export/latex/unicodesymbols/001-4-latin_cp862_pdf2
+export/export/latex/unicodesymbols/008-greek-and-coptic-with-textalpha_cp862_pdf2
+export/export/latex/unicodesymbols/008-greek-and-coptic_cp862_pdf2
+export/export/latex/unicodesymbols/070-72-general-punctuation-sub-super-currency_cp1255_pdf2
+export/export/latex/unicodesymbols/070-72-general-punctuation-sub-super-currency_cp862_pdf2
+export/export/latex/unicodesymbols/070-72-general-punctuation-sub-super-currency_iso8859-8_pdf2
+export/export/latex/unicodesymbols/074-76-letterlike-numberforms-arrows_cp862_pdf2
 # Arabic:
-export/export/latex/unicodesymbols/.*_iso8859-6_pdf2
-export/export/latex/unicodesymbols/.*_cp1256_pdf2
+export/export/latex/unicodesymbols/001-4-latin_cp1256_pdf2
+export/export/latex/unicodesymbols/001-4-latin_iso8859-6_pdf2
+export/export/latex/unicodesymbols/005-7-ipa-modifiers-combining_cp1256_pdf2
+export/export/latex/unicodesymbols/008-greek-and-coptic-with-textalpha_cp1256_pdf2
+export/export/latex/unicodesymbols/008-greek-and-coptic_cp1256_pdf2
+export/export/latex/unicodesymbols/069-greek-extended-textalpha_cp1256_pdf2
+export/export/latex/unicodesymbols/069-greek-extended_cp1256_pdf2
+export/export/latex/unicodesymbols/070-72-general-punctuation-sub-super-currency_cp1256_pdf2
+export/export/latex/unicodesymbols/074-76-letterlike-numberforms-arrows_cp1256_pdf2
+
 # CJK:
+# Unicode-blocks 008 and 009 work fine with utf8-cjk
+# everything else fails (special documentclass required?)
+export/export/latex/unicodesymbols/00[15].*_utf8-cjk_pdf2
+export/export/latex/unicodesymbols/0?[^0].*_utf8-cjk_pdf2
 export/export/latex/unicodesymbols/.*_euc-cn_pdf2
 export/export/latex/unicodesymbols/.*_gbk_pdf2
 export/export/latex/unicodesymbols/.*_jis_pdf2
 export/export/latex/unicodesymbols/.*_euc-kr_pdf2
-export/export/latex/unicodesymbols/.*_utf8-cjk_pdf2
 export/export/latex/unicodesymbols/.*_euc-tw_pdf2
 export/export/latex/unicodesymbols/.*_euc-jp_pdf2
-export/export/latex/unicodesymbols/.*_euc-jp-platex_pdf2
 # pLaTeX
+export/export/latex/unicodesymbols/.*_euc-jp-platex_pdf2
 export/export/latex/unicodesymbols/.*_jis-platex_pdf2
 export/export/latex/unicodesymbols/.*_shift-jis-platex_pdf2
 export/export/latex/unicodesymbols/.*_utf8-platex_pdf2
 
 
+# Arabic
+# If we want to try to get it to work with pdfTeX:
+# - set all non-Arab text parts to a different language (e.g. English)
+# - define alternatives for hyperref (e.g. with textorpdfstring)
+#     for correct handling of hyperref.
+# see discussion here:
+# https://www.mail-archive.com/search?l=mid&q=20161114035123.s5lt4ib4x4obtptp%40steph
+export/doc/ar/(Intro|Shortcuts|Tutorial)_pdf4_texF
+# This simple example doc is meant to test Arabic export of pdf2
+export/export/latex/arabic_simple_(dvi3|pdf5)_(texF|systemF)
+export/export/latex/arabic_simple_pdf4_texF
 
+
+# ================================================
 Sublabel: lyxbugs
-#
 # LyX bugs with a Trac number.
+# ================================================
 
 #8823 documents requiring pre-processing fail with Japanese
 export/examples/ja/(knitr|lilypond|sweave)_(dvi|pdf3?)
@@ -128,9 +143,12 @@ export/export/latex/unicodesymbols/009-cyrillic_(cp855|cp866|cp1251|koi8-r|koi8-
 export/export/latex/unicodesymbols/069-greek-extended(|_utf8x)_pdf2
 export/export/latex/unicodesymbols/069-greek-extended-textalpha_utf8x_pdf2
 
+
+# ==============================================================
 Sublabel: ert
+# Export failures due to "raw" LaTeX use in ERT or preamble code
+# ==============================================================
 #
-# Export failures due to "raw" LaTeX use in ERT or preamble code.
 # "Wontfix" if demonstrating correct use and OK in the default output format.
 
 # Non-ASCII in ERT, fails with inputenc==ASCII (e.g. XeTeX with tex-fonts)
@@ -142,9 +160,12 @@ export/doc/(de|es)/Additional_pdf4_texF
 # or document class file).
 export/export/latex/utf8-plain-with-tex-fonts_.*_texF
 
+
+# ================================================
 Sublabel: texissues
-#
 # Export fails due to LaTeX limitations,
+# ================================================
+#
 # e.g. non-ASCII in verbatim or listings, incompatible packages, ...
 # "Wontfix" if documents demonstrate correct use in the default output format.
 
@@ -174,12 +195,6 @@ export/examples/H-P-statements_.*_systemF
 # \MakeTextUppercase requires microtype.
 # http://tex.stackexchange.com/questions/202142/problems-compiling-tufte-title-page-in-xelatex
 export/examples/(|de/|es/)tufte-(book|handout)_(dvi.*|pdf|pdf3|pdf4.*)
-
-# Wasysym - LuaTeX incompatibility
-# Missing character reported for $_\sun$
-# (the sun-character is printed in \normalsize (i.e. not scaled)
-# with any export format -- only LuaTeX reports a missing character).
-export/examples/aas_sample_(dvi3|pdf5)_(texF|systemF)
 
 # These files use packages that are not compatible with the newest LuaTeX. We
 # could potentially fix these by loading the luatex85 package early in the
@@ -211,7 +226,17 @@ export/export/latex/TableErrorIfSlovakTextInserted_(dvi|pdf[23]?|.*_texF)
 # https://www.mail-archive.com/search?l=mid&q=1478004223.2367.5.camel%40lyx.org
 export/doc/(sk|nb)/Intro_(dvi3|pdf5)_systemF
 
+# fontspec errors with slides class:
+# LaTeX error: "kernel/command-already-defined"
+# Lines 2684 ... 2690 in fontspec-xetex.sty
+# Lines 2608 ... 2614 in fontspec-luatex.sty
+export/templates/slides_.*_systemF
+
+
+
+# ================================================
 Sublabel: attic
+# ================================================
 #
 # Documents in the attic are kept for reference and format conversion test.
 # However, many problems here are "wontfix".
@@ -227,3 +252,25 @@ export/doc/attic/eu_UserGuide_pdf[25].*
 export/doc/attic/it_(Customization_pdf5|UserGuide_dvi3|UserGuide_pdf4)_systemF
 export/doc/attic/sk_UserGuide_pdf4_texF
 export/doc/attic/id_UserGuide_.*systemF
+
+
+# ==============================================================
+# this sublabel is overridden anyway
+Sublabel: UNRELIABLE
+# See file unreliableTests for why these exports fail
+# ==============================================================
+
+export/doc/de/EmbeddedObjects_pdf4_texF
+export/doc/es/EmbeddedObjects_.*texF
+export/doc/es/Customization_pdf4_texF
+export/doc/es/UserGuide_(dvi3|pdf5)_texF
+export/examples/aa_sample_(dvi3|pdf[45])_.*
+export/examples/es/linguistics_pdf4_texF
+export/examples/fa/splash_(dvi|pdf|pdf[23]|(dvi3|pdf4|pdf5)_(texF|systemF))
+export/templates/ACM-siggraph_pdf5_(texF|systemF)
+export/templates/IUCr-article_pdf4_systemF
+export/templates/RJournal_(dvi3|pdf[45])_systemF
+export/templates/aa_(dvi3|pdf[45])_.*
+export/templates/ja_beamer-conference-ornate-20min_(pdf2|pdf[45]).*
+export/templates/es_beamer-conference-ornate-20min_pdf4_texF
+export/templates/kluwer_.*_systemF

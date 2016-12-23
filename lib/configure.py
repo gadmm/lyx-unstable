@@ -751,8 +751,8 @@ def checkConverterEntries():
         rc_entry = [r'''\converter latex      lyx        "%% -f $$i $$o"	""
 \converter latexclipboard lyx        "%% -fixedenc utf8 -f $$i $$o"	""
 \converter literate   lyx        "%% -n -m noweb -f $$i $$o"	""
-\converter sweave   lyx        "%% -n -m sweave -f $$i $$o"	""
-\converter knitr   lyx        "%% -n -m knitr -f $$i $$o"	""'''], not_found = 'tex2lyx')
+\converter sweave   lyx        "%% -n -m sweave -f $$i $$o"	"needauth"
+\converter knitr   lyx        "%% -n -m knitr -f $$i $$o"	"needauth"'''], not_found = 'tex2lyx')
     if path == '':
         logger.warning("Failed to find tex2lyx on your system.")
 
@@ -765,24 +765,24 @@ def checkConverterEntries():
 \converter literate   dviluatex     "%%"	""'''])
     #
     checkProg('a Sweave -> LaTeX converter', ['Rscript --verbose --no-save --no-restore $$s/scripts/lyxsweave.R $$p$$i $$p$$o $$e $$r'],
-        rc_entry = [r'''\converter sweave   latex      "%%"	""
-\converter sweave   pdflatex   "%%"	""
-\converter sweave   xetex      "%%"	""
-\converter sweave   luatex     "%%"	""
-\converter sweave   dviluatex  "%%"	""'''])
+        rc_entry = [r'''\converter sweave   latex      "%%"	"needauth"
+\converter sweave   pdflatex   "%%"	"needauth"
+\converter sweave   xetex      "%%"	"needauth"
+\converter sweave   luatex     "%%"	"needauth"
+\converter sweave   dviluatex  "%%"	"needauth"'''])
     #
     checkProg('a knitr -> LaTeX converter', ['Rscript --verbose --no-save --no-restore $$s/scripts/lyxknitr.R $$p$$i $$p$$o $$e $$r'],
-        rc_entry = [r'''\converter knitr   latex      "%%"	""
-\converter knitr   pdflatex   "%%"	""
-\converter knitr   xetex      "%%"	""
-\converter knitr   luatex     "%%"	""
-\converter knitr   dviluatex  "%%"	""'''])
+        rc_entry = [r'''\converter knitr   latex      "%%"	"needauth"
+\converter knitr   pdflatex   "%%"	"needauth"
+\converter knitr   xetex      "%%"	"needauth"
+\converter knitr   luatex     "%%"	"needauth"
+\converter knitr   dviluatex  "%%"	"needauth"'''])
     #
     checkProg('a Sweave -> R/S code converter', ['Rscript --verbose --no-save --no-restore $$s/scripts/lyxstangle.R $$i $$e $$r'], 
-        rc_entry = [ r'\converter sweave      r      "%%"    ""' ])
+        rc_entry = [ r'\converter sweave      r      "%%"    "needauth"' ])
     #
     checkProg('a knitr -> R/S code converter', ['Rscript --verbose --no-save --no-restore $$s/scripts/lyxknitr.R $$p$$i $$p$$o $$e $$r tangle'],
-        rc_entry = [ r'\converter knitr      r      "%%"    ""' ])
+        rc_entry = [ r'\converter knitr      r      "%%"    "needauth"' ])
     #
     checkProg('an HTML -> LaTeX converter', ['html2latex $$i', 'gnuhtml2latex',
         'htmltolatex -input $$i -output $$o', 'htmltolatex.jar -input $$i -output $$o'],
@@ -1554,7 +1554,7 @@ if __name__ == '__main__':
     lyx_check_config = True
     lyx_kpsewhich = True
     outfile = 'lyxrc.defaults'
-    lyxrc_fileformat = 19
+    lyxrc_fileformat = 20
     rc_entries = ''
     lyx_keep_temps = False
     version_suffix = ''

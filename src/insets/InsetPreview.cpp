@@ -139,7 +139,6 @@ void InsetPreview::draw(PainterInfo & pi, int x, int y) const
 	if (previewState(pi.base.bv)) {
 		// one pixel gap in front
 		preview_->draw(pi, x + 1, y);
-		setPosCache(pi, x, y);
 	} else
 		InsetText::draw(pi, x, y);
 }
@@ -175,8 +174,6 @@ void InsetPreview::metrics(MetricsInfo & mi, Dimension & dim) const
 		dim.des += TEXT_TO_INSET_OFFSET;
 		// insert a one pixel gap
 		dim.wid += 1;
-		// Cache the inset dimension.
-		setDimCache(mi, dim);
 		Dimension dim_dummy;
 		MetricsInfo mi_dummy = mi;
 		InsetText::metrics(mi_dummy, dim_dummy);

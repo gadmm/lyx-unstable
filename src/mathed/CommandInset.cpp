@@ -43,8 +43,6 @@ void CommandInset::metrics(MetricsInfo & mi, Dimension & dim) const
 		button_.update(screenLabel(), true);
 	}
 	button_.metrics(mi, dim);
-	// Cache the inset dimension. 
-	setDimCache(mi, dim);
 }
 
 
@@ -58,7 +56,6 @@ Inset * CommandInset::editXY(Cursor & cur, int /*x*/, int /*y*/)
 void CommandInset::draw(PainterInfo & pi, int x, int y) const
 {
 	button_.draw(pi, x, y);
-	setPosCache(pi, x, y);
 }
 
 

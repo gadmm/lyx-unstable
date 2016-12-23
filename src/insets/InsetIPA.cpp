@@ -152,7 +152,6 @@ void InsetIPA::draw(PainterInfo & pi, int x, int y) const
 {
 	if (previewState(pi.base.bv)) {
 		preview_->draw(pi, x, y);
-		setPosCache(pi, x, y);
 		return;
 	}
 	InsetText::draw(pi, x, y);
@@ -189,8 +188,6 @@ void InsetIPA::metrics(MetricsInfo & mi, Dimension & dim) const
 		dim.des += TEXT_TO_INSET_OFFSET;
 		// insert a one pixel gap
 		dim.wid += 1;
-		// Cache the inset dimension.
-		setDimCache(mi, dim);
 		Dimension dim_dummy;
 		MetricsInfo mi_dummy = mi;
 		InsetText::metrics(mi_dummy, dim_dummy);

@@ -73,21 +73,28 @@ int quote_index[2][6] = {
 
 // Corresponding LaTeX code, for double and single quotes.
 char const * const latex_quote_t1[2][5] = {
-	{ "\\quotesinglbase ",  "'", "`",
-    "\\guilsinglleft{}", "\\guilsinglright{}" },
+	{ "\\quotesinglbase",  "'", "`",
+    "\\guilsinglleft", "\\guilsinglright" },
   { ",,", "''", "``", "<<", ">>" }
 };
 
 char const * const latex_quote_ot1[2][5] = {
-	{ "\\quotesinglbase ",  "'", "`",
-    "\\guilsinglleft{}", "\\guilsinglright{}" },
-  { "\\quotedblbase ", "''", "``",
-    "\\guillemotleft{}", "\\guillemotright{}" }
+	{ "\\quotesinglbase",  "'", "`",
+    "\\guilsinglleft", "\\guilsinglright" },
+  { "\\quotedblbase", "''", "``",
+    "\\guillemotleft", "\\guillemotright" }
+};
+
+char const * const latex_quote_noligatures[2][5] = {
+	{ "\\quotesinglbase",  "\\textquoteleft", "\\textquoteright",
+    "\\guilsinglleft", "\\guilsinglright" },
+  { "\\quotedblbase", "\\textquotedblleft", "\\textquotedblright",
+    "\\guillemotleft", "\\guillemotright" }
 };
 
 char const * const latex_quote_babel[2][5] = {
-	{ "\\glq ",  "'", "`", "\\flq{}", "\\frq{}" },
-  { "\\glqq ", "''", "``", "\\flqq{}", "\\frqq{}" }
+	{ "\\glq",  "'", "`", "\\flq", "\\frq" },
+  { "\\glqq", "''", "``", "\\flqq", "\\frqq" }
 };
 
 char const * const html_quote[2][5] = {
@@ -192,16 +199,17 @@ void InsetQuotes::parseString(string const & s)
 
 docstring InsetQuotes::displayString() const
 {
-	// In PassThru and Hebrew, we use straight quotes
-	if (pass_thru_ || context_lang_ == "he_IL")
+	// In PassThru, we use straight quotes
+	if (pass_thru_)
 		return (times_ == DoubleQuotes) ? from_ascii("\"") : from_ascii("'");
 
 	int const index = quote_index[side_][language_];
 	docstring retdisp = docstring(1, display_quote_char[times_][index]);
 
-	// in French, thin spaces are added inside double quotes
+	// in French, thin spaces are added inside double guillemets
 	// FIXME: this should be done by a separate quote type.
-	if (times_ == DoubleQuotes && prefixIs(context_lang_, "fr")) {
+	if (prefixIs(context_lang_, "fr")
+	    && times_ == DoubleQuotes && language_ == FrenchQuotes) {
 		// THIN SPACE (U+2009)
 		char_type const thin_space = 0x2009;
 		if (side_ == LeftQuote)
@@ -256,44 +264,62 @@ void InsetQuotes::latex(otexstream & os, OutputParams const & runparams) const
 	const int quoteind = quote_index[side_][language_];
 	string qstr;
 
-	// In some context, we output plain quotes
-	bool const force_plain = 
-		runparams.pass_thru
-		|| runparams.local_font->language()->lang() == "hebrew";
-	if (force_plain)
+	// In pass-thru context, we output plain quotes
+	if (runparams.pass_thru)
 		qstr = (times_ == DoubleQuotes) ? "\"" : "'";
 	else if (language_ == FrenchQuotes && times_ == DoubleQuotes
 	    && prefixIs(runparams.local_font->language()->code(), "fr")
 	    && !runparams.use_polyglossia) {
+		// Specific guillemets of French babel
+		// including correct French spacing
 		if (side_ == LeftQuote)
-			qstr = "\\og "; //the spaces are important here
+			qstr = "\\og";
 		else
-			qstr = " \\fg{}"; //and here
-	} else if (fontenc_ == "T1" && !runparams.use_polyglossia) {
+			// the preceding space is important here
+			// FIXME: really? (doesn't make a difference
+			//        with recent babel-french)
+			qstr = " \\fg";
+	} else if (fontenc_ == "T1"
+		   && !runparams.local_font->language()->internalFontEncoding()
+		   && !runparams.use_polyglossia) {
+		// Quotation marks for T1 font encoding
+		// (using ligatures)
 		qstr = latex_quote_t1[times_][quoteind];
+	} else if (runparams.local_font->language()->internalFontEncoding()) {
+		// Quotation marks for internal font encodings
+		// (ligatures not featured)
+		qstr = latex_quote_noligatures[times_][quoteind];
 #ifdef DO_USE_DEFAULT_LANGUAGE
 	} else if (doclang == "default") {
 #else
-	} else if (!runparams.use_babel) {
+	} else if (!runparams.use_babel || runparams.isFullUnicode()) {
 #endif
-		// these are also used by polyglossia
+		// Standard quotation mark macros
+		// These are also used by polyglossia
+		// and babel without fontenc (XeTeX/LuaTeX)
 		qstr = latex_quote_ot1[times_][quoteind];
 	} else {
+		// Babel shorthand quotation marks (for T1/OT1)
 		qstr = latex_quote_babel[times_][quoteind];
 	}
 
-	if (!force_plain) {
+	if (!runparams.pass_thru) {
 		// Always guard against unfortunate ligatures (!` ?` `` '' ,, << >>)
 		char_type const lastchar = os.lastChar();
 		if (prefixIs(qstr, "`")) {
 			if (lastchar == '!' || lastchar == '?')
 				qstr.insert(0, "{}");
 		}
-		if (qstr[1] == lastchar)
+		if (qstr[0] == lastchar)
 			qstr.insert(0, "{}");
 	}
 
 	os << from_ascii(qstr);
+
+	// FIXME Check if the space in " \\fg" is really needed (see above)
+	if (prefixIs(qstr, "\\") || prefixIs(qstr, " \\"))
+		// properly terminate the command depending on the context
+		os << termcmd;
 }
 
 
@@ -308,7 +334,19 @@ int InsetQuotes::plaintext(odocstringstream & os,
 
 docstring InsetQuotes::getQuoteEntity() const {
 	const int quoteind = quote_index[side_][language_];
-	return from_ascii(html_quote[times_][quoteind]);
+	docstring res = from_ascii(html_quote[times_][quoteind]);
+	// in French, thin spaces are added inside double guillemets
+	// FIXME: this should be done by a separate quote type.
+	if (prefixIs(context_lang_, "fr")
+	    && times_ == DoubleQuotes && language_ == FrenchQuotes) {
+		// THIN SPACE (U+2009)
+		docstring const thin_space = from_ascii("&#x2009;");
+		if (side_ == LeftQuote)
+			res += thin_space;
+		else
+			res = thin_space + res;
+	}
+	return res;
 }
 
 
@@ -355,7 +393,7 @@ void InsetQuotes::validate(LaTeXFeatures & features) const
 #else
 	if (!features.useBabel()
 #endif
-	    && fontenc_ != "T1") {
+	    && !features.usePolyglossia() && fontenc_ != "T1") {
 		if (times_ == SingleQuotes)
 			switch (type) {
 			case ',': features.require("quotesinglbase"); break;

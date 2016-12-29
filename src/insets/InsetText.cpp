@@ -770,7 +770,9 @@ bool InsetText::insetAllowed(InsetCode code) const
 	switch (code) {
 	// Arguments and (plain) quotes are also allowed in PassThru insets
 	case ARG_CODE:
+#ifdef FILEFORMAT
 	case QUOTE_CODE:
+#endif
 		return true;
 	default:
 		return !isPassThru();

@@ -78,7 +78,12 @@ private:
 	///
 	TexString getCaption(OutputParams const &) const;
 	///
-	bool insetAllowed(InsetCode c) const { return c == CAPTION_CODE || c == QUOTE_CODE; }
+	bool insetAllowed(InsetCode c) const { return c == CAPTION_CODE
+#ifdef FILEFORMAT
+			|| c == QUOTE_CODE
+#endif
+			;
+	}
 
 	///
 	InsetListingsParams params_;

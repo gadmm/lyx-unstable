@@ -828,7 +828,11 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 		if (pimpl_->defskip.kind() == VSpace::DEFSKIP)
 			// that is invalid
 			pimpl_->defskip = VSpace(VSpace::MEDSKIP);
+#ifdef FILEFORMAT
 	} else if (token == "\\quotes_style") {
+#else
+	} else if (token == "\\quotes_language") {
+#endif
 		string qstyle;
 		lex >> qstyle;
 		quotes_style = quotesstyletranslator().find(qstyle);
@@ -1301,7 +1305,11 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 		os << "\n\\paragraph_indentation " << getIndentation().asLyXCommand();
 	else
 		os << "\n\\defskip " << getDefSkip().asLyXCommand();
+#ifdef FILEFORMAT
 	os << "\n\\quotes_style "
+#else
+	os << "\n\\quotes_language "
+#endif
 	   << string_quotes_style[quotes_style]
 	   << "\n\\papercolumns " << columns
 	   << "\n\\papersides " << sides

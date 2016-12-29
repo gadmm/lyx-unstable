@@ -1354,7 +1354,11 @@ bool Preamble::writeLyXHeader(ostream & os, bool subdoc, string const & outfiled
 		os << "\\defskip " << h_defskip << "\n";
 	else
 		os << "\\paragraph_indentation " << h_paragraph_indentation << "\n";
+#ifdef FILEFORMAT
 	os << "\\quotes_style " << h_quotes_style << "\n"
+#else
+	os << "\\quotes_language " << h_quotes_style << "\n"
+#endif
 	   << "\\papercolumns " << h_papercolumns << "\n"
 	   << "\\papersides " << h_papersides << "\n"
 	   << "\\paperpagestyle " << h_paperpagestyle << "\n";

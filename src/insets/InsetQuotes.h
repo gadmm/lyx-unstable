@@ -26,7 +26,7 @@ class InsetQuotes : public Inset
 {
 public:
 	///
-	enum QuoteLanguage {
+	enum QuoteStyle {
 		///
 		EnglishQuotes,
 		///
@@ -48,7 +48,7 @@ public:
 		RightQuote
 	};
 	///
-	enum QuoteTimes {
+	enum QuoteLevel {
 		///
 		SingleQuotes,
 		///
@@ -64,7 +64,9 @@ public:
 	  */
 	explicit InsetQuotes(Buffer * buf, std::string const & str = "eld");
 	/// Direct access to inner/outer quotation marks
-	InsetQuotes(Buffer * buf, char_type c, QuoteTimes t);
+	InsetQuotes(Buffer * buf, char_type c, QuoteLevel level,
+		    std::string const & side = std::string(),
+		    std::string const & style = std::string());
 	///
 	docstring layoutName() const;
 	///
@@ -75,6 +77,8 @@ public:
 	void write(std::ostream &) const;
 	///
 	void read(Lexer & lex);
+	///
+	bool getStatus(Cursor &, FuncRequest const &, FuncStatus &) const;
 	///
 	void latex(otexstream &, OutputParams const &) const;
 	///
@@ -96,9 +100,16 @@ public:
 	///
 	void validate(LaTeXFeatures &) const;
 	///
+	std::string contextMenuName() const;
+	///
 	InsetCode lyxCode() const { return QUOTE_CODE; }
 	/// should this inset be handled like a normal character
 	bool isChar() const { return true; }
+	
+	/// Returns the current quote type
+	std::string getType() const;
+	/// Returns a map of quotation marks
+	std::map<std::string, docstring> getTypes() const;
 
 private:
 	///
@@ -107,24 +118,34 @@ private:
 	/// Decide whether we need left or right quotation marks
 	void setSide(char_type c);
 	///
-	void parseString(std::string const &);
+	void parseString(std::string const &,
+			 bool const allow_wildcards = false);
 	///
 	docstring displayString() const;
 	///
 	docstring getQuoteEntity() const;
+	///
+	QuoteStyle getStyle(std::string const &);
 
 	///
-	QuoteLanguage language_;
+	QuoteStyle style_;
 	///
 	QuoteSide side_;
 	///
-	QuoteTimes times_;
+	QuoteLevel level_;
 	///
 	std::string fontenc_;
 	/// Code of the contextual language
 	std::string context_lang_;
 	/// Is this in a pass-thru context?
 	bool pass_thru_;
+
+protected:
+	/// \name Protected functions inherited from Inset class
+	//@{
+	///
+	void doDispatch(Cursor & cur, FuncRequest & cmd);
+	//@}
 };
 
 } // namespace lyx

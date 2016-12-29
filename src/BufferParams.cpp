@@ -71,7 +71,7 @@ static char const * const string_paragraph_separation[] = {
 };
 
 
-static char const * const string_quotes_language[] = {
+static char const * const string_quotes_style[] = {
 	"english", "swedish", "german", "polish", "french", "danish", ""
 };
 
@@ -127,27 +127,27 @@ ParSepTranslator const & parseptranslator()
 }
 
 
-// Quotes language
-typedef Translator<string, InsetQuotes::QuoteLanguage> QuotesLangTranslator;
+// Quotes style
+typedef Translator<string, InsetQuotes::QuoteStyle> QuotesStyleTranslator;
 
 
-QuotesLangTranslator const init_quoteslangtranslator()
+QuotesStyleTranslator const init_quotesstyletranslator()
 {
-	QuotesLangTranslator translator
-		(string_quotes_language[0], InsetQuotes::EnglishQuotes);
-	translator.addPair(string_quotes_language[1], InsetQuotes::SwedishQuotes);
-	translator.addPair(string_quotes_language[2], InsetQuotes::GermanQuotes);
-	translator.addPair(string_quotes_language[3], InsetQuotes::PolishQuotes);
-	translator.addPair(string_quotes_language[4], InsetQuotes::FrenchQuotes);
-	translator.addPair(string_quotes_language[5], InsetQuotes::DanishQuotes);
+	QuotesStyleTranslator translator
+		(string_quotes_style[0], InsetQuotes::EnglishQuotes);
+	translator.addPair(string_quotes_style[1], InsetQuotes::SwedishQuotes);
+	translator.addPair(string_quotes_style[2], InsetQuotes::GermanQuotes);
+	translator.addPair(string_quotes_style[3], InsetQuotes::PolishQuotes);
+	translator.addPair(string_quotes_style[4], InsetQuotes::FrenchQuotes);
+	translator.addPair(string_quotes_style[5], InsetQuotes::DanishQuotes);
 	return translator;
 }
 
 
-QuotesLangTranslator const & quoteslangtranslator()
+QuotesStyleTranslator const & quotesstyletranslator()
 {
-	static QuotesLangTranslator const translator =
-		init_quoteslangtranslator();
+	static QuotesStyleTranslator const translator =
+		init_quotesstyletranslator();
 	return translator;
 }
 
@@ -394,7 +394,7 @@ BufferParams::BufferParams()
 	cite_engine_type_ = ENGINE_TYPE_DEFAULT;
 	makeDocumentClass();
 	paragraph_separation = ParagraphIndentSeparation;
-	quotes_language = InsetQuotes::EnglishQuotes;
+	quotes_style = InsetQuotes::EnglishQuotes;
 	fontsize = "default";
 
 	/*  PaperLayout */
@@ -828,10 +828,10 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 		if (pimpl_->defskip.kind() == VSpace::DEFSKIP)
 			// that is invalid
 			pimpl_->defskip = VSpace(VSpace::MEDSKIP);
-	} else if (token == "\\quotes_language") {
-		string quotes_lang;
-		lex >> quotes_lang;
-		quotes_language = quoteslangtranslator().find(quotes_lang);
+	} else if (token == "\\quotes_style") {
+		string qstyle;
+		lex >> qstyle;
+		quotes_style = quotesstyletranslator().find(qstyle);
 	} else if (token == "\\papersize") {
 		string ppsize;
 		lex >> ppsize;
@@ -1301,8 +1301,8 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 		os << "\n\\paragraph_indentation " << getIndentation().asLyXCommand();
 	else
 		os << "\n\\defskip " << getDefSkip().asLyXCommand();
-	os << "\n\\quotes_language "
-	   << string_quotes_language[quotes_language]
+	os << "\n\\quotes_style "
+	   << string_quotes_style[quotes_style]
 	   << "\n\\papercolumns " << columns
 	   << "\n\\papersides " << sides
 	   << "\n\\paperpagestyle " << pagestyle << '\n';
@@ -2549,9 +2549,9 @@ Font const BufferParams::getFont() const
 }
 
 
-InsetQuotes::QuoteLanguage BufferParams::getQuoteStyle(string const & qs) const
+InsetQuotes::QuoteStyle BufferParams::getQuoteStyle(string const & qs) const
 {
-	return quoteslangtranslator().find(qs);
+	return quotesstyletranslator().find(qs);
 }
 
 

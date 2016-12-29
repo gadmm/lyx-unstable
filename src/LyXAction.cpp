@@ -403,8 +403,18 @@ void LyXAction::init()
  * \li Action: Inserts quotes according to the type and quote-language preference.
  * \li Notion: Currently English, Swedish, German, Polish, French, Danish quotes
                are distinguished.
- * \li Syntax: quote-insert [<TYPE>]
- * \li Params: <TYPE>: 'single' for single quotes, otherwise double quotes will be used.
+ * \li Syntax: quote-insert [<LEVEL>] [<SIDE>] [<STYLE>]
+ * \li Params: <LEVEL>: 'single' for single (i.e., inner or secondary) quotes, otherwise
+ *                      double quotes will be used.
+ *             <SIDE>:  'left' for opening quotes, 'right' for closing quotes, otherwise
+ *                      the side will be guessed from the context.
+ *             <STYLE>: 'english' for ``English'' quote style
+ *                      'swedish' for ''Swedish'' quote style
+ *                      'german' for ,,German`` quote style
+ *                      'polish' for ,,Polish'' quote style
+ *                      'french' for <<French>> quote style
+ *                      'danish' for >>Danish<< quote style
+ *                      If no quote style is specified, the document-wide will be used.
  * \endvar
  */
 		{ LFUN_QUOTE_INSERT, "quote-insert", Noop, Edit },
@@ -2461,14 +2471,21 @@ void LyXAction::init()
 /*!
  * \var lyx::FuncCode lyx::LFUN_INSET_MODIFY
  * \li Action: Modify some properties of an inset.
- * \li Notion: Used for bibitem, bibtex, box, branch, command, ert, external,
-                        floats, graphics, include, index, info, label,
-                        listings, newline, newpage, nomencl, note, phantom,
-                        ref, space, tabular, vspace, wrap insets.
+ * \li Notion: Used for argument, bibitem, bibtex, box, branch, caption, citation,
+                        command, ert, external, float, graphics, include, index,
+                        info, label, line, listings, newline, newpage, nomencl,
+                        note, phantom, quotes, ref, script, separator, space,
+                        tabular, vspace and wrap insets.
  * \li Syntax: inset-modify <INSET> <ARGS> \n
                inset-modify changetype <TYPE>
- * \li Sample: inset-modify note Note Comment \n
-	       inset-modify changetype Ovalbox
+ * \li Sample: Change a Note inset into a Comment inset: \n
+                   inset-modify note Note Comment \n
+               Change a Box into an Ovalbox: \n
+                   inset-modify changetype Ovalbox \n
+               Change a quotation mark to e[nglish style], l[eft side], s[ingle] \n
+                   inset-modify changetype els \n
+               Change only the style of a quotation mark, maintaining the other aspects (. = wildcard) \n
+                   inset-modify changetype e.. \n
  * \endvar
  */
 		{ LFUN_INSET_MODIFY, "inset-modify", AtPoint, Edit },

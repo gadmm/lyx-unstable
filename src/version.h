@@ -33,8 +33,8 @@ extern char const * const lyx_version_info;
 #ifdef FILEFORMAT
 // Do not remove the comment below, so we get merge conflict in
 // independent branches. Instead add your own.
-#define LYX_FORMAT_LYX 518 // rgheck: changes to iopart.layout
-#define LYX_FORMAT_TEX2LYX 518
+#define LYX_FORMAT_LYX 519 // spitz: \\quotes_language -> \\quotes_style
+#define LYX_FORMAT_TEX2LYX 519
 
 #else
 // LyX 2.2 format

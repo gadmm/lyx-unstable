@@ -285,7 +285,6 @@ void InsetSpecialChar::draw(PainterInfo & pi, int x, int y) const
 }
 
 
-// In lyxf3 this will be just LaTeX
 void InsetSpecialChar::write(ostream & os) const
 {
 	string command;
@@ -328,7 +327,6 @@ void InsetSpecialChar::write(ostream & os) const
 }
 
 
-// This function will not be necessary when lyx3
 void InsetSpecialChar::read(Lexer & lex)
 {
 	lex.next();
@@ -369,22 +367,23 @@ void InsetSpecialChar::latex(otexstream & os,
 		os << "\\-";
 		break;
 	case LIGATURE_BREAK:
-		os << "\\textcompwordmark{}";
+		os << "\\textcompwordmark" << termcmd;
 		break;
 	case END_OF_SENTENCE:
 		os << "\\@.";
 		break;
 	case LDOTS:
-		os << "\\ldots{}";
+		os << "\\ldots" << termcmd;
 		break;
 	case MENU_SEPARATOR:
 		if (rp.local_font->isRightToLeft())
-			os << "\\lyxarrow*{}";
+			os << "\\lyxarrow*";
 		else
-			os << "\\lyxarrow{}";
+			os << "\\lyxarrow";
+		os << termcmd;
 		break;
 	case SLASH:
-		os << "\\slash{}";
+		os << "\\slash" << termcmd;
 		break;
 	case NOBREAKDASH:
 		if (rp.moving_arg)
@@ -394,22 +393,22 @@ void InsetSpecialChar::latex(otexstream & os,
 	case PHRASE_LYX:
 		if (rp.moving_arg)
 			os << "\\protect";
-		os << "\\LyX{}";
+		os << "\\LyX" << termcmd;
 		break;
 	case PHRASE_TEX:
 		if (rp.moving_arg)
 			os << "\\protect";
-		os << "\\TeX{}";
+		os << "\\TeX" << termcmd;
 		break;
 	case PHRASE_LATEX2E:
 		if (rp.moving_arg)
 			os << "\\protect";
-		os << "\\LaTeXe{}";
+		os << "\\LaTeXe" << termcmd;
 		break;
 	case PHRASE_LATEX:
 		if (rp.moving_arg)
 			os << "\\protect";
-		os << "\\LaTeX{}";
+		os << "\\LaTeX" << termcmd;
 		break;
 	}
 }

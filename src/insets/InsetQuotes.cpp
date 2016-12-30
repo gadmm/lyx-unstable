@@ -172,13 +172,21 @@ void InsetQuotes::parseString(string const & s, bool const allow_wildcards)
 
 	// '.' wildcard means: keep current stylee
 	if (!allow_wildcards || str[0] != '.') {
+#ifdef FILEFORMAT
 		for (i = 0; i < 7; ++i) {
+#else
+		for (i = 0; i < 6; ++i) {
+#endif
 			if (str[0] == style_char[i]) {
 				style_ = QuoteStyle(i);
 				break;
 			}
 		}
+#ifdef FILEFORMAT
 		if (i >= 7) {
+#else
+		if (i >= 6) {
+#endif
 			lyxerr << "ERROR (InsetQuotes::InsetQuotes):"
 				" bad style specification." << endl;
 			style_ = EnglishQuotes;
@@ -233,8 +241,10 @@ InsetQuotes::QuoteStyle InsetQuotes::getStyle(string const & s)
 		qs = FrenchQuotes;
 	else if (s == "danish")
 		qs = DanishQuotes;
+#ifdef FILEFORMAT
 	else if (s == "plain")
 		qs = PlainQuotes;
+#endif
 
 	return qs;
 }
@@ -251,7 +261,11 @@ map<string, docstring> InsetQuotes::getTypes() const
 	string type;
 
 	// get all quote types
+#ifdef FILEFORMAT
 	for (sty = 0; sty < 7; ++sty) {
+#else
+	for (sty = 0; sty < 6; ++sty) {
+#endif
 		style = QuoteStyle(sty);
 		for (sid = 0; sid < 2; ++sid) {
 			side = QuoteSide(sid);

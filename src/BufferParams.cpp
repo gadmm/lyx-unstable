@@ -140,7 +140,9 @@ QuotesStyleTranslator const init_quotesstyletranslator()
 	translator.addPair(string_quotes_style[3], InsetQuotes::PolishQuotes);
 	translator.addPair(string_quotes_style[4], InsetQuotes::FrenchQuotes);
 	translator.addPair(string_quotes_style[5], InsetQuotes::DanishQuotes);
+#ifdef FILEFORMAT
 	translator.addPair(string_quotes_style[6], InsetQuotes::PlainQuotes);
+#endif
 	return translator;
 }
 

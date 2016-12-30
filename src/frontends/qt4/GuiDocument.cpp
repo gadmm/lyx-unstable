@@ -1080,8 +1080,10 @@ GuiDocument::GuiDocument(GuiView & lv)
 		qt_("<<text>>"), InsetQuotes::FrenchQuotes);
 	langModule->quoteStyleCO->addItem(
 		qt_(">>text<<"), InsetQuotes::DanishQuotes);
+#ifdef FILEFORMAT
 	langModule->quoteStyleCO->addItem(
 		qt_("\"text\""), InsetQuotes::PlainQuotes);
+#endif
 
 	langModule->languagePackageCO->addItem(
 		qt_("Default"), toqstr("default"));

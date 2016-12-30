@@ -125,7 +125,7 @@ Language albanian
 	GuiName          "Albanian"
 	BabelName        albanian
 	PolyglossiaName  albanian
-	QuoteStyle       swiss
+	QuoteStyle       french
 	Encoding         iso8859-2
 	LangCode         sq_AL
 End
@@ -194,7 +194,7 @@ End
 Language armenian
 	GuiName          "Armenian"
 	PolyglossiaName  armenian
-	QuoteStyle       swiss
+	QuoteStyle       french
 	Encoding         utf8
 	LangCode         hy_AM
 End
@@ -266,7 +266,7 @@ Language basque
 	HasGuiSupport    true
 	BabelName        basque
 	PolyglossiaName  basque
-	QuoteStyle       swiss
+	QuoteStyle       french
 	Encoding         iso8859-15
 	LangCode         eu_ES
 	PostBabelPreamble
@@ -308,7 +308,7 @@ Language british
 	BabelName        british
 	PolyglossiaName  english
 	PolyglossiaOpts  "variant=british"
-	QuoteStyle       british
+	QuoteStyle       english
 	Encoding         iso8859-15
 	LangCode         en_GB
 End
@@ -478,7 +478,6 @@ Language farsi
 	FontEncoding     "LFE,LAE"
 	RTL              true
 	LangCode         fa_IR
-	QuoteStyle       english
 	PostBabelPreamble
 	\DeclareTextSymbol{\guillemotright}{LFE}{62}
 	\DeclareTextSymbol{\guillemotleft}{LFE}{60}
@@ -566,7 +565,7 @@ Language german-ch
 	BabelName        nswissgerman
 	PolyglossiaName  german
 	PolyglossiaOpts  "variant=swiss,spelling=new,babelshorthands=true"
-	QuoteStyle       swiss
+	QuoteStyle       danish
 	Encoding         iso8859-15
 	LangCode         de_CH
 End
@@ -579,7 +578,7 @@ Language german-ch-old
  	BabelName        swissgerman
  	PolyglossiaName  german
  	PolyglossiaOpts  "variant=swiss,spelling=old,babelshorthands=true"
- 	QuoteStyle       swiss
+ 	QuoteStyle       danish
  	Encoding         iso8859-15
  	LangCode         de_CH
 End
@@ -852,7 +851,7 @@ Language norsk
 	HasGuiSupport    true
 	BabelName        norsk
 	PolyglossiaName  norsk
-	QuoteStyle       swiss
+	QuoteStyle       french
 	Encoding         iso8859-15
 	LangCode         nb_NO
 End
@@ -862,7 +861,7 @@ Language nynorsk
 	HasGuiSupport    true
 	BabelName        nynorsk
 	PolyglossiaName  nynorsk
-	QuoteStyle       swiss
+	QuoteStyle       french
 	Encoding         iso8859-15
 	LangCode         nn_NO
 End
@@ -925,7 +924,7 @@ Language russian
 	HasGuiSupport    true
 	BabelName        russian
 	PolyglossiaName  russian
-	QuoteStyle       russian
+	QuoteStyle       french
 	Encoding         koi8-r
 	FontEncoding     T2A
 	LangCode         ru_RU
@@ -1103,7 +1102,7 @@ Language turkmen
 	GuiName          "Turkmen"
 	BabelName        turkmen
 	PolyglossiaName  turkmen
-	QuoteStyle       swiss
+	QuoteStyle       french
 	Encoding         utf8
 	LangCode         tk_TM
 	AsBabelOptions   true
@@ -1114,7 +1113,7 @@ Language ukrainian
 	HasGuiSupport    true
 	BabelName        ukrainian
 	PolyglossiaName  ukrainian
-	QuoteStyle       russian
+	QuoteStyle       french
 	Encoding         koi8-u
 	FontEncoding     T2A
 	LangCode         uk_UA
@@ -1156,7 +1155,7 @@ Language welsh
 	GuiName          "Welsh"
 	BabelName        welsh
 	PolyglossiaName  welsh
-	QuoteStyle       british
+	QuoteStyle       english
 	Encoding         iso8859-15
 	LangCode         cy_GB
 End

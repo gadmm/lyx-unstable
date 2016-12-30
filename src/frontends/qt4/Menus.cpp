@@ -1702,7 +1702,11 @@ void MenuDefinition::expandQuotes(BufferView const * bv)
 			gqs.add(MenuItem(MenuItem::Command, toqstr(desc), cmd));
 		else if (prefixIs(style, 'p') && !prefixIs(qtype, "p"))
 			pqs.add(MenuItem(MenuItem::Command, toqstr(desc), cmd));
+#ifdef FILEFORMAT
 		else if (prefixIs(style, 'c') && !prefixIs(qtype, "c"))
+#else
+		else if (prefixIs(style, 'f') && !prefixIs(qtype, "f"))
+#endif
 			cqs.add(MenuItem(MenuItem::Command, toqstr(desc), cmd));
 		else if (prefixIs(style, 'a') && !prefixIs(qtype, "a"))
 			aqs.add(MenuItem(MenuItem::Command, toqstr(desc), cmd));

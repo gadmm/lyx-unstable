@@ -408,18 +408,19 @@ void LyXAction::init()
  *                       outer (i.e., primary, usually double) quotes will be used.
  *             <SIDE>:  'opening' for opening quotes, 'closing' for closing quotes,
  *                       otherwise the side will be guessed from the context.
- *             <STYLE>: 'british' for `British' quote style (with ``inner quotation'')
+ *             <STYLE>: *'british' for `British' quote style (with ``inner quotation'')
  *                      'danish' for >>Danish<< quote style (with >inner quotation<)
  *                      'english' for ``English'' quote style (with `inner quotation')
  *                      'french' for <<french>> quote style (with ``inner quotation'')
- *                      'frenchin' for <<frenchin>> quote style (with <<inner quotation>>) ["in" = Imprimerie Nationale]
+ *                      *'frenchin' for <<frenchin>> quote style (with <<inner quotation>>) ["in" = Imprimerie Nationale]
  *                      'german' for ,,German`` quote style (with ,inner quotation`)
- *                      'plain' for "Plain" quote style (with 'inner quotation')
+ *                      *'plain' for "Plain" quote style (with 'inner quotation')
  *                      'polish' for ,,Polish'' quote style (with ,inner quotation')
  *                      'swedish' for ''Swedish'' quote style (with 'inner quotation')
- *                      'swedishg' for >>swedishg>> quote style (with 'inner quotation') ["g" = Guillemets]
- *                      'swiss' for <<Swiss>> quote style (with <inner quotation>)
- *                      'russian' for <<Russian>> quote style (with ,,inner quotation``)
+ *                      *'swedishg' for >>swedishg>> quote style (with 'inner quotation') ["g" = Guillemets]
+ *                      *'swiss' for <<Swiss>> quote style (with <inner quotation>)
+ *                      *'russian' for <<Russian>> quote style (with ,,inner quotation``)
+ *                      (*: not in LyX 2.3unstable)
  *                      If no quote style is specified, the document-wide will be used.
  * \endvar
  */

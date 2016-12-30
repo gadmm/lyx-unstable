@@ -72,8 +72,12 @@ static char const * const string_paragraph_separation[] = {
 
 
 static char const * const string_quotes_style[] = {
+#ifdef FILEFORMAT
 	"english", "swedish", "german", "polish", "swiss", "danish", "plain",
 	"british", "swedishg", "french", "frenchin", "russian", ""
+#else
+	"english", "swedish", "german", "polish", "french", "danish", "",
+#endif
 };
 
 

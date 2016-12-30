@@ -66,10 +66,10 @@ namespace {
  * r    <<russian>>  (,,inner quotation``)
  */
 
+#ifdef FILEFORMAT
 char const * const style_char = "esgpcaqbwfir";
-#ifndef FILEFORMAT
-// must be a prefix of style_char above
-char const * const style_char_stable = "esgpfa";
+#else
+char const * const style_char = "esgpfa";
 #endif
 char const * const side_char = "lr" ;
 char const * const level_char = "sd";
@@ -88,11 +88,7 @@ InsetQuotesParams quoteparams;
 
 int InsetQuotesParams::stylescount() const
 {
-#ifdef FILEFORMAT
 	return strlen(style_char);
-#else
-	return strlen(style_char_stable);
-#endif
 }
 
 
@@ -527,14 +523,17 @@ InsetQuotesParams::QuoteStyle InsetQuotes::getStyle(string const & s)
 		qs = InsetQuotesParams::GermanQuotes;
 	else if (s == "polish")
 		qs = InsetQuotesParams::PolishQuotes;
+#ifdef FILEFORMAT
 	else if (s == "swiss")
+#else
+	else if (s == "french")
+#endif
 		qs = InsetQuotesParams::SwissQuotes;
 	else if (s == "danish")
 		qs = InsetQuotesParams::DanishQuotes;
 #ifdef FILEFORMAT
 	else if (s == "plain")
 		qs = InsetQuotesParams::PlainQuotes;
-#endif
 	else if (s == "british")
 		qs = InsetQuotesParams::BritishQuotes;
 	else if (s == "swedishg")
@@ -543,6 +542,7 @@ InsetQuotesParams::QuoteStyle InsetQuotes::getStyle(string const & s)
 		qs = InsetQuotesParams::FrenchQuotes;
 	else if (s == "frenchin")
 		qs = InsetQuotesParams::FrenchINQuotes;
+#endif
 
 	return qs;
 }

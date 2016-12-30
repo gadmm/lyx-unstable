@@ -62,6 +62,10 @@ namespace {
  */
 
 char const * const style_char = "esgpfaq";
+#ifndef FILEFORMAT
+// must be a prefix of style_char above
+char const * const style_char_stable = "esgpfa";
+#endif
 char const * const side_char = "lr" ;
 char const * const level_char = "sd";
 
@@ -79,7 +83,11 @@ InsetQuotesParams quoteparams;
 
 int InsetQuotesParams::stylescount() const
 {
+#ifdef FILEFORMAT
 	return strlen(style_char);
+#else
+	return strlen(style_char_stable);
+#endif
 }
 
 
@@ -483,8 +491,10 @@ InsetQuotesParams::QuoteStyle InsetQuotes::getStyle(string const & s)
 		qs = InsetQuotesParams::FrenchQuotes;
 	else if (s == "danish")
 		qs = InsetQuotesParams::DanishQuotes;
+#ifdef FILEFORMAT
 	else if (s == "plain")
 		qs = InsetQuotesParams::PlainQuotes;
+#endif
 
 	return qs;
 }

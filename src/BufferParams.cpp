@@ -408,6 +408,7 @@ BufferParams::BufferParams()
 	makeDocumentClass();
 	paragraph_separation = ParagraphIndentSeparation;
 	quotes_style = InsetQuotesParams::EnglishQuotes;
+	dynamic_quotes = false;
 	fontsize = "default";
 
 	/*  PaperLayout */
@@ -849,6 +850,8 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 		string qstyle;
 		lex >> qstyle;
 		quotes_style = quotesstyletranslator().find(qstyle);
+	} else if (token == "\\dynamic_quotes") {
+		lex >> dynamic_quotes;
 	} else if (token == "\\papersize") {
 		string ppsize;
 		lex >> ppsize;
@@ -1324,6 +1327,7 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 	os << "\n\\quotes_language "
 #endif
 	   << string_quotes_style[quotes_style]
+	   << "\n\\dynamic_quotes " << dynamic_quotes
 	   << "\n\\papercolumns " << columns
 	   << "\n\\papersides " << sides
 	   << "\n\\paperpagestyle " << pagestyle << '\n';

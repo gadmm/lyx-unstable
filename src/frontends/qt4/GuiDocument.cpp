@@ -1068,22 +1068,10 @@ GuiDocument::GuiDocument(GuiView & lv)
 	encodinglist.sort();
 	langModule->encodingCO->addItems(encodinglist);
 
-	langModule->quoteStyleCO->addItem(
-		qt_("``text''"), InsetQuotes::EnglishQuotes);
-	langModule->quoteStyleCO->addItem(
-		qt_("''text''"), InsetQuotes::SwedishQuotes);
-	langModule->quoteStyleCO->addItem
-		(qt_(",,text``"), InsetQuotes::GermanQuotes);
-	langModule->quoteStyleCO->addItem(
-		qt_(",,text''"), InsetQuotes::PolishQuotes);
-	langModule->quoteStyleCO->addItem(
-		qt_("<<text>>"), InsetQuotes::FrenchQuotes);
-	langModule->quoteStyleCO->addItem(
-		qt_(">>text<<"), InsetQuotes::DanishQuotes);
-#ifdef FILEFORMAT
-	langModule->quoteStyleCO->addItem(
-		qt_("\"text\""), InsetQuotes::PlainQuotes);
-#endif
+	for (int i = 0; i < quoteparams.stylescount(); ++i) {
+		InsetQuotesParams::QuoteStyle qs = InsetQuotesParams::QuoteStyle(i);
+		langModule->quoteStyleCO->addItem(toqstr(quoteparams.getGuiLabel(qs)));
+	}
 
 	langModule->languagePackageCO->addItem(
 		qt_("Default"), toqstr("default"));
@@ -2663,7 +2651,7 @@ void GuiDocument::applyView()
 		}
 	}
 
-	bp_.quotes_style = (InsetQuotes::QuoteStyle) langModule->quoteStyleCO->itemData(
+	bp_.quotes_style = (InsetQuotesParams::QuoteStyle) langModule->quoteStyleCO->itemData(
 		langModule->quoteStyleCO->currentIndex()).toInt();
 
 	QString const langname = langModule->languageCO->itemData(

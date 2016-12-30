@@ -18,6 +18,7 @@
 #include "BufferView.h"
 #include "Cursor.h"
 #include "Dimension.h"
+#include "Encoding.h"
 #include "Font.h"
 #include "FuncStatus.h"
 #include "FuncRequest.h"
@@ -64,11 +65,13 @@ namespace {
  * f    <<french>>   (``inner quotation'')
  * i    <<frenchin>> (<<inner quotation>>) ["in" = Imprimerie Nationale]
  * r    <<russian>>  (,,inner quotation``)
+ * j    [U+300C]cjk[U+300D]  ([U+300E]inner quotation[U+300F]) [CORNER BRACKETS]
+ * k    [U+300A]cjkangle[U+300B]  ([U+3008]inner quotation[U+3009]) [ANGLE BRACKETS]
  * x    dynamic style (inherits document settings)
  */
 
 #ifdef FILEFORMAT
-char const * const style_char = "esgpcaqbwfirx";
+char const * const style_char = "esgpcaqbwfirjkx";
 #else
 char const * const style_char = "esgpfa";
 #endif
@@ -190,6 +193,20 @@ char_type InsetQuotesParams::getQuoteChar(QuoteStyle const & style, QuoteLevel c
 		right_secondary = 0x201c; // ``
 		break;
 	}
+	case CJKQuotes:{
+		left_primary = 0x300c; // LEFT CORNER BRACKET
+		right_primary = 0x300d; // RIGHT CORNER BRACKET
+		left_secondary =  0x300e; // LEFT WHITE CORNER BRACKET
+		right_secondary = 0x300f; // RIGHT WHITE CORNER BRACKET
+		break;
+	}
+	case CJKAngleQuotes:{
+		left_primary = 0x300a; // LEFT DOUBLE ANGLE BRACKET
+		right_primary = 0x300b; // RIGHT DOUBLE ANGLE BRACKET
+		left_secondary =  0x3008; // LEFT ANGLE BRACKET
+		right_secondary = 0x3009; // RIGHT ANGLE BRACKET
+		break;
+	}
 	case DynamicQuotes:
 	default:
 		// should not happen
@@ -303,6 +320,33 @@ docstring InsetQuotesParams::getLaTeXQuote(char_type c, string const & op) const
 		res = "\\textquotedbl";
 		break;
 	}
+	// The following are fakes
+	// This is just to get something symbolic
+	// in encodings where this chars would not be used ayway
+	case 0x300c: // LEFT CORNER BRACKET
+		res = "\\ensuremath{\\lceil}";
+		break;
+	case 0x300d: // RIGHT CORNER BRACKET
+		res = "\\ensuremath{\\rfloor}";
+		break;
+	case 0x300e: // LEFT WHITE CORNER BRACKET
+		res = "\\ensuremath{\\llceil}";
+		break;
+	case 0x300f: // RIGHT WHITE CORNER BRACKET
+		res = "\\ensuremath{\\rrfloor}";
+		break;
+	case 0x300a: // LEFT DOUBLE ANGLE BRACKET
+		res = "\\ensuremath{\\langle\\kern-2.5pt\\langle}";
+		break;
+	case 0x300b: // RIGHT DOUBLE ANGLE BRACKET
+		res = "\\ensuremath{\\rangle\\kern-2.5pt\\rangle}";
+		break;
+	case 0x3008: // LEFT ANGLE BRACKET
+		res = "\\ensuremath{\\langle}";
+		break;
+	case 0x3009: // RIGHT ANGLE BRACKET
+		res = "\\ensuremath{\\rangle}";
+		break;
 	default:
 		break;
 	}
@@ -351,6 +395,30 @@ docstring InsetQuotesParams::getHTMLQuote(char_type c) const
 		break;
 	case 0x0022: // "
 		res = "&quot;";
+		break;
+	case 0x300c: // LEFT CORNER BRACKET
+		res = "&#x300c;";
+		break;
+	case 0x300d: // RIGHT CORNER BRACKET
+		res = "&#x300d;";
+		break;
+	case 0x300e: // LEFT WHITE CORNER BRACKET
+		res = "&#x300e;";
+		break;
+	case 0x300f: // RIGHT WHITE CORNER BRACKET
+		res = "&#x300f;";
+		break;
+	case 0x300a: // LEFT DOUBLE ANGLE BRACKET
+		res = "&#x300a;";
+		break;
+	case 0x300b: // RIGHT DOUBLE ANGLE BRACKET
+		res = "&#x300b;";
+		break;
+	case 0x3008: // LEFT ANGLE BRACKET
+		res = "&#x3008;";
+		break;
+	case 0x3009: // RIGHT ANGLE BRACKET
+		res = "&#x3009;";
 		break;
 	default:
 		break;
@@ -557,6 +625,12 @@ InsetQuotesParams::QuoteStyle InsetQuotes::getStyle(string const & s)
 		qs = InsetQuotesParams::FrenchQuotes;
 	else if (s == "frenchin")
 		qs = InsetQuotesParams::FrenchINQuotes;
+	else if (s == "russian")
+		qs = InsetQuotesParams::RussianQuotes;
+	else if (s == "cjk")
+		qs = InsetQuotesParams::CJKQuotes;
+	else if (s == "cjkangle")
+		qs = InsetQuotesParams::CJKAngleQuotes;
 	else if (s == "dynamic")
 		qs = InsetQuotesParams::DynamicQuotes;
 #endif
@@ -708,6 +782,12 @@ void InsetQuotes::latex(otexstream & os, OutputParams const & runparams) const
 		// (spacing and kerning is then handled respectively)
 		qstr = docstring(1, quotechar);
 	}
+	else if (style == InsetQuotesParams::CJKQuotes || style  == InsetQuotesParams::CJKAngleQuotes) {
+		if (runparams.encoding && runparams.encoding->encodable(quotechar))
+			qstr = docstring(1, quotechar);
+		else
+			qstr = quoteparams.getLaTeXQuote(quotechar, "int");
+	}
 	else if ((style == InsetQuotesParams::SwissQuotes
 		 || style == InsetQuotesParams::FrenchQuotes
 		 || style == InsetQuotesParams::FrenchINQuotes)
@@ -758,7 +838,7 @@ void InsetQuotes::latex(otexstream & os, OutputParams const & runparams) const
 
 	os << qstr;
 
-	if (prefixIs(qstr, from_ascii("\\")))
+	if (prefixIs(qstr, from_ascii("\\")) && !suffixIs(qstr, '}'))
 		// properly terminate the command depending on the context
 		os << termcmd;
 }
@@ -884,6 +964,13 @@ void InsetQuotes::validate(LaTeXFeatures & features) const
 			features.require("textquotedbl");
 		break;
 	}
+	// we fake these from math
+	case 0x300e: // LEFT WHITE CORNER BRACKET
+	case 0x300f: // RIGHT WHITE CORNER BRACKET
+		if (!features.runparams().encoding
+		    || !features.runparams().encoding->encodable(type))
+			features.require("stmaryrd");
+		break;
 	default:
 		break;
 	}

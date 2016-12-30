@@ -74,7 +74,7 @@ static char const * const string_paragraph_separation[] = {
 static char const * const string_quotes_style[] = {
 #ifdef FILEFORMAT
 	"english", "swedish", "german", "polish", "swiss", "danish", "plain",
-	"british", "swedishg", "french", "frenchin", "russian", ""
+	"british", "swedishg", "french", "frenchin", "russian", "cjk", "cjkangle", ""
 #else
 	"english", "swedish", "german", "polish", "french", "danish", "",
 #endif
@@ -152,6 +152,8 @@ QuotesStyleTranslator const init_quotesstyletranslator()
 	translator.addPair(string_quotes_style[9], InsetQuotesParams::FrenchQuotes);
 	translator.addPair(string_quotes_style[10], InsetQuotesParams::FrenchINQuotes);
 	translator.addPair(string_quotes_style[11], InsetQuotesParams::RussianQuotes);
+	translator.addPair(string_quotes_style[12], InsetQuotesParams::CJKQuotes);
+	translator.addPair(string_quotes_style[13], InsetQuotesParams::CJKAngleQuotes);
 #endif
 	return translator;
 }

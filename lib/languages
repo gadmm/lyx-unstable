@@ -374,9 +374,9 @@ End
 Language chinese-traditional
 	GuiName         "Chinese (traditional)"
 	HasGuiSupport    true
-	QuoteStyle       cjk
-	Encoding         utf8-cjk
-	LangCode         zh_TW
+	QuoteStyle       english
+	Encoding        utf8-cjk
+	LangCode        zh_TW
 	Requires         CJK
 End
 
@@ -700,7 +700,6 @@ Language japanese
 	Requires         japanese
 	InternalEncoding true
 	FontEncoding     None
-	QuoteStyle       cjk
 End
 
 # uses CJK package
@@ -709,7 +708,6 @@ Language japanese-cjk
 	Encoding        euc-jp
 	LangCode        ja_JP
 	Requires        CJK
-	QuoteStyle      cjk
 End
 
 # not supported by babel
@@ -743,7 +741,7 @@ End
 Language korean
 	GuiName         "Korean"
 	Encoding        euc-kr
-	QuoteStyle      cjkangle
+	QuoteStyle      english
 	LangCode        ko_KR
 	Requires        CJK
 End

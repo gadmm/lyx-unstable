@@ -1327,7 +1327,9 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 	os << "\n\\quotes_language "
 #endif
 	   << string_quotes_style[quotes_style]
+#ifdef FILEFORMAT
 	   << "\n\\dynamic_quotes " << dynamic_quotes
+#endif
 	   << "\n\\papercolumns " << columns
 	   << "\n\\papersides " << sides
 	   << "\n\\paperpagestyle " << pagestyle << '\n';

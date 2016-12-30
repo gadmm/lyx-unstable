@@ -1755,11 +1755,13 @@ void MenuDefinition::expandQuotes(BufferView const * bv)
 			rqs.add(MenuItem(MenuItem::Command, toqstr(desc), cmd));
 	}
 
+#ifdef FILEFORMAT
 	if (!xqs.empty()) {
 		MenuItem item(MenuItem::Submenu, qt_("Dynamic Quotation Marks"));
 		item.setSubmenu(xqs);
 		add(item);
 	}
+#endif
 	if (!eqs.empty()) {
 		MenuItem item(MenuItem::Submenu,
 			      toqstr(quoteparams.getGuiLabel(InsetQuotesParams::EnglishQuotes)));

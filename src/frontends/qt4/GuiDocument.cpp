@@ -1029,6 +1029,7 @@ GuiDocument::GuiDocument(GuiView & lv)
 
 	// language & quote
 	langModule = new UiWidget<Ui::LanguageUi>;
+	disable_widget_if_ndef_FILEFORMAT(langModule->dynamicQuotesCB);
 	connect(langModule->languageCO, SIGNAL(activated(int)),
 		this, SLOT(change_adaptor()));
 	connect(langModule->languageCO, SIGNAL(activated(int)),

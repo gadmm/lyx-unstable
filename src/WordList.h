@@ -30,15 +30,13 @@ public:
 	void insert(docstring const & w);
 	///
 	void remove(docstring const & w);
-	///
-	static void cleanupWordLists();
 
 private:
 	struct Impl;
 	std::unique_ptr<Impl> d;
 };
 
-WordList * theWordList(std::string const & lang);
+WordList & theWordList(std::string const & lang);
 
 } // namespace lyx
 

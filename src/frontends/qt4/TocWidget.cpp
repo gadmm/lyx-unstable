@@ -450,15 +450,17 @@ void TocWidget::updateViewNow()
 void TocWidget::finishUpdateView()
 {
 	// Profiling shows that this is the expensive stuff in the context of typing
-	// text and moving with arrows (still five times less than updateToolbars in
-	// my tests with a medium-sized document, however this grows linearly in the
-	// size of the document). For bigger operations, this is negligible, and
-	// outweighted by TocModels::reset() anyway.
+	// text and moving with arrows. For bigger operations, this is negligible,
+	// and outweighted by TocModels::reset() anyway.
 	if (canNavigate()) {
 		if (!persistent_)
 			setTreeDepth(depth_);
 		persistentCB->setChecked(persistent_);
-		select(gui_view_.tocModels().currentIndex(current_type_));
+		// select the item at current cursor location
+		if (gui_view_.documentBufferView()) {
+			DocIterator const & dit = gui_view_.documentBufferView()->cursor();
+			select(gui_view_.tocModels().currentIndex(current_type_, dit));
+		}
 	}
 	filterContents();
 }

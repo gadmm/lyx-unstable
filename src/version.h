@@ -33,7 +33,7 @@ extern char const * const lyx_version_info;
 #ifdef FILEFORMAT
 // Do not remove the comment below, so we get merge conflict in
 // independent branches. Instead add your own.
-#define LYX_FORMAT_LYX 524 // spitz: crimson/cochineal font
+#define LYX_FORMAT_LYX 525 // rgh: labelonly for references
 #define LYX_FORMAT_TEX2LYX 524
 
 #else

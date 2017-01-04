@@ -142,6 +142,8 @@ void GuiRef::enableBoxes()
 	bool const usingRefStyle = buffer().params().use_refstyle;
 	pluralCB->setEnabled(isFormatted && usingRefStyle);
 	capsCB->setEnabled (isFormatted && usingRefStyle);
+	disable_widget_if_ndef_FILEFORMAT(pluralCB);
+	disable_widget_if_ndef_FILEFORMAT(capsCB);
 }
 
 
@@ -301,8 +303,10 @@ void GuiRef::updateContents()
 	if (!typeAllowed())
 		typeCO->setCurrentIndex(0);
 
+#ifdef FILEFORMAT
 	pluralCB->setChecked(params_["plural"] == "true");
 	capsCB->setChecked(params_["caps"] == "true");
+#endif
 
 	// insert buffer list
 	bufferCO->clear();
@@ -340,10 +344,12 @@ void GuiRef::applyView()
 	params_.setCmdName(InsetRef::getName(typeCO->currentIndex()));
 	params_["reference"] = qstring_to_ucs4(last_reference_);
 	params_["name"] = qstring_to_ucs4(nameED->text());
+#ifdef FILEFORMAT
 	params_["plural"] = pluralCB->isChecked() ? 
 	      from_ascii("true") : from_ascii("false");
 	params_["caps"] = capsCB->isChecked() ? 
 	      from_ascii("true") : from_ascii("false");
+#endif
 	restored_buffer_ = bufferCO->currentIndex();
 }
 

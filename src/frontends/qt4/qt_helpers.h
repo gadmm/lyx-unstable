@@ -215,6 +215,11 @@ QString formatToolTip(QString text, int width = 30);
 /// if FILEFORMAT is not defined, calls setDisabled on w and prepend the tooltip
 /// with the text "Newer file format required". (LyX unstable)
 void disable_widget_if_ndef_FILEFORMAT(QWidget * w);
+/// if FILEFORMAT is not defined, disables the item at (row,col) and prepend the
+/// tooltip with the text "Newer file format required". (LyX unstable)
+void disable_item_if_ndef_FILEFORMAT(QAbstractItemModel * m,
+                                     int row,
+                                     int col = 0);
 
 
 #if QT_VERSION < 0x050300

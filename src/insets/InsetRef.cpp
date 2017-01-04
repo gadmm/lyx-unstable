@@ -58,7 +58,11 @@ bool InsetRef::isCompatibleCommand(string const & s) {
 		|| s == "formatted"
 		|| s == "eqref"
 		|| s == "nameref"
+#ifdef FILEFORMAT
 		|| s == "labelonly";
+#else
+		;
+#endif
 }
 
 

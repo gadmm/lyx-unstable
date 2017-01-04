@@ -48,6 +48,8 @@ GuiRef::GuiRef(GuiView & lv)
 {
 	setupUi(this);
 
+	disable_item_if_ndef_FILEFORMAT(typeCO->model(), 7);
+
 	at_ref_ = false;
 
 	// The filter bar

@@ -1742,12 +1742,14 @@ void MenuDefinition::expandQuotes(BufferView const * bv)
 	bool display_static = false;
 	// ... then potentially items to reset to the defaults and to dynamic style ...
 	if (!main_dynamic_qs && globalqsc != 'x') {
+#ifdef FILEFORMAT
 		FuncRequest cmd = FuncRequest(LFUN_INSET_MODIFY, subcmd + 'x' + wildcards);
 		docstring const desc = bformat(_("Use dynamic quotes (%1$s)|d"),
 						quoteparams.getGuiLabel(globalqs));
 		add(MenuItem(MenuItem::Command, toqstr(desc), cmd));
 		have_section = true;
 		display_static = true;
+#endif
 	}
 	if (!main_global_qs && langdefqs != globalqs) {
 		docstring const variant = main_dynamic_qs ? _("dynamic[[Quotes]]") : _("static[[Quotes]]");

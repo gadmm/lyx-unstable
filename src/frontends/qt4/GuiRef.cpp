@@ -149,6 +149,7 @@ void GuiRef::enableBoxes()
 	noprefixCB->setEnabled (isLabelOnly && usingRefStyle);
 	disable_widget_if_ndef_FILEFORMAT(pluralCB);
 	disable_widget_if_ndef_FILEFORMAT(capsCB);
+	disable_widget_if_ndef_FILEFORMAT(noprefixCB);
 }
 
 
@@ -311,8 +312,8 @@ void GuiRef::updateContents()
 #ifdef FILEFORMAT
 	pluralCB->setChecked(params_["plural"] == "true");
 	capsCB->setChecked(params_["caps"] == "true");
-#endif
 	noprefixCB->setChecked(params_["noprefix"] == "true");
+#endif
 
 	// insert buffer list
 	bufferCO->clear();

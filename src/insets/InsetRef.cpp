@@ -76,8 +76,8 @@ ParamInfo const & InsetRef::findInfo(string const & /* cmdName */)
 #ifdef FILEFORMAT
 		param_info_.add("plural", ParamInfo::LYX_INTERNAL);
 		param_info_.add("caps", ParamInfo::LYX_INTERNAL);
-#endif
 		param_info_.add("noprefix", ParamInfo::LYX_INTERNAL);
+#endif
 	}
 	return param_info_;
 }
@@ -197,7 +197,13 @@ void InsetRef::latex(otexstream & os, OutputParams const & rp) const
 	}
 	else if (cmd == "labelonly") {
 		docstring const & ref = getParam("reference");
-		if (getParam("noprefix") != "true")
+		if (
+#ifdef FILEFORMAT
+		    getParam("noprefix")
+#else
+		    "false"
+#endif
+		    != "true")
 			os << ref;
 		else {
 			docstring prefix;
@@ -343,7 +349,13 @@ void InsetRef::updateBuffer(ParIterator const & it, UpdateType)
 	if (cmd != "labelonly")
 		label += ref;
 	else {
-		if (getParam("noprefix") != "true")
+		if (
+#ifdef FILEFORMAT
+		    getParam("noprefix")
+#else
+		    "false"
+#endif
+		    != "true")
 			label += ref;
 		else {
 			docstring prefix;

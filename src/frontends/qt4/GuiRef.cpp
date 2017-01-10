@@ -145,8 +145,8 @@ void GuiRef::enableBoxes()
 	    (InsetRef::getName(typeCO->currentIndex()) == "labelonly");
 	bool const usingRefStyle = buffer().params().use_refstyle;
 	pluralCB->setEnabled(isFormatted && usingRefStyle);
-	capsCB->setEnabled (isFormatted && usingRefStyle);
-	noprefixCB->setEnabled (isLabelOnly && usingRefStyle);
+	capsCB->setEnabled(isFormatted && usingRefStyle);
+	noprefixCB->setEnabled(isLabelOnly);
 	disable_widget_if_ndef_FILEFORMAT(pluralCB);
 	disable_widget_if_ndef_FILEFORMAT(capsCB);
 	disable_widget_if_ndef_FILEFORMAT(noprefixCB);

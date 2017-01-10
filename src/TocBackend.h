@@ -19,45 +19,33 @@
 #include "FuncRequest.h"
 #include "OutputEnums.h"
 #include "Toc.h"
+#include "TocBuilder.h"
 
 #include "support/strfwd.h"
 #include "support/unique_ptr.h"
-
-#include <stack>
 
 
 namespace lyx {
 
 class Buffer;
 
-
-/* FIXME: toc types are currently identified by strings. It cannot be converted
- * into an enum because of the user-configurable indexing categories and
- * the user-definable float types provided by layout files.
+/* Toc types are described by strings. They cannot be converted into an enum
+ * because of the user-configurable categories for index and the user-definable
+ * toc types provided in layout files.
  *
- * I leave this for documentation purposes for the moment.
+ * Here is a summary of built-in toc types
  *
-enum TocType {
-	TABLE_OF_CONTENTS,//"tableofcontents"
-	CHILD,//"child"
-	GRAPHICS,//"graphics"
-	NOTE,//"note"
-	BRANCH,//"branch"
-	CHANGE,//"change"
-	LABEL,//"label"
-	CITATION,//"citation"
-	EQUATION,//"equation"
-	FOOTNOTE,//"footnote"
-	MARGINAL_NOTE,//"marginalnote"
-	INDEX,//"index", "index:<user-str>" (from interface)
-	NOMENCL,//"nomencl"
-	LISTING,//"listings"
-	FLOAT,//"figure", "table", "algorithm", user-defined (from layout?)
-	MATH_MACRO,//"math-macro"
-	EXTERNAL,//"external"
-	SENSELESS,//"senseless"
-	TOC_TYPE_COUNT
-}
+ * Non-customizable (used without TocBuilder): "tableofcontents", "change",
+ * "citation", "label", "senseless".
+ *
+ * Built-in but customizable (used with TocBuilder): "child", "graphics",
+ * "equation", "index", "index:<user-str>", "nomencl", "listings", "math-macro",
+ * "external", any float type (as defined in the layouts).
+ *
+ * The following are used for XHTML output: "tableofcontents" (InsetText),
+ * "citation" (InsetCitation), any float type.
+ *
+ * Other types are defined in the layouts.
  */
 
 ///
@@ -65,9 +53,6 @@ enum TocType {
 */
 class TocItem
 {
-	friend class TocBackend;
-	friend class TocBuilder;
-
 public:
 	/// Default constructor for STL containers.
 	TocItem() : dit_(0), depth_(0), output_(false) {}
@@ -79,31 +64,28 @@ public:
 		FuncRequest action = FuncRequest(LFUN_UNKNOWN_ACTION)
 		);
 	///
-	~TocItem() {}
-	///
-	int id() const;
+	DocIterator const & dit() const { return dit_; }
 	///
 	int depth() const { return depth_; }
 	///
 	docstring const & str() const { return str_; }
 	///
 	void str(docstring const & s) { str_ = s; }
-	/// String for display, e.g. it has a mark if output is inactive
-	docstring const asString() const;
-	///
-	DocIterator const & dit() const { return dit_; }
 	///
 	bool isOutput() const { return output_; }
 	///
 	void setAction(FuncRequest a) { action_ = a; }
+
 	/// custom action, or the default one (paragraph-goto) if not customised
 	FuncRequest action() const;
-
-protected:
-	/// Current position of item.
-	DocIterator dit_;
+	///
+	int id() const;
+	/// String for display, e.g. it has a mark if output is inactive
+	docstring const asString() const;
 
 private:
+	/// Current position of item.
+	DocIterator dit_;
 	/// nesting depth
 	int depth_;
 	/// Full item string
@@ -112,33 +94,6 @@ private:
 	bool output_;
 	/// Custom action
 	FuncRequest action_;
-};
-
-
-/// Caption-enabled TOC builders
-class TocBuilder
-{
-public:
-	TocBuilder(std::shared_ptr<Toc> const toc);
-	/// When entering a float
-	void pushItem(DocIterator const & dit, docstring const & s,
-	              bool output_active, bool is_captioned = false);
-	/// When encountering a caption
-	void captionItem(DocIterator const & dit, docstring const & s,
-	                 bool output_active);
-	/// When exiting a float
-	void pop();
-private:
-	TocBuilder(){}
-	///
-	struct frame {
-		Toc::size_type pos;
-		bool is_captioned;
-	};
-	///
-	std::shared_ptr<Toc> const toc_;
-	///
-	std::stack<frame> stack_;
 };
 
 
@@ -180,6 +135,9 @@ public:
 	        odocstringstream & os, size_t max_length) const;
 	///
 	docstring outlinerName(std::string const & type) const;
+	/// Whether a toc type is less important and appears in the "Other lists"
+	/// submenu
+	static bool isOther(std::string const & type);
 
 private:
 	///

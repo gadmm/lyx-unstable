@@ -33,24 +33,12 @@ public:
 	///
 	void setBuffer(Buffer &);
 
-	// The method below hides inset::metrics() intentionally!
-	// We have to tell clang not to be fussy about that.
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Woverloaded-virtual"
-#endif
-	/// the size is usually some sort of convex hull of the cells
-	void metrics(MetricsInfo const & mi) const;
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
+	/// Update the cells metrics
+	void cellsMetrics(MetricsInfo const & mi) const;
 	/// draw background if locked
 	void draw(PainterInfo & pi, int x, int y) const;
 	/// draw selection background
 	void drawSelection(PainterInfo & pi, int x, int y) const;
-	/// draw decorations.
-	void drawDecoration(PainterInfo & pi, int x, int y) const
-	{ drawMarkers(pi, x, y); }
 	///
 	void updateBuffer(ParIterator const &, UpdateType);
 	/// identifies NestInsets

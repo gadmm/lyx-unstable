@@ -199,11 +199,11 @@ void InsetRef::latex(otexstream & os, OutputParams const & rp) const
 		docstring const & ref = getParam("reference");
 		if (
 #ifdef FILEFORMAT
-		    getParam("noprefix")
+		    getParam("noprefix") != "true"
 #else
-		    "false"
+		    false
 #endif
-		    != "true")
+		    )
 			os << ref;
 		else {
 			docstring prefix;
@@ -351,11 +351,11 @@ void InsetRef::updateBuffer(ParIterator const & it, UpdateType)
 	else {
 		if (
 #ifdef FILEFORMAT
-		    getParam("noprefix")
+		    getParam("noprefix") != "true"
 #else
-		    "false"
+		    false
 #endif
-		    != "true")
+		    )
 			label += ref;
 		else {
 			docstring prefix;

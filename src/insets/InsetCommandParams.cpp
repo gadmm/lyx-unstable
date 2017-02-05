@@ -168,7 +168,7 @@ ParamInfo::ParamData const &
 
 
 InsetCommandParams::InsetCommandParams(InsetCode code)
-	: literal(true), insetCode_(code), preview_(false)
+	: literal(false), insetCode_(code), preview_(false)
 {
 	cmdName_ = getDefaultCmd(code);
 	info_ = findInfo(code, cmdName_);
@@ -177,7 +177,7 @@ InsetCommandParams::InsetCommandParams(InsetCode code)
 
 InsetCommandParams::InsetCommandParams(InsetCode code,
 	string const & cmdName)
-	: literal(true), insetCode_(code), cmdName_(cmdName), preview_(false)
+	: literal(false), insetCode_(code), cmdName_(cmdName), preview_(false)
 {
 	info_ = findInfo(code, cmdName);
 }

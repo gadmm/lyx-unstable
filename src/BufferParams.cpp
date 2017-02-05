@@ -873,9 +873,13 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 #endif
 	else if (token == "\\use_bibtopic") {
 		lex >> use_bibtopic;
-	} else if (token == "\\multibib") {
+	}
+#ifdef FILEFORMAT
+	else if (token == "\\multibib") {
 		lex >> multibib;
-	} else if (token == "\\use_indices") {
+	}
+#endif
+	else if (token == "\\use_indices") {
 		lex >> use_indices;
 	} else if (token == "\\tracking_changes") {
 		lex >> track_changes;

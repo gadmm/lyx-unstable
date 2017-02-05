@@ -1130,6 +1130,7 @@ GuiDocument::GuiDocument(GuiView & lv)
 		this, SLOT(biblioChanged()));
 	connect(biblioModule->bibunitsCO, SIGNAL(activated(int)),
 		this, SLOT(biblioChanged()));
+	disable_widget_if_ndef_FILEFORMAT(biblioModule->bibunitsCO);
 	connect(biblioModule->bibtexCO, SIGNAL(activated(int)),
 		this, SLOT(bibtexChanged(int)));
 	connect(biblioModule->bibtexOptionsLE, SIGNAL(textChanged(QString)),

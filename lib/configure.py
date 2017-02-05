@@ -687,6 +687,7 @@ def checkFormatEntries(dtl_tools):
 \Format eps3       eps    "EPS (cropped)"         "" "%%"	""	"document"	""
 \Format ps         ps      Postscript             t  "%%"	""	"document,vector,menu=export"	"application/postscript"'''])
     # for xdg-open issues look here: http://www.mail-archive.com/lyx-devel@lists.lyx.org/msg151818.html
+    # maybe use "bestApplication()" from https://github.com/jleclanche/python-mime
     # the MIME type is set for pdf6, because that one needs to be autodetectable by libmime
     checkViewer('a PDF previewer',
                 ['pdfview', 'kpdf', 'okular', 'qpdfview --unique',
@@ -1180,11 +1181,12 @@ def checkOtherEntries():
         rc_entry = [ r'\chktex_command "%%"' ])
     checkProgAlternatives('BibTeX or alternative programs',
         ['bibtex', 'bibtex8', 'biber'],
-        rc_entry = [ r'\bibtex_command "%%"' ],
+        rc_entry = [ r'\bibtex_command "automatic"' ],
         alt_rc_entry = [ r'\bibtex_alternatives "%%"' ])
-    checkProg('a specific Japanese BibTeX variant',
-        ['pbibtex', 'jbibtex', 'bibtex'],
-        rc_entry = [ r'\jbibtex_command "%%"' ])
+    checkProgAlternatives('a specific Japanese BibTeX variant',
+        ['pbibtex', 'upbibtex', 'jbibtex', 'bibtex', 'biber'],
+        rc_entry = [ r'\jbibtex_command "automatic"' ],
+        alt_rc_entry = [ r'\jbibtex_alternatives "%%"' ])
     checkProgAlternatives('available index processors',
         ['texindy', 'makeindex -c -q', 'xindy'],
         rc_entry = [ r'\index_command "%%"' ],
@@ -1714,7 +1716,7 @@ if __name__ == '__main__':
     lyx_check_config = True
     lyx_kpsewhich = True
     outfile = 'lyxrc.defaults'
-    lyxrc_fileformat = 20
+    lyxrc_fileformat = 21
     rc_entries = ''
     lyx_keep_temps = False
     version_suffix = ''

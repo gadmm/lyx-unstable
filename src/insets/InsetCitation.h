@@ -69,7 +69,7 @@ public:
 	void updateBuffer(ParIterator const & it, UpdateType);
 	///
 	void addToToc(DocIterator const & di, bool output_active,
-				  UpdateType utype) const;
+				  UpdateType utype, TocBackend & backend) const;
 	///
 	std::string contextMenuName() const;
 	//@}
@@ -86,6 +86,8 @@ public:
 	///
 	CitationStyle getCitationStyle(BufferParams const & bp, std::string const & input,
 				       std::vector<CitationStyle> const & valid_styles) const;
+	///
+	std::map<docstring, docstring> getQualifiedLists(docstring const p) const;
 
 private:
 	/// tries to make a pretty label and makes a basic one if not

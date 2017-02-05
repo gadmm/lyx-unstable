@@ -861,13 +861,13 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 #ifdef FILEFORMAT
 	else if (token == "\\biblio_options") {
 		lex.eatLine();
-		biblio_opts = lex.getString();
+		biblio_opts = trim(lex.getString());
 	} else if (token == "\\biblatex_bibstyle") {
 		lex.eatLine();
-		biblatex_bibstyle = lex.getString();
+		biblatex_bibstyle = trim(lex.getString());
 	} else if (token == "\\biblatex_citestyle") {
 		lex.eatLine();
-		biblatex_citestyle = lex.getString();
+		biblatex_citestyle = trim(lex.getString());
 	}
 #endif
 	else if (token == "\\use_bibtopic") {
@@ -3381,14 +3381,42 @@ vector<CitationStyle> BufferParams::citeStyles() const
 }
 
 
-string const & BufferParams::bibtexCommand() const
+string const BufferParams::bibtexCommand() const
 {
+	// Return document-specific setting if available
 	if (bibtex_command != "default")
 		return bibtex_command;
-	else if (encoding().package() == Encoding::japanese)
-		return lyxrc.jbibtex_command;
-	else
+
+	// If we have "default" in document settings, consult the prefs
+	// 1. Japanese (uses a specific processor)
+	if (encoding().package() == Encoding::japanese) {
+		if (lyxrc.jbibtex_command != "automatic")
+			// Return the specified program, if "automatic" is not set
+			return lyxrc.jbibtex_command;
+		else if (!useBiblatex()) {
+			// With classic BibTeX, return pbibtex, jbibtex, bibtex
+			if (lyxrc.jbibtex_alternatives.find("pbibtex") != lyxrc.jbibtex_alternatives.end())
+				return "pbibtex";
+			if (lyxrc.jbibtex_alternatives.find("jbibtex") != lyxrc.jbibtex_alternatives.end())
+				return "jbibtex";
+			return "bibtex";
+		}
+	}
+	// 2. All other languages
+	else if (lyxrc.bibtex_command != "automatic")
+		// Return the specified program, if "automatic" is not set
 		return lyxrc.bibtex_command;
+
+	// 3. Automatic: find the most suitable for the current cite framework
+	if (useBiblatex()) {
+		// For Biblatex, we prefer biber (also for Japanese)
+		// and fall back to bibtex8 and, as last resort, bibtex
+		if (lyxrc.bibtex_alternatives.find("biber") != lyxrc.bibtex_alternatives.end())
+			return "biber";
+		else if (lyxrc.bibtex_alternatives.find("bibtex8") != lyxrc.bibtex_alternatives.end())
+			return "bibtex8";
+	}
+	return "bibtex";
 }
 
 

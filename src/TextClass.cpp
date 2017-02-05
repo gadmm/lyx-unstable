@@ -1102,6 +1102,8 @@ bool TextClass::readCiteEngine(Lexer & lexrc)
 				latex_cmd += ichar;
 			else if (mode == StarDesc)
 				stardesc += ichar;
+			else if (ichar == '$')
+				cs.hasQualifiedList = true;
 			else if (ichar == '*')
 				cs.hasStarredVersion = true;
 			else if (ichar == '[' && cs.textAfter)
@@ -1418,18 +1420,6 @@ bool TextClass::readOutlinerName(Lexer & lexrc)
 	}
 	outliner_names_[type] = name;
     return true;
-}
-
-
-docstring TextClass::outlinerName(std::string const & type) const
-{
-	std::map<std::string,docstring>::const_iterator const it
-		= outliner_names_.find(type);
-	if (it == outliner_names_.end()) {
-		LYXERR0("Missing OutlinerName for " << type << "!");
-		return translateIfPossible(from_utf8(type));
-	} else
-		return translateIfPossible(it->second);
 }
 
 

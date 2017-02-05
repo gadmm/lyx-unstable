@@ -171,6 +171,10 @@ public:
 	void right_boundary(bool b) { right_boundary_ = b; }
 	///
 	bool right_boundary() const { return right_boundary_; }
+	///
+	void flushed(bool b) { flushed_ = b; }
+	///
+	bool flushed() const { return flushed_; }
 
 	///
 	Dimension const & dimension() const { return dim_; }
@@ -243,10 +247,11 @@ public:
 	 * separator and update endpos if necessary. If all that
 	 * remains is a large word, cut it to \param width.
 	 * \param body_pos minimum amount of text to keep.
-	 * \param width maximum width of the row
+	 * \param width maximum width of the row.
+	 * \param available width on next row.
 	 * \return true if the row has been shortened.
 	 */
-	bool shortenIfNeeded(pos_type const body_pos, int const width);
+	bool shortenIfNeeded(pos_type const body_pos, int const width, int const next_width);
 
 	/**
 	 * If last element of the row is a string, compute its width
@@ -309,8 +314,10 @@ private:
 	pos_type pos_;
 	/// one behind last pos covered by this row
 	pos_type end_;
-	// Is there is a boundary at the end of the row (display inset...)
+	// Is there a boundary at the end of the row (display inset...)
 	bool right_boundary_;
+	// Shall the row be flushed when it is supposed to be justified?
+	bool flushed_;
 	/// Row dimension.
 	Dimension dim_;
 };

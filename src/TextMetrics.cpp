@@ -514,13 +514,7 @@ bool TextMetrics::redoParagraph(pit_type const pit)
 
 LyXAlignment TextMetrics::getAlign(Paragraph const & par, Row const & row) const
 {
-	Layout const & layout = par.layout();
-
-	LyXAlignment align;
-	if (par.params().align() == LYX_ALIGN_LAYOUT)
-		align = layout.align;
-	else
-		align = par.params().align();
+	LyXAlignment align = par.getAlign();
 
 	// handle alignment inside tabular cells
 	Inset const & owner = text_->inset();
@@ -567,8 +561,7 @@ LyXAlignment TextMetrics::getAlign(Paragraph const & par, Row const & row) const
 		// not justify stuff, then don't stretch.
 		// A forced block alignment can only be overridden the 'no
 		// justification on screen' setting.
-		if (((row.right_boundary() || row.endpos() == par.size())
-		     && !forced_block)
+		if ((row.flushed() && !forced_block)
 		    || !bv_->buffer().params().justification)
 			align = text_->isRTL(par) ? LYX_ALIGN_RIGHT : LYX_ALIGN_LEFT;
 	}
@@ -917,7 +910,7 @@ bool TextMetrics::breakRow(Row & row, int const right_margin) const
 			&& inset->display())
 		    || (!row.empty() && row.back().inset
 			&& row.back().inset->display())) {
-			row.right_boundary(true);
+			row.flushed(true);
 			need_new_row = par.isNewline(i);
 			++i;
 			break;
@@ -947,8 +940,15 @@ bool TextMetrics::breakRow(Row & row, int const right_margin) const
 
 	// if the row is too large, try to cut at last separator. In case
 	// of success, reset indication that the row was broken abruptly.
-	if (row.shortenIfNeeded(body_pos, width))
-		row.right_boundary(!row.empty() && row.back().endpos == row.endpos());
+	int const next_width = max_width_ - leftMargin(max_width_, row.pit(), row.endpos())
+		- rightMargin(row.pit());
+
+	row.shortenIfNeeded(body_pos, width, next_width);
+	row.right_boundary(!row.empty() && row.endpos() < end
+	                   && row.back().endpos == row.endpos());
+	// Last row in paragraph is flushed
+	if (row.endpos() == end)
+		row.flushed(true);
 
 	// make sure that the RTL elements are in reverse ordering
 	row.reverseRTL(is_rtl);
@@ -1788,12 +1788,7 @@ int TextMetrics::leftMargin(int max_width,
 	if (!par.params().leftIndent().zero())
 		l_margin += par.params().leftIndent().inPixels(max_width, lfm.em());
 
-	LyXAlignment align;
-
-	if (par.params().align() == LYX_ALIGN_LAYOUT)
-		align = layout.align;
-	else
-		align = par.params().align();
+	LyXAlignment align = par.getAlign();
 
 	// set the correct parindent
 	if (pos == 0

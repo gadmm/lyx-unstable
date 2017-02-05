@@ -126,7 +126,6 @@ pos_type Row::Element::x2pos(int &x) const
 	}
 	//lyxerr << "=> p=" << pos + i << " x=" << x << endl;
 	return pos + i;
-
 }
 
 
@@ -165,7 +164,7 @@ Row::Row()
 	  sel_beg(-1), sel_end(-1),
 	  begin_margin_sel(false), end_margin_sel(false),
 	  changed_(false), crc_(0),
-	  pit_(0), pos_(0), end_(0), right_boundary_(false)
+	  pit_(0), pos_(0), end_(0), right_boundary_(false), flushed_(false)
 {}
 
 
@@ -446,7 +445,7 @@ void Row::pop_back()
 }
 
 
-bool Row::shortenIfNeeded(pos_type const keep, int const w)
+bool Row::shortenIfNeeded(pos_type const keep, int const w, int const next_width)
 {
 	if (empty() || width() <= w)
 		return false;
@@ -493,7 +492,7 @@ bool Row::shortenIfNeeded(pos_type const keep, int const w)
 			 * next row. Thus breaking does not help.
 			 */
 			if (wid_brk + cit_brk->dim.wid < w
-			    && dim_.wid - (wid_brk + brk.dim.wid) >= w) {
+			    && dim_.wid - (wid_brk + brk.dim.wid) >= next_width) {
 				break;
 			}
 			end_ = brk.endpos;

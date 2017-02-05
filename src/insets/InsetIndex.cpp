@@ -439,7 +439,9 @@ ParamInfo const & InsetPrintIndex::findInfo(string const & /* cmdName */)
 				ParamInfo::HANDLING_ESCAPE);
 		param_info_.add("name", ParamInfo::LATEX_OPTIONAL,
 				ParamInfo::HANDLING_LATEXIFY);
+#ifdef FILEFORMAT
 		param_info_.add("literal", ParamInfo::LYX_INTERNAL);
+#endif
 	}
 	return param_info_;
 }

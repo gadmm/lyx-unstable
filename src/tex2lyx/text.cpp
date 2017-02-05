@@ -2761,7 +2761,11 @@ void parse_text(Parser & p, ostream & os, unsigned flags, bool outer,
 				begin_command_inset(os, "bibitem", "bibitem");
 				os << "label \"" << label << "\"\n"
 				   << "key \"" << key << "\"\n"
+#ifdef FILEFORMAT
 				   << "literal \"true\"\n";
+#else
+				   ;
+#endif
 				end_inset(os);
 			}
 		}
@@ -3440,7 +3444,9 @@ void parse_text(Parser & p, ostream & os, unsigned flags, bool outer,
 			os << "target \"" << target << "\"\n";
 			if (type == "mailto:" || type == "file:")
 				os << "type \"" << type << "\"\n";
+#ifdef FILEFORMAT
 			os << "literal \"true\"\n";
+#endif
 			end_inset(os);
 			skip_spaces_braces(p);
 		}
@@ -3588,7 +3594,10 @@ void parse_text(Parser & p, ostream & os, unsigned flags, bool outer,
 			os << "key \""
 			   << convert_command_inset_arg(p.verbatim_item())
 			   << "\"\n"
-			   << "literal \"true\"\n";
+#ifdef FILEFORMAT
+			   << "literal \"true\"\n"
+#endif
+				;
 			end_inset(os);
 			// Need to set the cite engine if natbib is loaded by
 			// the document class directly
@@ -3643,7 +3652,10 @@ void parse_text(Parser & p, ostream & os, unsigned flags, bool outer,
 			os << "after " << '"' << after << "\"\n"
 			   << "before " << '"' << before << "\"\n"
 			   << "key " << '"' << citation << "\"\n"
-			   << "literal \"true\"\n";
+#ifdef FILEFORMAT
+			   << "literal \"true\"\n"
+#endif
+				;
 			end_inset(os);
 			// Need to set the cite engine if jurabib is loaded by
 			// the document class directly
@@ -3662,7 +3674,10 @@ void parse_text(Parser & p, ostream & os, unsigned flags, bool outer,
 				begin_command_inset(os, "citation", t.cs());
 				os << "after " << '"' << after << "\"\n"
 				   << "key " << '"' << key << "\"\n"
-				   << "literal \"true\"\n";
+#ifdef FILEFORMAT
+				   << "literal \"true\"\n"
+#endif
+					;
 				end_inset(os);
 			} else if (t.cs() == "nocite")
 				btprint = key;
@@ -3693,7 +3708,10 @@ void parse_text(Parser & p, ostream & os, unsigned flags, bool outer,
 			os << "\"\ndescription \""
 			   << convert_command_inset_arg(p.verbatim_item())
 			   << "\"\n"
-			   << "literal \"true\"\n";
+#ifdef FILEFORMAT
+			   << "literal \"true\"\n"
+#endif
+				;
 			end_inset(os);
 			preamble.registerAutomaticallyLoadedPackage("nomencl");
 		}
@@ -3723,7 +3741,9 @@ void parse_text(Parser & p, ostream & os, unsigned flags, bool outer,
 					os << "type \"idx\"\n";
 				else
 					os << "type \"" << indexname << "\"\n";
+#ifdef FILEFORMAT
 				os << "literal \"true\"\n";
+#endif
 			}
 			end_inset(os);
 			skip_spaces_braces(p);

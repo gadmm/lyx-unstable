@@ -129,6 +129,7 @@ GuiCitation::GuiCitation(GuiView & lv)
 		this, SLOT(updateStyles()));
 	connect(literalCB, SIGNAL(clicked()),
 		this, SLOT(changed()));
+	disable_widget_if_ndef_FILEFORMAT(literalCB);
 	connect(forceuppercaseCB, SIGNAL(clicked()),
 		this, SLOT(updateStyles()));
 	connect(textBeforeED, SIGNAL(textChanged(QString)),
@@ -592,8 +593,10 @@ void GuiCitation::applyParams(int const choice, bool full, bool force,
 		params_["pretextlist"] = getStringFromVector(getPreTexts(), from_ascii("\t"));
 		params_["posttextlist"] = getStringFromVector(getPostTexts(), from_ascii("\t"));
 	}
-#endif
 	params_["literal"] = literalCB->isChecked() ? from_ascii("true") : from_ascii("false");
+#else
+	params_.literal = true;
+#endif
 	dispatchParams();
 }
 
@@ -735,11 +738,13 @@ void GuiCitation::init()
 		documentBuffer().params().fullAuthorList());
 	textBeforeED->setText(toqstr(params_["before"]));
 	textAfterED->setText(toqstr(params_["after"]));
+#ifdef FILEFORMAT
 	literalCB->setChecked(params_["literal"] == "true");
 
-#ifdef FILEFORMAT
 	setPreTexts(getVectorFromString(params_["pretextlist"], from_ascii("\t")));
 	setPostTexts(getVectorFromString(params_["posttextlist"], from_ascii("\t")));
+#else
+	literalCB->setChecked(true);
 #endif
 
 	// Update the interface

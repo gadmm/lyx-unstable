@@ -68,7 +68,9 @@ ParamInfo const & InsetNomencl::findInfo(string const & /* cmdName */)
 				ParamInfo::HANDLING_LATEXIFY);
 		param_info_.add("description", ParamInfo::LATEX_REQUIRED,
 				ParamInfo::HANDLING_LATEXIFY);
+#ifdef FILEFORMAT
 		param_info_.add("literal", ParamInfo::LYX_INTERNAL);
+#endif
 	}
 	return param_info_;
 }

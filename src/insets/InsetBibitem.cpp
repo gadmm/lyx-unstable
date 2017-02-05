@@ -108,7 +108,9 @@ ParamInfo const & InsetBibitem::findInfo(string const & /* cmdName */)
 				ParamInfo::HANDLING_LATEXIFY);
 		param_info_.add("key", ParamInfo::LATEX_REQUIRED,
 				ParamInfo::HANDLING_ESCAPE);
+#ifdef FILEFORMAT
 		param_info_.add("literal", ParamInfo::LYX_INTERNAL);
+#endif
 	}
 	return param_info_;
 }
@@ -130,9 +132,14 @@ void InsetBibitem::doDispatch(Cursor & cur, FuncRequest & cmd)
 
 		docstring const & old_key = params()["key"];
 		docstring const & old_label = params()["label"];
+#ifdef FILEFORMAT
 		docstring const & old_literal = params()["literal"];
-		docstring label = p["label"];
 		docstring literal = p["literal"];
+#else
+		bool old_literal = params().literal;
+		bool literal = p.literal;
+#endif
+		docstring label = p["label"];
 
 		if (old_label != label) {
 			p["label"] = label;
@@ -142,11 +149,19 @@ void InsetBibitem::doDispatch(Cursor & cur, FuncRequest & cmd)
 		setParam("label", p["label"]);
 
 		if (old_literal != literal) {
+#ifdef FILEFORMAT
 			p["literal"] = literal;
+#else
+			p.literal = literal;
+#endif
 			cur.forceBufferUpdate();
 			buffer().invalidateBibinfoCache();
 		}
+#ifdef FILEFORMAT
 		setParam("literal", p["literal"]);
+#else
+		setParam("literal", from_ascii(p.literal ? "true" : "false"));
+#endif
 
 		if (p["key"] != old_key) {
 			updateCommand(p["key"]);

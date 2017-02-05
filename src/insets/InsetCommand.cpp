@@ -118,6 +118,12 @@ void InsetCommand::draw(PainterInfo & pi, int x, int y) const
 
 void InsetCommand::setParam(string const & name, docstring const & value)
 {
+#ifndef FILEFORMAT
+	if (name == "literal") {
+		p_.literal = value == "true";
+		return;
+	}
+#endif
 	p_[name] = value;
 }
 
@@ -160,7 +166,11 @@ int InsetCommand::docbook(odocstream &, OutputParams const &) const
 
 void InsetCommand::validate(LaTeXFeatures & features) const
 {
+#ifdef FILEFORMAT
 	if (params()["literal"] == "true")
+#else
+	if (params().literal)
+#endif
 		return;
 
 	ParamInfo::const_iterator it = params().info().begin();

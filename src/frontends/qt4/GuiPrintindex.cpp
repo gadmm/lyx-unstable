@@ -44,6 +44,7 @@ GuiPrintindex::GuiPrintindex(GuiView & lv)
 	connect(indicesCO, SIGNAL(activated(int)), this, SLOT(change_adaptor()));
 	connect(subindexCB, SIGNAL(clicked()), this, SLOT(change_adaptor()));
 	connect(literalCB, SIGNAL(clicked()), this, SLOT(change_adaptor()));
+	disable_widget_if_ndef_FILEFORMAT(literalCB);
 
 	bc().setPolicy(ButtonPolicy::NoRepeatedApplyReadOnlyPolicy);
 	bc().setOK(okPB);
@@ -79,7 +80,11 @@ void GuiPrintindex::updateContents()
 	int const pos = indicesCO->findData(toqstr(cur_index));
 	indicesCO->setCurrentIndex(pos);
 	subindexCB->setChecked(params_.getCmdName() == "printsubindex");
+#ifdef FILEFORMAT
 	literalCB->setChecked(params_["literal"] == "true");
+#else
+	literalCB->setChecked(false);
+#endif
 }
 
 
@@ -97,8 +102,12 @@ void GuiPrintindex::applyView()
 		params_["type"] = docstring();
 	else
 		params_["type"] = qstring_to_ucs4(index);
+#ifdef FILEFORMAT
 	params_["literal"] = literalCB->isChecked()
 			? from_ascii("true") : from_ascii("false");
+#else
+	params_.literal = false;
+#endif
 }
 
 
@@ -109,7 +118,11 @@ void GuiPrintindex::paramsToDialog(InsetCommandParams const & /*icp*/)
 		indicesCO->findData(toqstr(params_["type"]));
 	subindexCB->setChecked(params_.getCmdName() == "printsubindex");
 	indicesCO->setCurrentIndex(pos);
-	literalCB->setChecked(params_["literal"] == "true");
+#ifdef FILEFORMAT
+	literalCB->setChecked(params["literal"] == "true");
+#else
+	literalCB->setChecked(false);
+#endif
 	bc().setValid(isValid());
 }
 

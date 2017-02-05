@@ -167,7 +167,8 @@ int InsetCommand::docbook(odocstream &, OutputParams const &) const
 void InsetCommand::validate(LaTeXFeatures & features) const
 {
 #ifdef FILEFORMAT
-	if (params()["literal"] == "true")
+	if (params().info().hasParam("literal")
+	    && params()["literal"] == "true")
 #else
 	if (params().literal)
 #endif

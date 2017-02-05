@@ -208,12 +208,12 @@ docstring InsetBibtex::toolTip(BufferView const & /*bv*/, int /*x*/, int /*y*/) 
 			style = split(style, bibtotoc, char_type(','));
 	}
 
+	docstring const btprint = getParam("btprint");
 	if (!usingBiblatex()) {
 		tip += _("Style File:");
 		tip += "<ul><li>" + (style.empty() ? _("none") : style) + "</li></ul>";
 
 		tip += _("Lists:") + " ";
-		docstring btprint = getParam("btprint");
 		if (btprint == "btPrintAll")
 			tip += _("all references");
 		else if (btprint == "btPrintNotCited")
@@ -225,8 +225,17 @@ docstring InsetBibtex::toolTip(BufferView const & /*bv*/, int /*x*/, int /*y*/) 
 			tip += _("included in TOC");
 		}
 	} else {
-		if (toc)
-			tip += _("Included in TOC");
+		tip += _("Lists:") + " ";
+		if (btprint == "bibbysection")
+			tip += _("all reference units");
+		else if (btprint == "btPrintAll")
+			tip += _("all references");
+		else
+			tip += _("all cited references");
+		if (toc) {
+			tip += ", ";
+			tip += _("included in TOC");
+		}
 #ifdef FILEFORMAT
 		if (!getParam("biblatexopts").empty()) {
 			if (toc)
@@ -254,6 +263,8 @@ void InsetBibtex::latex(otexstream & os, OutputParams const & runparams) const
 	// 4. \end{btSect}
 	// With Biblatex:
 	// \printbibliography[biblatexopts]
+	// or
+	// \bibbysection[biblatexopts] - if btprint is "bibbysection"
 
 	string style = to_utf8(getParam("options")); // maybe empty! and with bibtotoc
 	string bibtotoc;
@@ -277,7 +288,10 @@ void InsetBibtex::latex(otexstream & os, OutputParams const & runparams) const
 		docstring btprint = getParam("btprint");
 		if (btprint == "btPrintAll")
 			os << "\\nocite{*}\n";
-		os << "\\printbibliography";
+		if (btprint == "bibbysection" && !buffer().masterParams().multibib.empty())
+			os << "\\bibbysection";
+		else
+			os << "\\printbibliography";
 		if (!opts.empty())
 			os << "[" << opts << "]";
 		os << "\n";

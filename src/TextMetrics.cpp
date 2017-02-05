@@ -563,7 +563,7 @@ LyXAlignment TextMetrics::getAlign(Paragraph const & par, Row const & row) const
 		// justification on screen' setting.
 		if ((row.flushed() && !forced_block)
 		    || !bv_->buffer().params().justification)
-			align = text_->isRTL(par) ? LYX_ALIGN_RIGHT : LYX_ALIGN_LEFT;
+			align = row.isRTL() ? LYX_ALIGN_RIGHT : LYX_ALIGN_LEFT;
 	}
 
 	return align;
@@ -620,7 +620,7 @@ void TextMetrics::computeRowMetrics(Row & row, int width) const
 		switch (getAlign(par, row)) {
 		case LYX_ALIGN_BLOCK:
 			// Expand expanding characters by a total of w
-			if (!row.setExtraWidth(w) && text_->isRTL(par)) {
+			if (!row.setExtraWidth(w) && row.isRTL()) {
 				// Justification failed and the text is RTL: align to the right
 				row.left_margin += w;
 				row.dimension().wid += w;
@@ -1427,28 +1427,12 @@ InsetList::InsetTable * TextMetrics::checkInsetHit(pit_type pit, int x, int y)
 
 	LYXERR(Debug::DEBUG, "x: " << x << " y: " << y << "  pit: " << pit);
 
-	InsetList::const_iterator iit = par.insetList().begin();
-	InsetList::const_iterator iend = par.insetList().end();
-	for (; iit != iend; ++iit) {
-		Inset * inset = iit->inset;
+	for (auto const & it : par.insetList()) {
+		LYXERR(Debug::DEBUG, "examining inset " << it.inset);
 
-		LYXERR(Debug::DEBUG, "examining inset " << inset);
-
-		if (!insetCache.has(inset)) {
-			LYXERR(Debug::DEBUG, "inset has no cached position");
-			return 0;
-		}
-
-		Dimension const & dim = insetCache.dim(inset);
-		Point p = insetCache.xy(inset);
-
-		LYXERR(Debug::DEBUG, "xo: " << p.x_ << "..." << p.x_ + dim.wid
-			<< " yo: " << p.y_ - dim.asc << "..." << p.y_ + dim.des);
-
-		if (x >= p.x_ && x <= p.x_ + dim.wid
-		    && y >= p.y_ - dim.asc && y <= p.y_ + dim.des) {
-			LYXERR(Debug::DEBUG, "Hit inset: " << inset);
-			return const_cast<InsetList::InsetTable *>(&(*iit));
+		if (insetCache.covers(it.inset, x, y)) {
+			LYXERR(Debug::DEBUG, "Hit inset: " << it.inset);
+			return const_cast<InsetList::InsetTable *>(&it);
 		}
 	}
 
@@ -1471,56 +1455,6 @@ Inset * TextMetrics::checkInsetHit(int x, int y)
 }
 
 
-Row::const_iterator const
-TextMetrics::findRowElement(Row const & row, pos_type const pos,
-                            bool const boundary, double & x) const
-{
-	/**
-	 * When boundary is true, position i is in the row element (pos, endpos)
-	 * if
-	 *    pos < i <= endpos
-	 * whereas, when boundary is false, the test is
-	 *    pos <= i < endpos
-	 * The correction below allows to handle both cases.
-	*/
-	int const boundary_corr = (boundary && pos) ? -1 : 0;
-
-	x = row.left_margin;
-
-	/** Early return in trivial cases
-	 * 1) the row is empty
-	 * 2) the position is the left-most position of the row; there
-	 * is a quirk here however: if the first element is virtual
-	 * (end-of-par marker for example), then we have to look
-	 * closer
-	 */
-	if (row.empty()
-	    || (pos == row.begin()->left_pos() && !boundary
-			&& !row.begin()->isVirtual()))
-		return row.begin();
-
-	Row::const_iterator cit = row.begin();
-	for ( ; cit != row.end() ; ++cit) {
-		/** Look whether the cursor is inside the element's
-		 * span. Note that it is necessary to take the
-		 * boundary into account, and to accept virtual
-		 * elements, which have pos == endpos.
-		 */
-		if (pos + boundary_corr >= cit->pos
-		    && (pos + boundary_corr < cit->endpos || cit->isVirtual())) {
-				x += cit->pos2x(pos);
-				break;
-		}
-		x += cit->full_width();
-	}
-
-	if (cit == row.end())
-		--cit;
-
-	return cit;
-}
-
-
 int TextMetrics::cursorX(CursorSlice const & sl,
 		bool boundary) const
 {
@@ -1533,7 +1467,7 @@ int TextMetrics::cursorX(CursorSlice const & sl,
 	pos_type const pos = sl.pos();
 
 	double x = 0;
-	findRowElement(row, pos, boundary, x);
+	row.findElement(pos, boundary, x);
 	return int(x);
 
 }
@@ -1988,15 +1922,14 @@ void TextMetrics::drawParagraph(PainterInfo & pi, pit_type const pit, int const 
 		rp.paintAppendix();
 		rp.paintDepthBar();
 		rp.paintChangeBar();
-		bool const is_rtl = text_->isRTL(text_->getPar(pit));
-		if (i == 0 && !is_rtl)
+		if (i == 0 && !row.isRTL())
 			rp.paintFirst();
-		if (i == nrows - 1 && is_rtl)
+		if (i == nrows - 1 && row.isRTL())
 			rp.paintLast();
 		rp.paintText();
-		if (i == nrows - 1 && !is_rtl)
+		if (i == nrows - 1 && !row.isRTL())
 			rp.paintLast();
-		if (i == 0 && is_rtl)
+		if (i == 0 && row.isRTL())
 			rp.paintFirst();
 		rp.paintTooLargeMarks(row_x + row.left_x() < 0,
 				      row_x + row.right_x() > bv_->workWidth());

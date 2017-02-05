@@ -171,6 +171,14 @@ public:
 	virtual MathClass mathClass() const;
 	/// Add this inset to a math row. Return true if contents got added
 	virtual bool addToMathRow(MathRow &, MetricsInfo & mi) const;
+	/// Hook that is run before metrics computation starts
+	virtual void beforeMetrics() const {}
+	/// Hook that is run after metrics computation
+	virtual void afterMetrics() const {}
+	/// Hook that is run before actual drawing
+	virtual void beforeDraw(PainterInfo const &) const {}
+	/// Hook that is run after drawing
+	virtual void afterDraw(PainterInfo const &) const {}
 
 	/// identifies things that can get scripts
 	virtual bool isScriptable() const { return false; }
@@ -230,7 +238,7 @@ public:
 	/// math stuff usually isn't allowed in text mode
 	virtual bool allowedIn(mode_type mode) const { return mode == MATH_MODE; }
 
-	/// superscript kerning
+	/// Italic correction as described in InsetMathScript.h
 	virtual int kerning(BufferView const *) const { return 0; }
 	///
 	bool isInToc() const { return true; }

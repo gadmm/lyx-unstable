@@ -264,6 +264,10 @@ public:
 	 * This should be called once the row is completely built.
 	 */
 	void reverseRTL(bool rtl_par);
+	///
+	bool isRTL() const { return rtl_; }
+	/// Find row element that contains \c pos, and compute x offset.
+	const_iterator const findElement(pos_type pos, bool boundary, double & x) const;
 
 	friend std::ostream & operator<<(std::ostream & os, Row const & row);
 
@@ -320,6 +324,8 @@ private:
 	bool flushed_;
 	/// Row dimension.
 	Dimension dim_;
+	/// true when this row lives in a right-to-left paragraph
+	bool rtl_;
 };
 
 

@@ -108,6 +108,7 @@ SOURCEFILESCORE = \
 	Bullet.cpp \
 	Changes.cpp \
 	Chktex.cpp \
+	CiteEnginesList.cpp \
 	CmdDef.cpp \
 	Color.cpp \
 	ConverterCache.cpp \
@@ -202,6 +203,7 @@ HEADERFILESCORE = \
 	BufferView.h \
 	Bullet.h \
 	Citation.h \
+	CiteEnginesList.h \
 	Changes.h \
 	Chktex.h \
 	CmdDef.h \

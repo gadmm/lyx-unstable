@@ -17,6 +17,7 @@
 
 #include "Buffer.h"
 #include "BufferParams.h"
+#include "CiteEnginesList.h"
 #include "FuncRequest.h"
 #include "LyXRC.h"
 #include "qt_helpers.h"
@@ -81,6 +82,8 @@ GuiBibtex::GuiBibtex(GuiView & lv)
 		this, SLOT(addPressed()));
 	connect(rescanPB, SIGNAL(clicked()),
 		this, SLOT(rescanClicked()));
+	connect(biblatexOptsLE, SIGNAL(textChanged(QString)),
+		this, SLOT(change_adaptor()));
 
 	add_ = new GuiBibtexAddDialog(this);
 	add_bc_.setPolicy(ButtonPolicy::OkCancelPolicy);
@@ -106,6 +109,10 @@ GuiBibtex::GuiBibtex(GuiView & lv)
 		this, SLOT(browseBibPressed()));
 	connect(add_->closePB, SIGNAL(clicked()),
 		add_, SLOT(reject()));
+
+	add_->bibLW->setToolTip(formatToolTip(qt_("This list consists of all databases that are indexed by LaTeX and thus are found without a file path. "
+				    "This is usually everything in the bib/ subdirectory of LaTeX's texmf tree. "
+				    "If you want to reuse your own database, this is the place you should store it.")));
 
 	bc().setPolicy(ButtonPolicy::NoRepeatedApplyReadOnlyPolicy);
 	bc().setOK(okPB);
@@ -295,6 +302,7 @@ void GuiBibtex::availableChanged()
 void GuiBibtex::updateContents()
 {
 	bool bibtopic = usingBibtopic();
+	bool biblatex = usingBiblatex();
 
 	databaseLW->clear();
 
@@ -337,27 +345,40 @@ void GuiBibtex::updateContents()
 
 	btPrintCO->setCurrentIndex(btp);
 
-	styleCB->clear();
+	// Only useful for biblatex
+	biblatexOptsLA->setVisible(biblatex);
+	biblatexOptsLE->setVisible(biblatex);
 
-	int item_nr = -1;
+	// only useful for BibTeX
+	styleCB->setVisible(!biblatex);
+	styleLA->setVisible(!biblatex);
+	stylePB->setVisible(!biblatex);
 
-	QStringList const str = bibStyles();
-	for (int i = 0; i != str.count(); ++i) {
-		QString item = changeExtension(str[i], "");
-		if (item == bibstyle)
-			item_nr = i;
-		styleCB->addItem(item);
-	}
+	if (!biblatex) {
+		styleCB->clear();
 
-	if (item_nr == -1 && !bibstyle.isEmpty()) {
-		styleCB->addItem(bibstyle);
-		item_nr = styleCB->count() - 1;
-	}
+		int item_nr = -1;
 
-	if (item_nr != -1)
-		styleCB->setCurrentIndex(item_nr);
-	else
-		styleCB->clearEditText();
+		QStringList const str = bibStyles();
+		for (int i = 0; i != str.count(); ++i) {
+			QString item = changeExtension(str[i], "");
+			if (item == bibstyle)
+				item_nr = i;
+			styleCB->addItem(item);
+		}
+
+		if (item_nr == -1 && !bibstyle.isEmpty()) {
+			styleCB->addItem(bibstyle);
+			item_nr = styleCB->count() - 1;
+		}
+
+
+		if (item_nr != -1)
+			styleCB->setCurrentIndex(item_nr);
+		else
+			styleCB->clearEditText();
+	} else
+		biblatexOptsLE->setText(toqstr(params_["biblatexopts"]));
 }
 
 
@@ -391,6 +412,8 @@ void GuiBibtex::applyView()
 		// command!
 		params_["options"] = bibstyle;
 	}
+
+	params_["biblatexopts"] = qstring_to_ucs4(biblatexOptsLE->text());
 
 	int btp = btPrintCO->currentIndex();
 
@@ -484,7 +507,10 @@ QStringList GuiBibtex::bibFiles() const
 
 void GuiBibtex::rescanBibStyles() const
 {
-	rescanTexStyles("bst bib");
+	if (usingBiblatex())
+		rescanTexStyles("bib");
+	else
+		rescanTexStyles("bst bib");
 }
 
 
@@ -497,6 +523,12 @@ bool GuiBibtex::usingBibtopic() const
 bool GuiBibtex::bibtotoc() const
 {
 	return prefixIs(to_utf8(params_["options"]), "bibtotoc");
+}
+
+
+bool GuiBibtex::usingBiblatex() const
+{
+	return buffer().masterBuffer()->params().useBiblatex();
 }
 
 

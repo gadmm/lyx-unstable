@@ -33,8 +33,8 @@ extern char const * const lyx_version_info;
 #ifdef FILEFORMAT
 // Do not remove the comment below, so we get merge conflict in
 // independent branches. Instead add your own.
-#define LYX_FORMAT_LYX 527 // rgh: labelonly for references
-#define LYX_FORMAT_TEX2LYX 527
+#define LYX_FORMAT_LYX 528 // spitz: biblatex
+#define LYX_FORMAT_TEX2LYX 528
 
 #else
 // LyX 2.2 format

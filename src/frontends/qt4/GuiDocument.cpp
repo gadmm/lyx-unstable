@@ -29,6 +29,7 @@
 #include "Buffer.h"
 #include "BufferParams.h"
 #include "BufferView.h"
+#include "CiteEnginesList.h"
 #include "Color.h"
 #include "ColorCache.h"
 #include "Converter.h"
@@ -1121,39 +1122,55 @@ GuiDocument::GuiDocument(GuiView & lv)
 
 	// biblio
 	biblioModule = new UiWidget<Ui::BiblioUi>;
-	connect(biblioModule->citeDefaultRB, SIGNAL(toggled(bool)),
-		this, SLOT(setNumerical(bool)));
-	connect(biblioModule->citeJurabibRB, SIGNAL(toggled(bool)),
-		this, SLOT(setAuthorYear(bool)));
-	connect(biblioModule->citeNatbibRB, SIGNAL(toggled(bool)),
-		biblioModule->citationStyleL, SLOT(setEnabled(bool)));
-	connect(biblioModule->citeNatbibRB, SIGNAL(toggled(bool)),
-		biblioModule->citeStyleCO, SLOT(setEnabled(bool)));
-	connect(biblioModule->citeDefaultRB, SIGNAL(clicked()),
-		this, SLOT(biblioChanged()));
-	connect(biblioModule->citeNatbibRB, SIGNAL(clicked()),
-		this, SLOT(biblioChanged()));
+	connect(biblioModule->citeEngineCO, SIGNAL(activated(int)),
+		this, SLOT(citeEngineChanged(int)));
 	connect(biblioModule->citeStyleCO, SIGNAL(activated(int)),
-		this, SLOT(biblioChanged()));
-	connect(biblioModule->citeJurabibRB, SIGNAL(clicked()),
-		this, SLOT(biblioChanged()));
+		this, SLOT(citeStyleChanged()));
 	connect(biblioModule->bibtopicCB, SIGNAL(clicked()),
 		this, SLOT(biblioChanged()));
 	connect(biblioModule->bibtexCO, SIGNAL(activated(int)),
 		this, SLOT(bibtexChanged(int)));
 	connect(biblioModule->bibtexOptionsLE, SIGNAL(textChanged(QString)),
 		this, SLOT(biblioChanged()));
-	connect(biblioModule->bibtexStyleLE, SIGNAL(textChanged(QString)),
+	connect(biblioModule->citePackageOptionsLE, SIGNAL(textChanged(QString)),
 		this, SLOT(biblioChanged()));
+	connect(biblioModule->defaultBiblioCO, SIGNAL(activated(int)),
+		this, SLOT(biblioChanged()));
+	connect(biblioModule->defaultBiblioCO, SIGNAL(editTextChanged(QString)),
+		this, SLOT(biblioChanged()));
+	connect(biblioModule->defaultBiblioCO, SIGNAL(editTextChanged(QString)),
+		this, SLOT(updateResetDefaultBiblio()));
+	connect(biblioModule->biblatexBbxCO, SIGNAL(activated(int)),
+		this, SLOT(biblioChanged()));
+	connect(biblioModule->biblatexBbxCO, SIGNAL(editTextChanged(QString)),
+		this, SLOT(updateResetDefaultBiblio()));
+	connect(biblioModule->biblatexCbxCO, SIGNAL(activated(int)),
+		this, SLOT(biblioChanged()));
+	connect(biblioModule->biblatexCbxCO, SIGNAL(editTextChanged(QString)),
+		this, SLOT(updateResetDefaultBiblio()));
+	connect(biblioModule->rescanBibliosPB, SIGNAL(clicked()),
+		this, SLOT(rescanBibFiles()));
+	connect(biblioModule->resetDefaultBiblioPB, SIGNAL(clicked()),
+		this, SLOT(resetDefaultBibfile()));
+	connect(biblioModule->resetCbxPB, SIGNAL(clicked()),
+		this, SLOT(resetDefaultCbxBibfile()));
+	connect(biblioModule->resetBbxPB, SIGNAL(clicked()),
+		this, SLOT(resetDefaultBbxBibfile()));
+	connect(biblioModule->matchBbxPB, SIGNAL(clicked()),
+		this, SLOT(matchBiblatexStyles()));
+
+	biblioModule->citeEngineCO->clear();
+	for (LyXCiteEngine const & cet : theCiteEnginesList) {
+		biblioModule->citeEngineCO->addItem(qt_(cet.getName()), toqstr(cet.getID()));
+		int const i = biblioModule->citeEngineCO->findData(toqstr(cet.getID()));
+		biblioModule->citeEngineCO->setItemData(i, qt_(cet.getDescription()),
+							Qt::ToolTipRole);
+	}
 
 	biblioModule->bibtexOptionsLE->setValidator(new NoNewLineValidator(
 		biblioModule->bibtexOptionsLE));
-	biblioModule->bibtexStyleLE->setValidator(new NoNewLineValidator(
-		biblioModule->bibtexStyleLE));
-
-	biblioModule->citeStyleCO->addItem(qt_("Author-year"));
-	biblioModule->citeStyleCO->addItem(qt_("Numerical"));
-	biblioModule->citeStyleCO->setCurrentIndex(0);
+	biblioModule->defaultBiblioCO->lineEdit()->setValidator(new NoNewLineValidator(
+		biblioModule->defaultBiblioCO->lineEdit()));
 
 	// NOTE: we do not provide "custom" here for security reasons!
 	biblioModule->bibtexCO->clear();
@@ -2302,6 +2319,94 @@ void GuiDocument::biblioChanged()
 }
 
 
+void GuiDocument::rescanBibFiles()
+{
+	if (isBiblatex())
+		rescanTexStyles("bbx cbx");
+	else
+		rescanTexStyles("bst");
+}
+
+
+void GuiDocument::resetDefaultBibfile(string const & which)
+{
+	QString const engine =
+		biblioModule->citeEngineCO->itemData(
+				biblioModule->citeEngineCO->currentIndex()).toString();
+
+	CiteEngineType const cet =
+		CiteEngineType(biblioModule->citeStyleCO->itemData(
+							  biblioModule->citeStyleCO->currentIndex()).toInt());
+
+	updateDefaultBiblio(theCiteEnginesList[fromqstr(engine)]->getDefaultBiblio(cet), which);
+}
+
+
+void GuiDocument::resetDefaultBbxBibfile()
+{
+	resetDefaultBibfile("bbx");
+}
+
+
+void GuiDocument::resetDefaultCbxBibfile()
+{
+	resetDefaultBibfile("cbx");
+}
+
+
+void GuiDocument::citeEngineChanged(int n)
+{
+	QString const engine =
+		biblioModule->citeEngineCO->itemData(n).toString();
+
+	vector<string> const engs =
+		theCiteEnginesList[fromqstr(engine)]->getEngineType();
+
+	updateCiteStyles(engs);
+	updateEngineDependends();
+	resetDefaultBibfile();
+	biblioChanged();
+}
+
+
+void GuiDocument::updateEngineDependends()
+{
+	bool const biblatex = isBiblatex();
+
+	// These are only useful with BibTeX
+	biblioModule->defaultBiblioCO->setEnabled(!biblatex);
+	biblioModule->bibtexStyleLA->setEnabled(!biblatex);
+	biblioModule->resetDefaultBiblioPB->setEnabled(!biblatex);
+	biblioModule->bibtopicCB->setEnabled(!biblatex);
+
+	// These are only useful with Biblatex
+	biblioModule->citePackageOptionsLE->setEnabled(biblatex);
+	biblioModule->citePackageOptionsL->setEnabled(biblatex);
+	biblioModule->biblatexBbxCO->setEnabled(biblatex);
+	biblioModule->biblatexBbxLA->setEnabled(biblatex);
+	biblioModule->biblatexCbxCO->setEnabled(biblatex);
+	biblioModule->biblatexCbxLA->setEnabled(biblatex);
+	biblioModule->resetBbxPB->setEnabled(biblatex);
+	biblioModule->resetCbxPB->setEnabled(biblatex);
+	biblioModule->matchBbxPB->setEnabled(biblatex);
+}
+
+
+void GuiDocument::citeStyleChanged()
+{
+	QString const engine =
+		biblioModule->citeEngineCO->itemData(
+				biblioModule->citeEngineCO->currentIndex()).toString();
+	QString const currentDef = isBiblatex() ?
+		biblioModule->biblatexBbxCO->currentText()
+		: biblioModule->defaultBiblioCO->currentText();
+	if (theCiteEnginesList[fromqstr(engine)]->isDefaultBiblio(fromqstr(currentDef)))
+		resetDefaultBibfile();
+
+	biblioChanged();
+}
+
+
 void GuiDocument::bibtexChanged(int n)
 {
 	biblioModule->bibtexOptionsLE->setEnabled(
@@ -2310,19 +2415,30 @@ void GuiDocument::bibtexChanged(int n)
 }
 
 
-void GuiDocument::setAuthorYear(bool authoryear)
+void GuiDocument::updateCiteStyles(vector<string> const & engs, CiteEngineType const & sel)
 {
-	if (authoryear)
-		biblioModule->citeStyleCO->setCurrentIndex(0);
-	biblioChanged();
-}
+	biblioModule->citeStyleCO->clear();
 
+	vector<string>::const_iterator it  = engs.begin();
+	vector<string>::const_iterator end = engs.end();
+	for (; it != end; ++it) {
+		if (*it == "default")
+			biblioModule->citeStyleCO->addItem(qt_("Basic numerical"),
+							   ENGINE_TYPE_DEFAULT);
+		else if (*it == "authoryear")
+			biblioModule->citeStyleCO->addItem(qt_("Author-year"),
+							   ENGINE_TYPE_AUTHORYEAR);
+		else if (*it == "numerical")
+			biblioModule->citeStyleCO->addItem(qt_("Author-number"),
+							   ENGINE_TYPE_NUMERICAL);
+	}
+	int i = biblioModule->citeStyleCO->findData(sel);
+	if (biblioModule->citeStyleCO->findData(sel) == -1)
+		i = 0;
+	biblioModule->citeStyleCO->setCurrentIndex(i);
 
-void GuiDocument::setNumerical(bool numerical)
-{
-	if (numerical)
-		biblioModule->citeStyleCO->setCurrentIndex(1);
-	biblioChanged();
+	biblioModule->citationStyleL->setEnabled(engs.size() > 1);
+	biblioModule->citeStyleCO->setEnabled(engs.size() > 1);
 }
 
 
@@ -2338,28 +2454,7 @@ void GuiDocument::updateEngineType(string const & items, CiteEngineType const & 
 		engine_types_.push_back(style);
 	}
 
-	switch (sel) {
-		case ENGINE_TYPE_AUTHORYEAR:
-			biblioModule->citeStyleCO->setCurrentIndex(0);
-			break;
-		case ENGINE_TYPE_NUMERICAL:
-		case ENGINE_TYPE_DEFAULT:
-			biblioModule->citeStyleCO->setCurrentIndex(1);
-			break;
-	}
-
-	biblioModule->citationStyleL->setEnabled(nn > 1);
-	biblioModule->citeStyleCO->setEnabled(nn > 1);
-
-	if (nn != 1)
-		return;
-
-	// If the textclass allows only one of authoryear or numerical,
-	// we have no choice but to force that engine type.
-	if (engine_types_[0] == "authoryear")
-		biblioModule->citeStyleCO->setCurrentIndex(0);
-	else
-		biblioModule->citeStyleCO->setCurrentIndex(1);
+	updateCiteStyles(engine_types_, sel);
 }
 
 
@@ -2612,24 +2707,26 @@ void GuiDocument::applyView()
 	bp_.use_refstyle  = latexModule->refstyleCB->isChecked();
 
 	// biblio
-	if (biblioModule->citeNatbibRB->isChecked())
-		bp_.setCiteEngine("natbib");
-	else if (biblioModule->citeJurabibRB->isChecked())
-		bp_.setCiteEngine("jurabib");
-	if (biblioModule->citeDefaultRB->isChecked()) {
-		bp_.setCiteEngine("basic");
+	string const engine =
+		fromqstr(biblioModule->citeEngineCO->itemData(
+				biblioModule->citeEngineCO->currentIndex()).toString());
+	bp_.setCiteEngine(engine);
+
+	CiteEngineType const style = CiteEngineType(biblioModule->citeStyleCO->itemData(
+		biblioModule->citeStyleCO->currentIndex()).toInt());
+	if (theCiteEnginesList[engine]->hasEngineType(style))
+		bp_.setCiteEngineType(style);
+	else
 		bp_.setCiteEngineType(ENGINE_TYPE_DEFAULT);
-	}
-	else
-	if (biblioModule->citeStyleCO->currentIndex())
-		bp_.setCiteEngineType(ENGINE_TYPE_NUMERICAL);
-	else
-		bp_.setCiteEngineType(ENGINE_TYPE_AUTHORYEAR);
 
 	bp_.use_bibtopic =
 		biblioModule->bibtopicCB->isChecked();
 
-	bp_.biblio_style = fromqstr(biblioModule->bibtexStyleLE->text());
+	bp_.setDefaultBiblioStyle(fromqstr(biblioModule->defaultBiblioCO->currentText()));
+
+	bp_.biblatex_bibstyle = fromqstr(biblioModule->biblatexBbxCO->currentText());
+	bp_.biblatex_citestyle = fromqstr(biblioModule->biblatexCbxCO->currentText());
+	bp_.biblio_opts = fromqstr(biblioModule->citePackageOptionsLE->text());
 
 	string const bibtex_command =
 		fromqstr(biblioModule->bibtexCO->itemData(
@@ -3040,25 +3137,27 @@ void GuiDocument::paramsToDialog()
 	// biblio
 	string const cite_engine = bp_.citeEngine().list().front();
 
-	biblioModule->citeDefaultRB->setChecked(
-		cite_engine == "basic");
-
-	biblioModule->citeJurabibRB->setChecked(
-		cite_engine == "jurabib");
-
-	biblioModule->citeNatbibRB->setChecked(
-		cite_engine == "natbib");
-
-	biblioModule->citeStyleCO->setCurrentIndex(
-		bp_.citeEngineType() & ENGINE_TYPE_NUMERICAL);
+	biblioModule->citeEngineCO->setCurrentIndex(
+		biblioModule->citeEngineCO->findData(toqstr(cite_engine)));
 
 	updateEngineType(documentClass().opt_enginetype(),
 		bp_.citeEngineType());
 
+	biblioModule->citeStyleCO->setCurrentIndex(
+		biblioModule->citeStyleCO->findData(bp_.citeEngineType()));
+
 	biblioModule->bibtopicCB->setChecked(
 		bp_.use_bibtopic);
 
-	biblioModule->bibtexStyleLE->setText(toqstr(bp_.biblio_style));
+	updateEngineDependends();
+
+	if (isBiblatex()) {
+		updateDefaultBiblio(bp_.biblatex_bibstyle, "bbx");
+		updateDefaultBiblio(bp_.biblatex_citestyle, "cbx");
+	} else
+		updateDefaultBiblio(bp_.defaultBiblioStyle());
+
+	biblioModule->citePackageOptionsLE->setText(toqstr(bp_.biblio_opts));
 
 	string command;
 	string options =
@@ -3643,6 +3742,152 @@ void GuiDocument::updateIncludeonlys()
 	// If all are included, we need to update again.
 	if (!has_unincluded)
 		updateIncludeonlys();
+}
+
+
+bool GuiDocument::isBiblatex() const
+{
+	QString const engine =
+		biblioModule->citeEngineCO->itemData(
+				biblioModule->citeEngineCO->currentIndex()).toString();
+
+	return theCiteEnginesList[fromqstr(engine)]->getCiteFramework() == "biblatex";
+}
+
+
+void GuiDocument::updateDefaultBiblio(string const & style,
+				      string const & which)
+{
+	QString const bibstyle = toqstr(style);
+	biblioModule->defaultBiblioCO->clear();
+	biblioModule->biblatexBbxCO->clear();
+	biblioModule->biblatexCbxCO->clear();
+
+	int item_nr = -1;
+
+	if (isBiblatex()) {
+		if (which != "cbx") {
+			// First the bbx styles
+			QStringList str = texFileList("bbxFiles.lst");
+			// test whether we have a valid list, otherwise run rescan
+			if (str.isEmpty()) {
+				rescanTexStyles("bbx");
+				str = texFileList("bbxFiles.lst");
+			}
+			for (int i = 0; i != str.size(); ++i)
+				str[i] = onlyFileName(str[i]);
+			// sort on filename only (no path)
+			str.sort();
+
+			for (int i = 0; i != str.count(); ++i) {
+				QString item = changeExtension(str[i], "");
+				if (item == bibstyle)
+					item_nr = i;
+				biblioModule->biblatexBbxCO->addItem(item);
+			}
+
+			if (item_nr == -1 && !bibstyle.isEmpty()) {
+				biblioModule->biblatexBbxCO->addItem(bibstyle);
+				item_nr = biblioModule->biblatexBbxCO->count() - 1;
+			}
+
+			if (item_nr != -1)
+				biblioModule->biblatexBbxCO->setCurrentIndex(item_nr);
+			else
+				biblioModule->biblatexBbxCO->clearEditText();
+		}
+
+		if (which != "bbx") {
+			// now the cbx styles
+			QStringList str = texFileList("cbxFiles.lst");
+			// test whether we have a valid list, otherwise run rescan
+			if (str.isEmpty()) {
+				rescanTexStyles("cbx");
+				str = texFileList("cbxFiles.lst");
+			}
+			for (int i = 0; i != str.size(); ++i)
+				str[i] = onlyFileName(str[i]);
+			// sort on filename only (no path)
+			str.sort();
+
+			for (int i = 0; i != str.count(); ++i) {
+				QString item = changeExtension(str[i], "");
+				if (item == bibstyle)
+					item_nr = i;
+				biblioModule->biblatexCbxCO->addItem(item);
+			}
+
+			if (item_nr == -1 && !bibstyle.isEmpty()) {
+				biblioModule->biblatexCbxCO->addItem(bibstyle);
+				item_nr = biblioModule->biblatexCbxCO->count() - 1;
+			}
+
+			if (item_nr != -1)
+				biblioModule->biblatexCbxCO->setCurrentIndex(item_nr);
+			else
+				biblioModule->biblatexCbxCO->clearEditText();
+		}
+	} else {// BibTeX
+		QStringList str = texFileList("bstFiles.lst");
+		// test whether we have a valid list, otherwise run rescan
+		if (str.isEmpty()) {
+			rescanTexStyles("bst");
+			str = texFileList("bstFiles.lst");
+		}
+		for (int i = 0; i != str.size(); ++i)
+			str[i] = onlyFileName(str[i]);
+		// sort on filename only (no path)
+		str.sort();
+
+		for (int i = 0; i != str.count(); ++i) {
+			QString item = changeExtension(str[i], "");
+			if (item == bibstyle)
+				item_nr = i;
+			biblioModule->defaultBiblioCO->addItem(item);
+		}
+
+		if (item_nr == -1 && !bibstyle.isEmpty()) {
+			biblioModule->defaultBiblioCO->addItem(bibstyle);
+			item_nr = biblioModule->defaultBiblioCO->count() - 1;
+		}
+
+		if (item_nr != -1)
+			biblioModule->defaultBiblioCO->setCurrentIndex(item_nr);
+		else
+			biblioModule->defaultBiblioCO->clearEditText();
+	}
+
+	updateResetDefaultBiblio();
+}
+
+
+void GuiDocument::updateResetDefaultBiblio()
+{
+	QString const engine =
+		biblioModule->citeEngineCO->itemData(
+				biblioModule->citeEngineCO->currentIndex()).toString();
+	CiteEngineType const cet =
+		CiteEngineType(biblioModule->citeStyleCO->itemData(
+							  biblioModule->citeStyleCO->currentIndex()).toInt());
+
+	string const defbib = theCiteEnginesList[fromqstr(engine)]->getDefaultBiblio(cet);
+	if (isBiblatex()) {
+		QString const bbx = biblioModule->biblatexBbxCO->currentText();
+		QString const cbx = biblioModule->biblatexCbxCO->currentText();
+		biblioModule->resetCbxPB->setEnabled(defbib != fromqstr(cbx));
+		biblioModule->resetBbxPB->setEnabled(defbib != fromqstr(bbx));
+		biblioModule->matchBbxPB->setEnabled(bbx != cbx && !cbx.isEmpty()
+			&& biblioModule->biblatexBbxCO->findText(cbx) != -1);
+	} else
+		biblioModule->resetDefaultBiblioPB->setEnabled(
+			defbib != fromqstr(biblioModule->defaultBiblioCO->currentText()));
+}
+
+
+void GuiDocument::matchBiblatexStyles()
+{
+	updateDefaultBiblio(fromqstr(biblioModule->biblatexCbxCO->currentText()), "bbx");
+	biblioChanged();
 }
 
 

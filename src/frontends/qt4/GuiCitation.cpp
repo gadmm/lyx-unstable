@@ -25,6 +25,7 @@
 #include "BufferView.h"
 #include "BiblioInfo.h"
 #include "BufferParams.h"
+#include "TextClass.h"
 #include "FuncRequest.h"
 
 #include "insets/InsetCommand.h"
@@ -123,10 +124,10 @@ GuiCitation::GuiCitation(GuiView & lv)
 
 	connect(citationStyleCO, SIGNAL(activated(int)),
 		this, SLOT(on_citationStyleCO_currentIndexChanged(int)));
-	connect(fulllistCB, SIGNAL(clicked()),
-		this, SLOT(changed()));
+	connect(starredCB, SIGNAL(clicked()),
+		this, SLOT(updateStyles()));
 	connect(forceuppercaseCB, SIGNAL(clicked()),
-		this, SLOT(changed()));
+		this, SLOT(updateStyles()));
 	connect(textBeforeED, SIGNAL(textChanged(QString)),
 		this, SLOT(updateStyles()));
 	connect(textAfterED, SIGNAL(textChanged(QString)),
@@ -179,7 +180,7 @@ void GuiCitation::applyView()
 {
 	int const choice = max(0, citationStyleCO->currentIndex());
 	style_ = choice;
-	bool const full  = fulllistCB->isChecked();
+	bool const full  = starredCB->isChecked();
 	bool const force = forceuppercaseCB->isChecked();
 
 	QString const before = textBeforeED->text();
@@ -246,9 +247,10 @@ void GuiCitation::updateControls(BiblioInfo const & bi)
 
 void GuiCitation::updateFormatting(CitationStyle currentStyle)
 {
+	BufferParams const bp = documentBuffer().params();
 	bool const force = currentStyle.forceUpperCase;
-	bool const full = currentStyle.fullAuthorList &&
-		documentBuffer().params().fullAuthorList();
+	bool const starred = currentStyle.hasStarredVersion;
+	bool const full = starred && bp.fullAuthorList();
 	bool const textbefore = currentStyle.textBefore;
 	bool const textafter = currentStyle.textAfter;
 
@@ -256,13 +258,37 @@ void GuiCitation::updateFormatting(CitationStyle currentStyle)
 		selectedLV->model()->rowCount() > 0;
 
 	forceuppercaseCB->setEnabled(force && haveSelection);
-	fulllistCB->setEnabled(full && haveSelection);
+	starredCB->setEnabled(full && haveSelection);
 	textBeforeED->setEnabled(textbefore && haveSelection);
 	textBeforeLA->setEnabled(textbefore && haveSelection);
 	textAfterED->setEnabled(textafter && haveSelection);
 	textAfterLA->setEnabled(textafter && haveSelection);
 	citationStyleCO->setEnabled(haveSelection);
 	citationStyleLA->setEnabled(haveSelection);
+
+	// Check if we have a custom string/tooltip for the starred version
+	if (starred && !currentStyle.stardesc.empty()) {
+		string val =
+			bp.documentClass().getCiteMacro(bp.citeEngineType(), currentStyle.stardesc);
+		docstring guistring;
+		if (!val.empty()) {
+			guistring = translateIfPossible(from_utf8(val));
+			starredCB->setText(toqstr(guistring));
+			starredCB->setEnabled(haveSelection);
+		}
+		if (!currentStyle.startooltip.empty()) {
+			val = bp.documentClass().getCiteMacro(bp.citeEngineType(),
+							      currentStyle.startooltip);
+			if (!val.empty())
+				guistring = translateIfPossible(from_utf8(val));
+		}
+		// Tooltip might also be empty
+		starredCB->setToolTip(toqstr(guistring));
+	} else {
+		// This is the default meaning of the starred commands
+		starredCB->setText(qt_("All aut&hors"));
+		starredCB->setToolTip(qt_("Always list all authors (rather than using \"et al.\")"));
+	}
 }
 
 
@@ -371,8 +397,10 @@ void GuiCitation::updateInfo(BiblioInfo const & bi, QModelIndex const & idx)
 	}
 
 	infoML->setToolTip(qt_("Sketchy preview of the selected citation"));
+	CiteItem ci;
+	ci.richtext = true;
 	QString const keytxt = toqstr(
-		bi.getInfo(qstring_to_ucs4(idx.data().toString()), documentBuffer(), true));
+		bi.getInfo(qstring_to_ucs4(idx.data().toString()), documentBuffer(), ci));
 	infoML->document()->setHtml(keytxt);
 }
 
@@ -516,7 +544,7 @@ void GuiCitation::applyParams(int const choice, bool full, bool force,
 		after.clear();
 
 	cs.forceUpperCase &= force;
-	cs.fullAuthorList &= full;
+	cs.hasStarredVersion &= full;
 	string const command = citationStyleToString(cs);
 
 	params_.setCmdName(command);
@@ -555,9 +583,10 @@ void GuiCitation::init()
 
 	// Initialize the citation formatting
 	string const & cmd = params_.getCmdName();
-	CitationStyle const cs = citationStyleFromString(cmd);
+	CitationStyle const cs =
+		citationStyleFromString(cmd, documentBuffer().params());
 	forceuppercaseCB->setChecked(cs.forceUpperCase);
-	fulllistCB->setChecked(cs.fullAuthorList &&
+	starredCB->setChecked(cs.hasStarredVersion &&
 		documentBuffer().params().fullAuthorList());
 	textBeforeED->setText(toqstr(params_["before"]));
 	textAfterED->setText(toqstr(params_["after"]));
@@ -576,7 +605,7 @@ void GuiCitation::init()
 		// Find the citation style
 		vector<string> const & cmds = citeCmds_;
 		vector<string>::const_iterator cit =
-			std::find(cmds.begin(), cmds.end(), cs.cmd);
+			std::find(cmds.begin(), cmds.end(), cs.name);
 		int i = 0;
 		if (cit != cmds.end())
 			i = int(cit - cmds.begin());
@@ -651,13 +680,16 @@ void GuiCitation::findKey(BiblioInfo const & bi,
 
 QStringList GuiCitation::citationStyles(BiblioInfo const & bi, size_t max_size)
 {
-	docstring const before = qstring_to_ucs4(textBeforeED->text());
-	docstring const after = qstring_to_ucs4(textAfterED->text());
 	vector<docstring> const keys = to_docstring_vector(cited_keys_);
 	vector<CitationStyle> styles = citeStyles_;
-	// FIXME: pass a dictionary instead of individual before, after, dialog, etc.
-	vector<docstring> ret = bi.getCiteStrings(keys, styles, documentBuffer(),
-		before, after, from_utf8("dialog"), max_size);
+	CiteItem ci;
+	ci.textBefore = qstring_to_ucs4(textBeforeED->text());
+	ci.textAfter = qstring_to_ucs4(textAfterED->text());
+	ci.forceUpperCase = forceuppercaseCB->isChecked();
+	ci.Starred = starredCB->isChecked();
+	ci.context = CiteItem::Dialog;
+	ci.max_size = max_size;
+	vector<docstring> ret = bi.getCiteStrings(keys, styles, documentBuffer(), ci);
 	return to_qstring_list(ret);
 }
 

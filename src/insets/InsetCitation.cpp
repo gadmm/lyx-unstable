@@ -21,6 +21,7 @@
 #include "DispatchResult.h"
 #include "FuncCode.h"
 #include "FuncRequest.h"
+#include "FuncStatus.h"
 #include "LaTeXFeatures.h"
 #include "output_xhtml.h"
 #include "ParIterator.h"
@@ -60,8 +61,8 @@ InsetCitation::~InsetCitation()
 
 ParamInfo const & InsetCitation::findInfo(string const & /* cmdName */)
 {
-	// standard cite does only take one argument if jurabib is
-	// not used, but jurabib extends this to two arguments, so
+	// standard cite does only take one argument, but biblatex, jurabib
+	// and natbib extend this to two arguments, so
 	// we have to allow both here. InsetCitation takes care that
 	// LaTeX output is nevertheless correct.
 	if (param_info_.empty()) {
@@ -73,54 +74,121 @@ ParamInfo const & InsetCitation::findInfo(string const & /* cmdName */)
 }
 
 
-namespace {
-
-vector<string> const init_possible_cite_commands()
+// We allow any command here, since we fall back to cite
+// anyway if a command is not allowed by a style
+bool InsetCitation::isCompatibleCommand(string const &)
 {
-	char const * const possible[] = {
-		"cite", "nocite", "citet", "citep", "citealt", "citealp",
-		"citeauthor", "citeyear", "citeyearpar",
-		"citet*", "citep*", "citealt*", "citealp*", "citeauthor*",
-		"Citet",  "Citep",  "Citealt",  "Citealp",  "Citeauthor",
-		"Citet*", "Citep*", "Citealt*", "Citealp*", "Citeauthor*",
-		"fullcite",
-		"footcite", "footcitet", "footcitep", "footcitealt",
-		"footcitealp", "footciteauthor", "footciteyear", "footciteyearpar",
-		"citefield", "citetitle", "cite*"
-	};
-	size_t const size_possible = sizeof(possible) / sizeof(possible[0]);
-
-	return vector<string>(possible, possible + size_possible);
+	return true;
 }
 
 
-vector<string> const & possibleCiteCommands()
+CitationStyle InsetCitation::getCitationStyle(BufferParams const & bp, string const & input,
+				  vector<CitationStyle> const & valid_styles) const
 {
-	static vector<string> const possible = init_possible_cite_commands();
-	return possible;
-}
+	CitationStyle cs = valid_styles[0];
+	cs.forceUpperCase = false;
+	cs.hasStarredVersion = false;
 
+	string normalized_input = input;
+	string::size_type const n = input.size() - 1;
+	if (isUpperCase(input[0]))
+		normalized_input[0] = lowercase(input[0]);
+	if (input[n] == '*')
+		normalized_input = normalized_input.substr(0, n);
 
-} // anon namespace
+	string const alias = bp.getCiteAlias(normalized_input);
+	if (!alias.empty())
+		normalized_input = alias;
 
+	vector<CitationStyle>::const_iterator it  = valid_styles.begin();
+	vector<CitationStyle>::const_iterator end = valid_styles.end();
+	for (; it != end; ++it) {
+		CitationStyle this_cs = *it;
+		if (this_cs.name == normalized_input) {
+			cs = *it;
+			break;
+		}
+	}
 
-// FIXME: use the citeCommands provided by the TextClass
-// instead of possibleCiteCommands defined in this file.
-bool InsetCitation::isCompatibleCommand(string const & cmd)
-{
-	vector<string> const & possibles = possibleCiteCommands();
-	vector<string>::const_iterator const end = possibles.end();
-	return find(possibles.begin(), end, cmd) != end;
+	return cs;
 }
 
 
 void InsetCitation::doDispatch(Cursor & cur, FuncRequest & cmd)
 {
-	if (cmd.action() == LFUN_INSET_MODIFY) {
+	switch (cmd.action()) {
+	case LFUN_INSET_MODIFY: {
 		buffer().removeBiblioTempFiles();
 		cache.recalculate = true;
+		if (cmd.getArg(0) == "toggleparam") {
+			string cmdname = getCmdName();
+			string const alias =
+				buffer().params().getCiteAlias(cmdname);
+			if (!alias.empty())
+				cmdname = alias;
+			string const par = cmd.getArg(1);
+			string newcmdname = cmdname;
+			if (par == "star") {
+				if (suffixIs(cmdname, "*"))
+					newcmdname = rtrim(cmdname, "*");
+				else
+					newcmdname = cmdname + "*";
+			} else if (par == "casing") {
+				if (isUpperCase(cmdname[0]))
+					newcmdname[0] = lowercase(cmdname[0]);
+				else
+					newcmdname[0] = uppercase(newcmdname[0]);
+			}
+			cmd = FuncRequest(LFUN_INSET_MODIFY, "changetype " + newcmdname);
+		}
 	}
-	InsetCommand::doDispatch(cur, cmd);
+	default:
+		InsetCommand::doDispatch(cur, cmd);
+	}
+}
+
+
+bool InsetCitation::getStatus(Cursor & cur, FuncRequest const & cmd,
+	FuncStatus & status) const
+{
+	switch (cmd.action()) {
+	// Handle the alias case
+	case LFUN_INSET_MODIFY:
+		if (cmd.getArg(0) == "changetype") {
+			string cmdname = getCmdName();
+			string const alias =
+				buffer().params().getCiteAlias(cmdname);
+			if (!alias.empty())
+				cmdname = alias;
+			if (suffixIs(cmdname, "*"))
+				cmdname = rtrim(cmdname, "*");
+			string const newtype = cmd.getArg(1);
+			status.setEnabled(isCompatibleCommand(newtype));
+			status.setOnOff(newtype == cmdname);
+		}
+		if (cmd.getArg(0) == "toggleparam") {
+			string cmdname = getCmdName();
+			string const alias =
+				buffer().params().getCiteAlias(cmdname);
+			if (!alias.empty())
+				cmdname = alias;
+			vector<CitationStyle> citation_styles =
+				buffer().params().citeStyles();
+			CitationStyle cs = getCitationStyle(buffer().params(),
+							    cmdname, citation_styles);
+			if (cmd.getArg(1) == "star") {
+				status.setEnabled(cs.hasStarredVersion);
+				status.setOnOff(suffixIs(cmdname, "*"));
+			}
+			else if (cmd.getArg(1) == "casing") {
+				status.setEnabled(cs.forceUpperCase);
+				status.setOnOff(isUpperCase(cmdname[0]));
+			}
+		}
+		return true;
+	default:
+		return InsetCommand::getStatus(cur, cmd, status);
+	}
 }
 
 
@@ -165,17 +233,29 @@ docstring InsetCitation::toolTip(BufferView const & bv, int, int) const
 	if (key.empty())
 		return _("No citations selected!");
 
+	CiteItem ci;
+	ci.richtext = true;
 	vector<docstring> keys = getVectorFromString(key);
 	if (keys.size() == 1)
-		return  bi.getInfo(keys[0], buffer(), true);
+		return bi.getInfo(keys[0], buffer(), ci);
 
 	docstring tip;
 	tip += "<ol>";
+	int count = 0;
 	for (docstring const & key : keys) {
-		docstring const key_info = bi.getInfo(key, buffer(), true);
+		docstring const key_info = bi.getInfo(key, buffer(), ci);
+		// limit to reasonable size.
+		if (count > 9 && keys.size() > 11) {
+			tip.push_back(0x2026);// HORIZONTAL ELLIPSIS
+			tip += "<p>"
+				+ bformat(_("+ %1$d more entries."), int(keys.size() - count))
+				+ "</p>";
+			break;
+		}
 		if (key_info.empty())
 			continue;
 		tip += "<li>" + key_info + "</li>";
+		++count;
 	}
 	tip += "</ol>";
 	return tip;
@@ -184,34 +264,36 @@ docstring InsetCitation::toolTip(BufferView const & bv, int, int) const
 
 namespace {
 
-
-CitationStyle asValidLatexCommand(string const & input, vector<CitationStyle> const & valid_styles)
+CitationStyle asValidLatexCommand(BufferParams const & bp, string const & input,
+				  vector<CitationStyle> const & valid_styles)
 {
 	CitationStyle cs = valid_styles[0];
 	cs.forceUpperCase = false;
-	cs.fullAuthorList = false;
-	if (!InsetCitation::isCompatibleCommand(input))
-		return cs;
+	cs.hasStarredVersion = false;
 
 	string normalized_input = input;
 	string::size_type const n = input.size() - 1;
-	if (input[0] == 'C')
-		normalized_input[0] = 'c';
+	if (isUpperCase(input[0]))
+		normalized_input[0] = lowercase(input[0]);
 	if (input[n] == '*')
 		normalized_input = normalized_input.substr(0, n);
+
+	string const alias = bp.getCiteAlias(normalized_input);
+	if (!alias.empty())
+		normalized_input = alias;
 
 	vector<CitationStyle>::const_iterator it  = valid_styles.begin();
 	vector<CitationStyle>::const_iterator end = valid_styles.end();
 	for (; it != end; ++it) {
 		CitationStyle this_cs = *it;
-		if (this_cs.cmd == normalized_input) {
+		if (this_cs.name == normalized_input) {
 			cs = *it;
 			break;
 		}
 	}
 
-	cs.forceUpperCase &= input[0] == 'C';
-	cs.fullAuthorList &= input[n] == '*';
+	cs.forceUpperCase &= input[0] == uppercase(input[0]);
+	cs.hasStarredVersion &= input[n] == '*';
 
 	return cs;
 }
@@ -258,17 +340,18 @@ docstring InsetCitation::complexLabel(bool for_xhtml) const
 	if (key.empty())
 		return _("No citations selected!");
 
-	// We don't currently use the full or forceUCase fields.
 	string cite_type = getCmdName();
-	if (cite_type[0] == 'C')
-		// If we were going to use them, this would mean ForceUCase
-		cite_type = string(1, 'c') + cite_type.substr(1);
-	if (cite_type[cite_type.size() - 1] == '*')
-		// and this would mean FULL
+	bool const uppercase = isUpperCase(cite_type[0]);
+	if (uppercase)
+		cite_type[0] = lowercase(cite_type[0]);
+	bool const starred = (cite_type[cite_type.size() - 1] == '*');
+	if (starred)
 		cite_type = cite_type.substr(0, cite_type.size() - 1);
 
-	docstring const & before = getParam("before");
-	docstring const & after = getParam("after");
+	// handle alias
+	string const alias = buf.params().getCiteAlias(cite_type);
+	if (!alias.empty())
+		cite_type = alias;
 
 	// FIXME: allow to add cite macros
 	/*
@@ -277,7 +360,18 @@ docstring InsetCitation::complexLabel(bool for_xhtml) const
 	*/
 	docstring label;
 	vector<docstring> keys = getVectorFromString(key);
-	label = biblist.getLabel(keys, buffer(), cite_type, for_xhtml, UINT_MAX, before, after);
+	CiteItem ci;
+	ci.textBefore = getParam("before");
+	ci.textAfter = getParam("after");
+	ci.forceUpperCase = uppercase;
+	ci.Starred = starred;
+	ci.max_size = UINT_MAX;
+	if (for_xhtml) {
+		ci.max_key_size = UINT_MAX;
+		ci.context = CiteItem::Export;
+	}
+	ci.richtext = for_xhtml;
+	label = biblist.getLabel(keys, buffer(), cite_type, ci);
 	return label;
 }
 
@@ -415,10 +509,10 @@ void InsetCitation::forOutliner(docstring & os, size_t const, bool const) const
 void InsetCitation::latex(otexstream & os, OutputParams const & runparams) const
 {
 	vector<CitationStyle> citation_styles = buffer().params().citeStyles();
-	CitationStyle cs = asValidLatexCommand(getCmdName(), citation_styles);
+	CitationStyle cs = asValidLatexCommand(buffer().params(), getCmdName(), citation_styles);
 	BiblioInfo const & bi = buffer().masterBibInfo();
 	// FIXME UNICODE
-	docstring const cite_str = from_utf8(citationStyleToString(cs));
+	docstring const cite_str = from_utf8(citationStyleToString(cs, true));
 
 	if (runparams.inulemcmd > 0)
 		os << "\\mbox{";

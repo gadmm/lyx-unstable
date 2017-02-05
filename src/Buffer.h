@@ -69,7 +69,7 @@ class WorkAreaManager;
 namespace support {
 class DocFileName;
 class FileName;
-class FileNameList;
+class FileNamePairList;
 }
 
 namespace graphics {
@@ -416,6 +416,18 @@ public:
 	 *  later manually moved to a different location.
 	 */
 	support::DocFileName getReferencedFileName(std::string const & fn) const;
+
+	/// Format a file name for LaTeX output (absolute or relative or filename only,
+	/// depending on file and context)
+	std::string const prepareFileNameForLaTeX(std::string const &,
+					std::string const &, bool nice) const;
+
+	/** Returns a vector of bibliography (*.bib) file paths suitable for the
+	 *  output in the respective BibTeX/Biblatex macro
+	 */
+	std::vector<docstring> const prepareBibFilePaths(OutputParams const &,
+				    support::FileNamePairList const bibfilelist,
+				    bool const extension = true) const;
 
 	/** Returns the path where a local layout file lives.
 	 *  An empty string is returned for standard system and user layouts.
@@ -790,7 +802,7 @@ private:
 	void updateBibfilesCache(UpdateScope scope = UpdateMaster) const;
 	/// Return the list with all bibfiles in use (including bibfiles
 	/// of loaded child documents).
-	support::FileNameList const &
+	support::FileNamePairList const &
 		getBibfilesCache(UpdateScope scope = UpdateMaster) const;
 	///
 	void collectChildren(ListOfBuffers & children, bool grand_children) const;

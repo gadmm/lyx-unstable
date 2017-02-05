@@ -17,6 +17,7 @@
 #include "TextClass.h"
 
 #include "LayoutFile.h"
+#include "CiteEnginesList.h"
 #include "Color.h"
 #include "Counters.h"
 #include "Floating.h"
@@ -61,7 +62,7 @@ namespace lyx {
 // You should also run the development/tools/updatelayouts.py script,
 // to update the format of all of our layout files.
 //
-int const LAYOUT_FORMAT = 62; //spitz PassThru for arguments.
+int const LAYOUT_FORMAT = 63; //spitz: new tags CiteFramework, MaxCiteNames, extended InsetCite syntax.
 
 
 #ifdef FILEFORMAT
@@ -128,6 +129,8 @@ string translateReadType(TextClass::ReadType rt)
 		return "input file";
 	case TextClass::MODULE:
 		return "module file";
+	case TextClass::CITE_ENGINE:
+		return "cite engine";
 	case TextClass::VALIDATION:
 		return "validation";
 	}
@@ -157,7 +160,7 @@ TextClass::TextClass()
 	  outputType_(LATEX), outputFormat_("latex"),
 	  defaultfont_(sane_font),
 	  titletype_(TITLE_COMMAND_AFTER), titlename_("maketitle"),
-	  min_toclevel_(0), max_toclevel_(0),
+	  min_toclevel_(0), max_toclevel_(0), maxcitenames_(2),
 	  cite_full_author_list_(true)
 {
 }
@@ -223,6 +226,8 @@ enum TextClassTags {
 	TC_CITEENGINE,
 	TC_CITEENGINETYPE,
 	TC_CITEFORMAT,
+	TC_CITEFRAMEWORK,
+	TC_MAXCITENAMES,
 	TC_DEFAULTBIBLIO,
 	TC_FULLAUTHORLIST,
 	TC_OUTLINERNAME
@@ -238,6 +243,7 @@ LexerKeyword textClassTags[] = {
 	{ "citeengine",        TC_CITEENGINE },
 	{ "citeenginetype",    TC_CITEENGINETYPE },
 	{ "citeformat",        TC_CITEFORMAT },
+	{ "citeframework",     TC_CITEFRAMEWORK },
 	{ "classoptions",      TC_CLASSOPTIONS },
 	{ "columns",           TC_COLUMNS },
 	{ "counter",           TC_COUNTER },
@@ -256,6 +262,7 @@ LexerKeyword textClassTags[] = {
 	{ "input",             TC_INPUT },
 	{ "insetlayout",       TC_INSETLAYOUT },
 	{ "leftmargin",        TC_LEFTMARGIN },
+	{ "maxcitenames",      TC_MAXCITENAMES },
 	{ "modifystyle",       TC_MODIFYSTYLE },
 	{ "nocounter",         TC_NOCOUNTER },
 	{ "nofloat",           TC_NOFLOAT },
@@ -760,9 +767,35 @@ TextClass::ReturnValues TextClass::read(Lexer & lexrc, ReadType rt)
 			error = !readCiteFormat(lexrc);
 			break;
 
+		case TC_CITEFRAMEWORK:
+			lexrc.next();
+			citeframework_ = rtrim(lexrc.getString());
+			break;
+
+		case TC_MAXCITENAMES:
+			lexrc.next();
+			maxcitenames_ = size_t(lexrc.getInteger());
+			break;
+
 		case TC_DEFAULTBIBLIO:
-			if (lexrc.next())
-				cite_default_biblio_style_ = rtrim(lexrc.getString());
+			if (lexrc.next()) {
+				vector<string> const dbs =
+					getVectorFromString(rtrim(lexrc.getString()), "|");
+				vector<string>::const_iterator it  = dbs.begin();
+				vector<string>::const_iterator end = dbs.end();
+				for (; it != end; ++it) {
+					if (!contains(*it, ':')) {
+						vector<string> const enginetypes =
+							getVectorFromString(opt_enginetype_, "|");
+						for (string const &s: enginetypes)
+							cite_default_biblio_style_[s] = *it;
+					} else {
+						string eng;
+						string const db = split(*it, eng, ':');
+						cite_default_biblio_style_[eng] = db;
+					}
+				}
+			}
 			break;
 
 		case TC_FULLAUTHORLIST:
@@ -1018,30 +1051,83 @@ bool TextClass::readCiteEngine(Lexer & lexrc)
 			getout = true;
 			continue;
 		}
-		string cmd;
 		CitationStyle cs;
 		char ichar = def[0];
 		if (ichar == '#')
 			continue;
-		if (ichar == 'C') {
+		if (isUpperCase(ichar)) {
 			cs.forceUpperCase = true;
-			def[0] = 'c';
+			def[0] = lowercase(ichar);
 		}
 
+		/** For portability reasons (between different
+		 *  cite engines such as natbib and biblatex),
+		 *  we distinguish between:
+		 *  1. The LyX name as output in the LyX file
+		 *  2. Possible aliases that might fall back to
+		 *     the given LyX name in the current engine
+		 *  3. The actual LaTeX command that is output
+		 *  (2) and (3) are optional.
+		 *  Also, the GUI string for the starred version can
+		 *  be changed
+		 *  The syntax is:
+		 *  LyXName|alias,nextalias*<!stardesc!stardesctooltip>[][]=latexcmd
+		 */
+		enum ScanMode {
+			LyXName,
+			Alias,
+			LaTeXCmd,
+			StarDesc
+		};
+
+		ScanMode mode = LyXName;
+		ScanMode oldmode = LyXName;
+		string lyx_cmd;
+		string alias;
+		string latex_cmd;
+		string stardesc;
 		size_t const n = def.size();
 		for (size_t i = 0; i != n; ++i) {
 			ichar = def[i];
-			if (ichar == '*')
-				cs.fullAuthorList = true;
+			if (ichar == '|')
+				mode = Alias;
+			else if (ichar == '=')
+				mode = LaTeXCmd;
+			else if (ichar == '<') {
+				oldmode = mode;
+				mode = StarDesc;
+			} else if (ichar == '>')
+				mode = oldmode;
+			else if (mode == LaTeXCmd)
+				latex_cmd += ichar;
+			else if (mode == StarDesc)
+				stardesc += ichar;
+			else if (ichar == '*')
+				cs.hasStarredVersion = true;
 			else if (ichar == '[' && cs.textAfter)
 				cs.textBefore = true;
 			else if (ichar == '[')
 				cs.textAfter = true;
-			else if (ichar != ']')
-				cmd += ichar;
+			else if (ichar != ']') {
+				if (mode == Alias)
+					alias += ichar;
+				else
+					lyx_cmd += ichar;
+			}
 		}
-
-		cs.cmd = cmd;
+		cs.name = lyx_cmd;
+		cs.cmd = latex_cmd.empty() ? lyx_cmd : latex_cmd;
+		if (!alias.empty()) {
+			vector<string> const aliases = getVectorFromString(alias);
+			for (string const &s: aliases)
+				cite_command_aliases_[s] = lyx_cmd;
+		}
+		vector<string> const stardescs = getVectorFromString(stardesc, "!");
+		int size = stardesc.size();
+		if (size > 0)
+			cs.stardesc = stardescs[0];
+		if (size > 1)
+			cs.startooltip = stardescs[1];
 		if (type & ENGINE_TYPE_AUTHORYEAR)
 			cite_styles_[ENGINE_TYPE_AUTHORYEAR].push_back(cs);
 		if (type & ENGINE_TYPE_NUMERICAL)
@@ -1590,6 +1676,7 @@ Layout TextClass::createBasicLayout(docstring const & name, bool unknown) const
 
 DocumentClassPtr getDocumentClass(
 		LayoutFile const & baseClass, LayoutModuleList const & modlist,
+		LayoutModuleList const & celist,
 		bool const clone)
 {
 	DocumentClassPtr doc_class =
@@ -1628,6 +1715,42 @@ DocumentClassPtr getDocumentClass(
 			frontend::Alert::warning(_("Read Error"), msg);
 		}
 	}
+
+	LayoutModuleList::const_iterator cit = celist.begin();
+	LayoutModuleList::const_iterator cen = celist.end();
+	for (; cit != cen; ++cit) {
+		string const ceName = *cit;
+		LyXCiteEngine * ce = theCiteEnginesList[ceName];
+		if (!ce) {
+			docstring const msg =
+						bformat(_("The cite engine %1$s has been requested by\n"
+						"this document but has not been found in the list of\n"
+						"available engines. If you recently installed it, you\n"
+						"probably need to reconfigure LyX.\n"), from_utf8(ceName));
+			if (!clone)
+				frontend::Alert::warning(_("Cite Engine not available"), msg);
+			continue;
+		}
+		if (!ce->isAvailable() && !clone) {
+			docstring const prereqs = from_utf8(getStringFromVector(ce->prerequisites(), "\n\t"));
+			docstring const msg =
+				bformat(_("The cite engine %1$s requires a package that is not\n"
+					"available in your LaTeX installation, or a converter that\n"
+					"you have not installed. LaTeX output may not be possible.\n"
+					"Missing prerequisites:\n"
+						"\t%2$s\n"
+					"See section 3.1.2.3 (Modules) of the User's Guide for more information."),
+				from_utf8(ceName), prereqs);
+			frontend::Alert::warning(_("Package not available"), msg, true);
+		}
+		FileName layout_file = libFileSearch("citeengines", ce->getFilename());
+		if (!doc_class->read(layout_file, TextClass::CITE_ENGINE)) {
+			docstring const msg =
+						bformat(_("Error reading cite engine %1$s\n"), from_utf8(ceName));
+			frontend::Alert::warning(_("Read Error"), msg);
+		}
+	}
+
 	return doc_class;
 }
 
@@ -1697,10 +1820,12 @@ Layout const & DocumentClass::htmlTOCLayout() const
 }
 
 
-string const & DocumentClass::getCiteFormat(CiteEngineType const & type,
-	string const & entry, string const & fallback) const
+string const DocumentClass::getCiteFormat(CiteEngineType const & type,
+	string const & entry, bool const punct, string const & fallback) const
 {
-	static string default_format = "{%author%[[%author%, ]][[{%editor%[[%editor%, ed., ]]}]]}\"%title%\"{%journal%[[, {!<i>!}%journal%{!</i>!}]][[{%publisher%[[, %publisher%]][[{%institution%[[, %institution%]]}]]}]]}{%year%[[ (%year%)]]}{%pages%[[, %pages%]]}.";
+	string default_format = "{%fullnames:author%[[%fullnames:author%, ]][[{%fullnames:editor%[[%fullnames:editor%, ed., ]]}]]}\"%title%\"{%journal%[[, {!<i>!}%journal%{!</i>!}]][[{%publisher%[[, %publisher%]][[{%institution%[[, %institution%]]}]]}]]}{%year%[[ (%year%)]]}{%pages%[[, %pages%]]}";
+	if (punct)
+		default_format += ".";
 
 	map<CiteEngineType, map<string, string> >::const_iterator itype = cite_formats_.find(type);
 	if (itype == cite_formats_.end())
@@ -1710,6 +1835,8 @@ string const & DocumentClass::getCiteFormat(CiteEngineType const & type,
 		it = itype->second.find(fallback);
 	if (it == itype->second.end())
 		return default_format;
+	if (punct)
+		return it->second + ".";
 	return it->second;
 }
 
@@ -1737,7 +1864,7 @@ vector<string> const DocumentClass::citeCommands(
 	vector<string> cmds;
 	for (; it != end; ++it) {
 		CitationStyle const cite = *it;
-		cmds.push_back(cite.cmd);
+		cmds.push_back(cite.name);
 	}
 	return cmds;
 }

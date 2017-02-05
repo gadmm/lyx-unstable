@@ -151,6 +151,7 @@ public:
 		BASECLASS, //>This is a base class, i.e., top-level layout file
 		MERGE, //>This is a file included in a layout file
 		MODULE, //>This is a layout module
+		CITE_ENGINE, //>This is a cite engine
 		VALIDATION //>We're just validating
 	};
 	/// return values for read()
@@ -257,6 +258,8 @@ protected:
 	mutable std::string prerequisites_;
 	/// The possible cite engine types
 	std::string opt_enginetype_;
+	/// The cite framework (bibtex, biblatex)
+	std::string citeframework_;
 	///
 	std::string opt_fontsize_;
 	///
@@ -329,7 +332,11 @@ protected:
 	/// Citation macros
 	std::map<CiteEngineType, std::map<std::string, std::string> > cite_macros_;
 	/// The default BibTeX bibliography style file
-	std::string cite_default_biblio_style_;
+	std::map<std::string, std::string> cite_default_biblio_style_;
+	/// Citation command aliases
+	std::map<std::string, std::string> cite_command_aliases_;
+	/// The maximum number of citations before "et al."
+	size_t maxcitenames_;
 	/// Whether full author lists are supported
 	bool cite_full_author_list_;
 	/// The possible citation styles
@@ -420,6 +427,8 @@ public:
 	///
 	std::string const & opt_enginetype() const { return opt_enginetype_; }
 	///
+	std::string const & citeFramework() const { return citeframework_; }
+	///
 	std::string const & opt_fontsize() const { return opt_fontsize_; }
 	///
 	std::string const & opt_pagestyle() const { return opt_pagestyle_; }
@@ -476,8 +485,9 @@ public:
 	/// returns true if the class has a ToC structure
 	bool hasTocLevels() const;
 	///
-	std::string const & getCiteFormat(CiteEngineType const & type,
-		std::string const & entry, std::string const & fallback = "") const;
+	std::string const getCiteFormat(CiteEngineType const & type,
+		std::string const & entry, bool const punct = true,
+		std::string const & fallback = "") const;
 	///
 	std::string const & getCiteMacro(CiteEngineType const & type,
 		std::string const & macro) const;
@@ -486,7 +496,13 @@ public:
 	///
 	std::vector<CitationStyle> const & citeStyles(CiteEngineType const &) const;
 	///
-	std::string const & defaultBiblioStyle() const { return cite_default_biblio_style_; }
+	std::map<std::string, std::string> const & defaultBiblioStyle() const
+	{ return cite_default_biblio_style_; }
+	///
+	std::map<std::string, std::string> const & citeCommandAliases() const
+	{ return cite_command_aliases_; }
+	/// The maximum number of citations before "et al."
+	size_t max_citenames() const { return maxcitenames_; }
 	///
 	bool const & fullAuthorList() const { return cite_full_author_list_; }
 protected:
@@ -498,6 +514,7 @@ private:
 	/// The only way to make a DocumentClass is to call this function.
 	friend DocumentClassPtr
 		getDocumentClass(LayoutFile const &, LayoutModuleList const &,
+				 LayoutModuleList const &,
 				 bool const clone);
 };
 
@@ -508,6 +525,7 @@ private:
 /// on the CutStack.
 DocumentClassPtr getDocumentClass(LayoutFile const & baseClass,
 			LayoutModuleList const & modlist,
+			LayoutModuleList const & celist,
 			bool const clone = false);
 
 /// convert page sides option to text 1 or 2

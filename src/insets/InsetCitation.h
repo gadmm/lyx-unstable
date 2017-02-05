@@ -14,6 +14,7 @@
 #define INSET_CITATION_H
 
 #include "InsetCommand.h"
+#include "Citation.h"
 
 namespace lyx {
 
@@ -45,6 +46,8 @@ public:
 	docstring toolTip(BufferView const & bv, int x, int y) const;
 	///
 	void doDispatch(Cursor & cur, FuncRequest & cmd);
+	///
+	bool getStatus(Cursor & cur, FuncRequest const & cmd, FuncStatus &) const;
 	///
 	InsetCode lyxCode() const { return CITE_CODE; }
 	///
@@ -78,8 +81,11 @@ public:
 	///
 	static std::string defaultCommand() { return "cite"; }
 	///
-	static bool isCompatibleCommand(std::string const & cmd);
+	static bool isCompatibleCommand(std::string const &);
 	//@}
+	///
+	CitationStyle getCitationStyle(BufferParams const & bp, std::string const & input,
+				       std::vector<CitationStyle> const & valid_styles) const;
 
 private:
 	/// tries to make a pretty label and makes a basic one if not

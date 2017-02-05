@@ -20,7 +20,7 @@ class BiblioInfo;
 
 namespace support {
 	class FileName;
-	class FileNameList;
+	class FileNamePairList;
 }
 
 /** Used to insert BibTeX's information
@@ -33,7 +33,7 @@ public:
 	~InsetBibtex();
 
 	///
-	support::FileNameList getBibFiles() const;
+	support::FileNamePairList getBibFiles() const;
 	///
 	bool addDatabase(docstring const &);
 	///
@@ -85,6 +85,8 @@ private:
 	void editDatabases() const;
 	///
 	void parseBibTeXFiles() const;
+	///
+	bool usingBiblatex() const;
 
 	/// \name Private functions inherited from Inset class
 	//@{

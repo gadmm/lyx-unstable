@@ -75,6 +75,8 @@ public:
 	void updateFontsize(std::string const &, std::string const &);
 	void updateFontlist();
 	void updateDefaultFormat();
+	void updateCiteStyles(std::vector<std::string> const &,
+			      CiteEngineType const & sel = ENGINE_TYPE_AUTHORYEAR);
 	void updateEngineType(std::string const &, CiteEngineType const &);
 	void updatePagestyle(std::string const &, std::string const &);
 	bool isChildIncluded(std::string const &);
@@ -113,9 +115,16 @@ private Q_SLOTS:
 	void classChanged_adaptor();
 	void languagePackageChanged(int);
 	void biblioChanged();
+	void rescanBibFiles();
+	void resetDefaultBibfile(std::string const & which = std::string());
+	void resetDefaultBbxBibfile();
+	void resetDefaultCbxBibfile();
+	void citeEngineChanged(int);
+	void citeStyleChanged();
 	void bibtexChanged(int);
-	void setAuthorYear(bool);
-	void setNumerical(bool);
+	void updateResetDefaultBiblio();
+	void matchBiblatexStyles();
+	void updateEngineDependends();
 	void updateModuleInfo();
 	void modulesChanged();
 	void changeBackgroundColor();
@@ -178,6 +187,9 @@ private:
 	void updateSelectedModules();
 	///
 	void updateIncludeonlys();
+	///
+	void updateDefaultBiblio(std::string const & style,
+				 std::string const & which = std::string());
 	/// save as default template
 	void saveDocDefault();
 	/// reset to default params
@@ -273,6 +285,8 @@ private:
 	bool noMathFont() const;
 	///
 	void allPackages(int);
+	///
+	bool isBiblatex() const;
 	///
 	BufferParams bp_;
 	/// List of names of available modules

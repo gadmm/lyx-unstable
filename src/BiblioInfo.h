@@ -17,6 +17,7 @@
 
 #include "support/docstring.h"
 
+#include "BufferParams.h"
 #include "Citation.h"
 
 #include <map>
@@ -29,9 +30,10 @@ namespace lyx {
 class Buffer;
 
 /// \param latex_str a LaTeX command, "cite", "Citep*", etc
-CitationStyle citationStyleFromString(std::string const & latex_str);
+CitationStyle citationStyleFromString(std::string const & latex_str,
+				      BufferParams const &);
 /// the other way round
-std::string citationStyleToString(CitationStyle const &);
+std::string citationStyleToString(CitationStyle const &, bool const latex = false);
 
 
 /// Class to represent information about a BibTeX or
@@ -53,22 +55,26 @@ public:
 	BibTeXInfo(bool ib) : is_bibtex_(ib), modifier_(0) {}
 	/// constructor that sets the entryType
 	BibTeXInfo(docstring const & key, docstring const & type);
-	/// \return the short form of an authorlist, used for sorting
-	/// this will be translated to the UI language if buf is null
+	/// \return an author or editor list (short form by default),
+	/// used for sorting.
+	/// This will be translated to the UI language if buf is null
 	/// otherwise, it will be translated to the buffer language.
-	docstring const getAbbreviatedAuthor(
-	    Buffer const * buf = 0, bool jurabib_style = false) const;
+	docstring const getAuthorOrEditorList(Buffer const * buf = 0, bool full = false,
+				      bool forceshort = false) const;
+	/// Same for a specific author role (editor, author etc.)
+	docstring const getAuthorList(Buffer const * buf = 0, docstring author = docstring(),
+				      bool full = false, bool forceshort = false,
+				      bool allnames = false, bool beginning = true) const;
 	///
 	docstring const getYear() const;
 	/// \return formatted BibTeX data suitable for framing.
 	/// \param vector of pointers to crossref/xdata information
 	docstring const & getInfo(BibTeXInfoList const xrefs,
-			Buffer const & buf, bool richtext) const;
+			Buffer const & buf, CiteItem const & ci) const;
 	/// \return formatted BibTeX data for a citation label
 	docstring const getLabel(BibTeXInfoList const xrefs,
-		Buffer const & buf, docstring const & format, bool richtext,
-		const docstring & before, const docstring & after,
-		const docstring & dialog, bool next = false) const;
+		Buffer const & buf, docstring const & format,
+		CiteItem const & ci, bool next = false, bool second = false) const;
 	///
 	const_iterator find(docstring const & f) const { return bimap_.find(f); }
 	///
@@ -114,8 +120,7 @@ private:
 	/// to get the data from xref BibTeXInfo objects, which would normally
 	/// be the one referenced in the crossref or xdata field.
 	docstring getValueForKey(std::string const & key, Buffer const & buf,
-		docstring const & before, docstring const & after, docstring const & dialog,
-		BibTeXInfoList const xrefs, size_t maxsize = 4096) const;
+		CiteItem const & ci, BibTeXInfoList const xrefs, size_t maxsize = 4096) const;
 	/// replace %keys% in a format string with their values
 	/// called from getInfo()
 	/// format strings may contain:
@@ -134,9 +139,8 @@ private:
 	/// so that things like "pp." and "vol." can be translated.
 	docstring expandFormat(docstring const & fmt,
 		BibTeXInfoList const xrefs, int & counter,
-		Buffer const & buf, docstring before = docstring(),
-		docstring after = docstring(), docstring dialog = docstring(),
-		bool next = false) const;
+		Buffer const & buf, CiteItem const & ci,
+		bool next = false, bool second = false) const;
 	/// true if from BibTeX; false if from bibliography environment
 	bool is_bibtex_;
 	/// the BibTeX key for this entry
@@ -179,8 +183,8 @@ public:
 	std::vector<docstring> const getFields() const;
 	/// \return a sorted vector of BibTeX entry types in use
 	std::vector<docstring> const getEntries() const;
-	/// \return the short form of an authorlist
-	docstring const getAbbreviatedAuthor(docstring const & key, Buffer const & buf) const;
+	/// \return author or editor list (abbreviated form by default)
+	docstring const getAuthorOrEditorList(docstring const & key, Buffer const & buf) const;
 	/// \return the year from the bibtex data record for \param key
 	/// if \param use_modifier is true, then we will also append any
 	/// modifier for this entry (e.g., 1998b).
@@ -206,16 +210,15 @@ public:
 	/// \return formatted BibTeX data associated with a given key.
 	/// Empty if no info exists.
 	/// Note that this will retrieve data from the crossref or xdata as needed.
-	/// If \param richtext is true, then it will output any richtext tags
-	/// marked in the citation format and escape < and > elsewhere.
+	/// \param ci contains further context information, such as if it should
+	/// output any richtext tags marked in the citation format and escape < and >
+	/// elsewhere, and the general output context.
 	docstring const getInfo(docstring const & key, Buffer const & buf,
-			bool richtext = false) const;
+			CiteItem const & ci) const;
 	/// \return formatted BibTeX data for citation labels.
 	/// Citation labels can have more than one key.
-	docstring const getLabel(std::vector<docstring> keys,
-		Buffer const & buf, std::string const & style, bool for_xhtml,
-		size_t max_size, docstring const & before, docstring const & after,
-		docstring const & dialog = docstring()) const;
+	docstring const getLabel(std::vector<docstring> keys, Buffer const & buf,
+				 std::string const & style, CiteItem const & ci) const;
 	/// Is this a reference from a bibtex database
 	/// or from a bibliography environment?
 	bool isBibtex(docstring const & key) const;
@@ -224,8 +227,7 @@ public:
 	/// upon the active engine.
 	std::vector<docstring> const getCiteStrings(std::vector<docstring> const & keys,
 		std::vector<CitationStyle> const & styles, Buffer const & buf,
-		docstring const & before, docstring const & after, docstring const & dialog,
-	  size_t max_size) const;
+		CiteItem const & ci) const;
 	/// A list of BibTeX keys cited in the current document, sorted by
 	/// the last name of the author.
 	/// Make sure you have called collectCitedEntries() before you try to

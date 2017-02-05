@@ -81,7 +81,9 @@ ParamInfo const & InsetBibtex::findInfo(string const & /* cmdName */)
 		param_info_.add("btprint", ParamInfo::LATEX_OPTIONAL);
 		param_info_.add("bibfiles", ParamInfo::LATEX_REQUIRED);
 		param_info_.add("options", ParamInfo::LYX_INTERNAL);
+#ifdef FILEFORMAT
 		param_info_.add("biblatexopts", ParamInfo::LATEX_OPTIONAL);
+#endif
 	}
 	return param_info_;
 }
@@ -225,11 +227,13 @@ docstring InsetBibtex::toolTip(BufferView const & /*bv*/, int /*x*/, int /*y*/) 
 	} else {
 		if (toc)
 			tip += _("Included in TOC");
+#ifdef FILEFORMAT
 		if (!getParam("biblatexopts").empty()) {
 			if (toc)
 				tip += "<br />";
 			tip += _("Options: ") + getParam("biblatexopts");
 		}
+#endif
 	}
 
 	return tip;
@@ -261,7 +265,11 @@ void InsetBibtex::latex(otexstream & os, OutputParams const & runparams) const
 
 	if (usingBiblatex()) {
 		// Options
+#ifdef FILEFORMAT
 		string opts = to_utf8(getParam("biblatexopts"));
+#else
+		string opts;
+#endif
 		// bibtotoc-Option
 		if (!bibtotoc.empty())
 			opts = opts.empty() ? "heading=bibintoc" : "heading=bibintoc," + opts;

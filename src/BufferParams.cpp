@@ -857,7 +857,9 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 	} else if (token == "\\biblio_style") {
 		lex.eatLine();
 		biblio_style = lex.getString();
-	} else if (token == "\\biblio_options") {
+	}
+#ifdef FILEFORMAT
+	else if (token == "\\biblio_options") {
 		lex.eatLine();
 		biblio_opts = lex.getString();
 	} else if (token == "\\biblatex_bibstyle") {
@@ -866,7 +868,9 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 	} else if (token == "\\biblatex_citestyle") {
 		lex.eatLine();
 		biblatex_citestyle = lex.getString();
-	} else if (token == "\\use_bibtopic") {
+	}
+#endif
+	else if (token == "\\use_bibtopic") {
 		lex >> use_bibtopic;
 	} else if (token == "\\use_indices") {
 		lex >> use_indices;
@@ -1237,6 +1241,7 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 
 	os << "\n\\cite_engine_type " << theCiteEnginesList.getTypeAsString(cite_engine_type_);
 
+#ifdef FILEFORMAT
 	if (!biblio_style.empty())
 		os << "\n\\biblio_style " << biblio_style;
 	if (!biblio_opts.empty())
@@ -1245,6 +1250,9 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 		os << "\n\\biblatex_bibstyle " << biblatex_bibstyle;
 	if (!biblatex_citestyle.empty())
 		os << "\n\\biblatex_citestyle " << biblatex_citestyle;
+#else
+	os << "\n\\biblio_style " << biblio_style;
+#endif
 
 	os << "\n\\use_bibtopic " << convert<string>(use_bibtopic)
 	   << "\n\\use_indices " << convert<string>(use_indices)

@@ -529,6 +529,14 @@ map<string, string> const & BufferParams::auto_packages()
 }
 
 
+bool BufferParams::useBibtopic() const
+{
+	if (useBiblatex())
+		return false;
+	return (use_bibtopic || (!multibib.empty() && multibib != "child"));
+}
+
+
 AuthorList & BufferParams::authors()
 {
 	return pimpl_->authorlist;
@@ -2248,7 +2256,7 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 				delim = ",";
 			}
 		}
-		if (!multibib.empty()) {
+		if (!multibib.empty() && multibib != "child") {
 			opts += delim + "refsection=" + multibib;
 			delim = ",";
 		}

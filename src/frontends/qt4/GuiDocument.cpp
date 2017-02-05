@@ -3760,14 +3760,13 @@ void GuiDocument::updateDefaultBiblio(string const & style,
 {
 	QString const bibstyle = toqstr(style);
 	biblioModule->defaultBiblioCO->clear();
-	biblioModule->biblatexBbxCO->clear();
-	biblioModule->biblatexCbxCO->clear();
 
 	int item_nr = -1;
 
 	if (isBiblatex()) {
 		if (which != "cbx") {
 			// First the bbx styles
+			biblioModule->biblatexBbxCO->clear();
 			QStringList str = texFileList("bbxFiles.lst");
 			// test whether we have a valid list, otherwise run rescan
 			if (str.isEmpty()) {
@@ -3799,6 +3798,7 @@ void GuiDocument::updateDefaultBiblio(string const & style,
 
 		if (which != "bbx") {
 			// now the cbx styles
+			biblioModule->biblatexCbxCO->clear();
 			QStringList str = texFileList("cbxFiles.lst");
 			// test whether we have a valid list, otherwise run rescan
 			if (str.isEmpty()) {
@@ -3828,6 +3828,8 @@ void GuiDocument::updateDefaultBiblio(string const & style,
 				biblioModule->biblatexCbxCO->clearEditText();
 		}
 	} else {// BibTeX
+		biblioModule->biblatexBbxCO->clear();
+		biblioModule->biblatexCbxCO->clear();
 		QStringList str = texFileList("bstFiles.lst");
 		// test whether we have a valid list, otherwise run rescan
 		if (str.isEmpty()) {

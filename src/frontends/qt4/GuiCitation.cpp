@@ -251,6 +251,10 @@ void GuiCitation::updateControls(BiblioInfo const & bi)
 {
 	QModelIndex idx = selectionManager->getSelectedIndex(1);
 	updateInfo(bi, idx);
+	int i = citationStyleCO->currentIndex();
+	if (i == -1)
+		i = 0;
+	updateFormatting(citeStyles_[i]);
 	selectionManager->update();
 }
 
@@ -300,6 +304,7 @@ void GuiCitation::updateFormatting(CitationStyle currentStyle)
 	textBeforeLA->setEnabled(textbefore && haveSelection);
 	textAfterED->setEnabled(textafter && haveSelection);
 	textAfterLA->setEnabled(textafter && haveSelection);
+	literalCB->setEnabled(textbefore || textafter);
 	citationStyleCO->setEnabled(haveSelection);
 	citationStyleLA->setEnabled(haveSelection);
 

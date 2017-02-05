@@ -2398,6 +2398,8 @@ void GuiDocument::updateEngineDependends()
 			|| ce->requires("natbib.sty");
 	biblioModule->citePackageOptionsLE->setEnabled(citepack);
 	biblioModule->citePackageOptionsL->setEnabled(citepack);
+	disable_widget_if_ndef_FILEFORMAT(biblioModule->citePackageOptionsLE);
+	disable_widget_if_ndef_FILEFORMAT(biblioModule->citePackageOptionsL);
 }
 
 

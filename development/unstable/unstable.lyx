@@ -189,12 +189,13 @@ Updates to layout contents (not layout format) requires to keep the version
 \family typewriter
 (un)stable/
 \family default
- subdirectory).
+ subdirectory), when this corresponds to a file format change.
  Then, an hypothetical 
 \family typewriter
 FILEFORMAT
 \family default
  switch should also determine which version is used.
+ For now, only the version before the file format change is kept.
 \end_layout
 
 \begin_layout Standard
@@ -350,6 +351,26 @@ in
  getStatus() 
 \family default
 so that new LFUNs or new uses of LFUNs are disabled.
+\end_layout
+
+\begin_layout Description
+InsetCommand
+\begin_inset space ~
+\end_inset
+
+parameter: Use the 
+\emph on
+ignore 
+\emph default
+and 
+\emph on
+default_value
+\emph default
+ arguments of 
+\family typewriter
+ParamsInfo::add
+\family default
+.
 \end_layout
 
 \end_deeper

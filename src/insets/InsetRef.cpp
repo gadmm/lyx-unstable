@@ -77,6 +77,16 @@ ParamInfo const & InsetRef::findInfo(string const & /* cmdName */)
 		param_info_.add("plural", ParamInfo::LYX_INTERNAL);
 		param_info_.add("caps", ParamInfo::LYX_INTERNAL);
 		param_info_.add("noprefix", ParamInfo::LYX_INTERNAL);
+#else
+		param_info_.add("plural", ParamInfo::LYX_INTERNAL,
+		                ParamInfo::HANDLING_NONE, true,
+		                from_ascii("false"));
+		param_info_.add("caps", ParamInfo::LYX_INTERNAL,
+		                ParamInfo::HANDLING_NONE, true,
+		                from_ascii("false"));
+		param_info_.add("noprefix", ParamInfo::LYX_INTERNAL,
+		                ParamInfo::HANDLING_NONE, true,
+		                from_ascii("false"));
 #endif
 	}
 	return param_info_;
@@ -181,29 +191,15 @@ void InsetRef::latex(otexstream & os, OutputParams const & rp) const
 		docstring label;
 		docstring prefix;
 		docstring const fcmd = 
-			getFormattedCmd(data, label, prefix,
-#ifdef FILEFORMAT
-			                getParam("caps")
-#else
-			                from_ascii("false")
-#endif
-			                );
+			getFormattedCmd(data, label, prefix, getParam("caps"));
 		os << fcmd;
-#ifdef FILEFORMAT
 		if (buffer().params().use_refstyle && getParam("plural") == "true")
-			os << "[s]";
-#endif
+		    os << "[s]";
 		os << '{' << label << '}';
 	}
 	else if (cmd == "labelonly") {
 		docstring const & ref = getParam("reference");
-		if (
-#ifdef FILEFORMAT
-		    getParam("noprefix") != "true"
-#else
-		    false
-#endif
-		    )
+		if (getParam("noprefix") != "true")
 			os << ref;
 		else {
 			docstring prefix;
@@ -287,10 +283,8 @@ docstring InsetRef::xhtml(XHTMLStream & xs, OutputParams const & op) const
 			display_string = '(' + value + ')';
 		else if (cmd == "formatted") {
 			display_string = il->prettyCounter();
-#ifdef FILEFORMAT
 			if (buffer().params().use_refstyle && getParam("caps") == "true")
 				capitalize(display_string);
-#endif
 			// it is hard to see what to do about plurals...
 		}
 		else if (cmd == "nameref")
@@ -349,13 +343,7 @@ void InsetRef::updateBuffer(ParIterator const & it, UpdateType)
 	if (cmd != "labelonly")
 		label += ref;
 	else {
-		if (
-#ifdef FILEFORMAT
-		    getParam("noprefix") != "true"
-#else
-		    false
-#endif
-		    )
+		if (getParam("noprefix") != "true")
 			label += ref;
 		else {
 			docstring prefix;
@@ -408,13 +396,7 @@ void InsetRef::validate(LaTeXFeatures & features) const
 		docstring label;
 		docstring prefix;
 		docstring const fcmd = 
-			getFormattedCmd(data, label, prefix,
-#ifdef FILEFORMAT
-			                getParam("caps")
-#else
-			                from_ascii("false")
-#endif
-			                );
+			getFormattedCmd(data, label, prefix, getParam("caps"));
 		if (buffer().params().use_refstyle) {
 			features.require("refstyle");
 			if (prefix == "cha")

@@ -171,7 +171,7 @@ ParamInfo::ParamData const &
 
 
 InsetCommandParams::InsetCommandParams(InsetCode code)
-	: literal(false), insetCode_(code), preview_(false)
+	: insetCode_(code), preview_(false)
 {
 	cmdName_ = getDefaultCmd(code);
 	info_ = findInfo(code, cmdName_);
@@ -180,7 +180,7 @@ InsetCommandParams::InsetCommandParams(InsetCode code)
 
 InsetCommandParams::InsetCommandParams(InsetCode code,
 	string const & cmdName)
-	: literal(false), insetCode_(code), cmdName_(cmdName), preview_(false)
+	: insetCode_(code), cmdName_(cmdName), preview_(false)
 {
 	info_ = findInfo(code, cmdName);
 }
@@ -433,13 +433,8 @@ docstring InsetCommandParams::prepareCommand(OutputParams const & runparams,
 					     ParamInfo::ParamHandling handling) const
 {
 	if (handling == ParamInfo::HANDLING_LATEXIFY)
-#ifdef FILEFORMAT
 		if ((*this)["literal"] == "true")
-#else
-		if (literal)
-#endif
 			handling = ParamInfo::HANDLING_NONE;
-
 	docstring result;
 	switch (handling) {
 	case ParamInfo::HANDLING_LATEXIFY: {

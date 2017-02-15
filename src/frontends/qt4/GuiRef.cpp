@@ -309,11 +309,9 @@ void GuiRef::updateContents()
 	if (!typeAllowed())
 		typeCO->setCurrentIndex(0);
 
-#ifdef FILEFORMAT
 	pluralCB->setChecked(params_["plural"] == "true");
 	capsCB->setChecked(params_["caps"] == "true");
 	noprefixCB->setChecked(params_["noprefix"] == "true");
-#endif
 
 	// insert buffer list
 	bufferCO->clear();
@@ -351,14 +349,12 @@ void GuiRef::applyView()
 	params_.setCmdName(InsetRef::getName(typeCO->currentIndex()));
 	params_["reference"] = qstring_to_ucs4(last_reference_);
 	params_["name"] = qstring_to_ucs4(nameED->text());
-#ifdef FILEFORMAT
 	params_["plural"] = pluralCB->isChecked() ? 
 	      from_ascii("true") : from_ascii("false");
 	params_["caps"] = capsCB->isChecked() ? 
 	      from_ascii("true") : from_ascii("false");
 	params_["noprefix"] = noprefixCB->isChecked() ? 
 	      from_ascii("true") : from_ascii("false");
-#endif
 	restored_buffer_ = bufferCO->currentIndex();
 }
 

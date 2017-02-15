@@ -54,6 +54,9 @@ ParamInfo const & InsetHyperlink::findInfo(string const & /* cmdName */)
 		param_info_.add("type", ParamInfo::LATEX_REQUIRED);
 #ifdef FILEFORMAT
 		param_info_.add("literal", ParamInfo::LYX_INTERNAL);
+#else
+		param_info_.add("literal", ParamInfo::LYX_INTERNAL,
+		                ParamInfo::HANDLING_NONE, true, from_ascii("false"));
 #endif
 	}
 	return param_info_;
@@ -168,11 +171,7 @@ void InsetHyperlink::latex(otexstream & os,
 					ParamInfo::HANDLING_LATEXIFY);
 		// replace the tilde by the \sim character as suggested in the
 		// LaTeX FAQ for URLs
-#ifdef FILEFORMAT
 		if (getParam("literal") != from_ascii("true")) {
-#else
-		if (true) {
-#endif
 			docstring const sim = from_ascii("$\\sim$");
 			for (size_t i = 0, pos;
 				(pos = name.find('~', i)) != string::npos;

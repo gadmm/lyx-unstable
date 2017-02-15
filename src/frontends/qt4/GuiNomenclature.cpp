@@ -44,11 +44,7 @@ void GuiNomenclature::paramsToDialog(Inset const * inset)
 
 	prefixED->setText(toqstr(params["prefix"]));
 	symbolED->setText(toqstr(params["symbol"]));
-#ifdef FILEFORMAT
 	literalCB->setChecked(params["literal"] == "true");
-#else
-	literalCB->setChecked(false);
-#endif
 	QString description = toqstr(params["description"]);
 	description.replace("\\\\","\n");
 	descriptionTE->setPlainText(description);
@@ -64,12 +60,8 @@ docstring GuiNomenclature::dialogToParams() const
 	QString description = descriptionTE->toPlainText();
 	description.replace('\n',"\\\\");
 	params["description"] = qstring_to_ucs4(description);
-#ifdef FILEFORMAT
 	params["literal"] = literalCB->isChecked()
 			? from_ascii("true") : from_ascii("false");
-#else
-	params.literal = false;
-#endif
 	return from_utf8(InsetNomencl::params2string(params));
 }
 

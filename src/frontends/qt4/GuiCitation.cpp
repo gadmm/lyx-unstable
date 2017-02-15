@@ -270,14 +270,10 @@ void GuiCitation::updateFormatting(CitationStyle currentStyle)
 
 	int const rows = selectedLV->model()->rowCount();
 
-#ifdef FILEFORMAT
 	bool const qualified = currentStyle.hasQualifiedList
 		&& (rows > 1
 		    || !params_["pretextlist"].empty()
 		    || !params_["posttextlist"].empty());
-#else
-	bool const qualified = false;
-#endif
 	selectedLV->horizontalHeader()->setVisible(qualified);
 	selectedLV->setColumnHidden(0, !qualified);
 	selectedLV->setColumnHidden(2, !qualified);
@@ -594,15 +590,11 @@ void GuiCitation::applyParams(int const choice, bool full, bool force,
 	params_["key"] = qstring_to_ucs4(cited_keys_.join(","));
 	params_["before"] = qstring_to_ucs4(before);
 	params_["after"] = qstring_to_ucs4(after);
-#ifdef FILEFORMAT
 	if (cs.hasQualifiedList) {
 		params_["pretextlist"] = getStringFromVector(getPreTexts(), from_ascii("\t"));
 		params_["posttextlist"] = getStringFromVector(getPostTexts(), from_ascii("\t"));
 	}
 	params_["literal"] = literalCB->isChecked() ? from_ascii("true") : from_ascii("false");
-#else
-	params_.literal = true;
-#endif
 	dispatchParams();
 }
 
@@ -744,14 +736,10 @@ void GuiCitation::init()
 		documentBuffer().params().fullAuthorList());
 	textBeforeED->setText(toqstr(params_["before"]));
 	textAfterED->setText(toqstr(params_["after"]));
-#ifdef FILEFORMAT
 	literalCB->setChecked(params_["literal"] == "true");
 
 	setPreTexts(getVectorFromString(params_["pretextlist"], from_ascii("\t")));
 	setPostTexts(getVectorFromString(params_["posttextlist"], from_ascii("\t")));
-#else
-	literalCB->setChecked(true);
-#endif
 
 	// Update the interface
 	updateControls(bi);

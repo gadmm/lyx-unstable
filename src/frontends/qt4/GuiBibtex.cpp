@@ -372,11 +372,8 @@ void GuiBibtex::updateContents()
 			styleCB->setCurrentIndex(item_nr);
 		else
 			styleCB->clearEditText();
-	}
-#ifdef FILEFORMAT
-	else
+	} else
 		biblatexOptsLE->setText(toqstr(params_["biblatexopts"]));
-#endif
 }
 
 
@@ -411,9 +408,7 @@ void GuiBibtex::applyView()
 		params_["options"] = bibstyle;
 	}
 
-#ifdef FILEFORMAT
 	params_["biblatexopts"] = qstring_to_ucs4(biblatexOptsLE->text());
-#endif
 
 	params_["btprint"] = qstring_to_ucs4(btPrintCO->itemData(btPrintCO->currentIndex()).toString());
 }

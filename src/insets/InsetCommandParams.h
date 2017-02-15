@@ -165,9 +165,6 @@ public:
 	///
 	docstring prepareCommand(OutputParams const & runparams,
 	        docstring const & command, ParamInfo::ParamHandling handling) const;
-	/// used only ifndef FILEFORMAT
-	bool literal;
-
 private:
 	std::string getDefaultCmd(InsetCode code);
 	/// checks whether we need to write an empty optional parameter

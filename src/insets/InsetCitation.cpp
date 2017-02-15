@@ -77,6 +77,13 @@ ParamInfo const & InsetCitation::findInfo(string const & /* cmdName */)
 		param_info_.add("posttextlist", ParamInfo::LATEX_OPTIONAL,
 				ParamInfo::HANDLING_LATEXIFY);
 		param_info_.add("literal", ParamInfo::LYX_INTERNAL);
+#else
+		param_info_.add("pretextlist", ParamInfo::LATEX_OPTIONAL,
+		                ParamInfo::HANDLING_LATEXIFY, true);
+		param_info_.add("posttextlist", ParamInfo::LATEX_OPTIONAL,
+		                ParamInfo::HANDLING_LATEXIFY, true);
+		param_info_.add("literal", ParamInfo::LYX_INTERNAL,
+		                ParamInfo::HANDLING_NONE, true, from_ascii("true"));
 #endif
 	}
 	return param_info_;
@@ -385,18 +392,12 @@ docstring InsetCitation::complexLabel(bool for_xhtml) const
 	vector<docstring> keys = getVectorFromString(key);
 	CitationStyle cs = getCitationStyle(buffer().masterParams(),
 					    cite_type, buffer().masterParams().citeStyles());
-#ifdef FILEFORMAT
 	bool const qualified = cs.hasQualifiedList
 		&& (keys.size() > 1
 		    || !getParam("pretextlist").empty()
 		    || !getParam("posttextlist").empty());
 	map<docstring, docstring> pres = getQualifiedLists(getParam("pretextlist"));
 	map<docstring, docstring> posts = getQualifiedLists(getParam("posttextlist"));
-#else
-	bool const qualified = false;
-	map<docstring, docstring> pres;
-	map<docstring, docstring> posts;
-#endif
 
 	CiteItem ci;
 	ci.textBefore = getParam("before");
@@ -569,13 +570,9 @@ void InsetCitation::latex(otexstream & os, OutputParams const & runparams) const
 
 	// check if we have to do a qualified list
 	vector<docstring> keys = getVectorFromString(cleanupWhitespace(key));
-#ifdef FILEFORMAT
 	bool const qualified = cs.hasQualifiedList
 		&& (!getParam("pretextlist").empty()
 		    || !getParam("posttextlist").empty());
-#else
-	bool const qualified = false;
-#endif
 
 	if (runparams.inulemcmd > 0)
 		os << "\\mbox{";

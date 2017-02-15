@@ -70,6 +70,9 @@ ParamInfo const & InsetNomencl::findInfo(string const & /* cmdName */)
 				ParamInfo::HANDLING_LATEXIFY);
 #ifdef FILEFORMAT
 		param_info_.add("literal", ParamInfo::LYX_INTERNAL);
+#else
+		param_info_.add("literal", ParamInfo::LYX_INTERNAL,
+		                ParamInfo::HANDLING_NONE, true, from_ascii("false"));
 #endif
 	}
 	return param_info_;

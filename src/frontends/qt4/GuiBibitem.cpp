@@ -57,12 +57,8 @@ docstring GuiBibitem::dialogToParams() const
 	InsetCommandParams params(insetCode());
 	params["key"] = qstring_to_ucs4(keyED->text());
 	params["label"] = qstring_to_ucs4(labelED->text());
-#ifdef FILEFORMAT
 	params["literal"] = literalCB->isChecked()
 			? from_ascii("true") : from_ascii("false");
-#else
-	params.literal = true;
-#endif
 	return from_utf8(InsetCommand::params2string(params));
 }
 

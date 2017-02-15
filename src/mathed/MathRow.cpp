@@ -28,6 +28,7 @@
 #include "support/docstring.h"
 #include "support/lassert.h"
 
+#include <algorithm>
 #include <ostream>
 
 using namespace std;
@@ -80,11 +81,8 @@ MathRow::MathRow(MetricsInfo & mi, MathData const * ar)
 	for (int i = 1 ; i != static_cast<int>(elements_.size()) ; ++i) {
 		Element & e = elements_[i];
 
-		if (e.mclass == MC_UNKNOWN)
-			continue;
-
 		Element & bef = elements_[before(i)];
-		if (dospacing) {
+		if (dospacing && e.mclass != MC_UNKNOWN) {
 			int spc = class_spacing(bef.mclass, e.mclass, mi.base);
 			bef.after += spc / 2;
 			// this is better than spc / 2 to avoid rounding problems
@@ -92,10 +90,17 @@ MathRow::MathRow(MetricsInfo & mi, MathData const * ar)
 		}
 
 		// finally reserve space for markers
-		if (bef.marker != Inset::NO_MARKER)
+		if (bef.marker != InsetMath::NO_MARKER)
 			bef.after = max(bef.after, 1);
-		if (e.marker != Inset::NO_MARKER)
+		if (e.mclass != MC_UNKNOWN && e.marker != InsetMath::NO_MARKER)
 			e.before = max(e.before, 1);
+		// for linearized insets (macros...) too
+		if (e.type == BEGIN && e.marker != InsetMath::NO_MARKER)
+			bef.after = max(bef.after, 1);
+		if (e.type == END && e.marker != InsetMath::NO_MARKER) {
+			Element & aft = elements_[after(i)];
+			aft.before = max(aft.before, 1);
+		}
 	}
 
 	// Do not lose spacing allocated to extremities
@@ -126,7 +131,41 @@ int MathRow::after(int i) const
 }
 
 
-void MathRow::metrics(MetricsInfo & mi, Dimension & dim) const
+namespace {
+
+void afterMetricsMarkers(MetricsInfo const & mi, MathRow::Element & e,
+                            Dimension & dim)
+{
+	// handle vertical space for markers
+	switch(e.marker) {
+	case InsetMath::NO_MARKER:
+		break;
+	case InsetMath::MARKER:
+		++dim.des;
+		break;
+	case InsetMath::MARKER2:
+		++dim.asc;
+		++dim.des;
+		break;
+	case InsetMath::BOX_MARKER:
+		FontInfo font = mi.base.font;
+		augmentFont(font, "lyxtex");
+		font.setSize(FONT_SIZE_TINY);
+		Dimension namedim;
+		mathed_string_dim(font, e.inset->name(), namedim);
+		int const namewid = 1 + namedim.wid + 1;
+		dim.wid += 2;
+		if (namewid > dim.wid)
+			e.after += namewid - dim.wid;
+		dim.asc += 2;
+		dim.des += 2 + namedim.height();
+	}
+}
+
+}
+
+
+void MathRow::metrics(MetricsInfo & mi, Dimension & dim)
 {
 	dim.asc = 0;
 	dim.wid = 0;
@@ -135,7 +174,7 @@ void MathRow::metrics(MetricsInfo & mi, Dimension & dim) const
 	vector<pair<InsetMath const *, Dimension>> dim_insets;
 	vector<pair<MathData const *, Dimension>> dim_arrays;
 	CoordCache & coords = mi.base.bv->coordCache();
-	for (Element const & e : elements_) {
+	for (Element & e : elements_) {
 		mi.base.macro_nesting = e.macro_nesting;
 		Dimension d;
 		switch (e.type) {
@@ -149,6 +188,8 @@ void MathRow::metrics(MetricsInfo & mi, Dimension & dim) const
 		case BEGIN:
 			if (e.inset) {
 				dim_insets.push_back(make_pair(e.inset, Dimension()));
+				dim_insets.back().second.wid += e.before + e.after;
+				d.wid = e.before + e.after;
 				e.inset->beforeMetrics();
 			}
 			if (e.ar)
@@ -158,8 +199,14 @@ void MathRow::metrics(MetricsInfo & mi, Dimension & dim) const
 			if (e.inset) {
 				e.inset->afterMetrics();
 				LATTEST(dim_insets.back().first == e.inset);
-				coords.insets().add(e.inset, dim_insets.back().second);
+				d = dim_insets.back().second;
+				afterMetricsMarkers(mi, e, d);
+				d.wid += e.before + e.after;
+				coords.insets().add(e.inset, d);
 				dim_insets.pop_back();
+				// We do not want to count the width again, but the
+				// padding and the vertical dimension are meaningful.
+				d.wid = e.before + e.after;
 			}
 			if (e.ar) {
 				LATTEST(dim_arrays.back().first == e.ar);
@@ -173,22 +220,10 @@ void MathRow::metrics(MetricsInfo & mi, Dimension & dim) const
 				// allow for one pixel before/after the box.
 				d.wid += e.before + e.after + 2;
 			} else {
-				// hide the box, but give it some height
+				// hide the box, but keep its height
 				d.wid = 0;
 			}
 			break;
-		}
-
-		// handle vertical space for markers
-		switch(e.marker) {
-		case InsetMath::NO_MARKER:
-			break;
-		case InsetMath::MARKER:
-			++d.des;
-			break;
-		case InsetMath::MARKER2:
-			++d.asc;
-			++d.des;
 		}
 
 		if (!d.empty()) {
@@ -223,6 +258,22 @@ void drawMarkers(PainterInfo const & pi, MathRow::Element const & e, int const x
 	// the marker is before/after the inset. Normally some space has been reserved already.
 	int const l = x + e.before - 1;
 	int const r = x + dim.width() - e.after;
+
+	if (e.marker == InsetMath::BOX_MARKER) {
+		// draw header and rectangle around
+		FontInfo font = pi.base.font;
+		augmentFont(font, "lyxtex");
+		font.setSize(FONT_SIZE_TINY);
+		font.setColor(Color_mathmacrolabel);
+		Dimension namedim;
+		mathed_string_dim(font, e.inset->name(), namedim);
+		pi.pain.rectangle(l, y - dim.asc, dim.wid,
+		                  dim.height(), Color_mathmacroframe);
+		pi.pain.fillRectangle(l, y + dim.des - namedim.height() - 2,
+		                      dim.wid, namedim.height() + 2, Color_mathmacrobg);
+		pi.pain.text(l + 1, y + dim.des - namedim.des - 1, e.inset->name(), font);
+		return;
+	}
 
 	// Duplicated from Inset.cpp and adapted. It is believed that the
 	// Inset version should die eventually
@@ -274,12 +325,14 @@ void MathRow::draw(PainterInfo & pi, int x, int const y) const
 				drawMarkers(pi, e, x, y);
 				e.inset->beforeDraw(pi);
 			}
+			x += e.before + e.after;
 			if (e.ar)
 				coords.arrays().add(e.ar, x, y);
 			break;
 		case END:
 			if (e.inset)
 				e.inset->afterDraw(pi);
+			x += e.before + e.after;
 			break;
 		case BOX: {
 			if (e.color == Color_none)

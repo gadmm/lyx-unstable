@@ -232,10 +232,6 @@ public:
 	//
 	// common part
 	//
-	/// move one step backwards
-	bool posBackward();
-	/// move one step forward
-	bool posForward();
 	/// move visually one step to the right
 	/**
 	 * @note: This method may move into an inset unless skip_inset == true.
@@ -398,6 +394,17 @@ public:
 	/// and after leaving the word the result is empty.
 	DocIterator newWord() const { return new_word_; }
 
+	/// Return true if the next or previous inset has confirmDeletion depending
+	/// on the boolean before. If there is a selection, return true if at least
+	/// one inset in the selection has confirmDeletion.
+	bool confirmDeletion(bool before = false) const;
+
+	/// Determine if x falls to the left or to the side of the middle of the
+	/// inset, and advance the cursor to match this position. If edit is true,
+	/// keep the cursor in front of the inset if it matter for dialogs.
+	/// Note: it does not handle RTL text yet, and is only used in math for now.
+	void moveToClosestEdge(int x, bool edit = false);
+
 public:
 //private:
 	
@@ -454,9 +461,10 @@ public:
 	///
 	void insert(MathData const &);
 	/// return false for empty math insets
-	bool erase();
-	/// return false for empty math insets
-	bool backspace();
+	/// Use force to skip the confirmDeletion check.
+	bool erase(bool force = false);
+	bool backspace(bool force = false);
+
 	/// move the cursor up by sending an internal LFUN_UP
 	/// return true if fullscreen update is needed
 	bool up();

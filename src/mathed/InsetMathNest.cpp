@@ -862,8 +862,8 @@ void InsetMathNest::doDispatch(Cursor & cur, FuncRequest & cmd)
 		else if (!cur.inMacroMode())
 			cur.recordUndoSelection();
 		// if the inset can not be removed from within, delete it
-		if (!cur.backspace()) {
-			FuncRequest cmd = FuncRequest(LFUN_CHAR_DELETE_FORWARD);
+		if (!cur.backspace(cmd.getArg(0) == "force")) {
+			FuncRequest cmd = FuncRequest(LFUN_CHAR_DELETE_FORWARD, "force");
 			cur.innerText()->dispatch(cur, cmd);
 		}
 		break;
@@ -876,8 +876,8 @@ void InsetMathNest::doDispatch(Cursor & cur, FuncRequest & cmd)
 		else
 			cur.recordUndoSelection();
 		// if the inset can not be removed from within, delete it
-		if (!cur.erase()) {
-			FuncRequest cmd = FuncRequest(LFUN_CHAR_DELETE_FORWARD);
+		if (!cur.erase(cmd.getArg(0) == "force")) {
+			FuncRequest cmd = FuncRequest(LFUN_CHAR_DELETE_FORWARD, "force");
 			cur.innerText()->dispatch(cur, cmd);
 		}
 		break;
@@ -1581,6 +1581,10 @@ void InsetMathNest::lfunMousePress(Cursor & cur, FuncRequest & cmd)
 			return;
 		}
 	}
+
+	// set cursor after the inset if x is nearer to that position (bug 9748)
+	cur.moveToClosestEdge(cmd.x(), true);
+
 	bool do_selection = cmd.button() == mouse_button::button1
 		&& cmd.modifier() == ShiftModifier;
 	bv.mouseSetCursor(cur, do_selection);
@@ -1624,6 +1628,9 @@ void InsetMathNest::lfunMouseMotion(Cursor & cur, FuncRequest & cmd)
 		cur.undispatched();
 		return;
 	}
+
+	// set cursor after the inset if x is nearer to that position (bug 9748)
+	cur.moveToClosestEdge(cmd.x());
 
 	CursorSlice old = bvcur.top();
 

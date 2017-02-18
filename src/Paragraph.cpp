@@ -1187,8 +1187,10 @@ void Paragraph::Private::latexSpecialChar(otexstream & os,
 	// NOTE: Some languages reset the font encoding internally to a
 	//       non-standard font encoding. If we are using such a language,
 	//       we do not output special T1 chars.
+	// NOTE: XeTeX and LuaTeX use OT1 (pre 2017) or TU (as of 2017) encoding
 	if (!runparams.inIPA && !running_font.language()->internalFontEncoding()
-	    && bparams.font_encoding() == "T1" && latexSpecialT1(c, os, i, column))
+	    && !runparams.isFullUnicode() && bparams.font_encoding() == "T1"
+	    && latexSpecialT1(c, os, i, column))
 		return;
 
 	// Otherwise, we use what LaTeX provides us.
@@ -1223,7 +1225,7 @@ void Paragraph::Private::latexSpecialChar(otexstream & os,
 		}
 		break;
 	case '\"':
-		os << "\\char`\\\"" << termcmd;
+		os << "\\char34" << termcmd;
 		column += 9;
 		break;
 
@@ -1389,6 +1391,7 @@ void Paragraph::Private::validate(LaTeXFeatures & features) const
 		// output is wrong if this paragraph contains content
 		// that needs to switch encoding.
 		otexstringstream os;
+		os << layout_->preamble();
 		if (is_command) {
 			os << '\\' << from_ascii(layout_->latexname());
 			// we have to provide all the optional arguments here, even though

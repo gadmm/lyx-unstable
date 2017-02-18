@@ -123,19 +123,19 @@ static docstring const textquotedbl_def = from_ascii(
 
 static docstring const textquotedblp_xetex_def = from_ascii(
 	"\\providecommand\\textquotedblplain{%\n"
-	"  \\bgroup\\addfontfeatures{Mapping=}\\textquotedbl\\egroup}");
+	"  \\bgroup\\addfontfeatures{Mapping=}\\char34\\egroup}");
 
 static docstring const textquotedblp_luatex_def = from_ascii(
 	"\\providecommand\\textquotedblplain{%\n"
-	"  \\bgroup\\addfontfeatures{RawFeature=-tlig}\\textquotedbl\\egroup}");
+	"  \\bgroup\\addfontfeatures{RawFeature=-tlig}\\char34\\egroup}");
 
 static docstring const textquotesinglep_xetex_def = from_ascii(
 	"\\providecommand\\textquotesingleplain{%\n"
-	"  \\bgroup\\addfontfeatures{Mapping=}\\textquotesingle\\egroup}");
+	"  \\bgroup\\addfontfeatures{Mapping=}\\char39\\egroup}");
 
 static docstring const textquotesinglep_luatex_def = from_ascii(
 	"\\providecommand\\textquotesingleplain{%\n"
-	"  \\bgroup\\addfontfeatures{RawFeature=-tlig}\\textquotesingle\\egroup}");
+	"  \\bgroup\\addfontfeatures{RawFeature=-tlig}\\char39\\egroup}");
 
 static docstring const paragraphleftindent_def = from_ascii(
 	"\\newenvironment{LyXParagraphLeftIndent}[1]%\n"
@@ -1568,7 +1568,10 @@ docstring const LaTeXFeatures::getTClassPreamble() const
 	list<docstring>::const_iterator cit = usedLayouts_.begin();
 	list<docstring>::const_iterator end = usedLayouts_.end();
 	for (; cit != end; ++cit)
-		tcpreamble << tclass[*cit].preamble();
+		// For InPreamble layouts, we output the preamble stuff earlier
+		// (before the layouts). See Paragraph::Private::validate.
+		if (!tclass[*cit].inpreamble)
+			tcpreamble << tclass[*cit].preamble();
 
 	cit = usedInsetLayouts_.begin();
 	end = usedInsetLayouts_.end();

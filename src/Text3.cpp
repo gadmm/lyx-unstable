@@ -586,7 +586,7 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 		if (cur.selection())
 			cutSelection(cur, true, false);
 		else
-			deleteWordForward(cur);
+			deleteWordForward(cur, cmd.getArg(0) == "force");
 		finishChange(cur, false);
 		break;
 
@@ -594,7 +594,7 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 		if (cur.selection())
 			cutSelection(cur, true, false);
 		else
-			deleteWordBackward(cur);
+			deleteWordBackward(cur, cmd.getArg(0) == "force");
 		finishChange(cur, false);
 		break;
 
@@ -1054,6 +1054,13 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 			if (cur.pos() == cur.paragraph().size())
 				// Par boundary, force full-screen update
 				singleParUpdate = false;
+			else if (cmd.getArg(0) != "force" && cur.confirmDeletion()) {
+				cur.resetAnchor();
+				cur.selection(true);
+				cur.posForward();
+				cur.setSelection();
+				break;
+			}
 			needsUpdate |= erase(cur);
 			cur.resetAnchor();
 		} else {
@@ -1071,6 +1078,13 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 				// Par boundary, full-screen update
 				if (par_boundary)
 					singleParUpdate = false;
+				else if (cmd.getArg(0) != "force" && cur.confirmDeletion(true)) {
+					cur.resetAnchor();
+					cur.selection(true);
+					cur.posBackward();
+					cur.setSelection();
+					break;
+				}
 				needsUpdate |= backspace(cur);
 				cur.resetAnchor();
 				if (par_boundary && !first_par && cur.pos() > 0
@@ -1676,7 +1690,7 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 		int const wh = bv->workHeight();
 		int const y = max(0, min(wh - 1, cmd.y()));
 
-		tm->setCursorFromCoordinates(cur, cmd.x(), y);
+		tm->setCursorFromCoordinates(cur, cmd.x(), y, true);
 		cur.setTargetX(cmd.x());
 		// Don't allow selecting a separator inset
 		if (cur.pos() && cur.paragraph().isEnvSeparator(cur.pos() - 1))

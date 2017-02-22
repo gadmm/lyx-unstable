@@ -31,6 +31,7 @@
 #include "mathed/InsetMathUnknown.h"
 
 #include "frontends/FontMetrics.h"
+#include "frontends/Painter.h"
 
 #include "support/debug.h"
 #include "support/docstream.h"
@@ -276,12 +277,46 @@ void MathData::metrics(MetricsInfo & mi, Dimension & dim) const
 	sshift_ = xascent / 4;
 
 	MathRow mrow(mi, this);
-	mrow.metrics(mi, dim);
 	mrow_cache_[mi.base.bv] = mrow;
+	mrow.metrics(mi, dim);
 	kerning_ = mrow.kerning(mi.base.bv);
 
 	// Cache the dimension.
 	mi.base.bv->coordCache().arrays().add(this, dim);
+}
+
+
+void MathData::drawSelection(PainterInfo & pi, int const x, int const y) const
+{
+	BufferView const * bv = pi.base.bv;
+	Cursor const & cur = bv->cursor();
+	InsetMath const * inset = cur.inset().asInsetMath();
+	if (!cur.selection() || !inset || inset->nargs() == 0)
+		return;
+
+	CursorSlice const s1 = cur.selBegin();
+	CursorSlice const s2 = cur.selEnd();
+	MathData const & c1 = inset->cell(s1.idx());
+
+	if (s1.idx() == s2.idx() && &c1 == this) {
+		// selection indide cell
+		Dimension const dim = bv->coordCache().getArrays().dim(&c1);
+		int const beg = c1.pos2x(bv, s1.pos());
+		int const end = c1.pos2x(bv, s2.pos());
+		pi.pain.fillRectangle(x + beg, y - dim.ascent(),
+		                      end - beg, dim.height(), Color_selection);
+	} else {
+		for (idx_type i = 0; i < inset->nargs(); ++i) {
+			MathData const & c = inset->cell(i);
+			if (&c == this && inset->idxBetween(i, s1.idx(), s2.idx())) {
+				// The whole cell is selected
+				Dimension const dim = bv->coordCache().getArrays().dim(&c);
+				pi.pain.fillRectangle(x, y - dim.ascent(),
+				                      dim.width(), dim.height(),
+				                      Color_selection);
+			}
+		}
+	}
 }
 
 
@@ -300,6 +335,7 @@ void MathData::draw(PainterInfo & pi, int const x, int const y) const
 		|| x >= bv. workWidth())
 		return;
 
+	drawSelection(pi, x, y);
 	MathRow const & mrow = mrow_cache_[pi.base.bv];
 	mrow.draw(pi, x, y);
 }

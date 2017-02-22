@@ -36,6 +36,8 @@ Counter subexamplei
 	LabelString          "Subexample:"
 End
 
+OutlinerName tableau    "Tableaux" #no AddToToc (built-in)
+
 # single numbered example with covington.sty
 Style Numbered_Example_(multiline)
 	LatexType             Environment

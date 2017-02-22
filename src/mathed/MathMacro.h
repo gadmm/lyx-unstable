@@ -37,7 +37,7 @@ public:
 	///
 	virtual MathMacro const * asMacro() const { return this; }
 	///
-	marker_type marker(BufferView const *) const;
+	marker_type marker() const;
 	/// If the macro is in normal edit mode, dissolve its contents in
 	/// the row. Otherwise, just insert the inset.
 	bool addToMathRow(MathRow &, MetricsInfo & mi) const;
@@ -56,8 +56,6 @@ public:
 	bool editMetrics(BufferView const * bv) const;
 	///
 	void draw(PainterInfo & pi, int x, int y) const;
-	/// draw selection background
-	void drawSelection(PainterInfo & pi, int x, int y) const;
 	///
 	int kerning(BufferView const * bv) const;
 	/// get cursor position

@@ -378,7 +378,10 @@ docstring InsetQuotesParams::getLaTeXQuote(char_type c, string const & op) const
 		break;
 	}
 	case 0x0027: {// ' (plain)
-		res = "\\textquotesingle";
+		if (op == "t1")
+			res = "\\textquotesingle";
+		else
+			res = "\\char39";
 		break;
 	}
 	case 0x201e: {// ,,
@@ -423,7 +426,10 @@ docstring InsetQuotesParams::getLaTeXQuote(char_type c, string const & op) const
 		break;
 	}
 	case 0x0022: {// "
-		res = "\\textquotedbl";
+		if (op == "t1")
+			res = "\\textquotedbl";
+		else
+			res = "\\char34";
 		break;
 	}
 	// The following are fakes
@@ -626,8 +632,7 @@ InsetQuotes::InsetQuotes(Buffer * buf, char_type c, InsetQuotesParams::QuoteLeve
 	bool dynamic = false;
 	if (buf) {
 		global_style_ = buf->masterBuffer()->params().quotes_style;
-		fontenc_ = (buf->masterBuffer()->params().fontenc == "global")
-			? lyxrc.fontenc : buf->params().fontenc;
+		fontenc_ = buf->masterBuffer()->params().main_font_encoding();
 		dynamic = buf->masterBuffer()->params().dynamic_quotes;
 		fontspec_ = buf->masterBuffer()->params().useNonTeXFonts;
 	} else {
@@ -984,7 +989,7 @@ void InsetQuotes::updateBuffer(ParIterator const & it, UpdateType /* utype*/)
 	BufferParams const & bp = buffer().masterBuffer()->params();
 	pass_thru_ = it.paragraph().isPassThru();
 	context_lang_ = it.paragraph().getFontSettings(bp, it.pos()).language()->code();
-	fontenc_ = (bp.fontenc == "global") ? lyxrc.fontenc : bp.fontenc;
+	fontenc_ = bp.main_font_encoding();
 	global_style_ = bp.quotes_style;
 	fontspec_ = bp.useNonTeXFonts;
 }

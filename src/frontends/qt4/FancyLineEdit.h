@@ -22,7 +22,6 @@ namespace frontend {
 
 class FancyLineEditPrivate;
 
-#if QT_VERSION >= 0x040600
 class IconButton: public QAbstractButton
 {
 	Q_OBJECT
@@ -30,22 +29,21 @@ class IconButton: public QAbstractButton
 	Q_PROPERTY(bool autoHide READ hasAutoHide WRITE setAutoHide)
 	Q_PROPERTY(QPixmap pixmap READ pixmap WRITE setPixmap)
 public:
-    explicit IconButton(QWidget *parent = 0);
-    void paintEvent(QPaintEvent *event);
-    void setPixmap(const QPixmap &pixmap) { m_pixmap = pixmap; update(); }
-    QPixmap pixmap() const { return m_pixmap; }
-    float iconOpacity() { return m_iconOpacity; }
-    void setIconOpacity(float value) { m_iconOpacity = value; update(); }
-    void animateShow(bool visible);
+	explicit IconButton(QWidget *parent = 0);
+	void paintEvent(QPaintEvent *event);
+	void setPixmap(const QPixmap &pixmap) { m_pixmap = pixmap; update(); }
+	QPixmap pixmap() const { return m_pixmap; }
+	float iconOpacity() { return m_iconOpacity; }
+	void setIconOpacity(float value) { m_iconOpacity = value; update(); }
+	void animateShow(bool visible);
 
-    void setAutoHide(bool hide) { m_autoHide = hide; }
-    bool hasAutoHide() const { return m_autoHide; }
+	void setAutoHide(bool hide) { m_autoHide = hide; }
+	bool hasAutoHide() const { return m_autoHide; }
 private:
-    float m_iconOpacity;
-    bool m_autoHide;
-    QPixmap m_pixmap;
+	float m_iconOpacity;
+	bool m_autoHide;
+	QPixmap m_pixmap;
 };
-#endif
 
 /* A line edit with an embedded pixmap on one side that is connected to
  * a menu. Additionally, it can display a grayed hintText (like "Type Here to")
@@ -61,57 +59,52 @@ class FancyLineEdit : public QLineEdit
 	Q_ENUMS(Side)
 
 public:
-    enum Side {Left = 0, Right = 1};
+	enum Side {Left = 0, Right = 1};
 
 Q_SIGNALS:
-    void buttonClicked(Side side);
-    void leftButtonClicked();
-    void rightButtonClicked();
+	void buttonClicked(Side side);
+	void leftButtonClicked();
+	void rightButtonClicked();
+	void downPressed();
 
-#if QT_VERSION >= 0x040600
 public:
-    explicit FancyLineEdit(QWidget *parent = 0);
-    ~FancyLineEdit();
+	explicit FancyLineEdit(QWidget *parent = 0);
+	~FancyLineEdit();
 
-    QPixmap buttonPixmap(Side side) const;
-    void setButtonPixmap(Side side, const QPixmap &pixmap);
+	QPixmap buttonPixmap(Side side) const;
+	void setButtonPixmap(Side side, const QPixmap &pixmap);
 
-    QMenu *buttonMenu(Side side) const;
-    void setButtonMenu(Side side, QMenu *menu);
+	QMenu *buttonMenu(Side side) const;
+	void setButtonMenu(Side side, QMenu *menu);
 
-    void setButtonVisible(Side side, bool visible);
-    bool isButtonVisible(Side side) const;
+	void setButtonVisible(Side side, bool visible);
+	bool isButtonVisible(Side side) const;
 
-    void setButtonToolTip(Side side, const QString &);
-    void setButtonFocusPolicy(Side side, Qt::FocusPolicy policy);
+	void setButtonToolTip(Side side, const QString &);
+	void setButtonFocusPolicy(Side side, Qt::FocusPolicy policy);
 
-    // Set whether tabbing in will trigger the menu.
-    void setMenuTabFocusTrigger(Side side, bool v);
-    bool hasMenuTabFocusTrigger(Side side) const;
+	// Set whether tabbing in will trigger the menu.
+	void setMenuTabFocusTrigger(Side side, bool v);
+	bool hasMenuTabFocusTrigger(Side side) const;
 
-    // Set if icon should be hidden when text is empty
-    void setAutoHideButton(Side side, bool h);
-    bool hasAutoHideButton(Side side) const;
+	// Set if icon should be hidden when text is empty
+	void setAutoHideButton(Side side, bool h);
+	bool hasAutoHideButton(Side side) const;
 
 private Q_SLOTS:
-    void checkButtons(const QString &);
-    void iconClicked();
+	void checkButtons(const QString &);
+	void iconClicked();
 
 protected:
-    virtual void resizeEvent(QResizeEvent *e);
+	virtual void resizeEvent(QResizeEvent *e);
+	virtual void keyPressEvent(QKeyEvent *e);
 
 private:
-    void updateMargins();
+	void updateMargins();
 	void updateButtonPositions();
 
-    FancyLineEditPrivate *m_d;
-    QString m_oldText;
-#else
-public:
-	explicit FancyLineEdit(QWidget *parent = 0) 
-		: QLineEdit(parent) 
-	{}
-#endif // QT_VERSION >= 0x040600*/
+	FancyLineEditPrivate *m_d;
+	QString m_oldText;
 };
 
 }

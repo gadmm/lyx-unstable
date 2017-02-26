@@ -61,6 +61,13 @@ GuiRef::GuiRef(GuiView & lv)
 	filter_->setAutoHideButton(FancyLineEdit::Right, true);
 	filter_->setPlaceholderText(qt_("All available labels"));
 	filter_->setToolTip(qt_("Enter string to filter the list of available labels"));
+#if (QT_VERSION < 0x050000)
+	connect(filter_, SIGNAL(downPressed()),
+	        refsTW, SLOT(setFocus()));
+#else
+	connect(filter_, &FancyLineEdit::downPressed,
+	        refsTW, [=](){ focusAndHighlight(refsTW); });
+#endif
 
 	filterBarL->addWidget(filter_, 0);
 	findKeysLA->setBuddy(filter_);
@@ -125,6 +132,8 @@ GuiRef::GuiRef(GuiView & lv)
 
 	restored_buffer_ = -1;
 	active_buffer_ = -1;
+
+	setFocusProxy(filter_);
 }
 
 
@@ -537,8 +546,6 @@ void GuiRef::updateRefs()
 	sortingCO->setEnabled(!refs_.empty());
 	refsTW->setEnabled(!refs_.empty());
 	groupCB->setEnabled(!refs_.empty());
-	// refsTW should only be the focus proxy when it is enabled
-	setFocusProxy(refs_.empty() ? 0 : refsTW);
 	redoRefs();
 }
 

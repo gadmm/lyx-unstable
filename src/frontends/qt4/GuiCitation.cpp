@@ -18,7 +18,6 @@
 
 #include "GuiApplication.h"
 #include "GuiSelectionManager.h"
-#include "LyXToolBox.h"
 #include "qt_helpers.h"
 
 #include "Buffer.h"
@@ -141,7 +140,7 @@ GuiCitation::GuiCitation(GuiView & lv)
 	connect(textAfterED, SIGNAL(returnPressed()),
 		this, SLOT(on_okPB_clicked()));
 
-	selectionManager = new GuiSelectionManager(availableLV, selectedLV,
+	selectionManager = new GuiSelectionManager(this, availableLV, selectedLV,
 			addPB, deletePB, upPB, downPB, &available_model_, &selected_model_, 1);
 	connect(selectionManager, SIGNAL(selectionChanged()),
 		this, SLOT(setCitedKeys()));
@@ -156,6 +155,13 @@ GuiCitation::GuiCitation(GuiView & lv)
 		this, SLOT(filterChanged(QString)));
 	connect(filter_, SIGNAL(returnPressed()),
 		this, SLOT(filterPressed()));
+#if (QT_VERSION < 0x050000)
+	connect(filter_, SIGNAL(downPressed()),
+	        availableLV, SLOT(setFocus()));
+#else
+	connect(filter_, &FancyLineEdit::downPressed,
+	        availableLV, [=](){ focusAndHighlight(availableLV); });
+#endif
 	connect(regexp_, SIGNAL(triggered()),
 		this, SLOT(regexChanged()));
 	connect(casesense_, SIGNAL(triggered()),
@@ -170,12 +176,6 @@ GuiCitation::GuiCitation(GuiView & lv)
 #endif
 
 	setFocusProxy(filter_);
-}
-
-
-GuiCitation::~GuiCitation()
-{
-	delete selectionManager;
 }
 
 
@@ -1054,7 +1054,7 @@ void GuiCitation::restoreSession()
 	QSettings settings;
 	regexp_->setChecked(settings.value(sessionKey() + "/regex").toBool());
 	casesense_->setChecked(settings.value(sessionKey() + "/casesensitive").toBool());
-	instant_->setChecked(settings.value(sessionKey() + "/autofind").toBool());
+	instant_->setChecked(settings.value(sessionKey() + "/autofind", true).toBool());
 	style_ = settings.value(sessionKey() + "/citestyle").toInt();
 	updateFilterHint();
 }

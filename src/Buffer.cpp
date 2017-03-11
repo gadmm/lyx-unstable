@@ -91,6 +91,7 @@
 #include "support/debug.h"
 #include "support/docstring_list.h"
 #include "support/ExceptionMessage.h"
+#include "support/FileMonitor.h"
 #include "support/FileName.h"
 #include "support/FileNameList.h"
 #include "support/filetools.h"
@@ -263,9 +264,8 @@ public:
 	/// Container for all sort of Buffer dependant errors.
 	map<string, ErrorList> errorLists;
 
-	/// timestamp and checksum used to test if the file has been externally
-	/// modified. (Used to properly enable 'File->Revert to saved', bug 4114).
-	time_t timestamp_;
+	/// checksum used to test if the file has been externally modified.  Used to
+	/// double check whether the file had been externally modified when saving.
 	unsigned long checksum_;
 
 	///
@@ -376,6 +376,18 @@ public:
 	// display the review toolbar, for instance)
 	mutable bool tracked_changes_present_;
 
+	// Make sure the file monitor monitors the good file.
+	void refreshFileMonitor();
+
+	/// has it been notified of an external modification?
+	bool isExternallyModified() const { return externally_modified_; }
+
+	/// Notify or clear of external modification
+	void fileExternallyModified(bool modified) const;
+
+	/// Block notifications of external modifications
+	FileMonitorBlocker blockFileMonitor() { return file_monitor_->block(10); }
+
 private:
 	/// So we can force access via the accessors.
 	mutable Buffer const * parent_buffer;
@@ -384,6 +396,10 @@ private:
 	int char_count_;
 	int blank_count_;
 
+	/// has been externally modified? Can be reset by the user.
+	mutable bool externally_modified_;
+
+	FileMonitorPtr file_monitor_;
 };
 
 
@@ -419,13 +435,16 @@ Buffer::Impl::Impl(Buffer * owner, FileName const & file, bool readonly_,
 	: owner_(owner), lyx_clean(true), bak_clean(true), unnamed(false),
 	  internal_buffer(false), read_only(readonly_), filename(file),
 	  file_fully_loaded(false), file_format(LYX_FORMAT), need_format_backup(false),
-	  ignore_parent(false),  toc_backend(owner), macro_lock(false), timestamp_(0),
+	  ignore_parent(false),  toc_backend(owner), macro_lock(false),
 	  checksum_(0), wa_(0),  gui_(0), undo_(*owner), bibinfo_cache_valid_(false),
 	  bibfile_cache_valid_(false), cite_labels_valid_(false), preview_error_(false),
 	  inset(0), preview_loader_(0), cloned_buffer_(cloned_buffer),
-	  clone_list_(0), doing_export(false), parent_buffer(0),
-	  word_count_(0), char_count_(0), blank_count_(0)
+	  clone_list_(0), doing_export(false),
+	  tracked_changes_present_(0), parent_buffer(0),
+	  word_count_(0), char_count_(0), blank_count_(0),
+	  externally_modified_(false)
 {
+	refreshFileMonitor();
 	if (!cloned_buffer_) {
 		temppath = createBufferTmpDir();
 		lyxvc.setBuffer(owner_);
@@ -863,6 +882,7 @@ void Buffer::setFileName(FileName const & fname)
 {
 	bool const changed = fname != d->filename;
 	d->filename = fname;
+	d->refreshFileMonitor();
 	if (changed)
 		lyxvc().file_found_hook(fname);
 	setReadonly(d->filename.isReadOnly());
@@ -1359,6 +1379,7 @@ FileName Buffer::getBackupName() const {
 // Should probably be moved to somewhere else: BufferView? GuiView?
 bool Buffer::save() const
 {
+	FileMonitorBlocker block = d->blockFileMonitor();
 	docstring const file = makeDisplayPath(absFileName(), 20);
 	d->filename.refresh();
 
@@ -1374,7 +1395,7 @@ bool Buffer::save() const
 	}
 
 	// ask if the disk file has been externally modified (use checksum method)
-	if (fileName().exists() && isExternallyModified(checksum_method)) {
+	if (fileName().exists() && isChecksumModified()) {
 		docstring text =
 			bformat(_("Document %1$s has been externally modified. "
 				"Are you sure you want to overwrite this file?"), file);
@@ -1389,12 +1410,12 @@ bool Buffer::save() const
 
 	// if the file does not yet exist, none of the backup activity
 	// that follows is necessary
-  if (!fileName().exists()) {
+	if (!fileName().exists()) {
 		if (!writeFile(fileName()))
-      return false;
-    markClean();
-    return true;
-  }
+			return false;
+		markClean();
+		return true;
+	}
 
 	// we first write the file to a new name, then move it to its
 	// proper location once that has been done successfully. that
@@ -2514,7 +2535,7 @@ bool Buffer::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 	switch (cmd.action()) {
 
 	case LFUN_BUFFER_TOGGLE_READ_ONLY:
-		flag.setOnOff(isReadonly());
+		flag.setOnOff(hasReadonlyFlag());
 		break;
 
 		// FIXME: There is need for a command-line import.
@@ -2533,7 +2554,8 @@ bool Buffer::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 			enable = true;
 			break;
 		}
-		string format = to_utf8(arg);
+		string format = (arg.empty() || arg == "default") ?
+			params().getDefaultOutputFormat() : to_utf8(arg);
 		size_t pos = format.find(' ');
 		if (pos != string::npos)
 			format = format.substr(0, pos);
@@ -2637,15 +2659,17 @@ void Buffer::dispatch(FuncRequest const & func, DispatchResult & dr)
 				dr.setMessage(log);
 		}
 		else
-			setReadonly(!isReadonly());
+			setReadonly(!hasReadonlyFlag());
 		break;
 
 	case LFUN_BUFFER_EXPORT: {
-		ExportStatus const status = doExport(argument, false);
+		string const format = (argument.empty() || argument == "default") ?
+			params().getDefaultOutputFormat() : argument;
+		ExportStatus const status = doExport(format, false);
 		dr.setError(status != ExportSuccess);
 		if (status != ExportSuccess)
 			dr.setMessage(bformat(_("Error exporting to format: %1$s."),
-					      func.argument()));
+			                      from_utf8(format)));
 		break;
 	}
 
@@ -2991,29 +3015,19 @@ bool Buffer::isClean() const
 }
 
 
-bool Buffer::isExternallyModified(CheckMethod method) const
+bool Buffer::isChecksumModified() const
 {
 	LASSERT(d->filename.exists(), return false);
-	// if method == timestamp, check timestamp before checksum
-	return (method == checksum_method
-		|| d->timestamp_ != d->filename.lastModified())
-		&& d->checksum_ != d->filename.checksum();
+	return d->checksum_ != d->filename.checksum();
 }
 
 
 void Buffer::saveCheckSum() const
 {
 	FileName const & file = d->filename;
-
 	file.refresh();
-	if (file.exists()) {
-		d->timestamp_ = file.lastModified();
-		d->checksum_ = file.checksum();
-	} else {
-		// in the case of save to a new file.
-		d->timestamp_ = 0;
-		d->checksum_ = 0;
-	}
+	d->checksum_ = file.exists() ? file.checksum()
+		: 0; // in the case of save to a new file.
 }
 
 
@@ -3027,6 +3041,7 @@ void Buffer::markClean() const
 	// autosave
 	d->bak_clean = true;
 	d->undo_.markDirty();
+	clearExternalModification();
 }
 
 
@@ -3247,9 +3262,15 @@ void Buffer::setLayoutPos(string const & path)
 }
 
 
-bool Buffer::isReadonly() const
+bool Buffer::hasReadonlyFlag() const
 {
 	return d->read_only;
+}
+
+
+bool Buffer::isReadonly() const
+{
+	return hasReadonlyFlag() || notifiesExternalModification();
 }
 
 
@@ -4129,7 +4150,7 @@ void Buffer::moveAutosaveFile(support::FileName const & oldauto) const
 bool Buffer::autoSave() const
 {
 	Buffer const * buf = d->cloned_buffer_ ? d->cloned_buffer_ : this;
-	if (buf->d->bak_clean || isReadonly())
+	if (buf->d->bak_clean || hasReadonlyFlag())
 		return true;
 
 	message(_("Autosaving current document..."));
@@ -4227,6 +4248,8 @@ Buffer::ExportStatus Buffer::doExport(string const & target, bool put_in_tempdir
 	if (pos != string::npos) {
 		dest_filename = target.substr(pos + 1, target.length() - pos - 1);
 		format = target.substr(0, pos);
+		if (format == "default")
+			format = params().getDefaultOutputFormat();
 		runparams.export_folder = FileName(dest_filename).onlyPath().realPath();
 		FileName(dest_filename).onlyPath().createPath();
 		LYXERR(Debug::FILES, "format=" << format << ", dest_filename=" << dest_filename << ", export_folder=" << runparams.export_folder);
@@ -4524,7 +4547,7 @@ Buffer::ReadStatus Buffer::loadEmergency()
 		ReadStatus const ret_llf = loadThisLyXFile(emergencyFile);
 		bool const success = (ret_llf == ReadSuccess);
 		if (success) {
-			if (isReadonly()) {
+			if (hasReadonlyFlag()) {
 				Alert::warning(_("File is read-only"),
 					bformat(_("An emergency file is successfully loaded, "
 					"but the original file %1$s is marked read-only. "
@@ -4587,7 +4610,7 @@ Buffer::ReadStatus Buffer::loadAutosave()
 		ReadStatus const ret_llf = loadThisLyXFile(autosaveFile);
 		// the file is not saved if we load the autosave file.
 		if (ret_llf == ReadSuccess) {
-			if (isReadonly()) {
+			if (hasReadonlyFlag()) {
 				Alert::warning(_("File is read-only"),
 					bformat(_("A backup file is successfully loaded, "
 					"but the original file %1$s is marked read-only. "
@@ -4641,7 +4664,7 @@ Buffer::ReadStatus Buffer::loadThisLyXFile(FileName const & fn)
 void Buffer::bufferErrors(TeXErrors const & terr, ErrorList & errorList) const
 {
 	for (auto const & err : terr) {
-		TexRow::TextEntry start, end = TexRow::text_none;
+		TexRow::TextEntry start = TexRow::text_none, end = TexRow::text_none;
 		int errorRow = err.error_in_line;
 		Buffer const * buf = 0;
 		Impl const * p = d;
@@ -5291,6 +5314,42 @@ void Buffer::updateChangesPresent() const
 		it->addChangesToBuffer(*this);
 }
 
+
+void Buffer::Impl::refreshFileMonitor()
+{
+	if (file_monitor_ && file_monitor_->filename() == filename.absFileName())
+		return file_monitor_->refresh();
+
+	// The previous file monitor is invalid
+	// This also destroys the previous file monitor and all its connections
+	file_monitor_ = FileSystemWatcher::monitor(filename);
+	fileExternallyModified(false);
+	// file_monitor_ will be destroyed with *this, so it is not going to call a
+	// destroyed object method.
+	file_monitor_->connect([this](){ fileExternallyModified(true); });
+}
+
+
+void Buffer::Impl::fileExternallyModified(bool modified) const
+{
+	if (modified)
+		lyx_clean = bak_clean = false;
+	externally_modified_ = modified;
+	if (wa_)
+		wa_->updateTitles();
+}
+
+
+bool Buffer::notifiesExternalModification() const
+{
+	return d->isExternallyModified();
+}
+
+
+void Buffer::clearExternalModification() const
+{
+	d->fileExternallyModified(false);
+}
 
 
 } // namespace lyx

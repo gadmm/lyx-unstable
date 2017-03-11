@@ -135,6 +135,9 @@ public:
 		/** This is a list of exportable formats
 		    typically for the File->Export menu. */
 		ExportFormats,
+		/** This exports the document default format
+		    typically for the File->Export menu. */
+		ExportFormat,
 		/** This is a list of importable formats
 		    typically for the File->Import menu. */
 		ImportFormats,
@@ -454,6 +457,7 @@ void MenuDefinition::read(Lexer & lex)
 		md_custom,
 		md_elements,
 		md_endmenu,
+		md_exportformat,
 		md_exportformats,
 		md_importformats,
 		md_indices,
@@ -495,6 +499,7 @@ void MenuDefinition::read(Lexer & lex)
 		{ "elements", md_elements },
 		{ "end", md_endmenu },
 		{ "environmentseparators", md_env_separators },
+		{ "exportformat", md_exportformat },
 		{ "exportformats", md_exportformats },
 		{ "floatinsert", md_floatinsert },
 		{ "floatlistinsert", md_floatlistinsert },
@@ -585,6 +590,10 @@ void MenuDefinition::read(Lexer & lex)
 
 		case md_exportformats:
 			add(MenuItem(MenuItem::ExportFormats));
+			break;
+
+		case md_exportformat:
+			add(MenuItem(MenuItem::ExportFormat));
 			break;
 
 		case md_importformats:
@@ -981,6 +990,8 @@ void MenuDefinition::expandDocuments()
 		QString label = toqstr(b.fileName().displayName(20));
 		if (!b.isClean())
 			label += "*";
+		if (b.notifiesExternalModification())
+			label += QChar(0x26a0);
 		if (i < 10)
 			label = QString::number(i) + ". " + label + '|' + QString::number(i);
 		add(MenuItem(MenuItem::Command, label,
@@ -998,6 +1009,8 @@ void MenuDefinition::expandDocuments()
 			QString label = toqstr(b->fileName().displayName(20));
 			if (!b->isClean())
 				label += "*";
+			if (b->notifiesExternalModification())
+				label += QChar(0x26a0);
 			if (i < 10)
 				label = QString::number(i) + ". " + label + '|' + QString::number(i);
 			item.submenu().add(MenuItem(MenuItem::Command, label,
@@ -1208,7 +1221,7 @@ void MenuDefinition::expandFlexInsert(
 		}
 	}
 	// FIXME This is a little clunky.
-	if (items_.empty() && type == InsetLayout::CUSTOM && !buf->isReadonly())
+	if (items_.empty() && type == InsetLayout::CUSTOM && !buf->hasReadonlyFlag())
 		add(MenuItem(MenuItem::Help, qt_("No Custom Insets Defined!")));
 }
 
@@ -1399,7 +1412,7 @@ void MenuDefinition::expandToolbars()
 
 void MenuDefinition::expandBranches(Buffer const * buf)
 {
-	if (!buf || buf->isReadonly())
+	if (!buf || buf->hasReadonlyFlag())
 		return;
 
 	BufferParams const & master_params = buf->masterBuffer()->params();
@@ -2176,6 +2189,19 @@ void Menus::Impl::expand(MenuDefinition const & frommenu,
 		case MenuItem::ExportFormats:
 			tomenu.expandFormats(cit->kind(), buf);
 			break;
+
+		case MenuItem::ExportFormat: {
+			if (!buf)
+				break;
+			string const format = buf->params().getDefaultOutputFormat();
+			Format const * f = formats.getFormat(format);
+			docstring const name = f ? f->prettyname() : from_utf8(format);
+			docstring const label = bformat(_("Export [%1$s]|E"), name);
+			MenuItem item(MenuItem::Command, toqstr(label),
+			              FuncRequest(LFUN_BUFFER_EXPORT));
+			tomenu.addWithStatusCheck(item);
+			break;
+		}
 
 		case MenuItem::CharStyles:
 			tomenu.expandFlexInsert(buf, InsetLayout::CHARSTYLE);

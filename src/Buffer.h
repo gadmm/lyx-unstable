@@ -144,24 +144,6 @@ public:
 		PreviewError
 	};
 
-	/// Method to check if a file is externally modified, used by
-	/// isExternallyModified()
-	/**
-	 * timestamp is fast but inaccurate. For example, the granularity
-	 * of timestamp on a FAT filesystem is 2 seconds. Also, various operations
-	 * may touch the timestamp of a file even when its content is unchanged.
-	 *
-	 * checksum is accurate but slow, which can be a problem when it is
-	 * frequently used, or used for a large file on a slow (network) file
-	 * system.
-	 *
-	 * FIXME: replace this method with support/FileMonitor.
-	 */
-	enum CheckMethod {
-		checksum_method, ///< Use file checksum
-		timestamp_method ///< Use timestamp, and checksum if timestamp has changed
-	};
-
 	///
 	enum UpdateScope {
 		UpdateMaster,
@@ -249,7 +231,7 @@ private:
 	typedef std::map<Buffer const *, Buffer *> BufferMap;
 	///
 	void cloneWithChildren(BufferMap &, CloneList *) const;
-	/// save timestamp and checksum of the given file.
+	/// save checksum of the given file.
 	void saveCheckSum() const;
 	/// read a new file
 	ReadStatus readFile(support::FileName const & fn);
@@ -371,8 +353,15 @@ public:
 	///
 	bool isDepClean(std::string const & name) const;
 
-	/// whether or not disk file has been externally modified
-	bool isExternallyModified(CheckMethod method) const;
+	/// Whether or not disk file has been externally modified. Uses a checksum
+	/// which is accurate but slow, which can be a problem when it is frequently
+	/// used, or used for a large file on a slow (network) file system.
+	bool isChecksumModified() const;
+
+	/// Flag set by the FileSystemWatcher.
+	/// Fast but (not so) inaccurate, can be cleared by the user.
+	bool notifiesExternalModification() const;
+	void clearExternalModification() const;
 
 	/// mark the main lyx file as not needing saving
 	void markClean() const;
@@ -482,8 +471,12 @@ public:
 	/// thing from whichever Buffer it is called.
 	ListOfBuffers allRelatives() const;
 
-	/// Is buffer read-only?
+	/// Is buffer read-only? True if it has either the read-only flag or the
+	/// externally modified flag.
 	bool isReadonly() const;
+
+	/// Does the buffer have the read-only flag?
+	bool hasReadonlyFlag() const;
 
 	/// Set buffer read-only flag
 	void setReadonly(bool flag = true);

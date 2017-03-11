@@ -1121,6 +1121,12 @@ void GuiView::updateWindowTitle(GuiWorkArea * wa)
 	Buffer const & buf = wa->bufferView().buffer();
 	// Set the windows title
 	docstring title = buf.fileName().displayName(130) + from_ascii("[*]");
+	if (buf.notifiesExternalModification()) {
+		title = bformat(_("%1$s (modified externally)"), title);
+		// If the external modification status has changed, then maybe the status of
+		// buffer-save has changed too.
+		updateToolbars();
+	}
 #ifndef Q_WS_MAC
 	title += from_ascii(" - LyX");
 #endif
@@ -1132,7 +1138,7 @@ void GuiView::updateWindowTitle(GuiWorkArea * wa)
 	// Tell Qt whether the current document is changed
 	setWindowModified(!buf.isClean());
 
-	if (buf.isReadonly())
+	if (buf.hasReadonlyFlag())
 		read_only_->show();
 	else
 		read_only_->hide();
@@ -1346,13 +1352,13 @@ double GuiView::pixelRatio() const
 	return 1.0;
 #endif
 }
-	
-	
+
+
 GuiWorkArea * GuiView::workArea(int index)
 {
 	if (TabWorkArea * twa = d.currentTabWorkArea())
 		if (index < twa->count())
-			return dynamic_cast<GuiWorkArea *>(twa->widget(index));
+			return twa->workArea(index);
 	return 0;
 }
 
@@ -1812,9 +1818,7 @@ bool GuiView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 
 	case LFUN_BUFFER_RELOAD:
 		enable = doc_buffer && !doc_buffer->isUnnamed()
-			&& doc_buffer->fileName().exists()
-			&& (!doc_buffer->isClean()
-			   || doc_buffer->isExternallyModified(Buffer::timestamp_method));
+			&& doc_buffer->fileName().exists() && !doc_buffer->isClean();
 		break;
 
 	case LFUN_BUFFER_CHILD_OPEN:
@@ -1843,6 +1847,10 @@ bool GuiView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 		} while (b != first);
 		break;
 	}
+
+	case LFUN_BUFFER_EXTERNAL_MODIFICATION_CLEAR:
+		enable = doc_buffer && doc_buffer->notifiesExternalModification();
+		break;
 
 	case LFUN_BUFFER_WRITE_AS:
 	case LFUN_BUFFER_EXPORT_AS:
@@ -2032,12 +2040,13 @@ bool GuiView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 		enable = doc_buffer && doc_buffer->lyxvc().checkOutEnabled();
 		break;
 	case LFUN_VC_LOCKING_TOGGLE:
-		enable = doc_buffer && !doc_buffer->isReadonly()
+		enable = doc_buffer && !doc_buffer->hasReadonlyFlag()
 			&& doc_buffer->lyxvc().lockingToggleEnabled();
 		flag.setOnOff(enable && doc_buffer->lyxvc().locking());
 		break;
 	case LFUN_VC_REVERT:
-		enable = doc_buffer && doc_buffer->lyxvc().inUse() && !doc_buffer->isReadonly();
+		enable = doc_buffer && doc_buffer->lyxvc().inUse()
+			&& !doc_buffer->hasReadonlyFlag();
 		break;
 	case LFUN_VC_UNDO_LAST:
 		enable = doc_buffer && doc_buffer->lyxvc().undoLastEnabled();
@@ -2759,7 +2768,7 @@ void GuiView::writeSession() const {
 	for (int i = 0; i < d.splitter_->count(); ++i) {
 		TabWorkArea * twa = d.tabWorkArea(i);
 		for (int j = 0; j < twa->count(); ++j) {
-			GuiWorkArea * wa = static_cast<GuiWorkArea *>(twa->widget(j));
+			GuiWorkArea * wa = twa->workArea(j);
 			Buffer & buf = wa->bufferView().buffer();
 			theSession().lastOpened().add(buf.fileName(), wa == active_wa);
 		}
@@ -3070,8 +3079,7 @@ void GuiView::checkExternallyModifiedBuffers()
 	BufferList::iterator const bend = theBufferList().end();
 	for (; bit != bend; ++bit) {
 		Buffer * buf = *bit;
-		if (buf->fileName().exists()
-			&& buf->isExternallyModified(Buffer::checksum_method)) {
+		if (buf->fileName().exists() && buf->isChecksumModified()) {
 			docstring text = bformat(_("Document \n%1$s\n has been externally modified."
 					" Reload now? Any local changes will be lost."),
 					from_utf8(buf->absFileName()));
@@ -3105,7 +3113,7 @@ void GuiView::dispatchVC(FuncRequest const & cmd, DispatchResult & dr)
 	case LFUN_VC_COPY: {
 		if (!buffer || !ensureBufferClean(buffer))
 			break;
-		if (buffer->lyxvc().inUse() && !buffer->isReadonly()) {
+		if (buffer->lyxvc().inUse() && !buffer->hasReadonlyFlag()) {
 			if (buffer->lyxvc().isCheckInWithConfirmation()) {
 				// Some changes are not yet committed.
 				// We test here and not in getStatus(), since
@@ -3134,7 +3142,7 @@ void GuiView::dispatchVC(FuncRequest const & cmd, DispatchResult & dr)
 	case LFUN_VC_CHECK_IN:
 		if (!buffer || !ensureBufferClean(buffer))
 			break;
-		if (buffer->lyxvc().inUse() && !buffer->isReadonly()) {
+		if (buffer->lyxvc().inUse() && !buffer->hasReadonlyFlag()) {
 			string log;
 			LyXVC::CommandResult ret = buffer->lyxvc().checkIn(log);
 			dr.setMessage(log);
@@ -3158,7 +3166,7 @@ void GuiView::dispatchVC(FuncRequest const & cmd, DispatchResult & dr)
 
 	case LFUN_VC_LOCKING_TOGGLE:
 		LASSERT(buffer, return);
-		if (!ensureBufferClean(buffer) || buffer->isReadonly())
+		if (!ensureBufferClean(buffer) || buffer->hasReadonlyFlag())
 			break;
 		if (buffer->lyxvc().inUse()) {
 			string res = buffer->lyxvc().lockingToggle();
@@ -3548,14 +3556,17 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 			else
 				target_dir = doc_buffer->fileName().onlyPath();
 
+			string const format = (argument.empty() || argument == "default") ?
+				doc_buffer->params().getDefaultOutputFormat() : argument;
+
 			if ((dest.empty() && doc_buffer->isUnnamed())
 			    || !target_dir.isDirWritable()) {
-				exportBufferAs(*doc_buffer, cmd.argument());
+				exportBufferAs(*doc_buffer, from_utf8(format));
 				break;
 			}
 			/* TODO/Review: Is it a problem to also export the children?
 					See the update_unincluded flag */
-			d.asyncBufferProcessing(argument,
+			d.asyncBufferProcessing(format,
 						doc_buffer,
 						_("Exporting ..."),
 						&GuiViewPrivate::exportAndDestroy,
@@ -3724,11 +3735,16 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 			if (!doc_buffer->isClean()) {
 				docstring const file =
 					makeDisplayPath(doc_buffer->absFileName(), 20);
-				docstring text = bformat(_("Any changes will be lost. "
-					"Are you sure you want to revert to the saved version "
-					"of the document %1$s?"), file);
-				ret = Alert::prompt(_("Revert to saved document?"),
-					text, 1, 1, _("&Revert"), _("&Cancel"));
+				doc_buffer->notifiesExternalModification();
+				docstring text = doc_buffer->notifiesExternalModification() ?
+					  _("Any changes will be lost. "
+					    "Are you sure you want to load the version on disk "
+					    "of the document %1$s?")
+					: _("Any changes will be lost. "
+					    "Are you sure you want to revert to the saved version "
+					    "of the document %1$s?");
+				ret = Alert::prompt(_("Revert to file on disk?"),
+					bformat(text, file), 1, 1, _("&Revert"), _("&Cancel"));
 			}
 
 			if (ret == 0) {
@@ -3766,6 +3782,11 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 			dr.setMessage(_("All documents saved."));
 			break;
 		}
+
+		case LFUN_BUFFER_EXTERNAL_MODIFICATION_CLEAR:
+			LASSERT(doc_buffer, break);
+			doc_buffer->clearExternalModification();
+			break;
 
 		case LFUN_BUFFER_CLOSE:
 			closeBuffer();

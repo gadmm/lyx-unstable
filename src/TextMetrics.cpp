@@ -482,11 +482,11 @@ bool TextMetrics::redoParagraph(pit_type const pit)
 	if (text_->isMainText()) {
 		if (pit == 0) {
 			pm.rows().front().dimension().asc += 20;
-			/* coverity[copy_paste_error]: coverity thinks that we
-			 * should update pm.dim().asc below, but all the rows
-			 * heights are actually counted as part of the paragraph metric
-			 * descent see loop above).
+			/* coverity thinks that we should update pm.dim().asc
+			 * below, but all the rows heights are actually counted as
+			 * part of the paragraph metric descent see loop above).
 			 */
+			// coverity[copy_paste_error]
 			pm.dim().des += 20;
 		}
 		ParagraphList const & pars = text_->paragraphs();
@@ -1361,18 +1361,23 @@ Inset * TextMetrics::editXY(Cursor & cur, int x, int y,
 	if (edited == inset && cur.pos() == it->pos) {
 		// non-editable inset, set cursor after the inset if x is
 		// nearer to that position (bug 9628)
+		// TODO: This should be replaced with an improvement of
+		// Cursor::moveToClosestEdge that handles rtl text. (Which could not
+		// be tested because of #10569.)
 		CoordCache::Insets const & insetCache = bv_->coordCache().getInsets();
-		Dimension const & dim = insetCache.dim(inset);
-		Point p = insetCache.xy(inset);
-		bool const is_rtl = text_->isRTL(text_->getPar(pit));
-		if (is_rtl) {
-			// "in front of" == "right of"
-			if (abs(p.x_ - x) < abs(p.x_ + dim.wid - x))
-				cur.posForward();
-		} else {
-			// "in front of" == "left of"
-			if (abs(p.x_ + dim.wid - x) < abs(p.x_ - x))
-				cur.posForward();
+		if (insetCache.has(inset)) {
+			Dimension const & dim = insetCache.dim(inset);
+			Point p = insetCache.xy(inset);
+			bool const is_rtl = text_->isRTL(text_->getPar(pit));
+			if (is_rtl) {
+				// "in front of" == "right of"
+				if (abs(p.x_ - x) < abs(p.x_ + dim.wid - x))
+					cur.posForward();
+			} else {
+				// "in front of" == "left of"
+				if (abs(p.x_ + dim.wid - x) < abs(p.x_ - x))
+					cur.posForward();
+			}
 		}
 	}
 

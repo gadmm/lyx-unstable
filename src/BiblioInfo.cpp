@@ -417,7 +417,9 @@ docstring const BibTeXInfo::getYear() const
 		static regex const ereg(".*/[-]?([\\d]{4}).*");
 		smatch sm;
 		string const date = to_utf8(year);
-		regex_match(date, sm, yreg);
+		if (!regex_match(date, sm, yreg))
+			// cannot parse year.
+			return docstring();
 		year = from_ascii(sm[1]);
 		// check for an endyear
 		if (regex_match(date, sm, ereg))
@@ -1263,7 +1265,7 @@ void BiblioInfo::makeCitationLabels(Buffer const & buf)
 	// used to remember the last one we saw
 	// we'll be comparing entries to see if we need to add
 	// modifiers, like "1984a"
-	map<docstring, BibTeXInfo>::iterator last;
+	map<docstring, BibTeXInfo>::iterator last = bimap_.end();
 
 	vector<docstring>::const_iterator it = cited_entries_.begin();
 	vector<docstring>::const_iterator const en = cited_entries_.end();
@@ -1278,12 +1280,10 @@ void BiblioInfo::makeCitationLabels(Buffer const & buf)
 			docstring const num = convert<docstring>(++keynumber);
 			entry.setCiteNumber(num);
 		} else {
-			// coverity complains about our derefercing the iterator last,
-			// which was not initialized above. but it does get initialized
-			// after the first time through the loop, which is the point of
-			// the first test.
-			// coverity[FORWARD_NULL]
-			if (it != cited_entries_.begin()
+			// The first test here is checking whether this is the first
+			// time through the loop. If so, then we do not have anything
+			// with which to compare.
+			if (last != bimap_.end()
 			    && entry.getAuthorOrEditorList() == last->second.getAuthorOrEditorList()
 			    // we access the year via getYear() so as to get it from the xref,
 			    // if we need to do so

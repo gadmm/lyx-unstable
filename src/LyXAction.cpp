@@ -574,7 +574,7 @@ void LyXAction::init()
 /*!
  * \var lyx::FuncCode lyx::LFUN_BUFFER_EXPORT
  * \li Action: Exports the current buffer (document) to the given format.
- * \li Syntax: buffer-export <FORMAT> [<DEST>]
+ * \li Syntax: buffer-export [<FORMAT>] [<DEST>]
  * \li Params: <FORMAT> is either "custom" or one of the formats which you
                         can find in Tools->Preferences->File formats->Format.
                         Usual format you will enter is "pdf2" (pdflatex),
@@ -582,7 +582,9 @@ void LyXAction::init()
                         In case of "custom" you will be asked for a format you
                         want to start from and for the command that you want to
                         apply to this format. Internally the control is then passed
-                        to #LFUN_BUFFER_EXPORT_CUSTOM.
+                        to #LFUN_BUFFER_EXPORT_CUSTOM.\n
+                        If absent or "default", then the default output format of the
+                        document is used.
 		<DEST>	If present, this argument provides the export destination
 			filename. Its containing folder will also be the destination
 			folder, where all the needed external files will be copied.
@@ -875,6 +877,16 @@ void LyXAction::init()
  * \endvar
  */
 		{ LFUN_BUFFER_WRITE_AS, "buffer-write-as", ReadOnly, Buffer },
+
+/*!
+ * \var lyx::FuncCode lyx::LFUN_BUFFER_EXTERNAL_MODIFICATION_CLEAR
+ * \li Action: Clear the external modification flag on the current buffer.
+ * \li Syntax: buffer-external-modification-clear
+ * \li Origin: gm, 2 March 2017
+ * \endvar
+ */
+		{ LFUN_BUFFER_EXTERNAL_MODIFICATION_CLEAR,
+		  "buffer-external-modification-clear", ReadOnly, Buffer },
 
 /*!
  * \var lyx::FuncCode lyx::LFUN_BUFFER_ZOOM_IN

@@ -251,7 +251,7 @@ GuiWorkArea::Private::Private(GuiWorkArea * parent)
   need_resize_(false), schedule_redraw_(false), preedit_lines_(1),
   pixel_ratio_(1.0),
   completer_(new GuiCompleter(p, p)), dialog_mode_(false),
-  read_only_(false), clean_(true)
+  read_only_(false), clean_(true), externally_modified_(false)
 {
 }
 
@@ -1390,12 +1390,16 @@ QVariant GuiWorkArea::inputMethodQuery(Qt::InputMethodQuery query) const
 void GuiWorkArea::updateWindowTitle()
 {
 	Buffer const & buf = bufferView().buffer();
-	if (buf.fileName() != d->file_name_ || buf.isReadonly() != d->read_only_
-	    || buf.lyxvc().vcstatus() != d->vc_status_ || buf.isClean() != d->clean_) {
+	if (buf.fileName() != d->file_name_
+	    || buf.hasReadonlyFlag() != d->read_only_
+	    || buf.lyxvc().vcstatus() != d->vc_status_
+	    || buf.isClean() != d->clean_
+	    || buf.notifiesExternalModification() != d->externally_modified_) {
 		d->file_name_ = buf.fileName();
-		d->read_only_ = buf.isReadonly();
+		d->read_only_ = buf.hasReadonlyFlag();
 		d->vc_status_ = buf.lyxvc().vcstatus();
 		d->clean_ = buf.isClean();
+		d->externally_modified_ = buf.notifiesExternalModification();
 		Q_EMIT titleChanged(this);
 	}
 }
@@ -1684,15 +1688,24 @@ GuiWorkArea * TabWorkArea::currentWorkArea()
 	if (count() == 0)
 		return 0;
 
-	GuiWorkArea * wa = dynamic_cast<GuiWorkArea *>(currentWidget());
+	GuiWorkAreaContainer * wac =
+		dynamic_cast<GuiWorkAreaContainer *>(currentWidget());
+	LATTEST(wac);
+	GuiWorkArea * wa = wac->workArea();
 	LATTEST(wa);
 	return wa;
 }
 
 
+GuiWorkArea const * TabWorkArea::workArea(int index) const
+{
+	return (dynamic_cast<GuiWorkAreaContainer *>(widget(index)))->workArea();
+}
+
+
 GuiWorkArea * TabWorkArea::workArea(int index)
 {
-	return dynamic_cast<GuiWorkArea *>(widget(index));
+	return (dynamic_cast<GuiWorkAreaContainer *>(widget(index)))->workArea();
 }
 
 
@@ -1713,18 +1726,27 @@ GuiWorkArea * TabWorkArea::workArea(Buffer & buffer)
 void TabWorkArea::closeAll()
 {
 	while (count()) {
-		GuiWorkArea * wa = workArea(0);
-		LASSERT(wa, return);
+		QWidget * wac = widget(0);
+		LASSERT(wac, return);
 		removeTab(0);
-		delete wa;
+		delete wac;
 	}
+}
+
+
+int TabWorkArea::indexOfWorkArea(GuiWorkArea * w) const
+{
+	for (int index = 0; index < count(); ++index)
+		if (workArea(index) == w)
+			return index;
+	return -1;
 }
 
 
 bool TabWorkArea::setCurrentWorkArea(GuiWorkArea * work_area)
 {
 	LASSERT(work_area, return false);
-	int index = indexOf(work_area);
+	int index = indexOfWorkArea(work_area);
 	if (index == -1)
 		return false;
 
@@ -1743,12 +1765,13 @@ bool TabWorkArea::setCurrentWorkArea(GuiWorkArea * work_area)
 GuiWorkArea * TabWorkArea::addWorkArea(Buffer & buffer, GuiView & view)
 {
 	GuiWorkArea * wa = new GuiWorkArea(buffer, view);
+	GuiWorkAreaContainer * wac = new GuiWorkAreaContainer(wa);
 	wa->setUpdatesEnabled(false);
 	// Hide tabbar if there's no tab (avoid a resize and a flashing tabbar
 	// when hiding it again below).
 	if (!(currentWorkArea() && currentWorkArea()->isFullScreen()))
 		showBar(count() > 0);
-	addTab(wa, wa->windowTitle());
+	addTab(wac, wa->windowTitle());
 	QObject::connect(wa, SIGNAL(titleChanged(GuiWorkArea *)),
 		this, SLOT(updateTabTexts()));
 	if (currentWorkArea() && currentWorkArea()->isFullScreen())
@@ -1766,13 +1789,14 @@ GuiWorkArea * TabWorkArea::addWorkArea(Buffer & buffer, GuiView & view)
 bool TabWorkArea::removeWorkArea(GuiWorkArea * work_area)
 {
 	LASSERT(work_area, return false);
-	int index = indexOf(work_area);
+	int index = indexOfWorkArea(work_area);
 	if (index == -1)
 		return false;
 
 	work_area->setUpdatesEnabled(false);
+	QWidget * wac = widget(index);
 	removeTab(index);
-	delete work_area;
+	delete wac;
 
 	if (count()) {
 		// make sure the next work area is enabled.
@@ -1853,8 +1877,7 @@ void TabWorkArea::closeTab(int index)
 class DisplayPath {
 public:
 	/// make vector happy
-	// coverity[UNINIT_CTOR]
-	DisplayPath() {}
+	DisplayPath() : tab_(-1), dottedPrefix_(false) {}
 	///
 	DisplayPath(int tab, FileName const & filename)
 		: tab_(tab)
@@ -2051,11 +2074,16 @@ void TabWorkArea::updateTabTexts()
 		if (!buf.fileName().empty() && !buf.isClean())
 			tab_text += "*";
 		QString tab_tooltip = it->abs();
-		if (buf.isReadonly()) {
+		if (buf.hasReadonlyFlag()) {
 			setTabIcon(tab_index, QIcon(getPixmap("images/", "emblem-readonly", "svgz,png")));
-			tab_tooltip = qt_("%1 (read only)").arg(it->abs());
+			tab_tooltip = qt_("%1 (read only)").arg(tab_tooltip);
 		} else
 			setTabIcon(tab_index, QIcon());
+		if (buf.notifiesExternalModification()) {
+			QString const warn = qt_("%1 (modified externally)");
+			tab_tooltip = warn.arg(tab_tooltip);
+			tab_text += QChar(0x26a0);
+		}
 		setTabText(tab_index, tab_text);
 		setTabToolTip(tab_index, tab_tooltip);
 	}
@@ -2169,6 +2197,66 @@ void DragTabBar::dropEvent(QDropEvent * event)
 	if (fromIndex != toIndex)
 		tabMoveRequested(fromIndex, toIndex);
 	event->acceptProposedAction();
+}
+
+
+GuiWorkAreaContainer::GuiWorkAreaContainer(GuiWorkArea * wa, QWidget * parent)
+	: QWidget(parent), wa_(wa)
+{
+	LASSERT(wa, return);
+	Ui::WorkAreaUi::setupUi(this);
+	layout()->addWidget(wa);
+	connect(wa, SIGNAL(titleChanged(GuiWorkArea *)),
+	        this, SLOT(updateDisplay()));
+	connect(reloadPB, SIGNAL(clicked()), this, SLOT(reload()));
+	connect(ignorePB, SIGNAL(clicked()), this, SLOT(ignore()));
+	QPalette const & pal = notificationFrame->palette();
+	QPalette newpal(pal.color(QPalette::Active, QPalette::HighlightedText),
+	                pal.color(QPalette::Active, QPalette::Highlight));
+	notificationFrame->setPalette(newpal);
+	updateDisplay();
+}
+
+
+void GuiWorkAreaContainer::updateDisplay()
+{
+	if (!wa_)
+		notificationFrame->hide();
+
+	Buffer const & buf = wa_->bufferView().buffer();
+	notificationFrame->setHidden(!buf.notifiesExternalModification());
+	QString const label = QString("<b>The file \"%1\" changed on disk.</b>")
+		.arg(toqstr(buf.fileName().displayName()));
+	externalModificationLabel->setText(label);
+}
+
+
+void GuiWorkAreaContainer::dispatch(FuncRequest f) const
+{
+	if (!wa_)
+		return;
+	lyx::dispatch(FuncRequest(LFUN_BUFFER_SWITCH,
+	                          wa_->bufferView().buffer().absFileName()));
+	lyx::dispatch(f);
+}
+
+
+void GuiWorkAreaContainer::reload() const
+{
+	dispatch(FuncRequest(LFUN_BUFFER_RELOAD));
+}
+
+
+void GuiWorkAreaContainer::ignore() const
+{
+	dispatch(FuncRequest(LFUN_BUFFER_EXTERNAL_MODIFICATION_CLEAR));
+}
+
+
+void GuiWorkAreaContainer::mouseDoubleClickEvent(QMouseEvent * event)
+{
+	// prevent TabWorkArea from opening a new buffer on double click
+	event->accept();
 }
 
 

@@ -3335,8 +3335,12 @@ bool BufferParams::addCiteEngine(vector<string> const & engine)
 
 string const & BufferParams::defaultBiblioStyle() const
 {
-	map<string, string> bs = documentClass().defaultBiblioStyle();
-	return bs[theCiteEnginesList.getTypeAsString(citeEngineType())];
+	map<string, string> const & bs = documentClass().defaultBiblioStyle();
+	auto cit = bs.find(theCiteEnginesList.getTypeAsString(citeEngineType()));
+	if (cit != bs.end())
+		return cit->second;
+	else
+		return empty_string();
 }
 
 

@@ -610,7 +610,10 @@ docstring const InsetQuotesParams::getShortGuiLabel(docstring const string)
 //
 ///////////////////////////////////////////////////////////////////////
 
-InsetQuotes::InsetQuotes(Buffer * buf, string const & str) : Inset(buf)
+InsetQuotes::InsetQuotes(Buffer * buf, string const & str)
+	: Inset(buf), 
+	  style_(InsetQuotesParams::EnglishQuotes), side_(InsetQuotesParams::OpeningQuote),
+	  pass_thru_(false)
 {
 	if (buf) {
 		global_style_ = buf->masterBuffer()->params().quotes_style;

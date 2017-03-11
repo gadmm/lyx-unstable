@@ -145,6 +145,9 @@ export/export/latex/LongestLabelWithUnderscore.*
 export/doc/(es|fr)/Additional_pdf4_texF
 export/doc/(de|es)/EmbeddedObjects_pdf4_texF
 export/doc/es/Customization_pdf4_texF
+# see also the discussion at:
+# https://www.mail-archive.com/search?l=mid&q=20170228190738.cgs3tl3ny2bxiegk%40steph
+export/examples/es/linguistics_pdf4_texF
 
 
 #9637 textgreek and textcyr depend on font-encoding, not input encoding
@@ -210,18 +213,13 @@ export/examples/ru/splash_(dvi3|pdf[45])_texF
 # ! Undefined control sequence.
 # <argument> ...art {link}{\Hy@tocdestname }{\nonumberline Ã
 #                                                   ndice alfabÃ©tico}\hyper...
-export/doc/es/(UserGuide|Math)_(dvi3|pdf5)_texF
+export/doc/es/(UserGuide|Math|EmbeddedObjects)_(dvi3|pdf5)_texF
 
 # Gives the following error:
 # # ! Package hpstatement Error: H or P statement "H251"
 # # (hpstatement)                is not defined.
 # seems to be polyglossia-related (dvi3 worked with babel)
 export/examples/H-P-statements_.*_systemF
-
-# tufte (partially) incompatible with latex and xelatex:
-# \MakeTextUppercase requires microtype.
-# http://tex.stackexchange.com/questions/202142/problems-compiling-tufte-title-page-in-xelatex
-export/examples/(|de/|es/)tufte-(book|handout)_(dvi.*|pdf|pdf3|pdf4.*)
 
 # These files use packages that are not compatible with the newest LuaTeX. We
 # could potentially fix these by loading the luatex85 package early in the

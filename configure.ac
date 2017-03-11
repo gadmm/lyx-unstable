@@ -122,7 +122,6 @@ AC_CHECK_LIB(gdi32, main)
 AC_CHECK_LIB(ole32, main)
 
 LYX_USE_INCLUDED_BOOST
-LYX_USE_INCLUDED_MYTHES
 
 ### we need to know the byte order for unicode conversions
 AC_C_BIGENDIAN
@@ -220,6 +219,7 @@ AC_FUNC_MKDIR
 AC_FUNC_SELECT_ARGTYPES
 
 LYX_CHECK_SPELL_ENGINES
+LYX_USE_INCLUDED_MYTHES
 
 lyx_client_subdir=true
 dnl AC_LANG_PUSH(C)
@@ -256,9 +256,11 @@ LYX_SET_VERSION_INFO
 real_bindir=`eval "echo \`eval \"echo ${bindir}\"\`"`
 real_pkgdatadir=`eval "echo \`eval \"echo \\\`eval \\\"echo ${pkgdatadir}\\\"\\\`\"\`"`
 real_localedir=`eval "echo \`eval \"echo ${datadir}/locale\"\`"`
+test -z "${lyx_included_libs}" && lyx_included_libs="(none)"
 VERSION_INFO="Configuration\n\
   Host type:               ${host}\n\
   Special build flags:     ${lyx_flags}\n\
+  Bundled libraries:       ${lyx_included_libs}\n\
   C++ Compiler:            ${CXX} ${CXX_VERSION}\n\
   C++ Compiler flags:      ${AM_CPPFLAGS} ${AM_CXXFLAGS}\n\
   C++ Compiler user flags: ${CPPFLAGS} ${CXXFLAGS}\n\
@@ -370,6 +372,7 @@ AC_CONFIG_FILES([Makefile \
       3rdparty/Makefile \
       3rdparty/boost/Makefile \
       3rdparty/hunspell/Makefile \
+      3rdparty/mythes/Makefile \
       3rdparty/libiconv/Makefile \
       $ICONV_ICONV_H_IN \
       3rdparty/zlib/Makefile \

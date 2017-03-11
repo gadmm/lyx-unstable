@@ -739,7 +739,9 @@ void MathData::collectOptionalParameters(Cursor * cur,
 			params.push_back(optarg);
 
 		// place cursor in optional argument of macro
-		if (thisSlice != -1
+		// Note: The two expressions on the first line are equivalent
+		// (see caller), but making this explicit pleases coverity.
+		if (cur && thisSlice != -1
 		    && thisPos >= int(pos) && thisPos <= int(right)) {
 			int paramPos = max(0, thisPos - int(pos) - 1);
 			vector<CursorSlice> x;
@@ -779,7 +781,10 @@ void MathData::collectParameters(Cursor * cur,
 		// fix cursor
 		vector<CursorSlice> argSlices;
 		int argPos = 0;
-		if (thisSlice != -1 && thisPos == int(pos))
+		// Note: The two expressions on the first line are equivalent
+		// (see caller), but making this explicit pleases coverity.
+		if (cur && thisSlice != -1
+			&& thisPos == int(pos))
 			cur->cutOff(thisSlice, argSlices);
 
 		// which kind of parameter is it? In {}? With index x^n?
@@ -820,7 +825,10 @@ void MathData::collectParameters(Cursor * cur,
 		}
 
 		// put cursor in argument again
-		if (thisSlice != - 1 && thisPos == int(pos)) {
+		// Note: The first two expressions on the first line are
+		// equivalent (see caller), but making this explicit pleases
+		// coverity.
+		if (cur && thisSlice != -1 && thisPos == int(pos)) {
 			cur->append(params.size() - 1, argPos);
 			cur->append(argSlices);
 			(*cur)[thisSlice].pos() = macroPos;

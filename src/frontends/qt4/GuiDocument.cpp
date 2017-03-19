@@ -805,6 +805,7 @@ GuiDocument::GuiDocument(GuiView & lv)
 	// fonts
 	fontModule = new FontModule(this);
 	disable_widget_if_ndef_FILEFORMAT(fontModule->microtypeCB);
+	disable_widget_if_ndef_FILEFORMAT(fontModule->dashesCB);
 	connect(fontModule->osFontsCB, SIGNAL(clicked()),
 		this, SLOT(change_adaptor()));
 	connect(fontModule->osFontsCB, SIGNAL(toggled(bool)),

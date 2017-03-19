@@ -421,6 +421,7 @@ BufferParams::BufferParams()
 	fonts_default_family = "default";
 	useNonTeXFonts = false;
 	use_microtype = false;
+	use_dash_ligatures = true;
 	fonts_expert_sc = false;
 	fonts_old_figures = false;
 	fonts_sans_scale[0] = 100;
@@ -818,6 +819,8 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 		lex >> fonts_cjk;
 	} else if (token == "\\use_microtype") {
 		lex >> use_microtype;
+	} else if (token == "\\use_dash_ligatures") {
+		lex >> use_dash_ligatures;
 	} else if (token == "\\paragraph_separation") {
 		string parsep;
 		lex >> parsep;
@@ -1216,6 +1219,7 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 #ifdef FILEFORMAT
 	os << "\\use_microtype " << convert<string>(use_microtype) << '\n';
 #endif
+	os << "\\use_dash_ligatures " << convert<string>(use_dash_ligatures) << '\n';
 	os << "\\graphics " << graphics_driver << '\n';
 	os << "\\default_output_format " << default_output_format << '\n';
 	os << "\\output_sync " << output_sync << '\n';

@@ -99,7 +99,7 @@ public:
 	/// The document filename this graphic item belongs to
 	FileName const & doc_file_;
 	///
-	FileMonitorPtr monitor_;
+	ActiveFileMonitorPtr monitor_;
 
 	/// Is the file compressed?
 	bool zipped_;
@@ -179,6 +179,14 @@ bool CacheItem::monitoring() const
 }
 
 
+void CacheItem::checkModifiedAsync() const
+{
+	if (!pimpl_->monitor_)
+		return;
+	pimpl_->monitor_->checkModifiedAsync();
+}
+
+
 Image const * CacheItem::image() const
 {
 	return pimpl_->image_.get();
@@ -214,7 +222,7 @@ void CacheItem::Impl::startMonitor()
 {
 	if (monitor_)
 		return;
-	monitor_ = FileSystemWatcher::monitor(filename_);
+	monitor_ = FileSystemWatcher::activeMonitor(filename_);
 	monitor_->connect([=](){ startLoading(); });
 }
 
@@ -318,10 +326,10 @@ bool CacheItem::Impl::loadImage()
 
 typedef vector<string> FormatList;
 
-static string const findTargetFormat(FormatList const & formats, string const & from)
+static string const findTargetFormat(FormatList const & format_list, string const & from)
 {
 	 // There must be a format to load from.
-	LASSERT(!formats.empty(), return string());
+	LASSERT(!theFormats().empty(), return string());
 
 	// Use the standard converter if we don't know the format to load
 	// from.
@@ -329,15 +337,15 @@ static string const findTargetFormat(FormatList const & formats, string const & 
 		return string("ppm");
 
 	// First ascertain if we can load directly with no conversion
-	FormatList::const_iterator it  = formats.begin();
-	FormatList::const_iterator end = formats.end();
+	FormatList::const_iterator it  = format_list.begin();
+	FormatList::const_iterator end = format_list.end();
 	for (; it != end; ++it) {
 		if (from == *it)
 			return *it;
 	}
 
 	// So, we have to convert to a loadable format. Can we?
-	it = formats.begin();
+	it = format_list.begin();
 	for (; it != end; ++it) {
 		if (lyx::graphics::Converter::isReachable(from, *it))
 			return *it;
@@ -364,7 +372,7 @@ bool CacheItem::Impl::tryDisplayFormat(FileName & filename, string & from)
 		return false;
 	}
 
-	zipped_ = formats.isZippedFile(filename_);
+	zipped_ = theFormats().isZippedFile(filename_);
 	if (zipped_) {
 		string tempname = unzippedFileName(filename_.toFilesystemEncoding());
 		string const ext = getExtension(tempname);
@@ -389,7 +397,7 @@ bool CacheItem::Impl::tryDisplayFormat(FileName & filename, string & from)
 		<< "\tAttempting to convert image file: " << filename
 		<< "\n\twith displayed filename: " << to_utf8(displayed_filename));
 
-	from = formats.getFormatFromFile(filename);
+	from = theFormats().getFormatFromFile(filename);
 	if (from.empty()) {
 		status_ = ErrorConverting;
 		LYXERR(Debug::GRAPHICS, "\tCould not determine file format.");

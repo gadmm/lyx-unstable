@@ -1,4 +1,12 @@
-# Standard formats for citations.
+# Standard formats for bibliography entries.
+#
+# This defines how LyX displays bibliographic information in the GUI
+# as well as in text/xhtml output. The format of citation references
+# is defined in the *.citeengines files, which might override the
+# default formatting defined here.
+#
+# This file is included by the citation engines, so there is no need
+# to include it in individual classes.
 #
 # Author: Richard Heck <rgheck@comcast.net>
 #         Jürgen Spitzmüller <spitz@lyx.org>
@@ -24,13 +32,15 @@ CiteFormat default
 	# Macros
 	#
 	# Scheme of the first author in the bibliography
-	!firstnameform %surname%, %prename%
+	!firstnameform {%prefix%[[%prefix% ]]}%surname%{%suffix%[[, %suffix%]]}{%prename%[[, %prename%]]}
 	# Scheme of other authors in the bibliography
-	!othernameform %surname%, %prename%
+	!othernameform {%prefix%[[%prefix% ]]}%surname%{%suffix%[[, %suffix%]]}{%prename%[[, %prename%]]}
 	# Scheme of the first name in later parts (such as book editor)
-	!firstbynameform %prename% %surname%
+	!firstbynameform %prename% {%prefix%[[%prefix% ]]}%surname%{%suffix%[[, %suffix%]]}
 	# Scheme of other authors in later parts (such as book editor)
-	!otherbynameform %prename% %surname%
+	!otherbynameform %prename% {%prefix%[[%prefix% ]]}%surname%{%suffix%[[, %suffix%]]}
+	# Scheme of authors in citation references
+	!citenameform {%prefix%[[%prefix% ]]}%surname%
 	# pagination
 	!pages {%pages%[[, %_pptext% %pages%]]}
 	# ed. or eds.

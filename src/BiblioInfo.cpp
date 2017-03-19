@@ -47,51 +47,52 @@ namespace lyx {
 
 namespace {
 
-// gets the "prename" and "family name" from an author-type string
-pair<docstring, docstring> nameParts(docstring const & name)
+// Remove placeholders from names
+docstring renormalize(docstring const & input)
 {
-	if (name.empty())
-		return make_pair(docstring(), docstring());
+	docstring res = subst(input, from_ascii("$$space!"), from_ascii(" "));
+	return subst(res, from_ascii("$$comma!"), from_ascii(","));
+}
 
-	// first we look for a comma, and take the last name to be everything
-	// preceding the right-most one, so that we also get the "jr" part.
-	vector<docstring> pieces = getVectorFromString(name);
-	if (pieces.size() > 1)
-		// whether we have a jr. part or not, it's always
-		// the first and last item (reversed)
-		return make_pair(pieces.back(), pieces.front());
 
-	// OK, so now we want to look for the last name. We're going to
-	// include the "von" part. This isn't perfect.
-	// Split on spaces, to get various tokens.
-	pieces = getVectorFromString(name, from_ascii(" "));
-	// If we only get two, assume the last one is the last name
-	if (pieces.size() <= 2)
-		return make_pair(pieces.front(), pieces.back());
+// Split the surname into prefix ("von-part") and family name
+pair<docstring, docstring> parseSurname(docstring const & sname)
+{
+	// Split the surname into its tokens
+	vector<docstring> pieces = getVectorFromString(sname, from_ascii(" "));
+	if (pieces.size() < 2)
+		return make_pair(docstring(), sname);
 
-	// Now we look for the first token that begins with
-	// a lower case letter or an opening group {.
-	docstring prename;
+	// Now we look for pieces that begin with a lower case letter.
+	// All except for the very last token constitute the "von-part".
+	docstring prefix;
 	vector<docstring>::const_iterator it = pieces.begin();
-	vector<docstring>::const_iterator en = pieces.end();
+	vector<docstring>::const_iterator const en = pieces.end();
 	bool first = true;
 	for (; it != en; ++it) {
 		if ((*it).empty())
 			continue;
-		char_type const c = (*it)[0];
-		if (isLower(c) || c == '{')
+		// If this is the last piece, then what we now have is
+		// the family name, notwithstanding the casing.
+		if (it + 1 == en)
 			break;
+		char_type const c = (*it)[0];
+		// If the piece starts with a upper case char, we assume
+		// this is part of the surname.
+		if (!isLower(c))
+			break;
+		// Nothing of the former, so add this piece to the prename
 		if (!first)
-			prename += " ";
+			prefix += " ";
 		else
 			first = false;
-		prename += *it;
+		prefix += *it;
 	}
 
-	if (it == en) // we never found a "von" or group
-		return make_pair(prename, pieces.back());
-
-	// reconstruct the family name
+	// Reconstruct the family name.
+	// Note that if we left the loop with because it + 1 == en,
+	// then this will still do the right thing, i.e., make surname
+	// just be the last piece.
 	docstring surname;
 	first = true;
 	for (; it != en; ++it) {
@@ -101,7 +102,124 @@ pair<docstring, docstring> nameParts(docstring const & name)
 			first = false;
 		surname += *it;
 	}
-	return make_pair(prename, surname);
+	return make_pair(prefix, surname);
+}
+
+
+struct name_parts {
+	docstring surname;
+	docstring prename;
+	docstring suffix;
+	docstring prefix;
+};
+
+
+// gets the name parts (prename, surname, prefix, suffix) from an author-type string
+name_parts nameParts(docstring const & iname)
+{
+	name_parts res;
+	if (iname.empty())
+		return res;
+
+	// First we check for goupings (via {...}) and replace blanks and
+	// commas inside groups with temporary placeholders
+	docstring name;
+	int gl = 0;
+	docstring::const_iterator p = iname.begin();
+	while (p != iname.end()) {
+		// count grouping level
+		if (*p == '{')
+			++gl;
+		else if (*p == '}')
+			--gl;
+		// generate string with probable placeholders
+		if (*p == ' ' && gl > 0)
+			name += from_ascii("$$space!");
+		else if (*p == ',' && gl > 0)
+			name += from_ascii("$$comma!");
+		else
+			name += *p;
+		++p;
+	}
+
+	// Now we look for a comma, and take the last name to be everything
+	// preceding the right-most one, so that we also get the name suffix
+	// (aka "jr" part).
+	vector<docstring> pieces = getVectorFromString(name);
+	if (pieces.size() > 1) {
+		// Whether we have a name suffix or not, the prename is
+		// always last item
+		res.prename = renormalize(pieces.back());
+		// The family name, conversely, is always the first item.
+		// However, it might contain a prefix (aka "von" part)
+		docstring const sname = pieces.front();
+		res.prefix = renormalize(parseSurname(sname).first);
+		res.surname = renormalize(parseSurname(sname).second);
+		// If we have three pieces (the maximum allowed by BibTeX),
+		// the second one is the name suffix.
+		if (pieces.size() > 2)
+			res.suffix = renormalize(pieces.at(1));
+		return res;
+	}
+
+	// OK, so now we want to look for the last name.
+	// Split on spaces, to get various tokens.
+	pieces = getVectorFromString(name, from_ascii(" "));
+	// No space: Only a family name given
+	if (pieces.size() < 2) {
+		res.surname = renormalize(pieces.back());
+		return res;
+	}
+	// If we get two pieces, assume "prename surname"
+	if (pieces.size() == 2) {
+		res.prename = renormalize(pieces.front());
+		res.surname = renormalize(pieces.back());
+		return res;
+	}
+
+	// More than 3 pieces: A name prefix (aka "von" part) might be included.
+	// We look for the first piece that begins with a lower case letter
+	// (which is the name prefix, if it is not the last token) or the last token.
+	docstring prename;
+	vector<docstring>::const_iterator it = pieces.begin();
+	vector<docstring>::const_iterator const en = pieces.end();
+	bool first = true;
+	for (; it != en; ++it) {
+		if ((*it).empty())
+			continue;
+		char_type const c = (*it)[0];
+		// If the piece starts with a lower case char, we assume
+		// this is the name prefix and thus prename is complete.
+		if (isLower(c))
+			break;
+		// Same if this is the last piece, which is always the surname.
+		if (it + 1 == en)
+			break;
+		// Nothing of the former, so add this piece to the prename
+		if (!first)
+			prename += " ";
+		else
+			first = false;
+		prename += *it;
+	}
+
+	// Now reconstruct the family name and strip the prefix.
+	// Note that if we left the loop because it + 1 == en,
+	// then this will still do the right thing, i.e., make surname
+	// just be the last piece.
+	docstring surname;
+	first = true;
+	for (; it != en; ++it) {
+		if (!first)
+			surname += " ";
+		else
+			first = false;
+		surname += *it;
+	}
+	res.prename = renormalize(prename);
+	res.prefix = renormalize(parseSurname(surname).first);
+	res.surname = renormalize(parseSurname(surname).second);
+	return res;
 }
 
 
@@ -109,20 +227,93 @@ docstring constructName(docstring const & name, string const scheme)
 {
 	// re-constructs a name from name parts according
 	// to a given scheme
-	docstring const prename = nameParts(name).first;
-	docstring const surname = nameParts(name).second;
-	docstring result = from_ascii(scheme);
+	docstring const prename = nameParts(name).prename;
+	docstring const surname = nameParts(name).surname;
+	docstring const prefix = nameParts(name).prefix;
+	docstring const suffix = nameParts(name).suffix;
+	string res = scheme;
+	static regex const reg1("(.*)(\\{%prename%\\[\\[)([^\\]]+)(\\]\\]\\})(.*)");
+	static regex const reg2("(.*)(\\{%suffix%\\[\\[)([^\\]]+)(\\]\\]\\})(.*)");
+	static regex const reg3("(.*)(\\{%prefix%\\[\\[)([^\\]]+)(\\]\\]\\})(.*)");
+	smatch sub;
+	if (regex_match(scheme, sub, reg1)) {
+		res = sub.str(1);
+		if (!prename.empty())
+			res += sub.str(3);
+		res += sub.str(5);
+	}
+	if (regex_match(res, sub, reg2)) {
+		res = sub.str(1);
+		if (!suffix.empty())
+			res += sub.str(3);
+		res += sub.str(5);
+	}
+	if (regex_match(res, sub, reg3)) {
+		res = sub.str(1);
+		if (!prefix.empty())
+			res += sub.str(3);
+		res += sub.str(5);
+	}
+	docstring result = from_ascii(res);
 	result = subst(result, from_ascii("%prename%"), prename);
 	result = subst(result, from_ascii("%surname%"), surname);
+	result = subst(result, from_ascii("%prefix%"), prefix);
+	result = subst(result, from_ascii("%suffix%"), suffix);
 	return result;
+}
+
+
+vector<docstring> const getAuthors(docstring const & author)
+{
+	// We check for goupings (via {...}) and only consider " and "
+	// outside groups as author separator. This is to account
+	// for cases such as {{Barnes and Noble, Inc.}}, which
+	// need to be treated as one single family name.
+	// We use temporary placeholders in order to differentiate the
+	// diverse " and " cases.
+
+	// First, we temporarily replace all ampersands. It is rather unusual
+	// in author names, but can happen (consider cases such as "C \& A Corp.").
+	docstring iname = subst(author, from_ascii("&"), from_ascii("$$amp!"));
+	// Then, we temporarily make all " and " strings to ampersands in order
+	// to handle them later on a per-char level.
+	iname = subst(iname, from_ascii(" and "), from_ascii(" & "));
+	// Now we traverse through the string and replace the "&" by the proper
+	// output in- and outside groups
+	docstring name;
+	int gl = 0;
+	docstring::const_iterator p = iname.begin();
+	while (p != iname.end()) {
+		// count grouping level
+		if (*p == '{')
+			++gl;
+		else if (*p == '}')
+			--gl;
+		// generate string with probable placeholders
+		if (*p == '&') {
+			if (gl > 0)
+				// Inside groups, we output "and"
+				name += from_ascii("and");
+			else
+				// Outside groups, we output a separator
+				name += from_ascii("$$namesep!");
+		}
+		else
+			name += *p;
+		++p;
+	}
+
+	// re-insert the literal ampersands
+	name = subst(name, from_ascii("$$amp!"), from_ascii("&"));
+
+	// Now construct the actual vector
+	return getVectorFromString(name, from_ascii(" $$namesep! "));
 }
 
 
 bool multipleAuthors(docstring const author)
 {
-	vector<docstring> const authors =
-		getVectorFromString(author, from_ascii(" and "));
-	return authors.size() > 1;
+	return getAuthors(author).size() > 1;
 }
 
 
@@ -187,7 +378,18 @@ docstring convertLaTeXCommands(docstring const & str)
 			continue;
 		}
 
-		// we just ignore braces
+		// Change text mode accents in the form
+		// {\v a} to \v{a} (see #9340).
+		// FIXME: This is a sort of mini-tex2lyx.
+		//        Use the real tex2lyx instead!
+		static lyx::regex const tma_reg("^\\{\\\\[bcCdfGhHkrtuUv]\\s\\w\\}");
+		if (lyx::regex_search(to_utf8(val), tma_reg)) {
+			val = val.substr(1);
+			val.replace(2, 1, from_ascii("{"));
+			continue;
+		}
+
+		// Apart from the above, we just ignore braces
 		if (ch == '{' || ch == '}') {
 			val = val.substr(1);
 			continue;
@@ -289,6 +491,7 @@ BibTeXInfo::BibTeXInfo(docstring const & key, docstring const & type)
 {}
 
 
+
 docstring const BibTeXInfo::getAuthorOrEditorList(Buffer const * buf,
 					  bool full, bool forceshort) const
 {
@@ -300,9 +503,9 @@ docstring const BibTeXInfo::getAuthorOrEditorList(Buffer const * buf,
 }
 
 
-docstring const BibTeXInfo::getAuthorList(Buffer const * buf, docstring author,
-					  bool full, bool forceshort, bool allnames,
-					  bool beginning) const
+docstring const BibTeXInfo::getAuthorList(Buffer const * buf, 
+		docstring const & author, bool const full, bool const forceshort, 
+		bool const allnames, bool const beginning) const
 {
 	// Maxnames treshold depend on engine
 	size_t maxnames = buf ?
@@ -325,13 +528,9 @@ docstring const BibTeXInfo::getAuthorList(Buffer const * buf, docstring author,
 	if (author.empty())
 		return author;
 
-	// FIXME Move this to a separate routine that can
-	// be called from elsewhere.
-	//
 	// OK, we've got some names. Let's format them.
-	// Try to split the author list on " and "
-	vector<docstring> const authors =
-		getVectorFromString(author, from_ascii(" and "));
+	// Try to split the author list
+	vector<docstring> const authors = getAuthors(author);
 
 	docstring retval;
 
@@ -353,18 +552,20 @@ docstring const BibTeXInfo::getAuthorList(Buffer const * buf, docstring author,
 		     : " and ";
 	string firstnameform =
 			buf ? buf->params().documentClass().getCiteMacro(engine_type, "!firstnameform")
-			     : "%surname%, %prename%";
+			     : "{%prefix%[[%prefix% ]]}%surname%{%suffix%[[, %suffix%]]}{%prename%[[, %prename%]]}";
 	if (!beginning)
 		firstnameform = buf ? buf->params().documentClass().getCiteMacro(engine_type, "!firstbynameform")
-					     : "%prename% %surname%";
+					     : "%prename% {%prefix%[[%prefix% ]]}%surname%{%suffix%[[, %suffix%]]}";
 	string othernameform = buf ? buf->params().documentClass().getCiteMacro(engine_type, "!othernameform")
-			     : "%surname%, %prename%";
+			     : "{%prefix%[[%prefix% ]]}%surname%{%suffix%[[, %suffix%]]}{%prename%[[, %prename%]]}";
 	if (!beginning)
 		othernameform = buf ? buf->params().documentClass().getCiteMacro(engine_type, "!otherbynameform")
-					     : "%prename% %surname%";
+					     : "%prename% {%prefix%[[%prefix% ]]}%surname%{%suffix%[[, %suffix%]]}";
+	string citenameform = buf ? buf->params().documentClass().getCiteMacro(engine_type, "!citenameform")
+			     : "{%prefix%[[%prefix% ]]}%surname%";
 
 	// Shorten the list (with et al.) if forceshort is set
-	// and the list can actually be shorten, else if maxcitenames
+	// and the list can actually be shortened, else if maxcitenames
 	// is passed and full is not set.
 	bool shorten = forceshort && authors.size() > 1;
 	vector<docstring>::const_iterator it = authors.begin();
@@ -389,13 +590,13 @@ docstring const BibTeXInfo::getAuthorList(Buffer const * buf, docstring author,
 			retval += (i == 0) ? constructName(*it, firstnameform)
 				: constructName(*it, othernameform);
 		else
-			retval += nameParts(*it).second;
+			retval += constructName(*it, citenameform);
 	}
 	if (shorten) {
 		if (allnames)
 			retval = constructName(authors[0], firstnameform) + (buf ? buf->B_(etal) : from_ascii(etal));
 		else
-			retval = nameParts(authors[0]).second + (buf ? buf->B_(etal) : from_ascii(etal));
+			retval = constructName(authors[0], citenameform) + (buf ? buf->B_(etal) : from_ascii(etal));
 	}
 
 	return convertLaTeXCommands(retval);

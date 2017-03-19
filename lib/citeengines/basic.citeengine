@@ -33,6 +33,9 @@ End
 # CITE FORMAT
 #
 
+# Input standard format definitions for the bibliography
+Input stdciteformats.inc
+
 # The following defines how the commands are represented in the GUI
 # (inset button and citation dialog) as well as in XHTML, docbook and
 # plain text output.
@@ -53,6 +56,10 @@ CiteFormat default
 	!open [
 	!sep ,
 	!close ]
+	# Modify scheme of the first author in the bibliography
+	!firstnameform %prename% {%prefix%[[%prefix% ]]}%surname%{%suffix%[[, %suffix%]]}
+	# Modify scheme of other authors in the bibliography
+	!othernameform %prename% {%prefix%[[%prefix% ]]}%surname%{%suffix%[[, %suffix%]]}
 
 	# A link that lets us jump to the bibliography entry in LyXHTML
 	# %clean:key% will be substituted by the cite key to give a unique id

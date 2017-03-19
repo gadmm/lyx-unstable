@@ -4,6 +4,7 @@
  * This file is part of LyX, the document processor.
  * Licence details can be found in the file COPYING.
  *
+ * \author Angus Leeming
  * \author Guillaume Munch
  *
  * Full author contact details are available in file CREDITS.
@@ -15,10 +16,13 @@
 #ifndef FILEMONITOR_H
 #define FILEMONITOR_H
 
+#include "support/FileName.h"
+
 #include <memory>
 
 #include <QFileSystemWatcher>
 #include <QObject>
+#include <QPointer>
 
 #include <boost/signals2.hpp>
 
@@ -26,15 +30,15 @@
 namespace lyx {
 namespace support {
 
-class FileName;
-
 ///
 ///  FileMonitor, a file monitor based on QFileSystemWatcher
 ///
 
 class FileMonitor;
+class ActiveFileMonitor;
 class FileMonitorGuard;
 typedef std::unique_ptr<FileMonitor> FileMonitorPtr;
+typedef std::unique_ptr<ActiveFileMonitor> ActiveFileMonitorPtr;
 
 ///
 /// Watch a file:
@@ -70,24 +74,29 @@ typedef std::unique_ptr<FileMonitor> FileMonitorPtr;
 class FileSystemWatcher
 {
 public:
-	// as described above
-	static FileMonitorPtr monitor(FileName const & file_with_path);
-	// Output whether the paths tracked by qwatcher_ and the active
-	// FileMonitorGuards are in correspondence.
+	/// as described above
+	static FileMonitorPtr monitor(FileName const & filename);
+	/// same but with an ActiveFileMonitor
+	static ActiveFileMonitorPtr activeMonitor(FileName const & filename,
+	                                          int interval = 10000);
+	/// Output whether the paths tracked by qwatcher_ and the active
+	/// FileMonitorGuards are in correspondence.
 	static void debug();
 private:
 	FileSystemWatcher();
-	// A global instance is created automatically on first call to monitor
+	/// A global instance is created automatically on first call
 	static FileSystemWatcher & instance();
-	// Caches the monitor guards but allow them to be destroyed
+	///
+	std::shared_ptr<FileMonitorGuard> getGuard(FileName const & filename);
+	/// Caches the monitor guards but allow them to be destroyed
 	std::map<std::string, std::weak_ptr<FileMonitorGuard>> store_;
-	// This class is a wrapper for QFileSystemWatcher
+	/// This class is a wrapper for QFileSystemWatcher
 	std::unique_ptr<QFileSystemWatcher> const qwatcher_;
 };
 
 
-// Must be unique per path
-// Ends the watch when deleted
+/// Must be unique per path
+/// Ends the watch when deleted
 class FileMonitorGuard : public QObject
 {
 	Q_OBJECT
@@ -100,12 +109,14 @@ public:
 	~FileMonitorGuard();
 	/// absolute path being tracked
 	std::string const & filename() { return filename_; }
+	/// if false, emit fileChanged() when we notice the existence of the file
+	void setExists(bool exists) { exists_ = exists; }
+
+public Q_SLOTS:
 	/// Make sure it is being monitored, after e.g. a deletion. See
 	/// <https://bugreports.qt.io/browse/QTBUG-46483>. This is called
 	/// automatically.
-	/// \param new_file  If true, emit fileChanged if the file exists and was
-	/// successfully added.
-	void refresh(bool new_file = false);
+	void refresh();
 
 Q_SIGNALS:
 	/// Connect to this to be notified when the file changes
@@ -115,28 +126,21 @@ private Q_SLOTS:
 	/// Receive notifications from the QFileSystemWatcher
 	void notifyChange(QString const & path);
 
-	/// nonsense introduced for when QT_VERSION < 0x050000, cannot be placed
-	/// between #ifdef
-	void refreshTrue() { refresh(true); }
-	/// nonsense introduced for when QT_VERSION < 0x050000, cannot be placed
-	/// between #ifdef
-	void refreshFalse() { refresh(false); }
-
-
 private:
 	std::string const filename_;
 	QFileSystemWatcher * qwatcher_;
+	bool exists_;
 };
 
 
 class FileMonitorBlockerGuard : public QObject
 {
 	Q_OBJECT
-	FileMonitor * parent_;
+	QPointer<FileMonitor> monitor_;
 	int delay_;
 
 public:
-	FileMonitorBlockerGuard(FileMonitor * parent);
+	FileMonitorBlockerGuard(FileMonitor * monitor);
 	~FileMonitorBlockerGuard();
 	void setDelay(int delay);
 };
@@ -178,21 +182,54 @@ Q_SIGNALS:
 	/// Connect to this to be notified when the file changes
 	void fileChanged() const;
 
-private Q_SLOTS:
+protected Q_SLOTS:
 	/// Receive notifications from the FileMonitorGuard
 	void changed();
 	///
-	void connectToFileMonitorGuard();
+	void reconnectToFileMonitorGuard();
 
 private:
-	// boost signal
+	/// boost signal
 	sig fileChanged_;
-	// the unique watch for our file
+	/// the unique watch for our file
 	std::shared_ptr<FileMonitorGuard> const monitor_;
-	//
+	///
 	std::weak_ptr<FileMonitorBlockerGuard> blocker_;
 };
 
+
+/// When a more active monitoring style is needed.
+/// For instance because QFileSystemWatcher does not work for remote file
+/// systems.
+class ActiveFileMonitor : public FileMonitor
+{
+	Q_OBJECT
+public:
+	ActiveFileMonitor(std::shared_ptr<FileMonitorGuard> monitor,
+	                  FileName const & filename, int interval);
+	/// call checkModified asynchronously
+	void checkModifiedAsync();
+
+public Q_SLOTS:
+	/// Check explicitly for a modification, but not more than once every
+	/// interval ms.
+	void checkModified();
+
+private Q_SLOTS:
+	void setCooldown() { cooldown_ = true; }
+	void clearCooldown() { cooldown_ = false; }
+
+private:
+	FileName const filename_;
+	///
+	int const interval_;
+	///
+	time_t timestamp_;
+	///
+	unsigned long checksum_;
+	///
+	bool cooldown_;
+};
 
 
 } // namespace support

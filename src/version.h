@@ -33,8 +33,8 @@ extern char const * const lyx_version_info;
 #ifdef FILEFORMAT
 // Do not remove the comment below, so we get merge conflict in
 // independent branches. Instead add your own.
-#define LYX_FORMAT_LYX 534 // spitz: chapterbib support
-#define LYX_FORMAT_TEX2LYX 534
+#define LYX_FORMAT_LYX 535 // ef: support for en/em-dash as ligatures
+#define LYX_FORMAT_TEX2LYX 535
 
 #else
 // LyX 2.2 format

@@ -31,6 +31,7 @@
 #include "support/TempFile.h"
 
 #include <fstream>
+#include <iomanip>
 #include <sstream>
 
 using namespace std;
@@ -170,6 +171,8 @@ void RCS::scanMaster()
 	LYXERR(Debug::LYXVC, "LyXVC::RCS: scanMaster: " << master_);
 
 	ifstream ifs(master_.toFilesystemEncoding().c_str());
+	// limit the size of strings we read to avoid memory problems
+	ifs >> setw(65636);
 
 	string token;
 	bool read_enough = false;

@@ -6,12 +6,14 @@ What is LyX unstable?
 
 What is LyX unstable-g?
 
-	It is a personal branch on top of unstable that may contain:
-	* quick fixes of important bugs present in master/unstable when they are
-	  detected,
-	* experimental patches of mine.
+    It is a personal branch on top of unstable that may contain:
 
-    This branch is unsupported, do not report bugs against it.
+    * quick fixes of important bugs present in master/unstable when they are
+      detected,
+
+    * experimental patches of mine.
+
+    This branch is unsupported, please do not report bugs against it.
 
 What is LyX?
 

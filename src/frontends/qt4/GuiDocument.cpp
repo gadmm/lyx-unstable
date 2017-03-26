@@ -1971,6 +1971,7 @@ void GuiDocument::updateFontOptions()
 	fontModule->fontScCB->setEnabled(providesSC(font));
 	fontModule->fontOsfCB->setEnabled(providesOSF(font));
 	fontModule->dashesCB->setEnabled(tex_fonts);
+	disable_widget_if_ndef_FILEFORMAT(fontModule->dashesCB);
 	updateMathFonts(font);
 }
 

@@ -13,6 +13,7 @@ changes happened in particular if possible. A good example would be
 	  the font ligatures -- and --- when they would have been exported
 	  as the macros \textendash and \textemdash, unless instructed
 	  otherwise by a document preference.
+	  - New buffer param \use_dash_ligatures {true|false}
 
 2017-02-04 Jürgen Spitzmüller <spitz@lyx.org>
 	* Format incremented to 534: Support for chapterbib
@@ -94,7 +95,7 @@ changes happened in particular if possible. A good example would be
 2016-12-25 Jürgen Spitzmüller <spitz@lyx.org>
 	* Format incremented to 522: Implement dynamic quotation marks.
           \begin_inset Quotes x..
-          New buffer param \dynamic_quotation true|false
+          New buffer param \dynamic_quotes true|false
 
 2016-12-24 Jürgen Spitzmüller <spitz@lyx.org>
 	* Format incremented to 521:

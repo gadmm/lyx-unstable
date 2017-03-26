@@ -259,7 +259,7 @@ void GuiCitation::updateControls(BiblioInfo const & bi)
 }
 
 
-void GuiCitation::updateFormatting(CitationStyle currentStyle)
+void GuiCitation::updateFormatting(CitationStyle const & currentStyle)
 {
 	BufferParams const bp = documentBuffer().params();
 	bool const force = currentStyle.forceUpperCase;

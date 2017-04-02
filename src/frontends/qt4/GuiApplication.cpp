@@ -1857,12 +1857,16 @@ void GuiApplication::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 		// repeat command
 		string countstr;
 		string rest = split(argument, countstr, ' ');
-		istringstream is(countstr);
-		int count = 0;
-		is >> count;
-		//lyxerr << "repeat: count: " << count << " cmd: " << rest << endl;
-		for (int i = 0; i < count; ++i)
-			dispatch(lyxaction.lookupFunc(rest));
+		int const count = convert<int>(countstr);
+		// an arbitrary number to limit number of iterations
+		int const max_iter = 10000;
+		if (count > max_iter) {
+			dr.setMessage(bformat(_("Cannot iterate more than %1$d times"), max_iter));
+			dr.setError(true);
+		} else {
+			for (int i = 0; i < count; ++i)
+				dispatch(lyxaction.lookupFunc(rest));
+		}
 		break;
 	}
 

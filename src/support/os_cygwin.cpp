@@ -456,11 +456,14 @@ bool autoOpenFile(string const & filename, auto_open_mode const mode,
 		cygwin_internal(CW_SYNC_WINENV);
 	}
 
+	QString const win_path =
+		toqstr(convert_path(filename, PathStyle(windows)));
+
 	// reference: http://msdn.microsoft.com/en-us/library/bb762153.aspx
-	string const win_path = to_local8bit(from_utf8(convert_path(filename, PathStyle(windows))));
-	char const * action = (mode == VIEW) ? "open" : "edit";
-	bool success = reinterpret_cast<long>(ShellExecute(NULL, action,
-					win_path.c_str(), NULL, NULL, 1)) > 32;
+	wchar_t const * action = (mode == VIEW) ? L"open" : L"edit";
+	bool success = reinterpret_cast<long>(ShellExecuteW(NULL, action,
+			reinterpret_cast<wchar_t const *>(win_path.utf16()),
+			NULL, NULL, 1)) > 32;
 
 	if (!path.empty() && !lyxrc.texinputs_prefix.empty()) {
 		setEnv("TEXINPUTS", oldtexinputs);

@@ -198,6 +198,9 @@ InsetInclude::InsetInclude(InsetInclude const & other)
 InsetInclude::~InsetInclude()
 {
 	if (isBufferLoaded())
+		/* Coverity believes that this may throw an exception, but
+		 * actually this code path is not taken when buffer_ == 0 */
+		// coverity[exn_spec_violation]
 		buffer().invalidateBibfileCache();
 	delete label_;
 }
@@ -1019,7 +1022,7 @@ void InsetInclude::metrics(MetricsInfo & mi, Dimension & dim) const
 	} else {
 		if (!set_label_) {
 			set_label_ = true;
-			button_.update(screenLabel(), true);
+			button_.update(screenLabel(), true, false);
 		}
 		button_.metrics(mi, dim);
 	}
@@ -1201,7 +1204,7 @@ void InsetInclude::updateCommand()
 
 void InsetInclude::updateBuffer(ParIterator const & it, UpdateType utype)
 {
-	button_.update(screenLabel(), true);
+	button_.update(screenLabel(), true, false);
 
 	Buffer const * const childbuffer = getChildBuffer();
 	if (childbuffer) {

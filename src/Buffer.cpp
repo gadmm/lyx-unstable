@@ -553,7 +553,11 @@ Buffer::~Buffer()
 
 		if (!isClean()) {
 			docstring msg = _("LyX attempted to close a document that had unsaved changes!\n");
-			msg += emergencyWrite();
+			try {
+				msg += emergencyWrite();
+			} catch (...) {
+				msg += "  " + _("Save failed! Bummer. Document is lost.");
+			}
 			Alert::warning(_("Attempting to close changed document!"), msg);
 		}
 
@@ -1313,7 +1317,7 @@ Buffer::ReadStatus Buffer::convertLyXFormat(FileName const & fn,
 	command << os::python()
 		<< ' ' << quoteName(lyx2lyx.toFilesystemEncoding())
 		<< " -t " << convert<string>(LYX_FORMAT)
-		<< " -o " << quoteName(tmpfile.toFilesystemEncoding())
+		<< " -o " << quoteName(tmpfile.toSafeFilesystemEncoding())
 		<< ' ' << quoteName(fn.toSafeFilesystemEncoding());
 	string const command_str = command.str();
 

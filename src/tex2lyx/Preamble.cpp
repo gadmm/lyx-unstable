@@ -1411,11 +1411,11 @@ bool Preamble::writeLyXHeader(ostream & os, bool subdoc, string const & outfiled
 		os << "\\defskip " << h_defskip << "\n";
 	else
 		os << "\\paragraph_indentation " << h_paragraph_indentation << "\n";
+#ifdef FILEFORMAT
 	os << "\\is_math_indent " << h_is_mathindent << "\n";
 	if (!h_mathindentation.empty())
 		os << "\\math_indentation " << h_mathindentation << "\n";
 	os << "\\math_number_before " << h_math_number_before << "\n";
-#ifdef FILEFORMAT
 	os << "\\quotes_style " << h_quotes_style << "\n"
 #else
 	os << "\\quotes_language " << h_quotes_style << "\n"

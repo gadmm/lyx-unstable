@@ -736,7 +736,7 @@ GuiDocument::GuiDocument(GuiView & lv)
 		this, SLOT(change_adaptor()));
 	connect(textLayoutModule->MathIndentLengthCO, SIGNAL(activated(int)),
 		this, SLOT(change_adaptor()));
-	disable_widget_if_ndef_FILEFORMAT(textLayoutModule->MathIndentCO);
+	disable_widget_if_ndef_FILEFORMAT(textLayoutModule->MathIndentCB);
 
 	
 	textLayoutModule->MathIndentCO->addItem(qt_("Default"));
@@ -1290,6 +1290,7 @@ GuiDocument::GuiDocument(GuiView & lv)
 	mathsModule->MathNumberingPosCO->addItem(qt_("Before"));
 	mathsModule->MathNumberingPosCO->addItem(qt_("After"));
 	mathsModule->MathNumberingPosCO->setCurrentIndex(2);
+	disable_widget_if_ndef_FILEFORMAT(mathsModule->MathNumberingPosCO);
 	
 
 	// latex class

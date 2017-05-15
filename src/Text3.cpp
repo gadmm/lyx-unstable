@@ -3212,7 +3212,9 @@ bool Text::getStatus(Cursor & cur, FuncRequest const & cmd,
 	case LFUN_FONT_STATE:
 	case LFUN_FONT_UNDERLINE:
 	case LFUN_FONT_STRIKEOUT:
+#ifdef FILEFORMAT
 	case LFUN_FONT_CROSSOUT:
+#endif
 	case LFUN_FONT_UNDERUNDERLINE:
 	case LFUN_FONT_UNDERWAVE:
 	case LFUN_TEXTSTYLE_APPLY:

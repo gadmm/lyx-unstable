@@ -86,7 +86,9 @@ static QList<BarPair> barData()
 	bars << BarPair(qt_("Double underbar"),  UULINE_TOGGLE);
 	bars << BarPair(qt_("Wavy underbar"),  UWAVE_TOGGLE);
 	bars << BarPair(qt_("Strike out"),  STRIKEOUT_TOGGLE);
+#ifdef FILEFORMAT
 	bars << BarPair(qt_("Cross out"),  XOUT_TOGGLE);
+#endif
 	bars << BarPair(qt_("Noun"),      NOUN_TOGGLE);
 	bars << BarPair(qt_("Reset"),     INHERIT);
 	return bars;

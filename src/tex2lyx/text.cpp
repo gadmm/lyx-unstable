@@ -3300,13 +3300,20 @@ void parse_text(Parser & p, ostream & os, unsigned flags, bool outer,
 
 		else if (t.cs() == "uuline" || t.cs() == "uwave"
 		        || t.cs() == "emph" || t.cs() == "noun"
-		        || t.cs() == "xout") {
+#ifdef FILEFORMAT
+		        || t.cs() == "xout"
+#endif
+		         ) {
 			context.check_layout(os);
 			os << "\n\\" << t.cs() << " on\n";
 			parse_text_snippet(p, os, FLAG_ITEM, outer, context);
 			context.check_layout(os);
 			os << "\n\\" << t.cs() << " default\n";
-			if (t.cs() == "uuline" || t.cs() == "uwave" || t.cs() == "xout")
+			if (t.cs() == "uuline" || t.cs() == "uwave"
+#ifdef FILEFORMAT
+			    || t.cs() == "xout"
+#endif
+			    )
 				preamble.registerAutomaticallyLoadedPackage("ulem");
 		}
 

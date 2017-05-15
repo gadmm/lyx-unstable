@@ -776,7 +776,9 @@ ostream & operator<<(ostream & os, FontInfo const & f)
 		<< " emph " << f.emph()
 		<< " underbar " << f.underbar()
 		<< " strikeout " << f.strikeout()
+#ifdef FILEFORMAT
 		<< " xout " << f.xout()
+#endif
 		<< " uuline " << f.uuline()
 		<< " uwave " << f.uwave()
 		<< " noun " << f.noun()

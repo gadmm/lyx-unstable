@@ -187,17 +187,18 @@ const char * const known_old_language_packages[] = {"french", "frenchle",
 char const * const known_fontsizes[] = { "10pt", "11pt", "12pt", 0 };
 
 const char * const known_roman_fonts[] = { "ae", "beraserif", "bookman",
-"ccfonts", "chancery", "charter", "cmr", "fourier", "garamondx", "libertine",
-"libertine-type1", "lmodern", "mathdesign", "mathpazo", "mathptmx", "newcent",
-"tgbonum", "tgchorus", "tgpagella", "tgschola", "tgtermes", "utopia", 0};
+"ccfonts", "chancery", "charter", "cmr", "cochineal", "crimson", "fourier",
+"garamondx", "libertine", "libertine-type1", "lmodern", "mathdesign", "mathpazo",
+"mathptmx", "newcent", "NotoSerif-TLF", "tgbonum", "tgchorus", "tgpagella", "tgschola",
+"tgtermes", "utopia", 0};
 
 const char * const known_sans_fonts[] = { "avant", "berasans", "biolinum-type1",
 "cmbr", "cmss", "helvet", "iwona", "iwonac", "iwonal", "iwonalc", "kurier",
-"kurierc", "kurierl", "kurierlc", "lmss", "tgadventor", "tgheros", 0};
+"kurierc", "kurierl", "kurierlc", "lmss", "NotoSans-TLF", "tgadventor", "tgheros", 0};
 
 const char * const known_typewriter_fonts[] = { "beramono", "cmtl", "cmtt",
 "courier", "lmtt", "luximono", "fourier", "libertineMono-type1", "lmodern",
-"mathpazo", "mathptmx", "newcent", "tgcursor", "txtt", 0};
+"mathpazo", "mathptmx", "newcent", "NotoMono-TLF", "tgcursor", "txtt", 0};
 
 const char * const known_math_fonts[] = { "eulervm", "newtxmath", 0};
 
@@ -847,6 +848,36 @@ void Preamble::handle_package(Parser &p, string const & name,
 	else if (name == "mathptmx")
 		h_font_roman[0] = "times";
 
+	if (name == "crimson")
+		h_font_roman[0] = "cochineal";
+
+	if (name == "cochineal") {
+		h_font_roman[0] = "cochineal";
+		// cochineal can have several options, e.g. [proportional,osf]
+		string::size_type pos = opts.find("osf");
+		if (pos != string::npos)
+			h_font_osf = "true";
+	}
+
+	if (name == "noto") {
+		// noto can have several options
+		if (opts.empty())
+			h_font_roman[0] = "NotoSerif-TLF";
+		string::size_type pos = opts.find("rm");
+		if (pos != string::npos)
+			h_font_roman[0] = "NotoSerif-TLF";
+		pos = opts.find("sf");
+		if (pos != string::npos)
+			h_font_sans[0] = "NotoSans-TLF";
+		pos = opts.find("nott");
+		if (pos != string::npos) {
+			h_font_roman[0] = "NotoSerif-TLF";
+			h_font_sans[0] = "NotoSans-TLF";
+		}
+		// noto as typewriter is handled in handling of \ttdefault
+		// special cases are handled in handling of \rmdefault and \sfdefault
+	}
+
 	// sansserif fonts
 	if (is_known(name, known_sans_fonts)) {
 		h_font_sans[0] = name;
@@ -898,6 +929,8 @@ void Preamble::handle_package(Parser &p, string const & name,
 			h_font_math[0] = "libertine-ntxm";
 		else if (opts == "minion")
 			h_font_math[0] = "minion-ntxm";
+		else if (opts == "cochineal")
+			h_font_math[0] = "cochineal-ntxm";
 	}
 
 	if (name == "iwona")

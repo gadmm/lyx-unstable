@@ -241,6 +241,18 @@ void focusAndHighlight(QAbstractItemView * w)
 }
 
 
+void setMessageColour(list<QWidget *> highlighted, list<QWidget *> plain)
+{
+	QPalette pal = QApplication::palette();
+	QPalette newpal(pal.color(QPalette::Active, QPalette::HighlightedText),
+	                pal.color(QPalette::Active, QPalette::Highlight));
+	for (QWidget * w : highlighted)
+		w->setPalette(newpal);
+	for (QWidget * w : plain)
+		w->setPalette(pal);
+}
+
+
 /// wrapper to hide the change of method name to setSectionResizeMode
 void setSectionResizeMode(QHeaderView * view,
     int logicalIndex, QHeaderView::ResizeMode mode) {

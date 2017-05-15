@@ -215,7 +215,7 @@ const char * const known_sans_fonts[] = { "avant", "berasans", "biolinum-type1",
 const char * const known_typewriter_fonts[] = { "beramono", "cmtl", "cmtt",
 "courier", "lmtt", "luximono", "fourier", "libertineMono-type1", "lmodern",
 "mathpazo", "mathptmx", "newcent", "tgcursor", "txtt", 0};
-#fi
+#endif
 
 const char * const known_math_fonts[] = { "eulervm", "newtxmath", 0};
 

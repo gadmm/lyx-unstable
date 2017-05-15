@@ -355,12 +355,8 @@ case "${QtVersion}" in
 	QtLibraries="QtSvg QtXml QtPrintSupport QtWidgets QtGui QtNetwork QtConcurrent QtCore"
 	QtFrameworkVersion="5"
 	;;
-5.2.*|5.3.*|5.4.*)
-	QtLibraries="QtSvg QtXml QtPrintSupport QtMacExtras QtWidgets QtGui QtNetwork QtConcurrent QtCore"
-	QtFrameworkVersion="5"
-	;;
 5*)
-	QtLibraries="QtSvg QtXml QtPrintSupport QtDBus QtMacExtras QtWidgets QtGui QtNetwork QtConcurrent QtCore"
+	QtLibraries="QtSvg QtXml QtPrintSupport QtMacExtras QtWidgets QtGui QtNetwork QtConcurrent QtCore"
 	QtFrameworkVersion="5"
 	;;
 *)
@@ -771,6 +767,7 @@ EOF
 		test -d "${condir}/${fwdir}" || (
 			echo Copy framework "${source}/lib/"$(basename "${fwdir}")
 			cp -pR "${source}/lib/"$(basename "${fwdir}") "${condir}/${fwdir}"
+			rm -f "${condir}/${fwdir}/${version}${libnm}"_debug
 			installname -id "@executable_path/../${fwdir}/${version}${libnm}" "${condir}/${fwdir}/${version}${libnm}"
 			find "${condir}/PlugIns" "${condir}/"$(dirname "${fwdir}") -name Headers -prune -o -type f -print | while read filename ; do
 				if [ "${filename}" != "${target}" ]; then
@@ -946,28 +943,27 @@ make_dmg() {
 	test -d /Volumes/"${LyxBase}" && rmdir /Volumes/"${LyxBase}"
 
 	# Mount the disk image
-	hdiutil attach "${DMGNAME}.sparseimage"
+	DEVICES=$(hdiutil attach "${DMGNAME}.sparseimage" | cut -f 1)
 
 	# Obtain device information
-	DEVS=$(hdiutil attach "${DMGNAME}.sparseimage" | cut -f 1)
-	DEV=$(echo $DEVS | cut -f 1 -d ' ')
-	VOLUME=$(mount |grep ${DEV} | cut -f 3 -d ' ')
+	DEVICE=$(echo $DEVICES | cut -f 1 -d ' ')
+	VOLUME=$(mount |grep ${DEVICE} | cut -f 3 -d ' ')
 
 	# copy in the application bundle
-	cp -Rp "${LyxAppDir}.app" "${VOLUME}/${LyxName}.app"
+	ditto --hfsCompression "${LyxAppDir}.app" "${VOLUME}/${LyxName}.app"
 
 	# copy in background image
 	mkdir -p "${VOLUME}/Pictures"
-	cp "${DmgBackground}" "${VOLUME}/Pictures/background.png"
+	ditto --hfsCompression "${DmgBackground}" "${VOLUME}/Pictures/background.png"
 	# symlink applications
 	ln -s /Applications/ "${VOLUME}"/Applications
-	test -d "${DocumentationDir}" && cp -r "${DocumentationDir}" "${VOLUME}"
+	test -d "${DocumentationDir}" && ditto --hfsCompression "${DocumentationDir}" "${VOLUME}"
 	set_bundle_display_options "${VOLUME}" ${BG_W} ${BG_H}
 	${XCODE_DEVELOPER}/Tools/SetFile -a C "${VOLUME}"
 	mv "${VOLUME}/Pictures" "${VOLUME}/.Pictures"
 
 	# Unmount the disk image
-	hdiutil detach ${DEV}
+	hdiutil detach ${DEVICE}
 
 	# Convert the disk image to read-only
 	hdiutil convert "${DMGNAME}.sparseimage" -format UDBZ -o "${DMGNAME}.dmg"

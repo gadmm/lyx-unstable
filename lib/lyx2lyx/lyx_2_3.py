@@ -1971,22 +1971,36 @@ def revert_xout(document):
 
 
 def convert_mathindent(document):
-    " add the \\is_formula_indent tag "
+    " add the \\is_math_indent tag "
+    # check if the document uses the class option "fleqn"
     k = find_token(document.header, "\\quotes_style", 0)
-    document.header.insert(k, "\\is_formula_indent 0")
+    regexp = re.compile(r'^.*fleqn.*')
+    i = find_re(document.header, regexp, 0)
+    if i != -1:
+        document.header.insert(k, "\\is_math_indent 1")
+        # delete the found option
+        document.header[i] = document.header[i].replace(",fleqn", "")
+        document.header[i] = document.header[i].replace(", fleqn", "")
+        document.header[i] = document.header[i].replace("fleqn,", "")
+        j = find_re(document.header, regexp, 0)
+        if i == j:
+            # then we have fleqn as the only option 
+            del document.header[i]
+    else:
+        document.header.insert(k, "\\is_math_indent 0")
 
 
 def revert_mathindent(document):
     " Define mathindent if set in the document "
     # first output the length
-    regexp = re.compile(r'(\\formula_indentation)')
+    regexp = re.compile(r'(\\math_indentation)')
     i = find_re(document.header, regexp, 0)
     if i != -1:
-        value = get_value(document.header, "\\formula_indentation" , i).split()[0]
+        value = get_value(document.header, "\\math_indentation" , i).split()[0]
         add_to_preamble(document, ["\\setlength{\\mathindent}{" + value + '}'])
         del document.header[i]
     # now set the document class option
-    regexp = re.compile(r'(\\is_formula_indent)')
+    regexp = re.compile(r'(\\is_math_indent)')
     i = find_re(document.header, regexp, 0)
     value = "1"
     if i == -1:
@@ -2063,6 +2077,51 @@ def revert_baselineskip(document):
     i = i + 1
 
 
+def revert_rotfloat(document):
+  " Revert placement options for rotated floats "
+  i = 0
+  j = 0
+  k = 0
+  while True:
+    i = find_token(document.body, "sideways true", i)
+    if i != -1:
+      regexp = re.compile(r'^.*placement.*$')
+      j = find_re(document.body, regexp, i-2)
+      if j == -1:
+          return
+      if j != i-2:
+          i = i + 1
+          continue
+    else:
+      return
+    # we found a sideways float with placement options
+    # at first store the placement
+    beg = document.body[i-2].rfind(" ");
+    placement = document.body[i-2][beg+1:]
+    # check if the option'H' is used
+    if placement.find("H") != -1:
+      add_to_preamble(document, ["\\usepackage{float}"])  
+    # now check if it is a starred type
+    if document.body[i-1].find("wide true") != -1:
+      star = '*'
+    else:
+      star = ''
+    # store the float type
+    beg = document.body[i-3].rfind(" ");
+    fType = document.body[i-3][beg+1:]
+    # now output TeX code
+    endInset = find_end_of_inset(document.body, i-3)
+    if endInset == -1:
+      document.warning("Malformed LyX document: Missing '\\end_inset' of Float inset.")
+      return
+    else:
+      document.body[endInset-2: endInset+1] = put_cmd_in_ert("\\end{sideways" + fType + star + '}')
+      document.body[i-3: i+2] = put_cmd_in_ert("\\begin{sideways" + fType + star + "}[" + placement + ']')
+      add_to_preamble(document, ["\\usepackage{rotfloat}"])  
+    
+    i = i + 1
+
+
 ##
 # Conversion hub
 #
@@ -2099,10 +2158,12 @@ convert = [
            [536, []],
            [537, []],
            [538, [convert_mathindent]],
-           [539, []]
+           [539, []],
+           [540, []]
           ]
 
 revert =  [
+           [539, [revert_rotfloat]],
            [538, [revert_baselineskip]],
            [537, [revert_mathindent]],
            [536, [revert_xout]],

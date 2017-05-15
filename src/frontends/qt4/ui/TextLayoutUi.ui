@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>421</width>
-    <height>327</height>
+    <width>470</width>
+    <height>380</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string/>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="0" colspan="4">
     <widget class="QGroupBox" name="separateGB">
      <property name="title">
@@ -22,7 +22,7 @@
      <property name="flat">
       <bool>true</bool>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
+     <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
        <widget class="QRadioButton" name="indentRB">
         <property name="minimumSize">
@@ -59,8 +59,8 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>135</width>
-          <height>26</height>
+          <width>133</width>
+          <height>23</height>
          </size>
         </property>
        </spacer>
@@ -103,6 +103,12 @@
       </item>
       <item row="2" column="0">
        <widget class="QRadioButton" name="skipRB">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
           <width>91</width>
@@ -270,9 +276,9 @@
     </widget>
    </item>
    <item row="4" column="0">
-    <widget class="QCheckBox" name="FormulaIndentCB">
+    <widget class="QCheckBox" name="MathIndentCB">
      <property name="toolTip">
-      <string>Justify text in the LyX editor (this does not affect whether the text is justified in the output)</string>
+      <string>Indent displayed formulas instead of centering</string>
      </property>
      <property name="text">
       <string>Indent &amp;Formulas</string>
@@ -280,17 +286,43 @@
     </widget>
    </item>
    <item row="4" column="1">
-    <widget class="QLineEdit" name="FormulaIndentLE">
+    <widget class="QComboBox" name="MathIndentCO">
      <property name="enabled">
       <bool>false</bool>
      </property>
-     <property name="text">
-      <string>30</string>
+     <property name="toolTip">
+      <string>Size of the indentation</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="2">
-    <widget class="lyx::frontend::LengthCombo" name="FormulaIndentCO">
+   <item row="4" column="2" colspan="2">
+    <spacer name="horizontalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>203</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLineEdit" name="MathIndentLE">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2">
+    <widget class="lyx::frontend::LengthCombo" name="MathIndentLengthCO">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -299,7 +331,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="3">
+   <item row="5" column="3">
     <spacer name="horizontalSpacer_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -312,7 +344,7 @@
      </property>
     </spacer>
    </item>
-   <item row="5" column="0" colspan="4">
+   <item row="6" column="0" colspan="4">
     <spacer>
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -355,25 +387,9 @@
  <resources/>
  <connections>
   <connection>
-   <sender>FormulaIndentCB</sender>
+   <sender>MathIndentCB</sender>
    <signal>toggled(bool)</signal>
-   <receiver>FormulaIndentCO</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>59</x>
-     <y>274</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>289</x>
-     <y>273</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>FormulaIndentCB</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>FormulaIndentLE</receiver>
+   <receiver>MathIndentCO</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -382,7 +398,7 @@
     </hint>
     <hint type="destinationlabel">
      <x>182</x>
-     <y>273</y>
+     <y>270</y>
     </hint>
    </hints>
   </connection>

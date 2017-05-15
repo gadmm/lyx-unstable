@@ -1468,13 +1468,21 @@ void parse_environment(Parser & p, ostream & os, bool outer,
 	}
 
 	else if (unstarred_name == "sidewaysfigure"
-		|| unstarred_name == "sidewaystable") {
+		|| unstarred_name == "sidewaystable"
+		|| unstarred_name == "sidewaysalgorithm") {
+		string const opt = p.hasOpt() ? p.getArg('[', ']') : string();
 		eat_whitespace(p, os, parent_context, false);
 		parent_context.check_layout(os);
 		if (unstarred_name == "sidewaysfigure")
 			begin_inset(os, "Float figure\n");
-		else
+		else if (unstarred_name == "sidewaystable")
 			begin_inset(os, "Float table\n");
+		else if (unstarred_name == "sidewaysalgorithm")
+			begin_inset(os, "Float algorithm\n");
+		if (!opt.empty())
+			os << "placement " << opt << '\n';
+		if (contains(opt, "H"))
+			preamble.registerAutomaticallyLoadedPackage("float");
 		os << "wide " << convert<string>(is_starred)
 		   << "\nsideways true"
 		   << "\nstatus open\n\n";

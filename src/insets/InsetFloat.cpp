@@ -129,7 +129,7 @@ void InsetFloat::setCaptionType(std::string const & type)
 	params_.type = captionType();
 	// check if the float type exists
 	if (buffer().params().documentClass().floats().typeExist(params_.type))
-		setLabel(_("float: ") + floatName(params_.type));
+		setNewLabel();
 	else
 		setLabel(bformat(_("ERROR: Unknown float type: %1$s"), from_utf8(params_.type)));
 }
@@ -389,8 +389,10 @@ void InsetFloat::latex(otexstream & os, OutputParams const & runparams_in) const
 	if (runparams.lastid != -1)
 		os.texrow().start(runparams.lastid, runparams.lastpos);
 	// We only output placement if different from the def_placement.
-	// sidewaysfloats always use their own page
-	if (!placement.empty() && !params_.sideways)
+	// sidewaysfloats always use their own page,
+	// therefore don't output the p option that is always set
+	if (!placement.empty()
+	    && (!params_.sideways || (params_.sideways && from_ascii(placement) != "p")))
 		os << '[' << from_ascii(placement) << ']';
 	os << '\n';
 

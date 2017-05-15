@@ -578,7 +578,7 @@ string remove_braces(string const & value)
 
 Preamble::Preamble() : one_language(true), explicit_babel(false),
 	title_layout_found(false), index_number(0), h_font_cjk_set(false),
-	h_use_microtype(false)
+	h_use_microtype("false")
 {
 	//h_backgroundcolor;
 	//h_boxbgcolor;
@@ -588,6 +588,7 @@ Preamble::Preamble() : one_language(true), explicit_babel(false),
 	h_cite_engine_type        = "default";
 	h_color                   = "#008000";
 	h_defskip                 = "medskip";
+	h_dynamic_quotes          = false;
 	//h_float_placement;
 	//h_fontcolor;
 	h_fontencoding            = "default";
@@ -608,7 +609,7 @@ Preamble::Preamble() : one_language(true), explicit_babel(false),
 	h_font_tt_scale[0]        = "100";
 	h_font_tt_scale[1]        = "100";
 	//h_font_cjk
-	h_is_formulaindent        = "0";
+	h_is_mathindent           = "0";
 	h_graphics                = "default";
 	h_default_output_format   = "default";
 	h_html_be_strict          = "false";
@@ -661,11 +662,12 @@ Preamble::Preamble() : one_language(true), explicit_babel(false),
 	h_tocdepth                = "3";
 	h_tracking_changes        = "false";
 	h_use_bibtopic            = "false";
+	h_use_dash_ligatures      = "true";
 	h_use_indices             = "false";
 	h_use_geometry            = "false";
 	h_use_default_options     = "false";
 	h_use_hyperref            = "false";
-	h_use_microtype	          = false;
+	h_use_microtype	          = "false";
 	h_use_refstyle            = false;
 	h_use_packages["amsmath"]    = "1";
 	h_use_packages["amssymb"]    = "0";
@@ -1174,7 +1176,7 @@ void Preamble::handle_package(Parser &p, string const & name,
 	else if (name == "microtype") {
 		//we internally support only microtype without params
 		if (options.empty())
-			h_use_microtype = true;
+			h_use_microtype = "true";
 		else
 			h_preamble << "\\usepackage[" << opts << "]{microtype}";
 	}
@@ -1329,6 +1331,7 @@ bool Preamble::writeLyXHeader(ostream & os, bool subdoc, string const & outfiled
 	if (!h_font_cjk.empty())
 		os << "\\font_cjk " << h_font_cjk << '\n';
 	os << "\\use_microtype " << h_use_microtype << '\n'
+	   << "\\use_dash_ligatures " << h_use_dash_ligatures << '\n'
 	   << "\\graphics " << h_graphics << '\n'
 	   << "\\default_output_format " << h_default_output_format << "\n"
 	   << "\\output_sync " << h_output_sync << "\n";
@@ -1407,13 +1410,15 @@ bool Preamble::writeLyXHeader(ostream & os, bool subdoc, string const & outfiled
 		os << "\\defskip " << h_defskip << "\n";
 	else
 		os << "\\paragraph_indentation " << h_paragraph_indentation << "\n";
-	os << "\\is_formula_indent " << h_is_formulaindent << "\n"
-	   << "\\formula_indentation " << h_formulaindentation << "\n"
-#ifdef FILEFORMAT
-	   << "\\quotes_style " << h_quotes_style << "\n"
+	os << "\\is_math_indent " << h_is_mathindent << "\n";
+	if (!h_mathindentation.empty())
+		os << "\\math_indentation " << h_mathindentation << "\n";
+#ifdef FILEFORMAT	
+	os << "\\quotes_style " << h_quotes_style << "\n"
 #else
-	   << "\\quotes_language " << h_quotes_style << "\n"
+	os << "\\quotes_language " << h_quotes_style << "\n"
 #endif
+	   << "\\dynamic_quotes " << h_dynamic_quotes << "\n"
 	   << "\\papercolumns " << h_papercolumns << "\n"
 	   << "\\papersides " << h_papersides << "\n"
 	   << "\\paperpagestyle " << h_paperpagestyle << "\n";
@@ -1800,10 +1805,10 @@ void Preamble::parse(Parser & p, string const & forceclass,
 			handle_opt(opts, known_languages, h_language);
 			delete_opt(opts, known_languages);
 
-			// formula indentation
+			// math indentation
 			if ((it = find(opts.begin(), opts.end(), "fleqn"))
 				 != opts.end()) {
-				h_is_formulaindent = "1";
+				h_is_mathindent = "1";
 				opts.erase(it);
 			}
 			// paper orientation
@@ -1964,7 +1969,7 @@ void Preamble::parse(Parser & p, string const & forceclass,
 				else
 					h_defskip = translate_len(content);
 			} else if (name == "\\mathindent") {
-				h_formulaindentation = translate_len(content);
+				h_mathindentation = translate_len(content);
 			} else
 				h_preamble << "\\setlength{" << name << "}{" << content << "}";
 		}

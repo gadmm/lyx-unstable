@@ -1277,7 +1277,7 @@ GuiDocument::GuiDocument(GuiView & lv)
 		this, SLOT(change_adaptor()));
 	connect(mathsModule->MathIndentLengthCO, SIGNAL(activated(int)),
 		this, SLOT(change_adaptor()));
-
+	disable_widget_if_ndef_FILEFORMAT(mathsModule->MathIndentCB);
 	
 	mathsModule->MathIndentCO->addItem(qt_("Default"));
 	mathsModule->MathIndentCO->addItem(qt_("Custom"));

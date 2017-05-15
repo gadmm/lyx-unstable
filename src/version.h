@@ -33,8 +33,8 @@ extern char const * const lyx_version_info;
 #ifdef FILEFORMAT
 // Do not remove the comment below, so we get merge conflict in
 // independent branches. Instead add your own.
-#define LYX_FORMAT_LYX 537 // uwestoehr: support for \\xout
-#define LYX_FORMAT_TEX2LYX 537
+#define LYX_FORMAT_LYX 538 // uwestoehr: support for formula indentation
+#define LYX_FORMAT_TEX2LYX 538
 
 #else
 // LyX 2.2 format

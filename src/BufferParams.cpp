@@ -348,6 +348,7 @@ public:
 	 */
 	HSpace indentation;
 	VSpace defskip;
+	HSpace formula_indentation;
 	PDFOptions pdfoptions;
 	LayoutFileIndex baseClass_;
 	FormatList exportableFormatList;
@@ -389,6 +390,8 @@ BufferParams::BufferParams()
 	cite_engine_type_ = ENGINE_TYPE_DEFAULT;
 	makeDocumentClass();
 	paragraph_separation = ParagraphIndentSeparation;
+	is_formula_indent = false;
+	formula_indentation = string();
 	quotes_style = InsetQuotesParams::EnglishQuotes;
 	dynamic_quotes = false;
 	fontsize = "default";
@@ -636,6 +639,18 @@ PDFOptions const & BufferParams::pdfoptions() const
 }
 
 
+HSpace const & BufferParams::getFormulaIndentation() const
+{
+	return pimpl_->formula_indentation;
+}
+
+
+void BufferParams::setFormulaIndentation(HSpace const & indent)
+{
+	pimpl_->formula_indentation = indent;
+}
+
+
 HSpace const & BufferParams::getIndentation() const
 {
 	return pimpl_->indentation;
@@ -842,6 +857,12 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 		if (pimpl_->defskip.kind() == VSpace::DEFSKIP)
 			// that is invalid
 			pimpl_->defskip = VSpace(VSpace::MEDSKIP);
+	} else if (token == "\\is_formula_indent") {
+		lex >> is_formula_indent;
+	} else if (token == "\\formula_indentation") {
+		lex.next();
+		string formula_indentation = lex.getString();
+		pimpl_->formula_indentation = HSpace(formula_indentation);
 #ifdef FILEFORMAT
 	} else if (token == "\\quotes_style") {
 #else
@@ -1356,6 +1377,9 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 		os << "\n\\paragraph_indentation " << getIndentation().asLyXCommand();
 	else
 		os << "\n\\defskip " << getDefSkip().asLyXCommand();
+	os << "\n\\is_formula_indent " << is_formula_indent;
+	if (is_formula_indent)
+		os << "\n\\formula_indentation " << getFormulaIndentation().asLyXCommand();
 #ifdef FILEFORMAT
 	os << "\n\\quotes_style "
 #else
@@ -1642,6 +1666,9 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	if (!use_geometry
 	    && orientation == ORIENTATION_LANDSCAPE)
 		clsoptions << "landscape,";
+
+	if (is_formula_indent)
+		clsoptions << "fleqn,";
 
 	// language should be a parameter to \documentclass
 	if (language->babel() == "hebrew"
@@ -1963,6 +1990,16 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 		if (getIndentation().asLyXCommand() != "default") {
 			os << "\\setlength{\\parindent}{"
 			   << from_utf8(getIndentation().asLatexCommand())
+			   << "}\n";
+		}
+	}
+
+	if (is_formula_indent) {
+		// when formula indentation
+		// only output something when it is not the default of 30pt
+		if (getFormulaIndentation().asLyXCommand() != "30pt") {
+			os << "\\setlength{\\mathindent}{"
+			   << from_utf8(getFormulaIndentation().asLatexCommand())
 			   << "}\n";
 		}
 	}

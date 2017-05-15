@@ -1,5 +1,5 @@
-#LyX 2.2 created this file. For more info see http://www.lyx.org/
-\lyxformat 508
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 541
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -41,6 +41,8 @@
 \font_osf false
 \font_sf_scale 100 100
 \font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
 \graphics default
 \default_output_format pdf4
 \output_sync 0
@@ -92,7 +94,8 @@
 \tocdepth 3
 \paragraph_separation indent
 \paragraph_indentation default
-\quotes_language french
+\is_math_indent 0
+\quotes_style swiss
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
@@ -106,7 +109,10 @@
 \begin_body
 
 \begin_layout Title
-مدخل إلى ليك LYX
+مدخل إلى ليك 
+\lang english
+\SpecialChar LyX
+
 \end_layout
 
 \begin_layout Author
@@ -121,6 +127,7 @@ status collapsed
 LatexCommand href
 target "lyx-docs@lists.lyx.org"
 type "mailto:"
+literal "false"
 
 \end_inset
 
@@ -142,7 +149,62 @@ LatexCommand tableofcontents
 \end_layout
 
 \begin_layout Section
-فلسفة ليك LYX
+فلسفة ليك 
+\lang english
+\SpecialChar LyX
+
+\lang arabic_arabi
+
+\begin_inset Argument 1
+status collapsed
+
+\begin_layout Plain Layout
+فلسفة ليك 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+texorpdfstring{
+\end_layout
+
+\end_inset
+
+
+\lang english
+\SpecialChar LyX
+
+\lang arabic_arabi
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}{
+\end_layout
+
+\end_inset
+
+LyX
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ 
 \end_layout
 
 \begin_layout Subsection
@@ -193,7 +255,11 @@ LatexCommand tableofcontents
  أنها لا تزال تستخدم علامات الجدولة لإضافة مسافة بيضاء.
  ما زلت تشعر بالقلق بشأن المكان الذي ستظهر فيه بعض الاشياء في الصفحة.
  تأكيد النص يعني تغيير الخط، على غرار تغيير عجلة الآلة الكاتبة.
- هذه هي الفلسفة الكامنة وراء معالج النصوص WYSIWYG: "ما تراه هو ما تحصل عليه".
+ هذه هي الفلسفة الكامنة وراء معالج النصوص 
+\lang english
+WYSIWYG
+\lang arabic_arabi
+: "ما تراه هو ما تحصل عليه".
  للأسف، هذا النموذج غالبا ما يؤدي إلى "ما تراه هو كل ما تحصل عليه".
 \end_layout
 
@@ -367,7 +433,9 @@ status collapsed
 \end_layout
 
 \begin_layout Itemize
-التنقل بمفتاح تاب Tab
+التنقل بمفتاح تاب 
+\lang english
+Tab
 \end_layout
 
 \begin_layout Itemize
@@ -380,7 +448,11 @@ status collapsed
  المسافات البيضاء هي أيضا غير مهمة.
  إن ليك يضيفها عندما يكون ذلك ضروريا، وهذا يتوقف على السياق.
  كما لا يمكن ترك سطرين فارغين في بداية النص لأن ذلك سيكون مزعج، ولكن اجعل
- الامر منطقي أكثر بالتفكير بطريقة WYSIWYM.
+ الامر منطقي أكثر بالتفكير بطريقة 
+\lang english
+WYSIWYM
+\lang arabic_arabi
+.
 \end_layout
 
 \begin_layout Standard
@@ -460,18 +532,85 @@ status collapsed
 \begin_layout Standard
 من الواجب الاعتراف، أن العديد من معالجات النصوص الحديثة تستطيع التعامل مع
  الرموز الرياضية، والجداول، وعلامات الترقيم، وكثير انتقلوا نحو تعريف وأسلوب
- ومفهوم WYSIWYM.
+ ومفهوم 
+\lang english
+WYSIWYM
+\lang arabic_arabi
+.
  ومع ذلك، لقد أصبحت في الآونة الأخيرة فقط قادرة على القيام بذلك، في حين
  تم بناء ليك على نظام إعداد الوثائق لتيك.
- الذي يعمل على هذه المفهوم منذ عام 1985.
+ الذي يعمل على هذه المفهوم منذ عام 
+\lang english
+1985
+\lang arabic_arabi
+.
 \end_layout
 
 \begin_layout Subsection
-ما هي لتيك LATEX
+ما هي لتيك 
+\lang english
+\SpecialChar LaTeX
+
+\lang arabic_arabi
+
+\begin_inset Argument 1
+status collapsed
+
+\begin_layout Plain Layout
+ما هي لتيك 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+texorpdfstring{
+\end_layout
+
+\end_inset
+
+
+\lang english
+\SpecialChar LaTeX
+
+\lang arabic_arabi
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}{
+\end_layout
+
+\end_inset
+
+LaTeX
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-لتيك هو نظام إعداد وثائق صممه ليزلي لامبورت في عام 1985
+لتيك هو نظام إعداد وثائق صممه ليزلي لامبورت في عام 
+\lang english
+1985
+\lang arabic_arabi
+
 \begin_inset Foot
 status collapsed
 
@@ -483,15 +622,36 @@ status collapsed
 \end_inset
 
 .
- وقد بني على لغة تنضيد تدعلى تكس tex، التي أنشأتها دونالد نث في عام 1984.
- تكس تأخذ سلسلة من أوامر التنضيد، مكتوبة كبرنامج النصي في ملف ASCII، ثم
- تنفذ.
+ وقد بني على لغة تنضيد تدعلى تكس 
+\lang english
+tex
+\lang arabic_arabi
+، التي أنشأتها دونالد نث في عام 
+\lang english
+1984
+\lang arabic_arabi
+.
+ تكس تأخذ سلسلة من أوامر التنضيد، مكتوبة كبرنامج النصي في ملف 
+\lang english
+ASCII
+\lang arabic_arabi
+، ثم تنفذ.
  كثير من الحيل الطباعية التي كتبها كانوث تم نمذجتها إلى خوارزميات للحاسوب
  ودمجها تكس، وبالتالي حصلنا على مظهر طباعي ممتاز.
- وما ينتج من تكس هو شكل وثيقة محمولة بصيغة PDF أو ما يسمى بـ "الاداة الحرة"
- بتنسيق DVI.
- وغالبا ما يستخدم تنسيق DVI للمعاينات ويمكن بعد ذلك أن يتم تحويله إلى أشكال
- أخرى مثل بوستسكريبت.
+ وما ينتج من تكس هو شكل وثيقة محمولة بصيغة 
+\lang english
+PDF
+\lang arabic_arabi
+ أو ما يسمى بـ "الاداة الحرة" بتنسيق 
+\lang english
+DVI
+\lang arabic_arabi
+.
+ وغالبا ما يستخدم تنسيق 
+\lang english
+DVI
+\lang arabic_arabi
+ للمعاينات ويمكن بعد ذلك أن يتم تحويله إلى أشكال أخرى مثل بوستسكريبت.
 \end_layout
 
 \begin_layout Standard
@@ -511,8 +671,21 @@ status collapsed
  مخصصة لتكس، منها للشرائح أو ومقالات مجلات الرياضيات ..
  الخ.
  البعض يستخدم أكواد تكس لفعل ذلك، لكن البعض الآخر بدأ باستخدام لتيك.
- وفي محاولة لتوحيد هذه الفوضى، قام فريق من LaTeX-nicians بالعمل على LaTeX2،
- الإصدار الحالي من لتيك، صدر في نهاية عام 1980م.
+ وفي محاولة لتوحيد هذه الفوضى، قام فريق من 
+\lang english
+\SpecialChar LaTeX
+-nicians
+\lang arabic_arabi
+ بالعمل على 
+\lang english
+\SpecialChar LaTeX2e
+
+\lang arabic_arabi
+، الإصدار الحالي من لتيك، صدر في نهاية عام 
+\lang english
+1980
+\lang arabic_arabi
+م.
  هذا الإصدار الجديد من لتيك وفر واجهة أسهل لأوامر إنشاء ماكرو تكس، وساعد
  في استخدام خطوط جديدة، وهلم جرا.
  في الواقع، لتيك هو تماما لغة واسعة في حد ذاتها! ولهذا اصبح المستخدمين في
@@ -551,21 +724,60 @@ status collapsed
 \end_layout
 
 \begin_layout Description
-classes نوع: مواصفات لأنواع من المستندات تستخدم في لتيك.
+\begin_inset Phantom HPhantom
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\lang english
+classes
+\lang arabic_arabi
+ نوع: مواصفات لأنواع من المستندات تستخدم في لتيك.
 \end_layout
 
 \begin_layout Description
-styles الاسلوب: مواصفات للسلوك الافتراضي لعناصر مختلفة في لتيك.
+\begin_inset Phantom HPhantom
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\lang english
+styles
+\lang arabic_arabi
+ الاسلوب: مواصفات للسلوك الافتراضي لعناصر مختلفة في لتيك.
 \end_layout
 
 \begin_layout Description
+\begin_inset Phantom HPhantom
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\lang english
 \SpecialChar LyX
+
+\lang arabic_arabi
  ليك: برنامج بصري, لتحرير النصوص يعتمد على مبدأ 
-\begin_inset Quotes fld
+\begin_inset Quotes cld
 \end_inset
 
 ما تراه هو ما تريده
-\begin_inset Quotes frd
+\begin_inset Quotes crd
 \end_inset
 
  ويستخدم لغة لتيك للتنضيد.
@@ -619,6 +831,7 @@ reference "sec:مساهمة"
 LatexCommand href
 target "lyx-docs@lists.lyx.org"
 type "mailto:"
+literal "false"
 
 \end_inset
 
@@ -629,6 +842,7 @@ type "mailto:"
 LatexCommand href
 target "lyx-users@lists.lyx.org"
 type "mailto:"
+literal "false"
 
 \end_inset
 
@@ -674,6 +888,7 @@ type "mailto:"
  يمكنك الذهاب إلى القسم المشار إليه بواسطة النقر بزر الماوس الأيمن على المربع
  أو عن طريق النقر على زر 
 \family sans
+\lang english
 Go
 \begin_inset space ~
 \end_inset
@@ -684,16 +899,20 @@ to
 
 Label
 \family default
- في النافذة المفتوحة.
+ 
+\lang arabic_arabi
+في النافذة المفتوحة.
  والعودة إلى المكان الذي جئت منه هو بنفس السهولة.
  انقر على 
 \family sans
+\lang english
 Go
 \begin_inset space ~
 \end_inset
 
 Back
 \family default
+\lang arabic_arabi
  للعودة إلى الموقع السابق.
 \end_layout
 
@@ -706,39 +925,50 @@ Back
 \begin_layout Itemize
 
 \emph on
-Emphasized اسلوب يستخدم بالعموم للتأكيد، والبراهين العامة، عناوين الكتب
- وأسماء أقسام الكتيبات، وملاحظات المؤلفين.
+\lang english
+Emphasized
+\lang arabic_arabi
+ اسلوب يستخدم بالعموم للتأكيد، والبراهين العامة، عناوين الكتب وأسماء أقسام
+ الكتيبات، وملاحظات المؤلفين.
 \end_layout
 
 \begin_layout Itemize
 
 \family typewriter
+\lang english
 Typewriter
 \family default
+\lang arabic_arabi
  يستخدم للبرنامج وأسماء الملفات, وأكواد ليك والدوال.
 \end_layout
 
 \begin_layout Itemize
 
 \family sans
+\lang english
 Sans Serif
 \family default
+\lang arabic_arabi
  يستخدم للقوائم، الأزرار، وأسماء نوافذ البرنامج، وأسماء مفاتيح لوحة المفاتيح.
 \end_layout
 
 \begin_layout Itemize
 
 \noun on
+\lang english
 Noun Style
 \noun default
+\lang arabic_arabi
  يستخدم لأسماء الناس.
 \end_layout
 
 \begin_layout Itemize
 
 \series bold
+\lang english
 Bold
 \series default
+\lang arabic_arabi
  يستخدم لأكواد لتيك
 \end_layout
 
@@ -748,6 +978,8 @@ Bold
 \end_layout
 
 \begin_layout Itemize
+
+\lang english
 \begin_inset Quotes eld
 \end_inset
 
@@ -759,14 +991,20 @@ Ctrl+
 \begin_inset Quotes erd
 \end_inset
 
+
+\lang arabic_arabi
  يدل على مفتاح التحكم 
 \family sans
+\lang english
 Control
 \family default
+\lang arabic_arabi
  .
 \end_layout
 
 \begin_layout Itemize
+
+\lang english
 \begin_inset Quotes eld
 \end_inset
 
@@ -778,14 +1016,20 @@ Shift+
 \begin_inset Quotes erd
 \end_inset
 
+
+\lang arabic_arabi
  يدل على مفتاح التحويل 
 \family sans
+\lang english
 Shift
 \family default
+\lang arabic_arabi
  .
 \end_layout
 
 \begin_layout Itemize
+
+\lang english
 \begin_inset Quotes eld
 \end_inset
 
@@ -797,6 +1041,8 @@ Alt+
 \begin_inset Quotes erd
 \end_inset
 
+
+\lang arabic_arabi
  يدل على مفتاح التبديل 
 \family sans
 Alt
@@ -809,6 +1055,8 @@ Meta
 \end_layout
 
 \begin_layout Itemize
+
+\lang english
 \begin_inset Quotes eld
 \end_inset
 
@@ -833,10 +1081,14 @@ F12
 \begin_inset Quotes erd
 \end_inset
 
+
+\lang arabic_arabi
  هي مفاتيح الدوال.
 \end_layout
 
 \begin_layout Itemize
+
+\lang english
 \begin_inset Quotes eld
 \end_inset
 
@@ -848,10 +1100,14 @@ Esc
 \begin_inset Quotes erd
 \end_inset
 
+
+\lang arabic_arabi
  هو مفتاح الخروج.
 \end_layout
 
 \begin_layout Itemize
+
+\lang english
 \begin_inset Quotes eld
 \end_inset
 
@@ -899,12 +1155,15 @@ Down
 \begin_inset Quotes erd
 \end_inset
 
+
+\lang arabic_arabi
 : لا تحتاج إلى شرح.
 \end_layout
 
 \begin_layout Itemize
 
 \family sans
+\lang english
 \begin_inset Quotes eld
 \end_inset
 
@@ -974,8 +1233,12 @@ PageDown
 \begin_inset Quotes erd
 \end_inset
 
+
+\lang arabic_arabi
 : هناك 6 مفاتيح تظهر على ازرار لوحة المفاتيح.
  
+\lang english
+
 \begin_inset Quotes eld
 \end_inset
 
@@ -999,7 +1262,11 @@ PageDown
 \begin_inset Quotes erd
 \end_inset
 
- تستبدل بـ 
+ 
+\lang arabic_arabi
+تستبدل بـ
+\lang english
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1011,7 +1278,11 @@ Prior
 \begin_inset Quotes erd
 \end_inset
 
+
+\lang arabic_arabi
  و 
+\lang english
+
 \begin_inset Quotes eld
 \end_inset
 
@@ -1023,24 +1294,30 @@ Next
 \begin_inset Quotes erd
 \end_inset
 
+
+\lang arabic_arabi
  في بعض لوحات المفاتيح.
 \end_layout
 
 \begin_layout Itemize
 
 \family sans
+\lang english
 Return
 \family default
  و 
 \family sans
 Enter
 \family default
+\lang arabic_arabi
  هما اسمان لمفتاح واحد.
  بعض لوحات المفاتيح تسميه 
 \family sans
 بـ
 \family default
  
+\lang english
+
 \begin_inset Quotes eld
 \end_inset
 
@@ -1048,7 +1325,11 @@ Return,
 \begin_inset Quotes erd
 \end_inset
 
- وأخرى تسميه 
+ 
+\lang arabic_arabi
+وأخرى تسميه 
+\lang english
+
 \begin_inset Quotes eld
 \end_inset
 
@@ -1056,15 +1337,19 @@ Enter,
 \begin_inset Quotes erd
 \end_inset
 
+
+\lang arabic_arabi
  بينما بعضها الأخرى تحتوي على المفتاحين.
  كلاهما يعنيان لليك الشيء نفسه, لهذا نستخدم 
 \family sans
+\lang english
 Return
 \family default
  و 
 \family sans
 Enter
 \family default
+\lang arabic_arabi
  للإدخال.
 \end_layout
 
@@ -1154,6 +1439,8 @@ name "tab:الوحدات"
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 mm
 \end_layout
 
@@ -1174,6 +1461,8 @@ mm
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 cm
 \end_layout
 
@@ -1194,6 +1483,8 @@ cm
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 in
 \end_layout
 
@@ -1218,6 +1509,8 @@ in
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 pt
 \end_layout
 
@@ -1242,6 +1535,8 @@ pt
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 pc
 \end_layout
 
@@ -1266,6 +1561,8 @@ pc
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 sp
 \end_layout
 
@@ -1290,6 +1587,8 @@ sp
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 bp
 \end_layout
 
@@ -1314,6 +1613,8 @@ bp
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 dd
 \end_layout
 
@@ -1323,7 +1624,11 @@ dd
 \begin_inset Text
 
 \begin_layout Plain Layout
-didot 
+
+\lang english
+didot
+\lang arabic_arabi
+ 
 \begin_inset Formula $72\,dd\approx37.6\,mm$
 \end_inset
 
@@ -1338,6 +1643,8 @@ didot
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 cc
 \end_layout
 
@@ -1347,7 +1654,11 @@ cc
 \begin_inset Text
 
 \begin_layout Plain Layout
-cicero 
+
+\lang english
+cicero
+\lang arabic_arabi
+ 
 \begin_inset Formula $1\,cc=12\,dd$
 \end_inset
 
@@ -1362,6 +1673,8 @@ cicero
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 Scale%
 \end_layout
 
@@ -1382,6 +1695,8 @@ Scale%
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 text%
 \end_layout
 
@@ -1402,6 +1717,8 @@ text%
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 col%
 \end_layout
 
@@ -1422,6 +1739,8 @@ col%
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 page%
 \end_layout
 
@@ -1442,6 +1761,8 @@ page%
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 line%
 \end_layout
 
@@ -1462,6 +1783,8 @@ line%
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 theight%
 \end_layout
 
@@ -1482,6 +1805,8 @@ theight%
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 pheight%
 \end_layout
 
@@ -1502,6 +1827,8 @@ pheight%
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 ex
 \end_layout
 
@@ -1522,6 +1849,8 @@ ex
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 em
 \end_layout
 
@@ -1542,6 +1871,8 @@ em
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\lang english
 mu
 \end_layout
 
@@ -1679,7 +2010,62 @@ mu
 \end_layout
 
 \begin_layout Section
-المساهمة في مشروع ليك LYX
+المساهمة في مشروع ليك 
+\lang english
+\SpecialChar LyX
+
+\lang arabic_arabi
+
+\begin_inset Argument 1
+status collapsed
+
+\begin_layout Plain Layout
+المساهمة في مشروع ليك 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+texorpdfstring{
+\end_layout
+
+\end_inset
+
+
+\lang english
+\SpecialChar LyX
+
+\lang arabic_arabi
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}{
+\end_layout
+
+\end_inset
+
+LyX
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:مساهمة"
@@ -1690,11 +2076,70 @@ name "sec:مساهمة"
 \end_layout
 
 \begin_layout Subsection
-المساهمة في ليك LYX
+المساهمة في ليك 
+\lang english
+\SpecialChar LyX
+
+\lang arabic_arabi
+
+\begin_inset Argument 1
+status collapsed
+
+\begin_layout Plain Layout
+المساهمة في ليك 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+texorpdfstring{
+\end_layout
+
+\end_inset
+
+
+\lang english
+\SpecialChar LyX
+
+\lang arabic_arabi
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}{
+\end_layout
+
+\end_inset
+
+LyX
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-معظم ليك مكتوب بلغة C++ (لتيك مستوردة بلغة بايثون).
+معظم ليك مكتوب بلغة 
+\lang english
+C++ 
+\lang arabic_arabi
+(لتيك مستوردة بلغة بايثون).
  إنه مشروع كبير, وكنتيجة طبيعية لن يكون خاليا من العيوب, أو الحاجة لتحسين
  اكواده المصدريه.
 \end_layout
@@ -1732,6 +2177,7 @@ http://www.lyx.org/trac/wiki/BugTrackerHome
 LatexCommand href
 target "lyx-devel@lists.lyx.org"
 type "mailto:"
+literal "false"
 
 \end_inset
 
@@ -1759,7 +2205,15 @@ http://www.lyx.org/
  وتزويدهم بإصدار المكتبات التي قمت بتثبيتها على نظامك، وإذا كان ذلك ممكنا،
  إصدارات البرامج الخارجية التي يستخدمها ليك.
  واذا كان هناك مجموعة من المشاكل أو كان لديك مشكلة في الضبط، فيفضل إرفاق
- config.log ، وذكر اي برنامج بناء compiler تستخدم.
+ 
+\lang english
+config.log ، 
+\lang arabic_arabi
+وذكر اي برنامج بناء 
+\lang english
+compiler
+\lang arabic_arabi
+ تستخدم.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1768,8 +2222,16 @@ http://www.lyx.org/
 
 \begin_layout Standard
 إذا قمت بعمل تعديلات في كود ليك وترى بأنها تستحق أن تضاف إليه, فضلا ارسل
- تعديلاتك على شكل ملف diff (في هيئة موحدة) إلى قائمة المطورين البريدية المذكورة
- في الأعلى, مع ملف change log, وتفصيل بالعمل الذي قمت به في الرقعة.
+ تعديلاتك على شكل ملف 
+\lang english
+diff
+\lang arabic_arabi
+ (في هيئة موحدة) إلى قائمة المطورين البريدية المذكورة في الأعلى, مع ملف
+ 
+\lang english
+change log,
+\lang arabic_arabi
+ وتفصيل بالعمل الذي قمت به في الرقعة.
 \end_layout
 
 \begin_layout Subsection
@@ -1793,6 +2255,7 @@ http://www.lyx.org/
 LatexCommand href
 target "lyx-docs@lists.lyx.org"
 type "mailto:"
+literal "false"
 
 \end_inset
 
@@ -1849,6 +2312,7 @@ http://www.lyx.org/trac/browser/lyxgit/lib/doc?rev=master
 LatexCommand href
 target "lyx-docs@lists.lyx.org"
 type "mailto:"
+literal "false"
 
 \end_inset
 
@@ -1872,6 +2336,7 @@ type "mailto:"
 LatexCommand href
 name "هنا"
 target "https://sourceforge.net/projects/ohodquizgame/files/Books/Scheherazade_font-2.100.zip/download"
+literal "false"
 
 \end_inset
 

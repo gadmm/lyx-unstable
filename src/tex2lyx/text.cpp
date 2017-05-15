@@ -413,9 +413,11 @@ bool translate_len(string const & length, string & valstring, string & unit)
 	} else if (unit == "\\textheight") {
 		valstring = percentval;
 		unit = "theight%" + endlen;
+#ifdef FILEFORMAT
 	} else if (unit == "\\baselineskip") {
 		valstring = percentval;
 		unit = "baselineskip%" + endlen;
+#endif
 	}
 	return true;
 }
@@ -4549,7 +4551,10 @@ void parse_text(Parser & p, ostream & os, unsigned flags, bool outer,
 						if (unit == "\\paperwidth" || unit == "\\columnwidth"
 							|| unit == "\\textwidth" || unit == "\\linewidth"
 							|| unit == "\\textheight" || unit == "\\paperheight"
-							|| unit == "\\baselineskip")
+#ifdef FILEFORMAT
+							|| unit == "\\baselineskip"
+#endif
+						    )
 							known_unit = true;
 						break;
 							 }

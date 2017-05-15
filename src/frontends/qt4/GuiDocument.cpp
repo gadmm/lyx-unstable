@@ -731,7 +731,7 @@ GuiDocument::GuiDocument(GuiView & lv)
 		this, SLOT(change_adaptor()));
 	connect(textLayoutModule->FormulaIndentCO, SIGNAL(activated(int)),
 		this, SLOT(change_adaptor()));
-	disable_widget_if_ndef_FILEFORMAT(textLayoutModule->FormulaIndentGB);
+	disable_widget_if_ndef_FILEFORMAT(textLayoutModule->FormulaIndentCB);
 
 	textLayoutModule->FormulaIndentLE->setValidator(new LengthValidator(
 		textLayoutModule->FormulaIndentLE));

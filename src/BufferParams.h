@@ -110,8 +110,13 @@ public:
 	bool is_math_indent;
 
 
-	/// number formulas before them
-	bool math_number_before;
+	enum  MathNumber { DEFAULT, LEFT, RIGHT };
+	/// number formulas on left/right/default
+	MathNumber math_numbering_side;
+
+	/// Convenience function for display: like math_number, but
+	/// DEFAULT is replaced by the best guess we have.
+	MathNumber getMathNumber() const;
 
 	/** Whether paragraphs are separated by using a indent like in
 	 *  articles or by using a little skip like in letters.

@@ -724,28 +724,6 @@ GuiDocument::GuiDocument(GuiView & lv)
 	connect(textLayoutModule->justCB, SIGNAL(clicked()),
 		this, SLOT(change_adaptor()));
 
-	connect(textLayoutModule->MathIndentCB, SIGNAL(toggled(bool)),
-		this, SLOT(change_adaptor()));
-	connect(textLayoutModule->MathIndentCB, SIGNAL(toggled(bool)),
-		this, SLOT(allowMathIndent()));
-	connect(textLayoutModule->MathIndentCO, SIGNAL(activated(int)),
-		this, SLOT(change_adaptor()));
-	connect(textLayoutModule->MathIndentCO, SIGNAL(activated(int)),
-		this, SLOT(setMathIndent(int)));
-	connect(textLayoutModule->MathIndentLE, SIGNAL(textChanged(const QString &)),
-		this, SLOT(change_adaptor()));
-	connect(textLayoutModule->MathIndentLengthCO, SIGNAL(activated(int)),
-		this, SLOT(change_adaptor()));
-	disable_widget_if_ndef_FILEFORMAT(textLayoutModule->MathIndentCB);
-
-	
-	textLayoutModule->MathIndentCO->addItem(qt_("Default"));
-	textLayoutModule->MathIndentCO->addItem(qt_("Custom"));
-	textLayoutModule->MathIndentLE->setValidator(new LengthValidator(
-		textLayoutModule->MathIndentLE));
-	// initialize the length validator
-	bc().addCheckedLineEdit(textLayoutModule->MathIndentLE);
-	
 	textLayoutModule->lspacingLE->setValidator(new QDoubleValidator(
 		textLayoutModule->lspacingLE));
 	textLayoutModule->indentLE->setValidator(new LengthValidator(
@@ -1287,9 +1265,30 @@ GuiDocument::GuiDocument(GuiView & lv)
 	connect(mathsModule->MathNumberingPosCO, SIGNAL(activated(int)),
 		this, SLOT(change_adaptor()));
 
-	mathsModule->MathNumberingPosCO->addItem(qt_("Before"));
-	mathsModule->MathNumberingPosCO->addItem(qt_("After"));
-	mathsModule->MathNumberingPosCO->setCurrentIndex(2);
+	connect(mathsModule->MathIndentCB, SIGNAL(toggled(bool)),
+		this, SLOT(change_adaptor()));
+	connect(mathsModule->MathIndentCB, SIGNAL(toggled(bool)),
+		this, SLOT(allowMathIndent()));
+	connect(mathsModule->MathIndentCO, SIGNAL(activated(int)),
+		this, SLOT(change_adaptor()));
+	connect(mathsModule->MathIndentCO, SIGNAL(activated(int)),
+		this, SLOT(enableMathIndent(int)));
+	connect(mathsModule->MathIndentLE, SIGNAL(textChanged(const QString &)),
+		this, SLOT(change_adaptor()));
+	connect(mathsModule->MathIndentLengthCO, SIGNAL(activated(int)),
+		this, SLOT(change_adaptor()));
+
+	
+	mathsModule->MathIndentCO->addItem(qt_("Default"));
+	mathsModule->MathIndentCO->addItem(qt_("Custom"));
+	mathsModule->MathIndentLE->setValidator(new LengthValidator(
+		mathsModule->MathIndentLE));
+	// initialize the length validator
+	bc().addCheckedLineEdit(mathsModule->MathIndentLE);
+	mathsModule->MathNumberingPosCO->addItem(qt_("Left"));
+	mathsModule->MathNumberingPosCO->addItem(qt_("Default"));
+	mathsModule->MathNumberingPosCO->addItem(qt_("Right"));
+	mathsModule->MathNumberingPosCO->setCurrentIndex(1);
 	disable_widget_if_ndef_FILEFORMAT(mathsModule->MathNumberingPosCO);
 	
 
@@ -1625,23 +1624,23 @@ void GuiDocument::enableSkip(bool skip)
 
 void GuiDocument::allowMathIndent() {
 	// only disable when not checked, checked does not always allow enabling
-	if (!textLayoutModule->MathIndentCB->isChecked()) {
-		textLayoutModule->MathIndentLE->setEnabled(false);
-		textLayoutModule->MathIndentLengthCO->setEnabled(false);
+	if (!mathsModule->MathIndentCB->isChecked()) {
+		mathsModule->MathIndentLE->setEnabled(false);
+		mathsModule->MathIndentLengthCO->setEnabled(false);
 	}
-	if (textLayoutModule->MathIndentCB->isChecked()
-	    && textLayoutModule->MathIndentCO->currentIndex() == 1) {
-			textLayoutModule->MathIndentLE->setEnabled(true);
-			textLayoutModule->MathIndentLengthCO->setEnabled(true);
+	if (mathsModule->MathIndentCB->isChecked()
+	    && mathsModule->MathIndentCO->currentIndex() == 1) {
+			mathsModule->MathIndentLE->setEnabled(true);
+			mathsModule->MathIndentLengthCO->setEnabled(true);
 	}
 	isValid();
 }
 
-void GuiDocument::setMathIndent(int item)
+void GuiDocument::enableMathIndent(int item)
 {
 	bool const enable = (item == 1);
-	textLayoutModule->MathIndentLE->setEnabled(enable);
-	textLayoutModule->MathIndentLengthCO->setEnabled(enable);
+	mathsModule->MathIndentLE->setEnabled(enable);
+	mathsModule->MathIndentLengthCO->setEnabled(enable);
 	isValid();
 }
 
@@ -2930,23 +2929,39 @@ void GuiDocument::applyView()
 		if (rb->isChecked())
 			bp_.use_package(it->first, BufferParams::package_off);
 	}
-	bp_.is_math_indent = textLayoutModule->MathIndentCB->isChecked();
 	// if math is indented
+	bp_.is_math_indent = mathsModule->MathIndentCB->isChecked();
 	if (bp_.is_math_indent) {
-		Length mathindent(widgetsToLength(textLayoutModule->MathIndentLE,
-		                                  textLayoutModule->MathIndentLengthCO));
-		bp_.setMathIndent(mathindent);
+		// if formulas are indented
+		switch (mathsModule->MathIndentCO->currentIndex()) {
+		case 0:
+			bp_.setMathIndent(Length());
+			break;
+		case 1: {
+			Length mathindent(widgetsToLength(mathsModule->MathIndentLE,
+			                                  mathsModule->MathIndentLengthCO));
+			bp_.setMathIndent(mathindent);
+			break;
+		}
+		default:
+			// this should never happen
+			bp_.setMathIndent(Length());
+			break;
+		}
 	}
 	switch (mathsModule->MathNumberingPosCO->currentIndex()) {
 		case 0:
-			bp_.math_number_before = true;
+			bp_.math_numbering_side = BufferParams::LEFT;
 			break;
 		case 1:
-			bp_.math_number_before = false;
+			bp_.math_numbering_side = BufferParams::DEFAULT;
+			break;
+		case 2:
+			bp_.math_numbering_side = BufferParams::RIGHT;
 			break;
 		default:
 			// this should never happen
-			bp_.math_number_before = false;
+			bp_.math_numbering_side = BufferParams::DEFAULT;
 			break;
 	}
 
@@ -3031,25 +3046,6 @@ void GuiDocument::applyView()
 		default:
 			// this should never happen
 			bp_.setDefSkip(VSpace(VSpace::MEDSKIP));
-			break;
-		}
-	}
-
-	if (textLayoutModule->MathIndentCB->isChecked()) {
-		// if formulas are indented
-		switch (textLayoutModule->MathIndentCO->currentIndex()) {
-		case 0:
-			bp_.setMathIndent(Length());
-			break;
-		case 1: {
-			Length mathindent(widgetsToLength(textLayoutModule->MathIndentLE,
-			                                  textLayoutModule->MathIndentLengthCO));
-			bp_.setMathIndent(mathindent);
-			break;
-		}
-		default:
-			// this should never happen
-			bp_.setMathIndent(Length());
 			break;
 		}
 	}
@@ -3418,23 +3414,29 @@ void GuiDocument::paramsToDialog()
 	updateModuleInfo();
 
 	// math
+	mathsModule->MathIndentCB->setChecked(bp_.is_math_indent);
 	if (bp_.is_math_indent) {
-		textLayoutModule->MathIndentCB->setChecked(bp_.is_math_indent);
 		Length const mathindent = bp_.getMathIndent();
 		int indent = 0;
 		if (!mathindent.empty()) {
-			lengthToWidgets(textLayoutModule->MathIndentLE,
-			                textLayoutModule->MathIndentLengthCO,
+			lengthToWidgets(mathsModule->MathIndentLE,
+			                mathsModule->MathIndentLengthCO,
 			                mathindent, default_unit);
 			indent = 1;
 		}
-		textLayoutModule->MathIndentCO->setCurrentIndex(indent);
-		setMathIndent(indent);
+		mathsModule->MathIndentCO->setCurrentIndex(indent);
+		enableMathIndent(indent);
 	}
-	if (bp_.math_number_before)
+	switch(bp_.math_numbering_side) {
+	case BufferParams::LEFT:
 		mathsModule->MathNumberingPosCO->setCurrentIndex(0);
-	else 
+		break;
+	case BufferParams::DEFAULT:
 		mathsModule->MathNumberingPosCO->setCurrentIndex(1);
+		break;
+	case BufferParams::RIGHT:
+		mathsModule->MathNumberingPosCO->setCurrentIndex(2);
+	}
 
 	map<string, string> const & packages = BufferParams::auto_packages();
 	for (map<string, string>::const_iterator it = packages.begin();
@@ -4102,12 +4104,12 @@ bool GuiDocument::isValid()
 			!textLayoutModule->indentLE->text().isEmpty()
 		) &&
 		(
-			// if we're asking for indentation
-			!textLayoutModule->MathIndentCB->isChecked() ||
+			// if we're asking for math indentation
+			!mathsModule->MathIndentCB->isChecked() ||
 			// then either we haven't chosen custom
-			textLayoutModule->MathIndentCO->currentIndex() != 1 ||
+			mathsModule->MathIndentCO->currentIndex() != 1 ||
 			// or else a length has been given
-			!textLayoutModule->MathIndentLE->text().isEmpty()
+			!mathsModule->MathIndentLE->text().isEmpty()
 		);
 }
 

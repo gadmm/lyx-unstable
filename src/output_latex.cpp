@@ -258,8 +258,10 @@ static TeXEnvironmentData prepareEnvironment(Buffer const & buf,
 		data.leftindent_open = true;
 	}
 
-	if (style.isEnvironment()) {
+	if (style.isEnvironment())
 		state->nest_level_ += 1;
+
+	if (style.isEnvironment() && !style.latexname().empty()) {
 		os << "\\begin{" << from_ascii(style.latexname()) << '}';
 		if (!style.latexargs().empty()) {
 			OutputParams rp = runparams;
@@ -324,7 +326,9 @@ static void finishEnvironment(otexstream & os, OutputParams const & runparams,
 			}
 		}
 		state->nest_level_ -= 1;
-		os << "\\end{" << from_ascii(data.style->latexname()) << "}\n";
+		string const & name = data.style->latexname();
+		if (!name.empty())
+			os << "\\end{" << from_ascii(name) << "}\n";
 		state->prev_env_language_ = data.par_language;
 		if (runparams.encoding != data.prev_encoding) {
 			runparams.encoding = data.prev_encoding;
@@ -521,43 +525,57 @@ void popPolyglossiaLang()
 }
 
 
+namespace {
+
+void addArgInsets(Paragraph const & par, string const & prefix,
+                 Layout::LaTeXArgMap const & latexargs,
+                 map<int, InsetArgument const *> & ilist,
+                 vector<string> & required)
+{
+	for (auto const & table : par.insetList()) {
+		InsetArgument const * arg = table.inset->asInsetArgument();
+		if (!arg)
+			continue;
+		if (arg->name().empty()) {
+			LYXERR0("Error: Unnamed argument inset!");
+			continue;
+		}
+		string const name = prefix.empty() ?
+			arg->name() : split(arg->name(), ':');
+		// why converting into an integer?
+		unsigned int const nr = convert<unsigned int>(name);
+		if (ilist.find(nr) == ilist.end())
+			ilist[nr] = arg;
+		Layout::LaTeXArgMap::const_iterator const lit =
+			latexargs.find(arg->name());
+		if (lit != latexargs.end()) {
+			Layout::latexarg const & larg = lit->second;
+			vector<string> req = getVectorFromString(larg.requires);
+			move(req.begin(), req.end(), back_inserter(required));
+		}
+	}
+}
+
+} // anon namespace
+
+
 void latexArgInsets(Paragraph const & par, otexstream & os,
-	OutputParams const & runparams, Layout::LaTeXArgMap const & latexargs, string const & prefix)
+                    OutputParams const & runparams,
+                    Layout::LaTeXArgMap const & latexargs,
+                    string const & prefix)
 {
 	map<int, InsetArgument const *> ilist;
 	vector<string> required;
-
-	InsetList::const_iterator it = par.insetList().begin();
-	InsetList::const_iterator end = par.insetList().end();
-	for (; it != end; ++it) {
-		if (it->inset->lyxCode() == ARG_CODE) {
-			InsetArgument const * ins =
-				static_cast<InsetArgument const *>(it->inset);
-			if (ins->name().empty())
-				LYXERR0("Error: Unnamed argument inset!");
-			else {
-				string const name = prefix.empty() ? ins->name() : split(ins->name(), ':');
-				unsigned int const nr = convert<unsigned int>(name);
-				ilist[nr] = ins;
-				Layout::LaTeXArgMap::const_iterator const lit =
-						latexargs.find(ins->name());
-				if (lit != latexargs.end()) {
-					Layout::latexarg const & arg = (*lit).second;
-					if (!arg.requires.empty()) {
-						vector<string> req = getVectorFromString(arg.requires);
-						required.insert(required.end(), req.begin(), req.end());
-					}
-				}
-			}
-		}
-	}
+	addArgInsets(par, prefix, latexargs, ilist, required);
 	getArgInsets(os, runparams, latexargs, ilist, required, prefix);
 }
 
 
-void latexArgInsets(ParagraphList const & pars, ParagraphList::const_iterator pit,
-	otexstream & os, OutputParams const & runparams, Layout::LaTeXArgMap const & latexargs,
-	string const & prefix)
+void latexArgInsets(ParagraphList const & pars,
+                    ParagraphList::const_iterator pit,
+                    otexstream & os, OutputParams const & runparams,
+                    Layout::LaTeXArgMap const & latexargs,
+                    string const & prefix)
 {
 	map<int, InsetArgument const *> ilist;
 	vector<string> required;
@@ -581,38 +599,34 @@ void latexArgInsets(ParagraphList const & pars, ParagraphList::const_iterator pi
 	ParagraphList::const_iterator spit = lyx::prev(pit, offset);
 
 	for (; spit != pars.end(); ++spit) {
-		if (spit->layout() != current_layout || spit->params().depth() < current_depth)
+		if (spit->layout() != current_layout ||
+		    spit->params().depth() < current_depth)
 			break;
 		if (spit->params().depth() > current_depth)
 			continue;
-		InsetList::const_iterator it = spit->insetList().begin();
-		InsetList::const_iterator end = spit->insetList().end();
-		for (; it != end; ++it) {
-			if (it->inset->lyxCode() == ARG_CODE) {
-				InsetArgument const * ins =
-					static_cast<InsetArgument const *>(it->inset);
-				if (ins->name().empty())
-					LYXERR0("Error: Unnamed argument inset!");
-				else {
-					string const name = prefix.empty() ? ins->name() : split(ins->name(), ':');
-					unsigned int const nr = convert<unsigned int>(name);
-					if (ilist.find(nr) == ilist.end())
-						ilist[nr] = ins;
-					Layout::LaTeXArgMap::const_iterator const lit =
-							latexargs.find(ins->name());
-					if (lit != latexargs.end()) {
-						Layout::latexarg const & arg = (*lit).second;
-						if (!arg.requires.empty()) {
-							vector<string> req = getVectorFromString(arg.requires);
-							required.insert(required.end(), req.begin(), req.end());
-						}
-					}
-				}
-			}
-		}
+		addArgInsets(*spit, prefix, latexargs, ilist, required);
 	}
 	getArgInsets(os, runparams, latexargs, ilist, required, prefix);
 }
+
+
+void latexArgInsetsForParent(ParagraphList const & pars, otexstream & os,
+                             OutputParams const & runparams,
+                             Layout::LaTeXArgMap const & latexargs,
+                             string const & prefix)
+{
+	map<int, InsetArgument const *> ilist;
+	vector<string> required;
+
+	for (Paragraph const & par : pars) {
+		if (par.layout().hasArgs())
+			// The InsetArguments inside this paragraph refer to this paragraph
+			continue;
+		addArgInsets(par, prefix, latexargs, ilist, required);
+	}
+	getArgInsets(os, runparams, latexargs, ilist, required, prefix);
+}
+
 
 namespace {
 
@@ -1341,7 +1355,7 @@ void latexParagraphs(Buffer const & buf,
 
 		if (layout.intitle) {
 			if (already_title) {
-				if (!gave_layout_warning) {
+				if (!gave_layout_warning && !runparams.dryrun) {
 					gave_layout_warning = true;
 					frontend::Alert::warning(_("Error in latexParagraphs"),
 							bformat(_("You are using at least one "
@@ -1358,7 +1372,7 @@ void latexParagraphs(Buffer const & buf,
 							<< "}\n";
 				}
 			}
-		} else if (was_title && !already_title) {
+		} else if (was_title && !already_title && !layout.inpreamble) {
 			if (tclass.titletype() == TITLE_ENVIRONMENT) {
 				os << "\\end{" << from_ascii(tclass.titlename())
 						<< "}\n";

@@ -729,7 +729,7 @@ BufferParams const & Buffer::masterParams() const
 double Buffer::fontScalingFactor() const
 {
 	return isExporting() ? 75.0 * params().html_math_img_scale
-		: 0.01 * lyxrc.dpi * lyxrc.zoom * lyxrc.preview_scale_factor * params().display_pixel_ratio;
+		: 0.01 * lyxrc.dpi * lyxrc.currentZoom * lyxrc.preview_scale_factor * params().display_pixel_ratio;
 }
 
 
@@ -3949,6 +3949,7 @@ unique_ptr<TexRow> Buffer::getSourceCode(odocstream & os, string const & format,
 			ots.texrow().newlines(2);
 			if (master)
 				runparams.is_child = true;
+			updateBuffer();
 			writeLaTeXSource(ots, string(), runparams, output);
 			texrow = ots.releaseTexRow();
 		}
@@ -5322,8 +5323,10 @@ void Buffer::updateChangesPresent() const
 
 void Buffer::Impl::refreshFileMonitor()
 {
-	if (file_monitor_ && file_monitor_->filename() == filename.absFileName())
-		return file_monitor_->refresh();
+	if (file_monitor_ && file_monitor_->filename() == filename.absFileName()) {
+		file_monitor_->refresh();
+		return;
+	}
 
 	// The previous file monitor is invalid
 	// This also destroys the previous file monitor and all its connections

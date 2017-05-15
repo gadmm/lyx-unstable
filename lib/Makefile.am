@@ -135,13 +135,13 @@ dist_frexamples_DATA = \
 	examples/fr/Braille.lyx \
 	examples/fr/exemple_brut.lyx \
 	examples/fr/exemple_lyxifie.lyx \
-	examples/fr/exemple-powerdot.lyx \
 	examples/fr/FeynmanDiagrams.lyx \
 	examples/fr/Foils.lyx \
 	examples/fr/linguistics.lyx \
 	examples/fr/ListesPuces.lyx \
 	examples/fr/MultilingualCaptions.lyx \
 	examples/fr/PDF-comment.lyx \
+	examples/fr/powerdot.lyx \
 	examples/fr/seminar.lyx \
 	examples/fr/simplecv.lyx \
 	examples/fr/splash.lyx \
@@ -327,6 +327,8 @@ dist_examples_DATA = \
 	examples/example_lyxified.lyx \
 	examples/example_raw.lyx \
 	examples/FeynmanDiagrams.lyx \
+	examples/gnuplot.lyx \
+	examples/gnuplot-example.gp \
 	examples/H-P-statements.lyx \
 	examples/iecc05.fen \
 	examples/iecc07.fen \
@@ -345,7 +347,7 @@ dist_examples_DATA = \
 	examples/paralist.lyx \
 	examples/PDF-comment.lyx \
 	examples/PDF-form.lyx \
-	examples/powerdot-example.lyx \
+	examples/powerdot.lyx \
 	examples/recipebook.lyx \
 	examples/R-S-statements.lyx \
 	examples/script_form.lyx \
@@ -558,6 +560,7 @@ dist_images_DATA1X = \
 	images/toolbar-toggle_math.svgz \
 	images/toolbar-toggle_math_panels.svgz \
 	images/toolbar-toggle_table.svgz \
+	images/toolbar-toggle_review.svgz \
 	images/undo.svgz \
 	images/unknown.svgz \
 	images/up.svgz \
@@ -2091,6 +2094,7 @@ dist_layouts_DATA =\
 	layouts/acm-sigs.layout \
 	layouts/acm-sigs-alt.layout \
 	layouts/acm-sigs.inc \
+	layouts/acmart.layout \
 	layouts/acmsiggraph.layout \
 	layouts/acmsiggraph-0-92.layout \
 	layouts/AEA.layout \
@@ -2331,6 +2335,7 @@ dist_scripts_DATA += \
 	scripts/svg2pdftex.py \
 	scripts/svg2pstex.py \
 	scripts/fig_copy.py \
+	scripts/gnuplot2pdf.py \
 	scripts/html2latexwrapper.py \
 	scripts/include_bib.py \
 	scripts/layout2layout.py \
@@ -2342,6 +2347,7 @@ dist_scripts_DATA += \
 	scripts/prefs2prefs.py \
 	scripts/prefs2prefs_lfuns.py \
 	scripts/prefs2prefs_prefs.py \
+	scripts/prefTest.pl.in \
 	scripts/tex_copy.py \
 	scripts/TeXFiles.py
 
@@ -2349,9 +2355,7 @@ templatesdir = $(pkgdatadir)/templates
 dist_templates_DATA = \
 	templates/aa.lyx \
 	templates/aastex6.lyx \
-	templates/ACM-siggraph.lyx \
-	templates/ACM-sigplan.lyx \
-	templates/ACM-SIGS.lyx \
+	templates/acmart.lyx \
 	templates/AEA.lyx \
 	templates/AGUTeX.lyx \
 	templates/APA.lyx \
@@ -2368,8 +2372,6 @@ dist_templates_DATA = \
 	templates/fr_beamer-conference-ornate-20min.lyx \
 	templates/frletter.lyx \
 	templates/g-brief2.lyx \
-	templates/g-brief-de.lyx \
-	templates/g-brief-en.lyx \
 	templates/hollywood.lyx \
 	templates/IEEEtran-CompSoc.lyx \
 	templates/IEEEtran-Conference.lyx \
@@ -2396,6 +2398,14 @@ dist_templates_DATA = \
 	templates/revtex4.lyx \
 	templates/revtex4-1.lyx \
 	templates/slides.lyx
+
+obsoletetemplatesdir = $(pkgdatadir)/templates/obsolete
+dist_obsoletetemplates_DATA = \
+	templates/obsolete/ACM-siggraph.lyx \
+	templates/obsolete/ACM-sigplan.lyx \
+	templates/obsolete/ACM-SIGS.lyx \
+	templates/obsolete/g-brief-de.lyx \
+	templates/obsolete/g-brief-en.lyx
 
 springertemplatesdir = $(pkgdatadir)/templates/springer
 dist_springertemplates_DATA = \

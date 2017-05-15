@@ -33,8 +33,8 @@ extern char const * const lyx_version_info;
 #ifdef FILEFORMAT
 // Do not remove the comment below, so we get merge conflict in
 // independent branches. Instead add your own.
-#define LYX_FORMAT_LYX 542 // uwestoehr: support for class option leqno
-#define LYX_FORMAT_TEX2LYX 542
+#define LYX_FORMAT_LYX 543 // uwestoehr: rename math_number_before entry to math_numbering_side
+#define LYX_FORMAT_TEX2LYX 543
 
 #else
 // LyX 2.2 format

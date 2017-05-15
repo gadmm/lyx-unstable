@@ -79,11 +79,11 @@
 # If possible, the script will use pdftocairo instead of gs,
 # as it's much faster and gives better results.
 
-import glob, os, pipes, re, string, sys
+import glob, os, pipes, re, sys, tempfile
 
 from lyxpreview_tools import check_latex_log, copyfileobj, error, filter_pages,\
      find_exe, find_exe_or_terminate, join_metrics_and_rename, latex_commands, \
-     latex_file_re, make_texcolor, mkstemp, pdflatex_commands, progress, \
+     latex_file_re, make_texcolor, pdflatex_commands, progress, \
      run_command, run_latex, warning, write_metrics_info
 
 
@@ -118,8 +118,8 @@ def legacy_extract_metrics_info(log_file):
                 error("Unexpected data in %s\n%s" % (log_file, line))
 
             if snippet:
-                ascent  = string.atof(match.group(2))
-                descent = string.atof(match.group(3))
+                ascent  = float(match.group(2))
+                descent = float(match.group(3))
 
                 frac = 0.5
                 if ascent == 0 and descent == 0:
@@ -139,8 +139,8 @@ def legacy_extract_metrics_info(log_file):
                 results.append((int(match.group(1)), frac))
 
             else:
-                tp_descent = string.atof(match.group(2))
-                tp_ascent  = string.atof(match.group(4))
+                tp_descent = float(match.group(2))
+                tp_ascent  = float(match.group(4))
 
     except:
         # Unable to open the file, but do nothing here because
@@ -177,7 +177,7 @@ def extract_resolution(log_file, dpi):
                     match = extract_decimal_re.search(line)
                     if match == None:
                         error("Unable to parse: %s" % line)
-                    fontsize = string.atof(match.group(1))
+                    fontsize = float(match.group(1))
                     found_fontsize = 1
                     continue
 
@@ -187,7 +187,7 @@ def extract_resolution(log_file, dpi):
                     match = extract_integer_re.search(line)
                     if match == None:
                         error("Unable to parse: %s" % line)
-                    magnification = string.atof(match.group(1))
+                    magnification = float(match.group(1))
                     found_magnification = 1
                     continue
 
@@ -201,15 +201,15 @@ def extract_resolution(log_file, dpi):
 
 
 def legacy_latex_file(latex_file, fg_color, bg_color):
-    use_preview_re = re.compile(r"\s*\\usepackage\[([^]]+)\]{preview}")
+    use_preview_re = re.compile(b"\\s*\\\\usepackage\\[([^]]+)\\]{preview}")
     fg_color_gr = make_texcolor(fg_color, True)
     bg_color_gr = make_texcolor(bg_color, True)
 
-    tmp = mkstemp()
+    tmp = tempfile.TemporaryFile()
 
     success = 0
     try:
-        f = open(latex_file, 'r')
+        f = open(latex_file, 'rb')
     except:
         # Unable to open the file, but do nothing here because
         # the calling function will act on the value of 'success'.
@@ -227,20 +227,20 @@ def legacy_latex_file(latex_file, fg_color, bg_color):
         success = 1
         # Package order: color should be loaded before preview
         # Preview options: add the options lyx and tightpage
-        tmp.write(r"""
-\usepackage{color}
-\definecolor{fg}{rgb}{%s}
-\definecolor{bg}{rgb}{%s}
-\pagecolor{bg}
-\usepackage[%s,tightpage]{preview}
-\makeatletter
-\def\t@a{cmr}
-\if\f@family\t@a
-\IfFileExists{lmodern.sty}{\usepackage{lmodern}}{\usepackage{ae,aecompl}}
-\fi
-\g@addto@macro\preview{\begingroup\color{bg}\special{ps::clippath fill}\color{fg}}
-\g@addto@macro\endpreview{\endgroup}
-\makeatother
+        tmp.write(b"""
+\\usepackage{color}
+\\definecolor{fg}{rgb}{%s}
+\\definecolor{bg}{rgb}{%s}
+\\pagecolor{bg}
+\\usepackage[%s,tightpage]{preview}
+\\makeatletter
+\\def\\t@a{cmr}
+\\if\\f@family\\t@a
+\\IfFileExists{lmodern.sty}{\\usepackage{lmodern}}{\\usepackage{ae,aecompl}}
+\\fi
+\\g@addto@macro\\preview{\\begingroup\\color{bg}\\special{ps::clippath fill}\\color{fg}}
+\\g@addto@macro\\endpreview{\\endgroup}
+\\makeatother
 """ % (fg_color_gr, bg_color_gr, match.group(1)))
 
     if success:
@@ -255,7 +255,7 @@ def crop_files(pnmcrop, basename):
     t.append('%s -right' % pnmcrop, '--')
 
     for file in glob.glob("%s*.ppm" % basename):
-        tmp = mkstemp()
+        tmp = tempfile.TemporaryFile()
         new = t.open(file, "r")
         copyfileobj(new, tmp)
         if not new.close():
@@ -275,7 +275,7 @@ def legacy_conversion(argv, skipMetrics = False):
     if len(dir) != 0:
         os.chdir(dir)
 
-    dpi = string.atoi(argv[2])
+    dpi = int(argv[2])
 
     output_format = argv[3]
 

@@ -889,6 +889,16 @@ void LyXAction::init()
 		  "buffer-external-modification-clear", ReadOnly, Buffer },
 
 /*!
+* \var lyx::FuncCode lyx::LFUN_BUFFER_ZOOM
+* \li Action: Sets the zoom of the screen fonts.
+* \li Syntax: buffer-zoom [<ZOOM>]
+* \li Params: <ZOOM>: The zoom in % points (neg. or pos.), the default is to reset to zoom savd in preferences.
+* \li Origin: daniel, 28 Oct 2016
+* \endvar
+*/
+		{ LFUN_BUFFER_ZOOM, "buffer-zoom", ReadOnly, Buffer },
+
+/*!
  * \var lyx::FuncCode lyx::LFUN_BUFFER_ZOOM_IN
  * \li Action: Increases the zoom of the screen fonts.
  * \li Syntax: buffer-zoom-in [<ZOOM>]
@@ -3737,6 +3747,18 @@ void LyXAction::init()
  * \endvar
  */
 		{ LFUN_THESAURUS_ENTRY, "thesaurus-entry", ReadOnly, Edit },
+
+/*!
+ * \var lyx::FuncCode lyx::LFUN_TOOLBAR_MOVABLE
+ * \li Action: Toggles movability of a given toolbar between true/false.
+ * \li Syntax: toolbar-movable <NAME>
+ * \li Params: <NAME>: *|standard|extra|table|math|mathmacrotemplate|\n
+					   minibuffer|review|view/update|math_panels|vcs|
+					   view-others|update-others
+* \li Origin: daniel, 12 July 2016
+* \endvar
+*/
+		{ LFUN_TOOLBAR_MOVABLE, "toolbar-movable", NoBuffer, Buffer },
 
 /*!
  * \var lyx::FuncCode lyx::LFUN_TOOLBAR_TOGGLE

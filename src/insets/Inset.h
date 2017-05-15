@@ -40,6 +40,7 @@ class Dimension;
 class DocIterator;
 class FuncRequest;
 class FuncStatus;
+class InsetArgument;
 class InsetCollapsable;
 class InsetCommand;
 class InsetIterator;
@@ -154,6 +155,8 @@ public:
 	virtual InsetCommand * asInsetCommand() { return 0; }
 	/// is this inset based on the InsetCommand class?
 	virtual InsetCommand const * asInsetCommand() const { return 0; }
+	/// is this inset based on the InsetArgument class?
+	virtual InsetArgument const * asInsetArgument() const { return nullptr; }
 
 	/// the real dispatcher
 	void dispatch(Cursor & cur, FuncRequest & cmd);
@@ -460,6 +463,8 @@ public:
 
 	/// should we have a non-filled line before this inset?
 	virtual DisplayType display() const { return Inline; }
+	/// indentation before this inset (only needed for displayed hull insets with fleqn option)
+	virtual int indent(BufferView const &) const { return 0; }
 	///
 	virtual LyXAlignment contentAlignment() const { return LYX_ALIGN_NONE; }
 	/// should we break lines after this inset?

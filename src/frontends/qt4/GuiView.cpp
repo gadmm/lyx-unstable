@@ -713,6 +713,7 @@ void GuiView::autoSaveThreadFinished()
 void GuiView::saveLayout() const
 {
 	QSettings settings;
+	settings.setValue("zoom", lyxrc.currentZoom);
 	settings.beginGroup("views");
 	settings.beginGroup(QString::number(id_));
 #if defined(Q_WS_X11) || defined(QPA_XCB)
@@ -742,6 +743,8 @@ void GuiView::saveUISettings() const
 bool GuiView::restoreLayout()
 {
 	QSettings settings;
+	lyxrc.currentZoom = settings.value("zoom", lyxrc.zoom).toInt();
+	lyx::dispatch(FuncRequest(LFUN_BUFFER_ZOOM, convert<docstring>(lyxrc.currentZoom)));
 	settings.beginGroup("views");
 	settings.beginGroup(QString::number(id_));
 	QString const icon_key = "icon_size";
@@ -790,6 +793,9 @@ bool GuiView::restoreLayout()
 			initToolbar(cit->name);
 	}
 
+	// update lock (all) toolbars positions
+	updateLockToolbars();
+
 	updateDialogs();
 	return true;
 }
@@ -803,6 +809,17 @@ GuiToolbar * GuiView::toolbar(string const & name)
 
 	LYXERR(Debug::GUI, "Toolbar::display: no toolbar named " << name);
 	return 0;
+}
+
+
+void GuiView::updateLockToolbars()
+{
+	toolbarsMovable_ = false;
+	for (ToolbarInfo const & info : guiApp->toolbars()) {
+		GuiToolbar * tb = toolbar(info.name);
+		if (tb && tb->isMovable())
+			toolbarsMovable_ = true;
+	}
 }
 
 
@@ -873,6 +890,8 @@ void GuiView::initToolbar(string const & name)
 
 	if (visibility & Toolbars::ON)
 		tb->setVisible(true);
+
+	tb->setMovable(true);
 }
 
 
@@ -1892,6 +1911,23 @@ bool GuiView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 		break;
 	}
 
+	case LFUN_TOOLBAR_MOVABLE: {
+		string const name = cmd.getArg(0);
+		// use negation since locked == !movable
+		if (name == "*")
+			// toolbar name * locks all toolbars
+			flag.setOnOff(!toolbarsMovable_);
+		else if (GuiToolbar * t = toolbar(name))
+			flag.setOnOff(!(t->isMovable()));
+		else {
+			enable = false;
+			docstring const msg =
+				bformat(_("Unknown toolbar \"%1$s\""), from_utf8(name));
+			flag.message(msg);
+		}
+		break;
+	}
+
 	case LFUN_ICON_SIZE:
 		flag.setOnOff(d.iconSize(cmd.argument()) == iconSize());
 		break;
@@ -1999,7 +2035,7 @@ bool GuiView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 		bool const neg_zoom =
 			convert<int>(cmd.argument()) < 0 ||
 			(cmd.action() == LFUN_BUFFER_ZOOM_OUT && cmd.argument().empty());
-		if (lyxrc.zoom <= zoom_min_ && neg_zoom) {
+		if (lyxrc.currentZoom <= zoom_min_ && neg_zoom) {
 			docstring const msg =
 				bformat(_("Zoom level cannot be less than %1$d%."), zoom_min_);
 			flag.message(msg);
@@ -2008,6 +2044,21 @@ bool GuiView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 			enable = doc_buffer;
 		break;
 	}
+
+	case LFUN_BUFFER_ZOOM: {
+		bool const less_than_min_zoom =
+			!cmd.argument().empty() && convert<int>(cmd.argument()) < zoom_min_;
+		if (lyxrc.currentZoom <= zoom_min_ && less_than_min_zoom) {
+			docstring const msg =
+				bformat(_("Zoom level cannot be less than %1$d%."), zoom_min_);
+			flag.message(msg);
+			enable = false;
+		}
+		else
+			enable = doc_buffer;
+		break;
+	}
+
 	case LFUN_BUFFER_MOVE_NEXT:
 	case LFUN_BUFFER_MOVE_PREVIOUS:
 		// we do not cycle when moving
@@ -3797,6 +3848,32 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 			break;
 		}
 
+		case LFUN_TOOLBAR_MOVABLE: {
+			string const name = cmd.getArg(0);
+			if (name == "*") {
+				// toggle (all) toolbars movablility
+				toolbarsMovable_ = !toolbarsMovable_;
+				for (ToolbarInfo const & ti : guiApp->toolbars()) {
+					GuiToolbar * tb = toolbar(ti.name);
+					if (tb && tb->isMovable() != toolbarsMovable_)
+						// toggle toolbar movablity if it does not fit lock
+						// (all) toolbars positions state silent = true, since
+						// status bar notifications are slow
+						tb->movable(true);
+				}
+				if (toolbarsMovable_)
+					dr.setMessage(_("Toolbars unlocked."));
+				else
+					dr.setMessage(_("Toolbars locked."));
+			} else if (GuiToolbar * t = toolbar(name)) {
+				// toggle current toolbar movablity
+				t->movable();
+				// update lock (all) toolbars positions
+				updateLockToolbars();
+			}
+			break;
+		}
+
 		case LFUN_ICON_SIZE: {
 			QSize size = d.iconSize(cmd.argument());
 			setIconSize(size);
@@ -3969,22 +4046,32 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 			break;
 
 		case LFUN_BUFFER_ZOOM_IN:
-		case LFUN_BUFFER_ZOOM_OUT: {
+		case LFUN_BUFFER_ZOOM_OUT:
+		case LFUN_BUFFER_ZOOM: {
 			// use a signed temp to avoid overflow
-			int zoom = lyxrc.zoom;
+			int zoom = lyxrc.currentZoom;
 			if (cmd.argument().empty()) {
-				if (cmd.action() == LFUN_BUFFER_ZOOM_IN)
+				if (cmd.action() == LFUN_BUFFER_ZOOM)
+					zoom = lyxrc.zoom;
+				else if (cmd.action() == LFUN_BUFFER_ZOOM_IN)
 					zoom += 20;
 				else
 					zoom -= 20;
-			} else
-				zoom += convert<int>(cmd.argument());
+			} else {
+				if (cmd.action() == LFUN_BUFFER_ZOOM)
+					zoom = convert<int>(cmd.argument());
+				else if (cmd.action() == LFUN_BUFFER_ZOOM_IN)
+					zoom += convert<int>(cmd.argument());
+				else
+					zoom -= convert<int>(cmd.argument());
+			}
 
 			if (zoom < static_cast<int>(zoom_min_))
 				zoom = zoom_min_;
-			lyxrc.zoom = zoom;
 
-			dr.setMessage(bformat(_("Zoom level is now %1$d%"), lyxrc.zoom));
+			lyxrc.currentZoom = zoom;
+
+			dr.setMessage(bformat(_("Zoom level is now %1$d%"), lyxrc.currentZoom));
 
 			// The global QPixmapCache is used in GuiPainter to cache text
 			// painting so we must reset it.

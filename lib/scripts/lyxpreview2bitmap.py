@@ -75,16 +75,19 @@
 # Moreover dvipng can't work with PDF files, so, if the CONVERTER
 # paramter is pdflatex we have to fallback to legacy route (step 2).
 
-import getopt, glob, os, re, shutil, string, sys
+from __future__ import print_function
+
+import getopt, glob, os, re, shutil, sys, tempfile
 
 from legacy_lyxpreview2ppm import extract_resolution, legacy_conversion_step1
 
 from lyxpreview_tools import bibtex_commands, check_latex_log, copyfileobj, \
      error, filter_pages, find_exe, find_exe_or_terminate, \
      join_metrics_and_rename, latex_commands, latex_file_re, make_texcolor, \
-     mkstemp, pdflatex_commands, progress, run_command, run_latex, run_tex, \
+     pdflatex_commands, progress, run_command, run_latex, run_tex, \
      warning, write_metrics_info
 
+PY2 = sys.version_info[0] == 2
 
 def usage(prog_name):
     msg = """
@@ -134,8 +137,8 @@ def extract_metrics_info(dvipng_stdout):
         success = 1
 
         # Calculate the 'ascent fraction'.
-        descent = string.atof(match.group(1))
-        ascent  = string.atof(match.group(2))
+        descent = float(match.group(1))
+        ascent  = float(match.group(2))
 
         frac = 0.5
         if ascent < 0:
@@ -159,25 +162,28 @@ def extract_metrics_info(dvipng_stdout):
 
 
 def fix_latex_file(latex_file, pdf_output):
-    def_re = re.compile(r"(\\newcommandx|\\global\\long\\def)(\\[a-zA-Z]+)")
+    # python 2 does not allow to declare a string as raw byte so we double
+    # the backslashes and remove the r preffix
+    def_re = re.compile(b"(\\\\newcommandx|\\\\global\\\\long\\\\def)"
+                        b"(\\\\[a-zA-Z]+)")
 
-    tmp = mkstemp()
+    tmp = tempfile.TemporaryFile()
 
     changed = False
     macros = []
-    for line in open(latex_file, 'r').readlines():
-        if not pdf_output and line.startswith("\\documentclass"):
+    for line in open(latex_file, 'rb').readlines():
+        if not pdf_output and line.startswith(b"\\documentclass"):
             changed = True
-            line += "\\PassOptionsToPackage{draft}{microtype}\n"
+            line += b"\\PassOptionsToPackage{draft}{microtype}\n"
         else:
             match = def_re.match(line)
             if match != None:
                 macroname = match.group(2)
                 if macroname in macros:
                     definecmd = match.group(1)
-                    if definecmd == "\\newcommandx":
+                    if definecmd == b"\\newcommandx":
                         changed = True
-                        line = line.replace(definecmd, "\\renewcommandx")
+                        line = line.replace(definecmd, b"\\renewcommandx")
                 else:
                     macros.append(macroname)
         tmp.write(line)
@@ -215,7 +221,7 @@ def find_ps_pages(dvi_file):
         error("No DVI output.")
 
     # Check for PostScript specials in the dvi, badly supported by dvipng,
-    # and inclusion of PDF/PNG/JPG files. 
+    # and inclusion of PDF/PNG/JPG files.
     # This is required for correct rendering of PSTricks and TikZ
     dv2dt = find_exe_or_terminate(["dv2dt"])
     dv2dt_call = '%s "%s"' % (dv2dt, dvi_file)
@@ -277,7 +283,7 @@ def find_ps_pages(dvi_file):
 
         # Use page ranges, as a list of pages could exceed command line
         # maximum length (especially under Win32)
-        for index in xrange(1, page_index + 1):
+        for index in range(1, page_index + 1):
             if (not index in ps_or_pdf_pages) and skip:
                 # We were skipping pages but current page shouldn't be skipped.
                 # Add this page to -pp, it could stay alone or become the
@@ -324,13 +330,13 @@ def main(argv):
         (opts, args) = getopt.gnu_getopt(argv[1:], "dhv", ["bibtex=", "bg=",
             "debug", "dpi=", "fg=", "help", "latex=", "lilypond",
             "lilypond-book=", "png", "ppm", "verbose"])
-    except getopt.GetoptError, err:
+    except getopt.GetoptError as err:
         error("%s\n%s" % (err, usage(script_name)))
 
     opts.reverse()
     for opt, val in opts:
         if opt in ("-h", "--help"):
-            print usage(script_name)
+            print(usage(script_name))
             sys.exit(0)
         elif opt == "--bibtex":
             bibtex = [val]
@@ -341,7 +347,7 @@ def main(argv):
             lyxpreview_tools.debug = True
         elif opt == "--dpi":
             try:
-                dpi = string.atoi(val)
+                dpi = int(val)
             except:
                 error("Cannot convert %s to an integer value" % val)
         elif opt == "--fg":
@@ -379,6 +385,11 @@ def main(argv):
         error('File "%s" not found.' % input_path)
     if len(dir) != 0:
         os.chdir(dir)
+
+    # For python > 2 convert strings to bytes
+    if not PY2:
+        fg_color = bytes(fg_color, 'ascii')
+        bg_color = bytes(bg_color, 'ascii')
 
     fg_color_dvipng = make_texcolor(fg_color, False)
     bg_color_dvipng = make_texcolor(bg_color, False)

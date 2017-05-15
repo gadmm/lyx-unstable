@@ -610,7 +610,7 @@ Preamble::Preamble() : one_language(true), explicit_babel(false),
 	h_font_tt_scale[1]        = "100";
 	//h_font_cjk
 	h_is_mathindent           = "0";
-	h_math_number_before      = "0";
+	h_math_numbering_side     = "default";
 	h_graphics                = "default";
 	h_default_output_format   = "default";
 	h_html_be_strict          = "false";
@@ -1415,7 +1415,7 @@ bool Preamble::writeLyXHeader(ostream & os, bool subdoc, string const & outfiled
 	os << "\\is_math_indent " << h_is_mathindent << "\n";
 	if (!h_mathindentation.empty())
 		os << "\\math_indentation " << h_mathindentation << "\n";
-	os << "\\math_number_before " << h_math_number_before << "\n";
+	os << "\\math_numbering_side " << h_math_numbering_side << "\n";
 	os << "\\quotes_style " << h_quotes_style << "\n"
 #else
 	os << "\\quotes_language " << h_quotes_style << "\n"
@@ -1816,7 +1816,12 @@ void Preamble::parse(Parser & p, string const & forceclass,
 			// formula numbering side
 			if ((it = find(opts.begin(), opts.end(), "leqno"))
 				 != opts.end()) {
-				h_math_number_before = "1";
+				h_math_numbering_side = "left";
+				opts.erase(it);
+			}
+			else if ((it = find(opts.begin(), opts.end(), "reqno"))
+				 != opts.end()) {
+				h_math_numbering_side = "right";
 				opts.erase(it);
 			}
 			

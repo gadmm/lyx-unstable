@@ -28,25 +28,32 @@
 
 set(KEYTEST "${AUTOTEST_ROOT}/keytest.py")
 
-execute_process(COMMAND pidof ${LYX} OUTPUT_VARIABLE LYX_PID RESULT_VARIABLE pidstat OUTPUT_VARIABLE pidres)
-message(STATUS "pidres = ${pidres}")
-if (NOT pidstat)
-  # lyx already running, remove trailing '\n' from pid
-  string(REGEX REPLACE "\n" "" pidres ${pidres})
-  execute_process(COMMAND wmctrl -l -p OUTPUT_VARIABLE _wmco)
-  string(REGEX REPLACE "[\n]+" ";" _wmc ${_wmco})
-  foreach(_w ${_wmc})
-    string(REGEX MATCH "${pidres}" _wr ${_w})
-    if (${_wr} MATCHES ${pidres})
-      # this entry contains the pid, go search for X11-window-id
-      string(REGEX REPLACE " .*" "" _wr ${_w})
-      set(LYX_WINDOW_NAME ${_wr})
-      message(STATUS "Set LYX_WINDOW_NAME to ${_wr}")
+if(0)
+  # This thread works, but the sollution in keytest.py is faster
+  #-------------------------------------------------------------
+  # Try to wait some seconds until the previous lyx stopped
+  # but not more than 30 seconds
+  message(STATUS "Wait for maximal 30 seconds until the previous lyx finishes")
+  set(lcount 0)
+  set(pidstat 1)
+  while (NOT lcount GREATER 30)
+    MATH(EXPR lcount "${lcount} + 1")
+    execute_process(COMMAND pidof ${LYX} OUTPUT_VARIABLE LYX_PID RESULT_VARIABLE pidstat OUTPUT_VARIABLE pidres)
+    if (pidstat)
+      break()
     endif()
-  endforeach()
-else()
-  set(pidres "")
-  set(LYX_WINDOW_NAME "")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E sleep 1)
+  endwhile()
+
+  if (lcount GREATER 1)
+    # We had to wait for some seconds
+    message(STATUS "There was still some lyx in way(${lcount})")
+  endif()
+  if (NOT pidstat)
+    # lyx still running, remove trailing '\n' from pid
+    string(REGEX REPLACE "\n" "" pidres ${pidres})
+    message(FATAL_ERROR "Old lyx with pid ${pidres} still running")
+  endif()
 endif()
 
 #check for plausible DISPLAY environment (needed bei keytests)
@@ -56,25 +63,7 @@ if(NOT DISPLAY_VAR MATCHES "^[a-zA-Z\\.]*:[0-9]+\(\\.[0-9]+\)?$")
 endif()
 
 set(LYX_EXE "${BINDIR}/${LYX}")
-set(use_hacked $ENV{XVKBD_HACKED})
-if(NOT use_hacked)
-  if(use_hacked STREQUAL "")
-    # ENV{XVKBD_HACKED} probably not set, so the default should be
-    # to use the hacked
-    set(use_hacked "1")
-  else()
-    set(use_hacked "0")
-  endif()
-else()
-  set(use_hacked "1")
-endif()
 
-set(ENV{XVKBD_HACKED} ${use_hacked})
-if(use_hacked)
-  set(XVKBD_EXE "${BINDIR}/xvkbd")
-else()
-  set(XVKBD_EXE "/usr/bin/xvkbd")
-endif()
 set(ENV{QT_FRONTEND} ${FRONTEND})
 
 if(EXISTS "${LYX_TESTS_USERDIR}/session")
@@ -109,6 +98,7 @@ endif()
 if(EXISTS "${AUTOTEST_ROOT}/${_jj}.lyx")
   configure_file("${AUTOTEST_ROOT}/${_jj}.lyx" "${WORKDIR}/../${_jj}.lyx" COPYONLY)
 endif()
+
 execute_process(
   COMMAND python ${KEYTEST}
   RESULT_VARIABLE KEYTEST_RES)

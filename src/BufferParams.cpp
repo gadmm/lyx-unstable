@@ -391,7 +391,7 @@ BufferParams::BufferParams()
 	makeDocumentClass();
 	paragraph_separation = ParagraphIndentSeparation;
 	is_math_indent = false;
-	math_number_before = false;
+	math_numbering_side = DEFAULT;
 	quotes_style = InsetQuotesParams::EnglishQuotes;
 	dynamic_quotes = false;
 	fontsize = "default";
@@ -677,6 +677,19 @@ void BufferParams::setDefSkip(VSpace const & vs)
 }
 
 
+BufferParams::MathNumber BufferParams::getMathNumber() const
+{
+	if (math_numbering_side != DEFAULT)
+		return math_numbering_side;
+	// FIXME: do not hardcode language here
+	else if (language->lang() == "arabic_arabi"
+	         || documentClass().provides("leqno"))
+		return LEFT;
+	else
+		return RIGHT;
+}
+
+
 string BufferParams::readToken(Lexer & lex, string const & token,
 	FileName const & filepath)
 {
@@ -865,8 +878,15 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 	} else if (token == "\\math_indentation") {
 		lex.next();
 		pimpl_->mathindent = Length(lex.getString());
-	} else if (token == "\\math_number_before") {
-		lex >> math_number_before;
+	} else if (token == "\\math_numbering_side") {
+		string tmp;
+		lex >> tmp;
+		if (tmp == "left")
+			math_numbering_side = LEFT;
+		else if (tmp == "right")
+			math_numbering_side = RIGHT;
+		else
+			math_numbering_side = DEFAULT;
 #ifdef FILEFORMAT
 	} else if (token == "\\quotes_style") {
 #else
@@ -1386,7 +1406,17 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 	os << "\n\\is_math_indent " << is_math_indent;
 	if (is_math_indent && !getMathIndent().empty())
 		os << "\n\\math_indentation " << getMathIndent().asString();
-	os << "\n\\math_number_before " << math_number_before;
+	os << "\n\\math_numbering_side ";
+	switch(math_numbering_side) {
+	case LEFT:
+		os << "left";
+		break;
+	case RIGHT:
+		os << "right";
+		break;
+	case DEFAULT:
+		os << "default";
+	}
 	os << "\n\\quotes_style "
 #else
 	os << "\n\\quotes_language "
@@ -1676,8 +1706,17 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	if (is_math_indent)
 		clsoptions << "fleqn,";
 
-	if (math_number_before)
+	switch(math_numbering_side) {
+	case LEFT:
 		clsoptions << "leqno,";
+		break;
+	case RIGHT:
+		clsoptions << "reqno,";
+		features.require("amsmath");
+		break;
+	case DEFAULT:
+		break;
+	}
 
 	// language should be a parameter to \documentclass
 	if (language->babel() == "hebrew"

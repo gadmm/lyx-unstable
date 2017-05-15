@@ -10,12 +10,12 @@
 #   Paul A. Rubin, rubin@msu.edu.
 
 # A repository of the following functions, used by the lyxpreview2xyz scripts.
-# copyfileobj, error, find_exe, find_exe_or_terminate, make_texcolor, mkstemp,
+# copyfileobj, error, find_exe, find_exe_or_terminate, make_texcolor,
 # progress, run_command, run_latex, warning
 
 # Requires python 2.4 or later (subprocess module).
 
-import os, re, string, subprocess, sys, tempfile
+import os, re, subprocess, sys, tempfile
 
 
 # Control the output to stdout
@@ -72,18 +72,18 @@ def error(message):
 
 def make_texcolor(hexcolor, graphics):
     # Test that the input string contains 6 hexadecimal chars.
-    hexcolor_re = re.compile("^[0-9a-fA-F]{6}$")
+    hexcolor_re = re.compile(b"^[0-9a-fA-F]{6}$")
     if not hexcolor_re.match(hexcolor):
         error("Cannot convert color '%s'" % hexcolor)
 
-    red   = float(string.atoi(hexcolor[0:2], 16)) / 255.0
-    green = float(string.atoi(hexcolor[2:4], 16)) / 255.0
-    blue  = float(string.atoi(hexcolor[4:6], 16)) / 255.0
+    red   = float(int(hexcolor[0:2], 16)) / 255.0
+    green = float(int(hexcolor[2:4], 16)) / 255.0
+    blue  = float(int(hexcolor[4:6], 16)) / 255.0
 
     if graphics:
-        return "%f,%f,%f" % (red, green, blue)
+        return b"%f,%f,%f" % (red, green, blue)
     else:
-        return "rgb %f %f %f" % (red, green, blue)
+        return b"rgb %f %f %f" % (red, green, blue)
 
 
 def find_exe(candidates):
@@ -110,7 +110,7 @@ def find_exe(candidates):
 def find_exe_or_terminate(candidates):
     exe = find_exe(candidates)
     if exe == None:
-        error("Unable to find executable from '%s'" % string.join(candidates))
+        error("Unable to find executable from '%s'" % " ".join(candidates))
 
     return exe
 
@@ -196,16 +196,6 @@ def run_command(cmd, stderr2stdout = True):
         return run_command_popen(cmd, stderr2stdout)
 
 
-def get_version_info():
-    version_re = re.compile("([0-9])\.([0-9])")
-
-    match = version_re.match(sys.version)
-    if match == None:
-        error("Unable to extract version info from 'sys.version'")
-
-    return string.atoi(match.group(1)), string.atoi(match.group(2))
-
-
 def copyfileobj(fsrc, fdst, rewind=0, length=16*1024):
     """copy data from file-like object fsrc to file-like object fdst"""
     if rewind:
@@ -219,55 +209,12 @@ def copyfileobj(fsrc, fdst, rewind=0, length=16*1024):
         fdst.write(buf)
 
 
-class TempFile:
-    """clone of tempfile.TemporaryFile to use with python < 2.0."""
-    # Cache the unlinker so we don't get spurious errors at shutdown
-    # when the module-level "os" is None'd out.  Note that this must
-    # be referenced as self.unlink, because the name TempFile
-    # may also get None'd out before __del__ is called.
-    unlink = os.unlink
-
-    def __init__(self):
-        self.filename = tempfile.mktemp()
-        self.file = open(self.filename,"w+b")
-        self.close_called = 0
-
-    def close(self):
-        if not self.close_called:
-            self.close_called = 1
-            self.file.close()
-            self.unlink(self.filename)
-
-    def __del__(self):
-        self.close()
-
-    def read(self, size = -1):
-        return self.file.read(size)
-
-    def write(self, line):
-        return self.file.write(line)
-
-    def seek(self, offset):
-        return self.file.seek(offset)
-
-    def flush(self):
-        return self.file.flush()
-
-
-def mkstemp():
-    """create a secure temporary file and return its object-like file"""
-    major, minor = get_version_info()
-
-    if major >= 2 and minor >= 0:
-        return tempfile.TemporaryFile()
-    else:
-        return TempFile()
-
 def write_metrics_info(metrics_info, metrics_file):
     metrics = open(metrics_file, 'w')
     for metric in metrics_info:
         metrics.write("Snippet %s %f\n" % metric)
     metrics.close()
+
 
 # Reads a .tex files and create an identical file but only with
 # pages whose index is in pages_to_keep

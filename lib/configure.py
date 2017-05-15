@@ -927,6 +927,14 @@ def checkConverterEntries():
     # Only define a converter from pdf6 for graphics
     checkProg('a PDF to EPS converter', ['pdftops -eps -f 1 -l 1 $$i $$o'],
         rc_entry = [ r'\converter pdf6        eps        "%%"	""' ])
+    # Define a converter from pdf6 to png for Macs where pdftops is missing.
+    # The converter utility sips allows to force the dimensions of the resulting
+    # png image. The value of 800 pixel for the width is arbitrary and not
+    # related to the current screen resolution or width.
+    # There is no converter parameter for this information.
+    checkProg('a PDF to PNG converter',
+        ['sips --resampleWidth 800 --setProperty format png $$i --out $$o'],
+        rc_entry = [ r'\converter pdf6        png        "%%" ""' ])
     # Create one converter for a PDF produced using TeX fonts and one for a
     # PDF produced using non-TeX fonts. This does not produce non-unique
     # conversion paths, since a given document either uses TeX fonts or not.
@@ -1023,7 +1031,7 @@ def checkConverterEntries():
     # The eps2->eps converter then fixes the bounding box by cropping.
     # Although unoconv can convert to png and pdf as well, do not define
     # odg->png and odg->pdf converters, since the bb would be too large as well.
-    checkProg('an OpenDocument -> EPS converter', ['libreoffice -headless -nologo -convert-to eps $$i', 'unoconv -f eps --stdout $$i > $$o'],
+    checkProg('an OpenDocument -> EPS converter', ['libreoffice --headless --nologo --convert-to eps $$i', 'unoconv -f eps --stdout $$i > $$o'],
         rc_entry = [ r'\converter odg        eps2       "%%"	""'])
     #
     checkProg('a SVG (compressed) -> SVG converter', ['gunzip -c $$i > $$o'],
@@ -1047,7 +1055,10 @@ def checkConverterEntries():
         rc_entry = [ r'''\converter svg        png        "%%"    "",
 \converter svgz       png        "%%"    ""'''],
         path = ['', inkscape_path])
-
+    #
+    checkProg('Gnuplot', ['gnuplot'], 
+        rc_entry = [ r'''\Format gnuplot     "gp, gnuplot"    "Gnuplot"     "" "" ""  "vector"	"text/plain"
+\converter gnuplot      pdf6      "python -tt $$s/scripts/gnuplot2pdf.py $$i $$o"    "needauth"''' ])
     #
     # gnumeric/xls/ods to tex
     checkProg('a spreadsheet -> latex converter', ['ssconvert'],

@@ -357,6 +357,8 @@ private:
 	void initToolbars();
 	///
 	void initToolbar(std::string const & name);
+	/// Update lock (all) toolbars position
+	void updateLockToolbars();
 	///
 	bool lfunUiToggle(std::string const & ui_component);
 	///
@@ -461,8 +463,10 @@ private:
 	QLabel * version_control_;
 
 	/// Minimum zoom percentage
-	static unsigned int const zoom_min_ = 10;
+	static int const zoom_min_ = 10;
 
+	// movability flag of all toolbars
+	bool toolbarsMovable_;
 };
 
 } // namespace frontend

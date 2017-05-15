@@ -63,13 +63,11 @@ void InsetArgument::read(Lexer & lex)
 
 void InsetArgument::updateBuffer(ParIterator const & it, UpdateType utype)
 {
-	Layout::LaTeXArgMap args = it.paragraph().layout().args();
-	pass_thru_context_ = it.paragraph().layout().pass_thru;
-	bool const insetlayout = args.empty();
-	if (insetlayout) {
-		args = it.inset().getLayout().args();
-		pass_thru_context_ = it.inset().getLayout().isPassThru();
-	}
+	bool const insetlayout = !it.paragraph().layout().hasArgs();
+	Layout::LaTeXArgMap const args = insetlayout ?
+		it.inset().getLayout().args() : it.paragraph().layout().args();
+	pass_thru_context_ = insetlayout ?
+		it.inset().getLayout().isPassThru() : it.paragraph().layout().pass_thru;
 
 	// Handle pre 2.1 ArgInsets (lyx2lyx cannot classify them)
 	if (name_ == "999") {
@@ -225,19 +223,13 @@ bool InsetArgument::getStatus(Cursor & cur, FuncRequest const & cmd,
 			Layout::LaTeXArgMap::const_iterator const lait = args.find(type);
 			if (lait != args.end()) {
 				flag.setEnabled(true);
-				InsetList::const_iterator it = cur.paragraph().insetList().begin();
-				InsetList::const_iterator end = cur.paragraph().insetList().end();
-				for (; it != end; ++it) {
-					if (it->inset->lyxCode() == ARG_CODE) {
-						InsetArgument const * ins =
-							static_cast<InsetArgument const *>(it->inset);
+				for (auto const & table : cur.paragraph().insetList())
+					if (InsetArgument const * ins = table.inset->asInsetArgument())
 						if (ins->name() == type) {
 							// we have this already
 							flag.setEnabled(false);
 							return true;
 						}
-					}
-				}
 			} else
 				flag.setEnabled(false);
 			return true;

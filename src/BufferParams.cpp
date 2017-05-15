@@ -1377,10 +1377,10 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 		os << "\n\\paragraph_indentation " << getIndentation().asLyXCommand();
 	else
 		os << "\n\\defskip " << getDefSkip().asLyXCommand();
+#ifdef FILEFORMAT
 	os << "\n\\is_formula_indent " << is_formula_indent;
 	if (is_formula_indent)
 		os << "\n\\formula_indentation " << getFormulaIndentation().asLyXCommand();
-#ifdef FILEFORMAT
 	os << "\n\\quotes_style "
 #else
 	os << "\n\\quotes_language "

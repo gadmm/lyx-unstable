@@ -1470,7 +1470,11 @@ void parse_environment(Parser & p, ostream & os, bool outer,
 	else if (unstarred_name == "sidewaysfigure"
 		|| unstarred_name == "sidewaystable"
 		|| unstarred_name == "sidewaysalgorithm") {
+#ifdef FILEFORMAT
 		string const opt = p.hasOpt() ? p.getArg('[', ']') : string();
+#else
+		string const opt;
+#endif
 		eat_whitespace(p, os, parent_context, false);
 		parent_context.check_layout(os);
 		if (unstarred_name == "sidewaysfigure")

@@ -735,7 +735,7 @@ GuiDocument::GuiDocument(GuiView & lv)
 		this, SLOT(change_adaptor()));
 	connect(textLayoutModule->MathIndentLengthCO, SIGNAL(activated(int)),
 		this, SLOT(change_adaptor()));
-	disable_widget_if_ndef_FILEFORMAT(textLayoutModule->FormulaIndentCB);
+	disable_widget_if_ndef_FILEFORMAT(textLayoutModule->MathIndentCO);
 
 	
 	textLayoutModule->MathIndentCO->addItem(qt_("Default"));

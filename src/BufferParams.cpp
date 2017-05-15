@@ -28,11 +28,11 @@
 #include "ColorSet.h"
 #include "Converter.h"
 #include "Encoding.h"
-#include "HSpace.h"
 #include "IndicesList.h"
 #include "Language.h"
 #include "LaTeXFeatures.h"
 #include "LaTeXFonts.h"
+#include "Length.h"
 #include "ModuleList.h"
 #include "Font.h"
 #include "Lexer.h"
@@ -343,12 +343,12 @@ public:
 	Bullet user_defined_bullets[4];
 	IndicesList indiceslist;
 	Spacing spacing;
+	Length parindent;
+	Length mathindent;
 	/** This is the amount of space used for paragraph_separation "skip",
 	 * and for detached paragraphs in "indented" documents.
 	 */
-	HSpace indentation;
 	VSpace defskip;
-	HSpace math_indentation;
 	PDFOptions pdfoptions;
 	LayoutFileIndex baseClass_;
 	FormatList exportableFormatList;
@@ -391,7 +391,6 @@ BufferParams::BufferParams()
 	makeDocumentClass();
 	paragraph_separation = ParagraphIndentSeparation;
 	is_math_indent = false;
-	math_indentation = "default";
 	quotes_style = InsetQuotesParams::EnglishQuotes;
 	dynamic_quotes = false;
 	fontsize = "default";
@@ -639,27 +638,27 @@ PDFOptions const & BufferParams::pdfoptions() const
 }
 
 
-HSpace const & BufferParams::getMathIndentation() const
+Length const & BufferParams::getMathIndent() const
 {
-	return pimpl_->math_indentation;
+	return pimpl_->mathindent;
 }
 
 
-void BufferParams::setMathIndentation(HSpace const & indent)
+void BufferParams::setMathIndent(Length const & indent)
 {
-	pimpl_->math_indentation = indent;
+	pimpl_->mathindent = indent;
 }
 
 
-HSpace const & BufferParams::getIndentation() const
+Length const & BufferParams::getParIndent() const
 {
-	return pimpl_->indentation;
+	return pimpl_->parindent;
 }
 
 
-void BufferParams::setIndentation(HSpace const & indent)
+void BufferParams::setParIndent(Length const & indent)
 {
-	pimpl_->indentation = indent;
+	pimpl_->parindent = indent;
 }
 
 
@@ -848,8 +847,11 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 		paragraph_separation = parseptranslator().find(parsep);
 	} else if (token == "\\paragraph_indentation") {
 		lex.next();
-		string indentation = lex.getString();
-		pimpl_->indentation = HSpace(indentation);
+		string parindent = lex.getString();
+		if (parindent == "default")
+			pimpl_->parindent = Length();
+		else
+			pimpl_->parindent = Length(parindent);
 	} else if (token == "\\defskip") {
 		lex.next();
 		string const defskip = lex.getString();
@@ -861,8 +863,7 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 		lex >> is_math_indent;
 	} else if (token == "\\math_indentation") {
 		lex.next();
-		string math_indentation = lex.getString();
-		pimpl_->math_indentation = HSpace(math_indentation);
+		pimpl_->mathindent = Length(lex.getString());
 #ifdef FILEFORMAT
 	} else if (token == "\\quotes_style") {
 #else
@@ -1374,13 +1375,14 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 	   << "\n\\paragraph_separation "
 	   << string_paragraph_separation[paragraph_separation];
 	if (!paragraph_separation)
-		os << "\n\\paragraph_indentation " << getIndentation().asLyXCommand();
+		os << "\n\\paragraph_indentation "
+		   << (getParIndent().empty() ? "default" : getParIndent().asString());
 	else
 		os << "\n\\defskip " << getDefSkip().asLyXCommand();
 #ifdef FILEFORMAT
 	os << "\n\\is_math_indent " << is_math_indent;
-	if (is_math_indent)
-		os << "\n\\math_indentation " << getMathIndentation().asLyXCommand();
+	if (is_math_indent && !getMathIndent().empty())
+		os << "\n\\math_indentation " << getMathIndent().asString();
 	os << "\n\\quotes_style "
 #else
 	os << "\n\\quotes_language "
@@ -1987,9 +1989,9 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	} else {
 		// when separation by indentation
 		// only output something when a width is given
-		if (getIndentation().asLyXCommand() != "default") {
+		if (!getParIndent().empty()) {
 			os << "\\setlength{\\parindent}{"
-			   << from_utf8(getIndentation().asLatexCommand())
+			   << from_utf8(getParIndent().asLatexString())
 			   << "}\n";
 		}
 	}
@@ -1997,9 +1999,9 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	if (is_math_indent) {
 		// when formula indentation
 		// only output something when it is not the default
-		if (getMathIndentation().asLyXCommand() != "default") {
+		if (!getMathIndent().empty()) {
 			os << "\\setlength{\\mathindent}{"
-			   << from_utf8(getMathIndentation().asLatexCommand())
+			   << from_utf8(getMathIndent().asString())
 			   << "}\n";
 		}
 	}

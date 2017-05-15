@@ -38,7 +38,6 @@
 #include "FloatPlacement.h"
 #include "Format.h"
 #include "FuncRequest.h"
-#include "HSpace.h"
 #include "IndicesList.h"
 #include "Language.h"
 #include "LaTeXFeatures.h"
@@ -727,6 +726,8 @@ GuiDocument::GuiDocument(GuiView & lv)
 
 	connect(textLayoutModule->MathIndentCB, SIGNAL(toggled(bool)),
 		this, SLOT(change_adaptor()));
+	connect(textLayoutModule->MathIndentCB, SIGNAL(toggled(bool)),
+		this, SLOT(allowMathIndent()));
 	connect(textLayoutModule->MathIndentCO, SIGNAL(activated(int)),
 		this, SLOT(change_adaptor()));
 	connect(textLayoutModule->MathIndentCO, SIGNAL(activated(int)),
@@ -1613,6 +1614,20 @@ void GuiDocument::enableSkip(bool skip)
 	textLayoutModule->indentLengthCO->setEnabled(!skip);
 	if (skip)
 		setSkip(textLayoutModule->skipCO->currentIndex());
+}
+
+void GuiDocument::allowMathIndent() {
+	// only disable when not checked, checked does not always allow enabling
+	if (!textLayoutModule->MathIndentCB->isChecked()) {
+		textLayoutModule->MathIndentLE->setEnabled(false);
+		textLayoutModule->MathIndentLengthCO->setEnabled(false);
+	}
+	if (textLayoutModule->MathIndentCB->isChecked()
+	    && textLayoutModule->MathIndentCO->currentIndex() == 1) {
+			textLayoutModule->MathIndentLE->setEnabled(true);
+			textLayoutModule->MathIndentLengthCO->setEnabled(true);
+	}
+	isValid();
 }
 
 void GuiDocument::setMathIndent(int item)
@@ -2911,13 +2926,10 @@ void GuiDocument::applyView()
 	bp_.is_math_indent = textLayoutModule->MathIndentCB->isChecked();
 	// if math is indented
 	if (bp_.is_math_indent) {
-		HSpace MathIndentation = HSpace(
-				widgetsToLength(textLayoutModule->MathIndentLE,
-				textLayoutModule->MathIndentLengthCO)
-				);
-			bp_.setMathIndentation(MathIndentation);
+		Length mathindent(widgetsToLength(textLayoutModule->MathIndentLE,
+		                                  textLayoutModule->MathIndentLengthCO));
+		bp_.setMathIndent(mathindent);
 	}
-
 	// Page Layout
 	if (pageLayoutModule->pagestyleCO->currentIndex() == 0)
 		bp_.pagestyle = "default";
@@ -2961,19 +2973,17 @@ void GuiDocument::applyView()
 		bp_.paragraph_separation = BufferParams::ParagraphIndentSeparation;
 		switch (textLayoutModule->indentCO->currentIndex()) {
 		case 0:
-			bp_.setIndentation(HSpace(HSpace::DEFAULT));
+			bp_.setParIndent(Length());
 			break;
-		case 1:	{
-			HSpace indent = HSpace(
-				widgetsToLength(textLayoutModule->indentLE,
-				textLayoutModule->indentLengthCO)
-				);
-			bp_.setIndentation(indent);
+		case 1: {
+			Length parindent(widgetsToLength(textLayoutModule->indentLE,
+			                                 textLayoutModule->indentLengthCO));
+			bp_.setParIndent(parindent);
 			break;
-			}
+		}
 		default:
 			// this should never happen
-			bp_.setIndentation(HSpace(HSpace::DEFAULT));
+			bp_.setParIndent(Length());
 			break;
 		}
 	} else {
@@ -3009,19 +3019,17 @@ void GuiDocument::applyView()
 		// if formulas are indented
 		switch (textLayoutModule->MathIndentCO->currentIndex()) {
 		case 0:
-			bp_.setMathIndentation(HSpace(HSpace::DEFAULT));
+			bp_.setMathIndent(Length());
 			break;
-		case 1:	{
-			HSpace MathIndent = HSpace(
-				widgetsToLength(textLayoutModule->MathIndentLE,
-				textLayoutModule->MathIndentLengthCO)
-				);
-			bp_.setMathIndentation(MathIndent);
+		case 1: {
+			Length mathindent(widgetsToLength(textLayoutModule->MathIndentLE,
+			                                  textLayoutModule->MathIndentLengthCO));
+			bp_.setMathIndent(mathindent);
 			break;
-			}
+		}
 		default:
 			// this should never happen
-			bp_.setMathIndentation(HSpace(HSpace::DEFAULT));
+			bp_.setMathIndent(Length());
 			break;
 		}
 	}
@@ -3392,16 +3400,16 @@ void GuiDocument::paramsToDialog()
 	// math
 	if (bp_.is_math_indent) {
 		textLayoutModule->MathIndentCB->setChecked(bp_.is_math_indent);
-		string MathIndentation = bp_.getMathIndentation().asLyXCommand();
-		int MathIndent = 0;
-		if (MathIndentation != "default") {
+		Length const mathindent = bp_.getMathIndent();
+		int indent = 0;
+		if (!mathindent.empty()) {
 			lengthToWidgets(textLayoutModule->MathIndentLE,
-			textLayoutModule->MathIndentLengthCO,
-			MathIndentation, default_unit);
-			MathIndent = 1;
+			                textLayoutModule->MathIndentLengthCO,
+			                mathindent, default_unit);
+			indent = 1;
 		}
-		textLayoutModule->MathIndentCO->setCurrentIndex(MathIndent);
-		setMathIndent(MathIndent);
+		textLayoutModule->MathIndentCO->setCurrentIndex(indent);
+		setMathIndent(indent);
 	}
 
 	map<string, string> const & packages = BufferParams::auto_packages();
@@ -3453,12 +3461,12 @@ void GuiDocument::paramsToDialog()
 
 	if (bp_.paragraph_separation == BufferParams::ParagraphIndentSeparation) {
 		textLayoutModule->indentRB->setChecked(true);
-		string indentation = bp_.getIndentation().asLyXCommand();
+		string parindent = bp_.getParIndent().asString();
 		int indent = 0;
-		if (indentation != "default") {
+		if (!parindent.empty()) {
 			lengthToWidgets(textLayoutModule->indentLE,
-			textLayoutModule->indentLengthCO,
-			indentation, default_unit);
+			                textLayoutModule->indentLengthCO,
+			                parindent, default_unit);
 			indent = 1;
 		}
 		textLayoutModule->indentCO->setCurrentIndex(indent);
@@ -4068,6 +4076,14 @@ bool GuiDocument::isValid()
 			textLayoutModule->indentCO->currentIndex() != 1 ||
 			// or else a length has been given
 			!textLayoutModule->indentLE->text().isEmpty()
+		) &&
+		(
+			// if we're asking for indentation
+			!textLayoutModule->MathIndentCB->isChecked() ||
+			// then either we haven't chosen custom
+			textLayoutModule->MathIndentCO->currentIndex() != 1 ||
+			// or else a length has been given
+			!textLayoutModule->MathIndentLE->text().isEmpty()
 		);
 }
 
@@ -4217,10 +4233,6 @@ void GuiDocument::dispatchParams()
 			docstring const str = current_branch + ' ' + from_ascii(x11hexname);
 			dispatch(FuncRequest(LFUN_SET_COLOR, str));
 		}
-
-		// Open insets of selected branches, close deselected ones
-		dispatch(FuncRequest(LFUN_INSET_FORALL,
-			"Branch inset-toggle assign"));
 	}
 	// rename branches in the document
 	executeBranchRenaming();

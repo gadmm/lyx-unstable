@@ -2022,17 +2022,16 @@ Un clic droit sur un élément du plan ouvrira dans la plupart de cas un menu
 
 \begin_layout Standard
 Le champ 
-\begin_inset Quotes fld
-\end_inset
-
+\family sans
 Filtre
-\begin_inset Quotes frd
-\end_inset
-
+\family default
  situé en haut vous permet de restreindre les éléments apparaissant dans
  le plan.
- Par exemple, si vous affichez une liste des étiquettes et références et
- souhaitez ne voir que les références dans les sous-sections, vous pouvez
+ Par exemple, si vous affichez une liste des 
+\emph on
+étiquettes et références
+\emph default
+ et souhaitez ne voir que les références dans les sous-sections, vous pouvez
  saisir le texte 
 \begin_inset Quotes fld
 \end_inset
@@ -2042,7 +2041,7 @@ Filtre
 status collapsed
 
 \begin_layout Plain Layout
-sub:
+sub
 \end_layout
 
 \end_inset
@@ -2191,10 +2190,8 @@ Maj-Tab
 \end_layout
 
 \begin_layout Standard
-
-\lang english
-By right-clicking on a section in the outliner you can select the whole
- section to copy, cut or delete it.
+Un clic droit sur un nom de section dans le panneau du plan permet de sélectionn
+er toute la section pour la copier, la coller ou la couper.
 \end_layout
 
 \begin_layout Subsection
@@ -9016,14 +9013,12 @@ Verbatim
 \end_layout
 
 \begin_layout Verbatim
-
 This is Verbatim.
 \end_layout
 
 \begin_layout Verbatim
 \noindent
 \align block
-
 The following 2 lines are empty:
 \end_layout
 
@@ -9036,7 +9031,6 @@ The following 2 lines are empty:
 \end_layout
 
 \begin_layout Verbatim
-
 Almost everything is allowed in Verbatim:"%&$§#~'`
 \backslash
 }][{|
@@ -9069,7 +9063,6 @@ Verbatim
 \end_layout
 
 \begin_layout Verbatim*
-
 This is Verbatim*.
 \end_layout
 
@@ -32192,6 +32185,27 @@ Vous pouvez mettre une commande complète ou incomplète dans une boîte de
  \SpecialChar LyX
  standard et donc se trouver hors de la boîte.
  Un exemple pour comprendre: vous voulez tracer un cadre autour d'un mot
+\lang english
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Avec LyX, il est possible d'utiliser une boîte avec l'option 
+\begin_inset Quotes fld
+\end_inset
+
+Cadre simple
+\begin_inset Quotes frd
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\lang french
  et donc utiliser la commande \SpecialChar LaTeX
 
 \series bold
@@ -32218,8 +32232,7 @@ fbox{
 \begin_layout Standard
 \begin_inset Graphics
 	filename clipart/ERT.png
-	lyxscale 75
-	scale 50
+	scale 95
 
 \end_inset
 
@@ -32518,7 +32531,7 @@ key "latexcompanion,latexguide"
 \end_layout
 
 \begin_layout Standard
-\begin_inset Newpage cleardoublepage
+\begin_inset Newpage clearpage
 \end_inset
 
 
@@ -33498,7 +33511,7 @@ key "fancyhdr"
 
 \begin_layout Standard
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -33514,9 +33527,7 @@ pagestyle{headings}
 status collapsed
 
 \begin_layout Plain Layout
-
-\lang english
-switches back to page style with the default headings
+Revient à la mise en pages avec les en-têtes implicites
 \end_layout
 
 \end_inset

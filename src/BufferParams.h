@@ -39,11 +39,11 @@ class Bullet;
 class DocumentClass;
 class Encoding;
 class Font;
-class HSpace;
 class IndicesList;
 class Language;
 class LayoutFile;
 class LayoutFileIndex;
+class Length;
 class Lexer;
 class PDFOptions;
 class Spacing;
@@ -93,24 +93,21 @@ public:
 	bool hasClassDefaults() const;
 
 	///
-	HSpace const & getIndentation() const;
+	Length const & getParIndent() const;
 	///
-	void setIndentation(HSpace const & indent);
+	void setParIndent(Length const & indent);
 	///
 	VSpace const & getDefSkip() const;
 	///
 	void setDefSkip(VSpace const & vs);
 
 	///
-	HSpace const & getMathIndentation() const;
+	Length const & getMathIndent() const;
 	///
-	void setMathIndentation(HSpace const & indent);
+	void setMathIndent(Length const & indent);
 
 	/// Whether formulas are indented
 	bool is_math_indent;
-
-	/// the indentation of formulas
-	std::string math_indentation;
 
 	/** Whether paragraphs are separated by using a indent like in
 	 *  articles or by using a little skip like in letters.

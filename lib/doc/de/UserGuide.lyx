@@ -1872,9 +1872,13 @@ Das Feld
 Filter
 \family default
  erlaubt es, die angezeigten Einträge einzugrenzen.
- Wenn zum Beispiel die Liste der Marken und Querverweise angezeigt ist und
- Sie nur Verweise auf Unterabschnitte sehen wollen, geben Sie den Text „sub:“
- in den Filter ein und nur Einträge mit diesem Text werden angezeigt.
+ Wenn zum Beispiel die Liste der 
+\emph on
+Marken und Querverweise
+\emph default
+ angezeigt ist und Sie nur Verweise auf Unterabschnitte sehen wollen, geben
+ Sie den Text „sub“ in den Filter ein und nur Einträge mit diesem Text werden
+ angezeigt.
 \end_layout
 
 \begin_layout Standard
@@ -8585,12 +8589,10 @@ Unformatiert
 \end_layout
 
 \begin_layout Verbatim
-
 Dies ist Unformatiert.
 \end_layout
 
 \begin_layout Verbatim
-
 Die folgenden 2 Zeilen sind leer:
 \end_layout
 
@@ -8603,7 +8605,6 @@ Die folgenden 2 Zeilen sind leer:
 \end_layout
 
 \begin_layout Verbatim
-
 Fast alles ist in Unformatiert erlaubt:"%&$§#~'`
 \backslash
 }][{|
@@ -8627,7 +8628,6 @@ Unformatiert
 \end_layout
 
 \begin_layout Verbatim*
-
 Dies ist Unformatiert*.
 \end_layout
 
@@ -29793,8 +29793,17 @@ In das \SpecialChar TeX
 -Befehle
  schreiben.
  Unvollständig bedeutet, dass das Befehlsargument normaler Text sein kann.
- Sie wollen zum Beispiel einen Rahmen um ein Wort zeichnen und verwenden
- daher den \SpecialChar LaTeX
+ Sie wollen zum Beispiel einen Rahmen um ein Wort zeichnen
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Der LyX-Weg wäre eine gerahmte Box zu verwenden.
+\end_layout
+
+\end_inset
+
+ und verwenden daher den \SpecialChar LaTeX
 -Befehl 
 \series bold
 
@@ -29823,8 +29832,8 @@ fbox{
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename ../clipart/ERT.png
-	scale 75
+	filename clipart/ERT.png
+	scale 95
 
 \end_inset
 
@@ -30096,7 +30105,7 @@ key "latexcompanion,latexguide"
 \end_layout
 
 \begin_layout Standard
-\begin_inset Newpage cleardoublepage
+\begin_inset Newpage clearpage
 \end_inset
 
 

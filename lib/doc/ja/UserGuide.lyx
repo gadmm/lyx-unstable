@@ -1435,7 +1435,7 @@ reference "sec:書誌情報"
 
 \begin_layout Standard
 上部の「フィルタ」フィールドを使うと，文書構造に表示される項目を制限することができます．例えば，ラベルと参照の一覧を表示しているときに，小節への参照のみを見たい
-場合には，フィルタに「sub:」というテキストを入力すれば，このテキストを含む項目，すなわち小節のみが表示されるようになります．
+場合には，フィルタに「sub」というテキストを入力すれば，このテキストを含む項目，すなわち小節のみが表示されるようになります．
 \end_layout
 
 \begin_layout Standard
@@ -7162,14 +7162,12 @@ Space
 \end_layout
 
 \begin_layout Verbatim
-
 これは原文儘(verbatim)環境です．
 \end_layout
 
 \begin_layout Verbatim
 \noindent
 \align block
-
 この下の2行は空白行です．
 \end_layout
 
@@ -7182,7 +7180,6 @@ Space
 \end_layout
 
 \begin_layout Verbatim
-
 右記の各文字を始め，ほぼすべての文字が使えます．例："%&$§#~'`
 \backslash
 }][{|
@@ -7205,7 +7202,6 @@ Space
 \end_layout
 
 \begin_layout Verbatim*
-
 This is Verbatim*.
 \end_layout
 
@@ -25937,7 +25933,23 @@ arg   "ert-insert"
 \SpecialChar TeX
 コード枠には，完全なコマンドを挿入することもできますし，不完全なコマンドを入れることもできます．不完全というのは，通常の\SpecialChar LyX
 の本文を引数として使うことができるという
-意味です．例えば，単語の周りに枠を描きたいので，
+意味です．
+\lang english
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+The LyX way would be to use a framed box.
+\end_layout
+
+\end_inset
+
+
+\lang japanese
+例えば，単語の周りに枠を描きたいので，
 \series bold
 
 \backslash
@@ -25963,7 +25975,7 @@ fbox{
 \begin_layout Standard
 \begin_inset Graphics
 	filename clipart/ERT.png
-	scale 89
+	scale 95
 
 \end_inset
 
@@ -26221,7 +26233,7 @@ key "latexcompanion,latexguide"
 \end_layout
 
 \begin_layout Standard
-\begin_inset Newpage cleardoublepage
+\begin_inset Newpage clearpage
 \end_inset
 
 
@@ -27005,7 +27017,7 @@ key "fancyhdr"
 
 \begin_layout Standard
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 

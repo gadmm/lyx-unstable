@@ -1984,7 +1984,7 @@ def convert_mathindent(document):
         document.header[i] = document.header[i].replace("fleqn,", "")
         j = find_re(document.header, regexp, 0)
         if i == j:
-            # then we have fleqn as the only option 
+            # then we have fleqn as the only option
             del document.header[i]
     else:
         document.header.insert(k, "\\is_math_indent 0")
@@ -2000,12 +2000,13 @@ def revert_mathindent(document):
         add_to_preamble(document, ["\\setlength{\\mathindent}{" + value + '}'])
         del document.header[i]
     # now set the document class option
-    regexp = re.compile(r'(\\is_math_indent)')
+    regexp = re.compile(r'(\\is_math_indent 1)')
     i = find_re(document.header, regexp, 0)
-    value = "1"
     if i == -1:
-        return
-    else:    
+        regexp = re.compile(r'(\\is_math_indent)')
+        j = find_re(document.header, regexp, 0)
+        del document.header[j]
+    else:
         k = find_token(document.header, "\\options", 0)
         if k != -1:
     	    document.header[k] = document.header[k].replace("\\options", "\\options fleqn,")
@@ -2073,7 +2074,7 @@ def revert_baselineskip(document):
         return
       else:
         document.body[hspaceLine: endInset + 1] = put_cmd_in_ert("\\hspace" + star + '{' + baselineskip + "\\baselineskip}")
-    
+
     i = i + 1
 
 
@@ -2100,7 +2101,7 @@ def revert_rotfloat(document):
     placement = document.body[i-2][beg+1:]
     # check if the option'H' is used
     if placement.find("H") != -1:
-      add_to_preamble(document, ["\\usepackage{float}"])  
+      add_to_preamble(document, ["\\usepackage{float}"])
     # now check if it is a starred type
     if document.body[i-1].find("wide true") != -1:
       star = '*'
@@ -2117,9 +2118,27 @@ def revert_rotfloat(document):
     else:
       document.body[endInset-2: endInset+1] = put_cmd_in_ert("\\end{sideways" + fType + star + '}')
       document.body[i-3: i+2] = put_cmd_in_ert("\\begin{sideways" + fType + star + "}[" + placement + ']')
-      add_to_preamble(document, ["\\usepackage{rotfloat}"])  
-    
+      add_to_preamble(document, ["\\usepackage{rotfloat}"])
+
     i = i + 1
+
+def convert_allowbreak(document):
+    " Zero widths Space-inset -> \SpecialChar allowbreak. "
+    body = "\n".join(document.body)
+    body = body.replace("\\begin_inset space \hspace{}\n"
+                        "\\length 0dd\n"
+                        "\\end_inset\n\n",
+                        "\\SpecialChar allowbreak\n")
+    document.body = body.split("\n")
+
+def revert_allowbreak(document):
+    " \SpecialChar allowbreak -> Zero widths Space-inset. "
+    body = "\n".join(document.body)
+    body = body.replace("\\SpecialChar allowbreak\n",
+                        "\\begin_inset space \hspace{}\n"
+                        "\\length 0dd\n"
+                        "\\end_inset\n\n")
+    document.body = body.split("\n")
 
 
 ##
@@ -2159,10 +2178,12 @@ convert = [
            [537, []],
            [538, [convert_mathindent]],
            [539, []],
-           [540, []]
-          ]
+           [540, []],
+           [541, [convert_allowbreak]],
+           ]
 
 revert =  [
+           [540, [revert_allowbreak]],
            [539, [revert_rotfloat]],
            [538, [revert_baselineskip]],
            [537, [revert_mathindent]],

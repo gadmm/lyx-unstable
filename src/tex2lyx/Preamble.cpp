@@ -186,6 +186,7 @@ const char * const known_old_language_packages[] = {"french", "frenchle",
 
 char const * const known_fontsizes[] = { "10pt", "11pt", "12pt", 0 };
 
+#ifdef FILEFORMAT
 const char * const known_roman_fonts[] = { "ae", "beraserif", "bookman",
 "ccfonts", "chancery", "charter", "cmr", "cochineal", "crimson", "fourier",
 "garamondx", "libertine", "libertine-type1", "lmodern", "mathdesign", "mathpazo",
@@ -199,6 +200,22 @@ const char * const known_sans_fonts[] = { "avant", "berasans", "biolinum-type1",
 const char * const known_typewriter_fonts[] = { "beramono", "cmtl", "cmtt",
 "courier", "lmtt", "luximono", "fourier", "libertineMono-type1", "lmodern",
 "mathpazo", "mathptmx", "newcent", "NotoMono-TLF", "tgcursor", "txtt", 0};
+
+#else
+const char * const known_roman_fonts[] = { "ae", "beraserif", "bookman",
+"ccfonts", "chancery", "charter", "cmr", "cochineal", "crimson", "fourier",
+"garamondx", "libertine", "libertine-type1", "lmodern", "mathdesign", "mathpazo",
+"mathptmx", "newcent", "tgbonum", "tgchorus", "tgpagella", "tgschola", "tgtermes",
+"utopia", 0};
+
+const char * const known_sans_fonts[] = { "avant", "berasans", "biolinum-type1",
+"cmbr", "cmss", "helvet", "iwona", "iwonac", "iwonal", "iwonalc", "kurier",
+"kurierc", "kurierl", "kurierlc", "lmss", "tgadventor", "tgheros", 0};
+
+const char * const known_typewriter_fonts[] = { "beramono", "cmtl", "cmtt",
+"courier", "lmtt", "luximono", "fourier", "libertineMono-type1", "lmodern",
+"mathpazo", "mathptmx", "newcent", "tgcursor", "txtt", 0};
+#fi
 
 const char * const known_math_fonts[] = { "eulervm", "newtxmath", 0};
 
@@ -859,6 +876,7 @@ void Preamble::handle_package(Parser &p, string const & name,
 			h_font_osf = "true";
 	}
 
+#ifdef FILEFORMAT
 	if (name == "noto") {
 		// noto can have several options
 		if (opts.empty())
@@ -877,6 +895,7 @@ void Preamble::handle_package(Parser &p, string const & name,
 		// noto as typewriter is handled in handling of \ttdefault
 		// special cases are handled in handling of \rmdefault and \sfdefault
 	}
+#endif
 
 	// sansserif fonts
 	if (is_known(name, known_sans_fonts)) {

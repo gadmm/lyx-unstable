@@ -17,7 +17,7 @@
   latex using TeX fonts, as done in version 2.1 and earlier. In version 2.2
   they were instead output as the macros \textendash and \textemdash, causing
   changed output with old documents and bugs. The 2.2 behavior can be restored
-  by don't allowing using dash ligatures in Document→Settings→Fonts.
+  by don't allowing using dash ligatures in Document->Settings->Fonts.
 
 
 !!!The following pref variables were added in 2.3:
@@ -70,6 +70,12 @@
   "inset-forall Quotes inset-modify changetype g.s"
    => change all quote insets to German single quotes, keeping left/right setting
 
+* word-delete-forward, word-delete-backward, char-delete-forward,
+  char-delete-backward
+  The pre-2.3 behavior of these functions is equivalent to the 2.3 behavior with
+  the "force" option appended. The new default behavior (without "force") is
+  to select big insets on the first call and delete them only on the second.
+  This new behavior is consistent with how delete works in LyX's math editor.
 
 !!!The following LyX documents have been moved in 2.3:
 

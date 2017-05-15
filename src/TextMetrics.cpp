@@ -1094,7 +1094,7 @@ void TextMetrics::setRowHeight(Row & row) const
 // returns the column near the specified x-coordinate of the row
 // x is set to the real beginning of this column
 pos_type TextMetrics::getPosNearX(Row const & row, int & x,
-                                  bool & boundary, bool const select) const
+				  bool & boundary) const
 {
 	//LYXERR0("getPosNearX(" << x << ") row=" << row);
 	/// For the main Text, it is possible that this pit is not
@@ -1124,7 +1124,7 @@ pos_type TextMetrics::getPosNearX(Row const & row, int & x,
 		for ( ; cit != cend; ++cit) {
 			if (w <= x &&  w + cit->full_width() > x) {
 				int x_offset = int(x - w);
-				pos = cit->x2pos(x_offset, select);
+				pos = cit->x2pos(x_offset);
 				x = int(x_offset + w);
 				break;
 			}
@@ -1140,8 +1140,10 @@ pos_type TextMetrics::getPosNearX(Row const & row, int & x,
 		 * how boundary helps here.
 		 */
 		else if (pos == cit->endpos
-			 && cit + 1 != row.end()
-			 && cit->isRTL() != (cit + 1)->isRTL())
+		         && ((!cit->isRTL() && cit + 1 != row.end()
+		              && (cit + 1)->isRTL())
+		             || (cit->isRTL() && cit != row.begin()
+		                 && !(cit - 1)->isRTL())))
 			boundary = true;
 	}
 
@@ -1328,23 +1330,19 @@ Inset * TextMetrics::editXY(Cursor & cur, int x, int y,
 	}
 	pit_type pit = getPitNearY(y);
 	LASSERT(pit != -1, return 0);
-
-	int yy = y; // is modified by getPitAndRowNearY
-	Row const & row = getPitAndRowNearY(yy, pit, assert_in_view, up);
-
+	Row const & row = getPitAndRowNearY(y, pit, assert_in_view, up);
 	cur.pit() = pit;
 
 	// Do we cover an inset?
-	InsetList::InsetTable * it = checkInsetHit(pit, x, yy);
+	InsetList::InsetTable * it = checkInsetHit(pit, x, y);
 
 	if (!it) {
 		// No inset, set position in the text
 		bool bound = false; // is modified by getPosNearX
-		int xx = x; // is modified by getPosNearX
-		cur.pos() = getPosNearX(row, xx, bound);
+		cur.pos() = getPosNearX(row, x, bound);
 		cur.boundary(bound);
 		cur.setCurrentFont();
-		cur.setTargetX(xx);
+		cur.setTargetX(x);
 		return 0;
 	}
 
@@ -1357,28 +1355,15 @@ Inset * TextMetrics::editXY(Cursor & cur, int x, int y,
 	cur.setTargetX(x);
 
 	// Try to descend recursively inside the inset.
-	Inset * edited = inset->editXY(cur, x, yy);
+	Inset * edited = inset->editXY(cur, x, y);
 	if (edited == inset && cur.pos() == it->pos) {
 		// non-editable inset, set cursor after the inset if x is
 		// nearer to that position (bug 9628)
-		// TODO: This should be replaced with an improvement of
-		// Cursor::moveToClosestEdge that handles rtl text. (Which could not
-		// be tested because of #10569.)
-		CoordCache::Insets const & insetCache = bv_->coordCache().getInsets();
-		if (insetCache.has(inset)) {
-			Dimension const & dim = insetCache.dim(inset);
-			Point p = insetCache.xy(inset);
-			bool const is_rtl = text_->isRTL(text_->getPar(pit));
-			if (is_rtl) {
-				// "in front of" == "right of"
-				if (abs(p.x_ - x) < abs(p.x_ + dim.wid - x))
-					cur.posForward();
-			} else {
-				// "in front of" == "left of"
-				if (abs(p.x_ + dim.wid - x) < abs(p.x_ - x))
-					cur.posForward();
-			}
-		}
+		bool bound = false; // is modified by getPosNearX
+		cur.pos() = getPosNearX(row, x, bound);
+		cur.boundary(bound);
+		cur.setCurrentFont();
+		cur.setTargetX(x);
 	}
 
 	if (cur.top().text() == text_)
@@ -1387,8 +1372,7 @@ Inset * TextMetrics::editXY(Cursor & cur, int x, int y,
 }
 
 
-void TextMetrics::setCursorFromCoordinates(Cursor & cur, int const x,
-                                           int const y, bool const select)
+void TextMetrics::setCursorFromCoordinates(Cursor & cur, int const x, int const y)
 {
 	LASSERT(text_ == cur.text(), return);
 	pit_type const pit = getPitNearY(y);
@@ -1415,7 +1399,7 @@ void TextMetrics::setCursorFromCoordinates(Cursor & cur, int const x,
 
 	bool bound = false;
 	int xx = x;
-	pos_type const pos = getPosNearX(row, xx, bound, select);
+	pos_type const pos = getPosNearX(row, xx, bound);
 
 	LYXERR(Debug::DEBUG, "setting cursor pit: " << pit << " pos: " << pos);
 

@@ -1146,11 +1146,12 @@ def revert_noprefix(document):
             i += 1
             continue
         k = find_token(document.body, "LatexCommand labelonly", i, j)
-        if k == -1:
-            i = j
-            continue
-        noprefix = get_bool_value(document.body, "noprefix", i, j)
+        noprefix = False
+        if k != -1:
+            noprefix = get_bool_value(document.body, "noprefix", i, j)
         if not noprefix:
+            # either it was not a labelonly command, or else noprefix was not set.
+            # in that case, we just delete the option.
             del_token(document.body, "noprefix", i, j)
             i = j
             continue
@@ -2145,9 +2146,10 @@ def convert_mathnumberpos(document):
     " add the \\math_number_before tag "
     # check if the document uses the class option "leqno"
     k = find_token(document.header, "\\quotes_style", 0)
+    m = find_token(document.header, "\\options", 0)
     regexp = re.compile(r'^.*leqno.*')
     i = find_re(document.header, regexp, 0)
-    if i != -1:
+    if i != -1 and i == m:
         document.header.insert(k, "\\math_number_before 1")
         # delete the found option
         document.header[i] = document.header[i].replace(",leqno", "")
@@ -2182,7 +2184,6 @@ def revert_mathnumberpos(document):
 
 def convert_mathnumberingname(document):
     " rename the \\math_number_before tag to \\math_numbering_side "
-    document.warning("Malformed LyX document: Missing '\\end_inset' of Float inset.")
     regexp = re.compile(r'(\\math_number_before 1)')
     i = find_re(document.header, regexp, 0)
     if i != -1:
@@ -2193,9 +2194,10 @@ def convert_mathnumberingname(document):
         document.header[i] = "\\math_numbering_side default"
     # check if the document uses the class option "reqno"
     k = find_token(document.header, "\\math_numbering_side", 0)
+    m = find_token(document.header, "\\options", 0)
     regexp = re.compile(r'^.*reqno.*')
     i = find_re(document.header, regexp, 0)
-    if i != -1:
+    if i != -1 and i == m:
         document.header[k] = "\\math_numbering_side right"
         # delete the found option
         document.header[i] = document.header[i].replace(",reqno", "")

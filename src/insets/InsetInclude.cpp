@@ -99,7 +99,7 @@ Types type(string const & s)
 		return VERB;
 	if (s == "verbatiminput*")
 		return VERBAST;
-	if (s == "lstinputlisting")
+	if (s == "lstinputlisting" || s == "inputminted")
 		return LISTINGS;
 	if (s == "include")
 		return INCLUDE;
@@ -598,15 +598,87 @@ void InsetInclude::latex(otexstream & os, OutputParams const & runparams) const
 		break;
 	}
 	case LISTINGS: {
+		// Here, listings and minted have sligthly different behaviors.
+		// Using listings, it is always possible to have a caption,
+		// even for non-floats. Using minted, only floats can have a
+		// caption. So, with minted we use the following strategy.
+		// If a caption was specified but the float parameter was not,
+		// we ourselves add a caption above the listing (because the
+		// listing comes from a file and might span several pages).
+		// Otherwise, if float was specified, the floating listing
+		// environment provided by minted is used. In either case, the
+		// label parameter is taken as the label by which the float
+		// can be referenced, otherwise it will have the meaning
+		// intended by minted. In this last case, the label will
+		// serve as a sort of caption that, however, will be shown
+		// by minted only if the frame parameter is also specified.
+		bool const use_minted = buffer().params().use_minted;
 		runparams.exportdata->addExternalFile(tex_format, writefile,
 						      exportfile);
-		os << '\\' << from_ascii(params().getCmdName());
 		string const opt = to_utf8(params()["lstparams"]);
 		// opt is set in QInclude dialog and should have passed validation.
-		InsetListingsParams params(opt);
-		if (!params.params().empty())
-			os << "[" << from_utf8(params.params()) << "]";
-		os << '{'  << from_utf8(incfile) << '}';
+		InsetListingsParams lstparams(opt);
+		string parameters = lstparams.params();
+		string language;
+		string caption;
+		string label;
+		string placement;
+		bool isfloat = lstparams.isFloat();
+		if (use_minted) {
+			// Get float placement, language, caption, and
+			// label, then remove the relative options.
+			vector<string> opts =
+				getVectorFromString(parameters, ",", false);
+			for (size_t i = 0; i < opts.size(); ++i) {
+				if (prefixIs(opts[i], "float")) {
+					if (prefixIs(opts[i], "float="))
+						placement = opts[i].substr(6);
+					opts.erase(opts.begin() + i--);
+				} else if (prefixIs(opts[i], "language=")) {
+					language = opts[i].substr(9);
+					opts.erase(opts.begin() + i--);
+				} else if (prefixIs(opts[i], "caption=")) {
+					caption = opts[i].substr(8);
+					opts.erase(opts.begin() + i--);
+				} else if (prefixIs(opts[i], "label=")) {
+					label = opts[i].substr(6);
+					opts.erase(opts.begin() + i--);
+				}
+			}
+			if (!label.empty()) {
+				if (isfloat || !caption.empty())
+					label = trim(label, "{}");
+				else
+					opts.push_back("label=" + label);
+			}
+			parameters = getStringFromVector(opts, ",");
+		}
+		if (language.empty())
+			language = "TeX";
+		if (use_minted && isfloat) {
+			os << breakln << "\\begin{listing}";
+			if (!placement.empty())
+				os << '[' << placement << "]";
+			os << breakln;
+		} else if (use_minted && !caption.empty()) {
+			os << breakln << "\\lyxmintcaption[t]{" << caption;
+			if (!label.empty())
+				os << "\\label{" << label << "}";
+			os << "}\n";
+		}
+		os << (use_minted ? "\\inputminted" : "\\lstinputlisting");
+		if (!parameters.empty())
+			os << "[" << parameters << "]";
+		if (use_minted)
+			os << '{'  << language << '}';
+		os << '{'  << incfile << '}';
+		if (use_minted && isfloat) {
+			if (!caption.empty())
+				os << breakln << "\\caption{" << caption << "}";
+			if (!label.empty())
+				os << breakln << "\\label{" << label << "}";
+			os << breakln << "\\end{listing}\n";
+		}
 		break;
 	}
 	case INCLUDE: {
@@ -963,9 +1035,13 @@ void InsetInclude::validate(LaTeXFeatures & features) const
 	if (isVerbatim(params()))
 		features.require("verbatim");
 	else if (isListings(params())) {
-		if (buffer().params().use_minted)
+		if (buffer().params().use_minted) {
 			features.require("minted");
-		else
+			string const opts = to_utf8(params()["lstparams"]);
+			InsetListingsParams lstpars(opts);
+			if (!lstpars.isFloat() && contains(opts, "caption="))
+				features.require("lyxmintcaption");
+		} else
 			features.require("listings");
 	}
 

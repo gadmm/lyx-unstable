@@ -17,14 +17,13 @@
 #define FILEMONITOR_H
 
 #include "support/FileName.h"
+#include "support/signals.h"
 
 #include <memory>
 
 #include <QFileSystemWatcher>
 #include <QObject>
 #include <QPointer>
-
-#include <boost/signals2.hpp>
 
 
 namespace lyx {
@@ -60,12 +59,6 @@ typedef std::unique_ptr<ActiveFileMonitor> ActiveFileMonitorPtr;
 ///   monitor = FileSystemWatcher::monitor(file_with_path2);
 ///   monitor.connect(...);
 /// (stops watching the first)
-///
-/// Block notifications for the duration of a scope:
-///   {
-///       FileMonitorBlocker block = monitor.block();
-///       ...
-///   }
 ///
 /// Reset connections:
 ///   monitor.disconnect();
@@ -109,18 +102,16 @@ public:
 	~FileMonitorGuard();
 	/// absolute path being tracked
 	std::string const & filename() { return filename_; }
-	/// if false, emit fileChanged() when we notice the existence of the file
-	void setExists(bool exists) { exists_ = exists; }
 
 public Q_SLOTS:
 	/// Make sure it is being monitored, after e.g. a deletion. See
 	/// <https://bugreports.qt.io/browse/QTBUG-46483>. This is called
 	/// automatically.
-	void refresh();
+	void refresh(bool emit = true);
 
 Q_SIGNALS:
 	/// Connect to this to be notified when the file changes
-	void fileChanged() const;
+	void fileChanged(bool exists) const;
 
 private Q_SLOTS:
 	/// Receive notifications from the QFileSystemWatcher
@@ -129,50 +120,28 @@ private Q_SLOTS:
 private:
 	std::string const filename_;
 	QFileSystemWatcher * qwatcher_;
+	/// for emitting fileChanged() when the file is created or deleted
 	bool exists_;
 };
-
-
-class FileMonitorBlockerGuard : public QObject
-{
-	Q_OBJECT
-	QPointer<FileMonitor> monitor_;
-	int delay_;
-
-public:
-	FileMonitorBlockerGuard(FileMonitor * monitor);
-	~FileMonitorBlockerGuard();
-	void setDelay(int delay);
-};
-
-
-typedef std::shared_ptr<FileMonitorBlockerGuard> FileMonitorBlocker;
 
 
 /// Main class
 class FileMonitor : public QObject
 {
 	Q_OBJECT
-	friend class FileMonitorBlockerGuard;
 
 public:
 	FileMonitor(std::shared_ptr<FileMonitorGuard> monitor);
 
-	typedef boost::signals2::signal<void()> sig;
+	typedef signals2::signal<void(bool)> sig;
+	typedef sig::slot_type slot;
 	/// Connect and you'll be informed when the file has changed.
-	boost::signals2::connection connect(sig::slot_type const &);
+	signals2::connection connect(slot const &);
 	/// disconnect all slots connected to the boost signal fileChanged_ or to
 	/// the qt signal fileChanged()
 	void disconnect();
 	/// absolute path being tracked
 	std::string const & filename() { return monitor_->filename(); }
-	/// Creates a guard that blocks notifications. Copyable. Notifications from
-	/// this monitor are blocked as long as there are copies around.
-	/// \param delay is the amount waited in ms after expiration of the guard
-	/// before reconnecting. This delay thing is to deal with asynchronous
-	/// notifications in a not so elegant fashion. But it can also be used to
-	/// slow down incoming events.
-	FileMonitorBlocker block(int delay = 0);
 	/// Make sure the good file is being monitored, after e.g. a move or a
 	/// deletion. See <https://bugreports.qt.io/browse/QTBUG-46483>. This is
 	/// called automatically.
@@ -180,21 +149,19 @@ public:
 
 Q_SIGNALS:
 	/// Connect to this to be notified when the file changes
-	void fileChanged() const;
+	void fileChanged(bool exists) const;
 
 protected Q_SLOTS:
 	/// Receive notifications from the FileMonitorGuard
-	void changed();
+	void changed(bool exists);
 	///
-	void reconnectToFileMonitorGuard();
+	void connectToFileMonitorGuard();
 
 private:
 	/// boost signal
 	sig fileChanged_;
 	/// the unique watch for our file
 	std::shared_ptr<FileMonitorGuard> const monitor_;
-	///
-	std::weak_ptr<FileMonitorBlockerGuard> blocker_;
 };
 
 

@@ -320,9 +320,10 @@ void GuiWorkArea::init()
 
 	d->setCursorShape(Qt::IBeamCursor);
 
-	d->synthetic_mouse_event_.timeout.timeout.connect(
-		bind(&GuiWorkArea::generateSyntheticMouseEvent,
-					this));
+	// This connection is closed at the same time as this is destroyed.
+	d->synthetic_mouse_event_.timeout.timeout.connect([this](){
+			generateSyntheticMouseEvent();
+		});
 
 	// Initialize the vertical Scroll Bar
 	QObject::connect(verticalScrollBar(), SIGNAL(valueChanged(int)),
@@ -2229,7 +2230,7 @@ void GuiWorkAreaContainer::updateDisplay()
 {
 	Buffer const & buf = wa_->bufferView().buffer();
 	notificationFrame->setHidden(!buf.notifiesExternalModification());
-	QString const label = QString("<b>The file \"%1\" changed on disk.</b>")
+	QString const label = qt_("<b>The file %1 changed on disk.</b>")
 		.arg(toqstr(buf.fileName().displayName()));
 	externalModificationLabel->setText(label);
 }

@@ -379,14 +379,11 @@ public:
 	// Make sure the file monitor monitors the good file.
 	void refreshFileMonitor();
 
-	/// has it been notified of an external modification?
-	bool isExternallyModified() const { return externally_modified_; }
-
 	/// Notify or clear of external modification
-	void fileExternallyModified(bool modified) const;
+	void fileExternallyModified(bool exists);
 
-	/// Block notifications of external modifications
-	FileMonitorBlocker blockFileMonitor() { return file_monitor_->block(10); }
+	/// has been externally modified? Can be reset by the user.
+	mutable bool externally_modified_;
 
 private:
 	/// So we can force access via the accessors.
@@ -395,9 +392,6 @@ private:
 	int word_count_;
 	int char_count_;
 	int blank_count_;
-
-	/// has been externally modified? Can be reset by the user.
-	mutable bool externally_modified_;
 
 	FileMonitorPtr file_monitor_;
 };
@@ -440,9 +434,8 @@ Buffer::Impl::Impl(Buffer * owner, FileName const & file, bool readonly_,
 	  bibfile_cache_valid_(false), cite_labels_valid_(false), preview_error_(false),
 	  inset(0), preview_loader_(0), cloned_buffer_(cloned_buffer),
 	  clone_list_(0), doing_export(false),
-	  tracked_changes_present_(0), parent_buffer(0),
-	  word_count_(0), char_count_(0), blank_count_(0),
-	  externally_modified_(false)
+	  tracked_changes_present_(0), externally_modified_(false), parent_buffer(0),
+	  word_count_(0), char_count_(0), blank_count_(0)
 {
 	refreshFileMonitor();
 	if (!cloned_buffer_) {
@@ -1383,7 +1376,6 @@ FileName Buffer::getBackupName() const {
 // Should probably be moved to somewhere else: BufferView? GuiView?
 bool Buffer::save() const
 {
-	FileMonitorBlocker block = d->blockFileMonitor();
 	docstring const file = makeDisplayPath(absFileName(), 20);
 	d->filename.refresh();
 
@@ -5332,32 +5324,49 @@ void Buffer::Impl::refreshFileMonitor()
 	// The previous file monitor is invalid
 	// This also destroys the previous file monitor and all its connections
 	file_monitor_ = FileSystemWatcher::monitor(filename);
-	fileExternallyModified(false);
 	// file_monitor_ will be destroyed with *this, so it is not going to call a
 	// destroyed object method.
-	file_monitor_->connect([this](){ fileExternallyModified(true); });
+	file_monitor_->connect([this](bool exists) {
+			fileExternallyModified(exists);
+		});
 }
 
 
-void Buffer::Impl::fileExternallyModified(bool modified) const
+void Buffer::Impl::fileExternallyModified(bool const exists)
 {
-	if (modified)
-		lyx_clean = bak_clean = false;
-	externally_modified_ = modified;
-	if (wa_)
+	// ignore notifications after our own saving operations
+	if (checksum_ == filename.checksum()) {
+		LYXERR(Debug::FILES, "External modification but "
+		       "checksum unchanged: " << filename);
+		return;
+	}
+	lyx_clean = bak_clean = false;
+	// If the file has been deleted, only mark the file as dirty since it is
+	// pointless to prompt for reloading. If later a file is moved into this
+	// location, then the externally modified warning will appear then.
+	if (exists)
+			externally_modified_ = true;
+	// Update external modification notification.
+	// Dirty buffers must be visible at all times.
+	if (wa_ && wa_->unhide(owner_))
 		wa_->updateTitles();
+	else
+		// Unable to unhide the buffer (e.g. no GUI or not current View)
+		lyx_clean = true;
 }
 
 
 bool Buffer::notifiesExternalModification() const
 {
-	return d->isExternallyModified();
+	return d->externally_modified_;
 }
 
 
 void Buffer::clearExternalModification() const
 {
-	d->fileExternallyModified(false);
+	d->externally_modified_ = false;
+	if (d->wa_)
+		d->wa_->updateTitles();
 }
 
 

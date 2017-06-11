@@ -471,6 +471,7 @@ BufferParams::BufferParams()
 
 	output_sync = false;
 	use_refstyle = true;
+	use_minted = false;
 
 	// map current author
 	author_map_[pimpl_->authorlist.get(0).bufferId()] = 0;
@@ -1119,6 +1120,8 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 		lex >> output_sync_macro;
 	} else if (token == "\\use_refstyle") {
 		lex >> use_refstyle;
+	} else if (token == "\\use_minted") {
+		lex >> use_minted;
 	} else {
 		lyxerr << "BufferParams::readToken(): Unknown token: " <<
 			token << endl;
@@ -1332,6 +1335,7 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 	   << "\n\\suppress_date " << convert<string>(suppress_date)
 	   << "\n\\justification " << convert<string>(justification)
 	   << "\n\\use_refstyle " << use_refstyle
+	   << "\n\\use_minted " << use_minted
 	   << '\n';
 	if (isbackgroundcolor == true)
 		os << "\\backgroundcolor " << lyx::X11hexname(backgroundcolor) << '\n';
@@ -2289,10 +2293,19 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	}
 	if (features.isRequired("bicaption"))
 		os << "\\usepackage{bicaption}\n";
-	if (!listings_params.empty() || features.mustProvide("listings"))
-		os << "\\usepackage{listings}\n";
+	if (!listings_params.empty()
+	    || features.mustProvide("listings")
+	    || features.mustProvide("minted")) {
+		if (features.mustProvide("listings"))
+			os << "\\usepackage{listings}\n";
+		else
+			os << "\\usepackage{minted}\n";
+	}
 	if (!listings_params.empty()) {
-		os << "\\lstset{";
+		if (features.mustProvide("listings"))
+			os << "\\lstset{";
+		else
+			os << "\\setminted{";
 		// do not test validity because listings_params is
 		// supposed to be valid
 		string par =
@@ -2389,7 +2402,8 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	}
 
 	docstring const i18npreamble =
-		features.getTClassI18nPreamble(use_babel, use_polyglossia);
+		features.getTClassI18nPreamble(use_babel, use_polyglossia,
+					       use_minted);
 	if (!i18npreamble.empty())
 		os << i18npreamble + '\n';
 

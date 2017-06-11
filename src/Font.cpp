@@ -244,9 +244,11 @@ void Font::lyxWriteChanges(Font const & orgfont,
 	if (orgfont.fontInfo().strikeout() != bits_.strikeout()) {
 		os << "\\strikeout " << LyXMiscNames[bits_.strikeout()] << "\n";
 	}
+#ifdef FILEFORMAT
 	if (orgfont.fontInfo().xout() != bits_.xout()) {
 		os << "\\xout " << LyXMiscNames[bits_.xout()] << "\n";
 	}
+#endif
 	if (orgfont.fontInfo().uuline() != bits_.uuline()) {
 		os << "\\uuline " << LyXMiscNames[bits_.uuline()] << "\n";
 	}

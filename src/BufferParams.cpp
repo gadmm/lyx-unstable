@@ -1335,7 +1335,9 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 	   << "\n\\suppress_date " << convert<string>(suppress_date)
 	   << "\n\\justification " << convert<string>(justification)
 	   << "\n\\use_refstyle " << use_refstyle
+#ifdef FILEFORMAT
 	   << "\n\\use_minted " << use_minted
+#endif
 	   << '\n';
 	if (isbackgroundcolor == true)
 		os << "\\backgroundcolor " << lyx::X11hexname(backgroundcolor) << '\n';

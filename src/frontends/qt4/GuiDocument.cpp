@@ -1460,6 +1460,7 @@ GuiDocument::GuiDocument(GuiView & lv)
 
 	// listings
 	listingsModule = new UiWidget<Ui::ListingsSettingsUi>(this);
+	disable_widget_if_ndef_FILEFORMAT(listingsModule->mintedCB);
 	connect(listingsModule->listingsED, SIGNAL(textChanged()),
 		this, SLOT(change_adaptor()));
 	connect(listingsModule->bypassCB, SIGNAL(clicked()),

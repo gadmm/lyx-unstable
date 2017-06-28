@@ -135,6 +135,12 @@ char const * backref_opts_gui[] =
 };
 
 
+char const * lst_packages[] =
+{
+	"Listings", "Minted", ""
+};
+
+
 vector<string> engine_types_;
 vector<pair<string, QString> > pagestyles;
 
@@ -1467,12 +1473,17 @@ GuiDocument::GuiDocument(GuiView & lv)
 		this, SLOT(change_adaptor()));
 	connect(listingsModule->bypassCB, SIGNAL(clicked()),
 		this, SLOT(setListingsMessage()));
-	connect(listingsModule->mintedCB, SIGNAL(clicked()),
+	connect(listingsModule->packageCO, SIGNAL(activated(int)),
 		this, SLOT(change_adaptor()));
+	connect(listingsModule->packageCO, SIGNAL(currentIndexChanged(int)),
+		this, SLOT(listingsPackageChanged(int)));
 	connect(listingsModule->listingsED, SIGNAL(textChanged()),
 		this, SLOT(setListingsMessage()));
 	listingsModule->listingsTB->setPlainText(
 		qt_("Input listings parameters below. Enter ? for a list of parameters."));
+
+	for (int i = 0; lst_packages[i][0]; ++i)
+            listingsModule->packageCO->addItem(lst_packages[i]);
 
 
 	// add the panels
@@ -1556,8 +1567,12 @@ QString GuiDocument::validateListingsParameters()
 {
 	if (listingsModule->bypassCB->isChecked())
 		return QString();
+	string const package =
+	    lst_packages[listingsModule->packageCO->currentIndex()];
 	string params = fromqstr(listingsModule->listingsED->toPlainText());
-	return toqstr(InsetListingsParams(params).validate());
+	InsetListingsParams lstparams(params);
+	lstparams.setMinted(package == "Minted");
+	return toqstr(lstparams.validate());
 }
 
 
@@ -1579,6 +1594,22 @@ void GuiDocument::setListingsMessage()
 		// listingsTB->setTextColor("red");
 		listingsModule->listingsTB->setPlainText(msg);
 	}
+}
+
+
+void GuiDocument::listingsPackageChanged(int index)
+{
+        string const package = lst_packages[index];
+        if (package == "Minted" && lyxrc.pygmentize_command.empty()) {
+                Alert::warning(_("Pygments driver command not found!"),
+                    _("The driver command necessary to use the minted package\n"
+                      "(pygmentize) has not been found. Make sure you have\n"
+                      "the python-pygments module installed or, if the driver\n"
+                      "is named differently, to add the following line to the\n"
+                      "document preamble:\n\n"
+                      "\\AtBeginDocument{\\renewcommand{\\MintedPygmentize}{driver}}\n\n"
+                      "where 'driver' is name of the driver command."));
+        }
 }
 
 
@@ -3081,7 +3112,8 @@ void GuiDocument::applyView()
 
 	// Listings
 	// text should have passed validation
-	bp_.use_minted  = listingsModule->mintedCB->isChecked();
+	idx = listingsModule->packageCO->currentIndex();
+	bp_.use_minted = string(lst_packages[idx]) == "Minted";
 	bp_.listings_params =
 		InsetListingsParams(fromqstr(listingsModule->listingsED->toPlainText())).params();
 
@@ -3599,7 +3631,9 @@ void GuiDocument::paramsToDialog()
 	string lstparams =
 		InsetListingsParams(bp_.listings_params).separatedParams();
 	listingsModule->listingsED->setPlainText(toqstr(lstparams));
-	listingsModule->mintedCB->setChecked(bp_.use_minted);
+	int nn = findToken(lst_packages, bp_.use_minted ? "Minted" : "Listings");
+	if (nn >= 0)
+		listingsModule->packageCO->setCurrentIndex(nn);
 
 
 	// Fonts
@@ -3683,7 +3717,7 @@ void GuiDocument::paramsToDialog()
 	fontModule->scaleTypewriterSB->setValue(bp_.fontsTypewriterScale());
 	fontModule->font_tt_scale = bp_.fonts_typewriter_scale[!bp_.useNonTeXFonts];
 
-	int nn = findToken(GuiDocument::fontfamilies, bp_.fonts_default_family);
+	nn = findToken(GuiDocument::fontfamilies, bp_.fonts_default_family);
 	if (nn >= 0)
 		fontModule->fontsDefaultCO->setCurrentIndex(nn);
 

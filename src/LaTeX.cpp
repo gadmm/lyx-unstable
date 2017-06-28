@@ -785,7 +785,7 @@ int LaTeX::scanLogFile(TeXErrors & terr)
 			if (contains(token, "LaTeX Error:"))
 				retval |= LATEX_ERROR;
 
-			if (prefixIs(token, "! File ended while scanning")){
+			if (prefixIs(token, "! File ended while scanning")) {
 				if (prefixIs(token, "! File ended while scanning use of \\Hy@setref@link.")){
 					// bug 7344. We must rerun LaTeX if hyperref has been toggled.
 					retval |= ERROR_RERUN;
@@ -795,6 +795,12 @@ int LaTeX::scanLogFile(TeXErrors & terr)
 					wait_for_error = desc;
 					continue;
 				}
+			}
+
+			if (prefixIs(token, "! Incomplete \\if")) {
+				// bug 10666. At this point its not clear we finish with error.
+				wait_for_error = desc;
+				continue;
 			}
 
 			if (prefixIs(token, "! Paragraph ended before \\Hy@setref@link was complete.")){
@@ -808,6 +814,7 @@ int LaTeX::scanLogFile(TeXErrors & terr)
 				string errstr;
 				int count = 0;
 				errstr = wait_for_error;
+				wait_for_error.clear();
 				do {
 					if (!getline(ifs, tmp))
 						break;
@@ -901,8 +908,16 @@ int LaTeX::scanLogFile(TeXErrors & terr)
 				|| contains(token, "no pages of output")) {
 				// No output file (e.g. the DVI or PDF) was created
 				retval |= NO_OUTPUT;
+			} else if (contains(token, "Error 256 (driver return code)")) {
+				// This is a xdvipdfmx driver error reported by XeTeX.
+				// We have to check whether an output PDF file was created.
+				FileName pdffile = file;
+				pdffile.changeExtension("pdf");
+				if (!pdffile.exists())
+					// No output PDF file was created (see #10076)
+					retval |= NO_OUTPUT;
 			} else if (contains(token, "That makes 100 errors")) {
-				// More than 100 errors were reprted
+				// More than 100 errors were reported
 				retval |= TOO_MANY_ERRORS;
 			} else if (prefixIs(token, "!pdfTeX error:")) {
 				// otherwise we dont catch e.g.:
@@ -923,6 +938,9 @@ int LaTeX::scanLogFile(TeXErrors & terr)
 						 from_local8bit("Missing glyphs!"),
 						 from_local8bit(token),
 						 child_name);
+			} else if (!wait_for_error.empty()) {
+				// We collect information until we know we have an error.
+				wait_for_error += token + '\n';
 			}
 		}
 	}

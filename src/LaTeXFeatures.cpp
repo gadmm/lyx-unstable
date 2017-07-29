@@ -1786,7 +1786,7 @@ docstring const i18npreamble(docstring const & templ, Language const * lang,
 
 
 docstring const LaTeXFeatures::getTClassI18nPreamble(bool use_babel,
-				bool use_polyglossia, bool use_minted) const
+				bool use_polyglossia, bool /*use_minted*/) const
 {
 	DocumentClass const & tclass = params_.documentClass();
 	// collect preamble snippets in a set to prevent multiple identical
@@ -1868,7 +1868,7 @@ docstring const LaTeXFeatures::getTClassI18nPreamble(bool use_babel,
 		// need to force a fixed width encoding for
 		// \lstlistlistingname and \lstlistingname (bug 9382).
 		// This needs to be consistent with InsetListings::latex().
-		bool const need_fixedwidth = !use_minted &&
+		bool const need_fixedwidth = /*!use_minted &&*/
 					!runparams_.isFullUnicode() &&
 					it->second.fixedwidthpreambleencoding();
 		// language dependent commands (once per document)

@@ -605,7 +605,7 @@ void InsetInclude::latex(otexstream & os, OutputParams const & runparams) const
 		// intended by minted. In this last case, the label will
 		// serve as a sort of caption that, however, will be shown
 		// by minted only if the frame parameter is also specified.
-		bool const use_minted = buffer().params().use_minted;
+		bool const use_minted = false/*buffer().params().use_minted*/;
 		runparams.exportdata->addExternalFile(tex_format, writefile,
 						      exportfile);
 		string const opt = to_utf8(params()["lstparams"]);
@@ -1028,7 +1028,7 @@ void InsetInclude::validate(LaTeXFeatures & features) const
 	if (isVerbatim(params()))
 		features.require("verbatim");
 	else if (isListings(params())) {
-		if (buffer().params().use_minted) {
+		if (false/*buffer().params().use_minted*/) {
 			features.require("minted");
 			string const opts = to_utf8(params()["lstparams"]);
 			InsetListingsParams lstpars(opts);

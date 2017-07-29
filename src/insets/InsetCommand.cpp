@@ -144,7 +144,7 @@ void InsetCommand::latex(otexstream & os, OutputParams const & runparams_in) con
 {
 	OutputParams runparams = runparams_in;
 	docstring command = getCommand(runparams);
-	if (buffer().params().use_minted
+	if (false/*buffer().params().use_minted*/
 	    && prefixIs(command, from_ascii("\\lstlistoflistings")))
 		command.erase(1, 3);
 	os << command;

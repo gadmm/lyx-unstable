@@ -296,7 +296,7 @@ string GuiListings::construct_params()
 	string fontstyle = font_styles[qMax(0, fontstyleCO->currentIndex())];
 	string basicstyle;
 	string mintedsize;
-	bool const use_minted = buffer().params().use_minted;
+	bool const use_minted = false/*buffer().params().use_minted*/;
 	if (fontsize != "default") {
 		if (use_minted)
 			mintedsize = "\\" + fontsize;
@@ -434,13 +434,13 @@ void GuiListings::on_languageCO_currentIndexChanged(int index)
 	}
 	dialectCO->setCurrentIndex(default_dialect);
 	dialectCO->setEnabled(dialectCO->count() > 1
-			      && !buffer().params().use_minted);
+	                      /*&& !buffer().params().use_minted*/);
 }
 
 
 void GuiListings::applyView()
 {
-	params_.setMinted(buffer().params().use_minted);
+	params_.setMinted(false/*buffer().params().use_minted*/);
 	params_.setInline(inlineCB->isChecked());
 	params_.setParams(construct_params());
 }
@@ -457,7 +457,7 @@ static string plainParam(string const & par)
 
 void GuiListings::updateContents()
 {
-	bool const use_minted = buffer().params().use_minted;
+	bool const use_minted = false/*buffer().params().use_minted*/;
 	// set default values
 	listingsTB->setPlainText(
 		qt_("Input listing parameters on the right. Enter ? for a list of parameters."));
@@ -671,7 +671,7 @@ bool GuiListings::initialiseParams(string const & data)
 void GuiListings::clearParams()
 {
 	params_.clear();
-	params_.setMinted(buffer().params().use_minted);
+	params_.setMinted(false/*buffer().params().use_minted*/);
 }
 
 
@@ -685,7 +685,7 @@ void GuiListings::dispatchParams()
 void GuiListings::setParams(InsetListingsParams const & params)
 {
 	params_ = params;
-	params_.setMinted(buffer().params().use_minted);
+	params_.setMinted(false/*buffer().params().use_minted*/);
 }
 
 

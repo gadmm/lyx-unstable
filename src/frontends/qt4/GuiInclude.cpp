@@ -96,7 +96,7 @@ docstring GuiInclude::validate_listings_params()
 		return docstring();
 	string params = fromqstr(listingsED->toPlainText());
 	InsetListingsParams lstparams(params);
-	lstparams.setMinted(buffer().params().use_minted);
+	lstparams.setMinted(false/*buffer().params().use_minted*/);
 	return lstparams.validate();
 }
 
@@ -245,7 +245,7 @@ void GuiInclude::applyView()
 	} else if (item == 1) {
 		params_.setCmdName("input");
 	} else if (item == 3) {
-		if (buffer().params().use_minted)
+		if (false/*buffer().params().use_minted*/)
 			params_.setCmdName("inputminted");
 		else
 			params_.setCmdName("lstinputlisting");

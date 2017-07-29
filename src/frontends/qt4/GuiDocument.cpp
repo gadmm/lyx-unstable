@@ -1487,6 +1487,9 @@ GuiDocument::GuiDocument(GuiView & lv)
 
 	for (int i = 0; lst_packages[i][0]; ++i)
             listingsModule->packageCO->addItem(lst_packages[i]);
+#ifndef MINTED
+	listingsModule->packageGB->hide();
+#endif
 
 
 	// add the panels
@@ -3691,7 +3694,7 @@ void GuiDocument::paramsToDialog()
 	string lstparams =
 		InsetListingsParams(bp_.listings_params).separatedParams();
 	listingsModule->listingsED->setPlainText(toqstr(lstparams));
-	int nn = findToken(lst_packages, bp_.use_minted ? "Minted" : "Listings");
+	int nn = findToken(lst_packages, /*bp_.use_minted ? "Minted" :*/ "Listings");
 	if (nn >= 0)
 		listingsModule->packageCO->setCurrentIndex(nn);
 

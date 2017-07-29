@@ -55,7 +55,7 @@ namespace lyx {
 InsetListings::InsetListings(Buffer * buf, InsetListingsParams const & par)
 	: InsetCaptionable(buf,"listing")
 {
-	params_.setMinted(buffer().params().use_minted);
+	params_.setMinted(false/*buffer().params().use_minted*/);
 	status_ = par.status();
 }
 
@@ -74,7 +74,7 @@ Inset::DisplayType InsetListings::display() const
 
 docstring InsetListings::layoutName() const
 {
-	if (buffer().params().use_minted)
+	if (false/*buffer().params().use_minted*/)
 		return from_ascii("MintedListings");
 	else
 		return from_ascii("Listings");
@@ -126,8 +126,8 @@ Encoding const * InsetListings::forcedEncoding(Encoding const * inner_enc,
 	// glyphs, except if full-unicode aware backends
 	// such as XeTeX or LuaTeX are used, and with pLaTeX.
 	// Minted can deal with all encodings.
-	if (buffer().params().use_minted
-		|| (buffer().params().encoding().package() == Encoding::japanese
+	if (/*buffer().params().use_minted
+	      ||*/ (buffer().params().encoding().package() == Encoding::japanese
 			&& inner_enc->package() == Encoding::japanese)
 		|| inner_enc->hasFixedWidth())
 		return 0;
@@ -145,7 +145,7 @@ void InsetListings::latex(otexstream & os, OutputParams const & runparams) const
 	// NOTE: I use {} to quote text, which is an experimental feature
 	// of the listings package (see page 25 of the manual)
 	bool const isInline = params().isInline();
-	bool const use_minted = buffer().params().use_minted;
+	bool const use_minted = false/*buffer().params().use_minted*/;
 	string minted_language;
 	string float_placement;
 	bool const isfloat = params().isFloat();
@@ -471,7 +471,7 @@ void InsetListings::validate(LaTeXFeatures & features) const
 {
 	features.useInsetLayout(getLayout());
 	string param_string = params().params();
-	if (buffer().params().use_minted) {
+	if (false/*buffer().params().use_minted*/) {
 		features.require("minted");
 		OutputParams rp = features.runparams();
 		if (!params().isFloat() && !getCaption(rp).str.empty())
@@ -509,8 +509,8 @@ TexString InsetListings::getCaption(OutputParams const & runparams) const
 	// the caption may contain \label{} but the listings
 	// package prefer caption={}, label={}
 	TexString cap = os.release();
-	if (buffer().params().use_minted
-	    || !contains(cap.str, from_ascii("\\label{")))
+	if (/*buffer().params().use_minted
+	      ||*/ !contains(cap.str, from_ascii("\\label{")))
 		return cap;
 	// convert from
 	//     blah1\label{blah2} blah3

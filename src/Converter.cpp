@@ -524,7 +524,7 @@ bool Converters::convert(Buffer const * buffer,
 						   "tmpfile.out"));
 		}
 
-		if (buffer && buffer->params().use_minted
+		if (buffer && false /*buffer->params().use_minted*/
 		    && lyxrc.pygmentize_command.empty() && conv.latex()) {
 			bool dowarn = false;
 			// Warn only if listings insets are actually used

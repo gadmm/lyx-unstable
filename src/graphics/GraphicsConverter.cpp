@@ -121,10 +121,12 @@ FileName const & Converter::convertedFile() const
 /** Build the conversion script.
  *  The script is output to the stream \p script.
  */
-static void build_script(string const & doc_fname,
-		  string const & from_file, string const & to_file_base,
-		  string const & from_format, string const & to_format,
-		  ostream & script);
+static void build_script(FileName const & doc_fname,
+                         string const & from_file,
+                         string const & to_file_base,
+                         string const & from_format,
+                         string const & to_format,
+                         ostream & script);
 
 
 Converter::Impl::Impl(FileName const & doc_fname,
@@ -146,9 +148,9 @@ Converter::Impl::Impl(FileName const & doc_fname,
 
 	// The conversion commands are stored in a stringstream
 	ostringstream script;
-	build_script(doc_fname_.absFileName(), from_file.toFilesystemEncoding(),
-		     to_file_.toFilesystemEncoding(),
-		     from_format, to_format, script);
+	build_script(doc_fname_, from_file.toFilesystemEncoding(),
+	             to_file_.toFilesystemEncoding(),
+	             from_format, to_format, script);
 	LYXERR(Debug::GRAPHICS, "\tConversion script:"
 		   "\n--------------------------------------\n"
 		<< script.str()
@@ -276,12 +278,12 @@ static string const strip_digit(string const & format)
 }
 
 
-static void build_script(string const & doc_fname,
-		  string const & from_file,
-		  string const & to_file,
-		  string const & from_format,
-		  string const & to_format,
-		  ostream & script)
+static void build_script(FileName const & doc_fname,
+                         string const & from_file,
+                         string const & to_file,
+                         string const & from_format,
+                         string const & to_format,
+                         ostream & script)
 {
 	LASSERT(from_format != to_format, return);
 	LYXERR(Debug::GRAPHICS, "build_script ... ");

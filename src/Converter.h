@@ -194,7 +194,7 @@ public:
 	/// authorization is: always denied if lyxrc.use_converter_needauth_forbidden
 	/// is enabled; always allowed if the lyxrc.use_converter_needauth
 	/// is disabled; user is prompted otherwise
-	bool checkAuth(Converter const & conv, std::string const & doc_fname);
+	bool checkAuth(Converter const & conv, support::FileName const & buf);
 
 private:
 	///

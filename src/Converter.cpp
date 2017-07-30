@@ -13,6 +13,7 @@
 #include "Converter.h"
 
 #include "Buffer.h"
+#include "BufferList.h"
 #include "buffer_funcs.h"
 #include "BufferParams.h"
 #include "ConverterCache.h"
@@ -283,7 +284,7 @@ OutputParams::FLAVOR Converters::getFlavor(Graph::EdgePath const & path,
 }
 
 
-bool Converters::checkAuth(Converter const & conv, string const & doc_fname)
+bool Converters::checkAuth(Converter const & conv, FileName const & doc_fname)
 {
 	string conv_command = conv.command();
 	bool const has_shell_escape =
@@ -339,13 +340,14 @@ bool Converters::checkAuth(Converter const & conv, string const & doc_fname)
 		  "document!</b></p>");
 	if (!doc_fname.empty()) {
 		LYXERR(Debug::FILES, "looking up: " << doc_fname);
-		bool authorized = theSession().authFiles().find(doc_fname);
+		Buffer const * buf = theBufferList().getBuffer(doc_fname);
+		bool authorized = buf->auth();
 		if (!authorized) {
 			choice = frontend::Alert::prompt(security_title, security_warning2,
 			                                 0, 0, _("Do &not run"), _("&Run"),
 			                                 _("&Always run for this document"));
 			if (choice == 2)
-				theSession().authFiles().insert(doc_fname);
+				buf->setAuth(true);
 		} else
 			choice = 1;
 	} else {
@@ -530,7 +532,7 @@ bool Converters::convert(Buffer const * buffer,
 			}
 		}
 
-		if (!checkAuth(conv, buffer ? buffer->absFileName() : string()))
+		if (!checkAuth(conv, buffer ? buffer->fileName() : FileName()))
 			return false;
 
 		if (conv.latex()) {

@@ -86,15 +86,11 @@ public:
 
 public Q_SLOTS:
 	void onBufferViewChanged();//override
-	// OK button clicked
-	void slotOK();
-	// Apply button clicked
-	void slotApply();
 
 private Q_SLOTS:
 	void updateNumbering();
 	void change_adaptor();
-	void shellescapeChanged();
+	void authChanged();
 	void includeonlyClicked(QTreeWidgetItem * item, int);
 	void setListingsMessage();
 	void listingsPackageChanged(int);

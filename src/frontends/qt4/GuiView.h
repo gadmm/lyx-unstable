@@ -242,7 +242,7 @@ public Q_SLOTS:
 	///
 	void updateWindowTitle(GuiWorkArea * wa);
 	///
-	void disableShellEscape();
+	void disableAuth();
 
 private Q_SLOTS:
 	///
@@ -481,8 +481,8 @@ private:
 	/// Request to give focus to minibuffer
 	bool minibuffer_focus_;
 
-	/// Statusbar widget that shows shell-escape status
-	QLabel * shell_escape_;
+	/// Statusbar widget that shows auth status
+	QLabel * auth_;
 	/// Statusbar widget that shows read-only status
 	QLabel * read_only_;
 	/// Statusbar widget that shows version control status

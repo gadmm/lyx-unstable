@@ -199,7 +199,7 @@ struct GuiWorkArea::Private
 	///
 	support::FileName file_name_;
 	///
-	bool shell_escape_;
+	bool auth_;
 	///
 	bool read_only_;
 	///

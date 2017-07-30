@@ -106,12 +106,12 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QCheckBox" name="shellescapeCB">
+    <widget class="QCheckBox" name="authCB">
      <property name="toolTip">
-      <string>Runs the LaTeX backend with the -shell-escape option (Warning: use only when really necessary)</string>
+      <string>Allow running unsafe converters for this document. This setting is stored with the session rather than in the file, and is always applied immediately.</string>
      </property>
      <property name="text">
-      <string>&amp;Allow running external programs</string>
+      <string>&amp;Allow unsafe converters</string>
      </property>
     </widget>
    </item>

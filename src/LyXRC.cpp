@@ -212,7 +212,7 @@ LexerKeyword lyxrcTags[] = {
 
 const int lyxrcCount = sizeof(lyxrcTags) / sizeof(lyxrcTags[0]);
 
-} // namespace anon
+} // namespace
 
 
 LyXRC::LyXRC()
@@ -377,7 +377,7 @@ void oldFontFormat(string & family, string & foundry)
 		foundry.erase();
 }
 
-} // namespace anon
+} // namespace
 
 
 bool LyXRC::read(FileName const & filename, bool check_format)
@@ -460,7 +460,7 @@ LyXRC::ReturnValues LyXRC::read(Lexer & lexrc, bool check_format)
 				FileName const tmp =
 					libFileSearch(string(),
 						      lexrc.getString());
-				if (read(tmp, check_format)) {
+				if (!read(tmp, check_format)) {
 					lexrc.printError(
 					    "Error reading included file: " + tmp.absFileName());
 				}
@@ -1287,7 +1287,7 @@ namespace {
 			     "\"", "\\\"");
 	}
 
-}
+} // namespace
 
 
 void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) const
@@ -2574,7 +2574,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 
 	case RC_FILEFORMAT:
 		// New/modified formats
-		for (Formats::const_iterator cit = theFormats().begin(); 
+		for (Formats::const_iterator cit = theFormats().begin();
 		     cit != theFormats().end(); ++cit) {
 			Format const * format =
 				theSystemFormats().getFormat(cit->name());
@@ -2610,7 +2610,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 
 		// Look for deleted formats
-		for (Formats::const_iterator cit = theSystemFormats().begin(); 
+		for (Formats::const_iterator cit = theSystemFormats().begin();
 		     cit != theSystemFormats().end(); ++cit)
 			if (!theFormats().getFormat(cit->name()))
 				os << "\\format \"" << cit->name()

@@ -53,7 +53,7 @@
 #include "mathed/MacroTable.h"
 #include "mathed/MathData.h"
 #include "mathed/MathFactory.h"
-#include "mathed/MathMacro.h"
+#include "mathed/InsetMathMacro.h"
 
 #include <sstream>
 #include <limits>
@@ -115,7 +115,7 @@ DocIterator bruteFind(Cursor const & c, int x, int y)
 }
 
 
-} // namespace anon
+} // namespace
 
 
 CursorData::CursorData()
@@ -758,7 +758,7 @@ bool findNonVirtual(Row const & row, Row::const_iterator & cit, bool onleft)
 	return cit != row.end() && !cit->isVirtual();
 }
 
-}
+} // namespace
 
 void Cursor::getSurroundingPos(pos_type & left_pos, pos_type & right_pos) const
 {
@@ -1057,7 +1057,7 @@ void Cursor::updateTextTargetOffset()
 }
 
 
-void Cursor::info(odocstream & os) const
+void Cursor::info(odocstream & os, bool devel_mode) const
 {
 	for (int i = 1, n = depth(); i < n; ++i) {
 		operator[](i).inset().infoize(os);
@@ -1069,6 +1069,14 @@ void Cursor::info(odocstream & os) const
 		if (inset)
 			prevInset()->infoize2(os);
 	}
+	if (devel_mode) {
+		InsetMath * math = inset().asInsetMath();
+		if (math)
+			os << _(", Inset: ") << math->id();
+		os << _(", Cell: ") << idx();
+		os << _(", Position: ") << pos();
+	}
+
 }
 
 
@@ -1431,12 +1439,12 @@ bool Cursor::macroModeClose()
 	if (in && in->interpretString(*this, s))
 		return true;
 	bool const user_macro = buffer()->getMacro(name, *this, false);
-	MathAtom atom = user_macro ? MathAtom(new MathMacro(buffer(), name))
+	MathAtom atom = user_macro ? MathAtom(new InsetMathMacro(buffer(), name))
 				   : createInsetMath(name, buffer());
 
 	// try to put argument into macro, if we just inserted a macro
 	bool macroArg = false;
-	MathMacro * atomAsMacro = atom.nucleus()->asMacro();
+	InsetMathMacro * atomAsMacro = atom.nucleus()->asMacro();
 	if (atomAsMacro) {
 		// macros here are still unfolded (in init mode in fact). So
 		// we have to resolve the macro here manually and check its arity
@@ -1444,10 +1452,10 @@ bool Cursor::macroModeClose()
 		MacroData const * data = buffer()->getMacro(atomAsMacro->name());
 		if (!selection.empty() && data && data->numargs() - data->optionals() > 0) {
 			macroArg = true;
-			atomAsMacro->setDisplayMode(MathMacro::DISPLAY_INTERACTIVE_INIT, 1);
+			atomAsMacro->setDisplayMode(InsetMathMacro::DISPLAY_INTERACTIVE_INIT, 1);
 		} else
 			// non-greedy case. Do not touch the arguments behind
-			atomAsMacro->setDisplayMode(MathMacro::DISPLAY_INTERACTIVE_INIT, 0);
+			atomAsMacro->setDisplayMode(InsetMathMacro::DISPLAY_INTERACTIVE_INIT, 0);
 	}
 
 	// insert remembered selection into first argument of a non-macro
@@ -2054,7 +2062,7 @@ docstring parbreak(Cursor const * cur)
 	return os.str();
 }
 
-}
+} // namespace
 
 
 docstring Cursor::selectionAsString(bool with_label) const
@@ -2106,23 +2114,16 @@ docstring Cursor::selectionAsString(bool with_label) const
 }
 
 
-docstring Cursor::currentState() const
+docstring Cursor::currentState(bool devel_mode) const
 {
 	if (inMathed()) {
 		odocstringstream os;
-		info(os);
-#ifdef DEVEL_VERSION
-		InsetMath * math = inset().asInsetMath();
-		if (math)
-			os << _(", Inset: ") << math->id();
-		os << _(", Cell: ") << idx();
-		os << _(", Position: ") << pos();
-#endif
+		info(os, devel_mode);
 		return os.str();
 	}
 
 	if (inTexted())
-		return text()->currentState(*this);
+		return text()->currentState(*this, devel_mode);
 
 	return docstring();
 }

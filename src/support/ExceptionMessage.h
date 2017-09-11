@@ -8,9 +8,6 @@
  *
  * Full author contact details are available in file CREDITS.
  *
- * A store of the paths to the various different directoies used
- * by LyX. These paths differ markedly from one OS to another,
- * following the local Windows, MacOS X or Posix conventions.
  */
 #ifndef LYX_MESSAGE_H
 #define LYX_MESSAGE_H
@@ -27,7 +24,7 @@ namespace support {
 ///
 /// WarningException
 ///   Intended for unexpected situations that we do not expect
-///   to compromise further operation. It has the effect of 
+///   to compromise further operation. It has the effect of
 ///   aborting whatever operation in in process.
 ///
 /// BufferException
@@ -36,7 +33,7 @@ namespace support {
 ///   closed, in emergency style.
 ///
 /// ErrorException
-///   Intended for situations that indicate a global problem 
+///   Intended for situations that indicate a global problem
 ///   with the program. It will lead to an emergency shutdown.
 
 enum ExceptionType {

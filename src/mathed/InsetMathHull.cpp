@@ -35,8 +35,8 @@
 #include "LaTeXFeatures.h"
 #include "LyXRC.h"
 #include "MacroTable.h"
-#include "MathMacro.h"
-#include "MathMacroTemplate.h"
+#include "InsetMathMacro.h"
+#include "InsetMathMacroTemplate.h"
 #include "MetricsInfo.h"
 #include "output_xhtml.h"
 #include "Paragraph.h"
@@ -151,7 +151,7 @@ namespace {
 	}
 
 
-} // end anon namespace
+} // namespace
 
 
 HullType hullType(docstring const & s)
@@ -280,7 +280,7 @@ void InsetMathHull::setBuffer(Buffer & buffer)
 namespace {
 	const char * counters_to_save[] = {"section", "chapter"};
 	unsigned int const numcnts = sizeof(counters_to_save)/sizeof(char *);
-}
+} // namespace
 
 
 void InsetMathHull::updateBuffer(ParIterator const & it, UpdateType utype)
@@ -752,8 +752,8 @@ void InsetMathHull::usedMacros(MathData const & md, DocIterator const & pos,
 	MacroNameSet::iterator const end = macros.end();
 
 	for (size_t i = 0; i < md.size(); ++i) {
-		MathMacro const * mi = md[i].nucleus()->asMacro();
-		MathMacroTemplate const * mt = md[i].nucleus()->asMacroTemplate();
+		InsetMathMacro const * mi = md[i].nucleus()->asMacro();
+		InsetMathMacroTemplate const * mt = md[i].nucleus()->asMacroTemplate();
 		InsetMathScript const * si = md[i].nucleus()->asScriptInset();
 		InsetMathFracBase const * fi = md[i].nucleus()->asFracBaseInset();
 		InsetMathGrid const * gi = md[i].nucleus()->asGridInset();
@@ -842,7 +842,7 @@ void InsetMathHull::preparePreview(DocIterator const & pos,
 		endfont += '}';
 	}
 	if (lsize != "normalsize" && !prefixIs(lsize, "error"))
-		setfont += from_ascii("\\" + lsize + '\n'); 
+		setfont += from_ascii("\\" + lsize + '\n');
 
 	docstring setcnt;
 	if (forexport && haveNumbers()) {
@@ -2020,7 +2020,7 @@ bool allowDisplayMath(Cursor const & cur)
 	return tmpcur.getStatus(cmd, status) && status.enabled();
 }
 
-}
+} // namespace
 
 
 bool InsetMathHull::getStatus(Cursor & cur, FuncRequest const & cmd,
@@ -2248,7 +2248,7 @@ void InsetMathHull::revealCodes(Cursor & cur) const
 	if (!cur.inMathed())
 		return;
 	odocstringstream os;
-	cur.info(os);
+	cur.info(os, false);
 	cur.message(os.str());
 /*
 	// write something to the minibuffer

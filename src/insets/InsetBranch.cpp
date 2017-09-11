@@ -85,7 +85,7 @@ docstring InsetBranch::toolTip(BufferView const & bv, int, int) const
 		support::bformat(_("master %1$s, child %2$s"),
 						 masteron, childon);
 
-	docstring const heading = 
+	docstring const heading =
 		support::bformat(_("Branch Name: %1$s\nBranch Status: %2$s\nInset Status: %3$s"),
 						 params_.branch, status, onoff);
 
@@ -261,7 +261,7 @@ bool InsetBranch::getStatus(Cursor & cur, FuncRequest const & cmd,
 		if (cmd.argument() == "assign")
 			flag.setEnabled(true);
 		else
-			return InsetCollapsable::getStatus(cur, cmd, flag);	
+			return InsetCollapsable::getStatus(cur, cmd, flag);
 		break;
 
 	default:
@@ -358,7 +358,7 @@ string InsetBranch::contextMenuName() const
 }
 
 
-bool InsetBranch::isMacroScope() const 
+bool InsetBranch::isMacroScope() const
 {
 	// Its own scope if not selected by buffer
 	return !producesOutput();
@@ -398,8 +398,8 @@ void InsetBranchParams::write(ostream & os) const
 {
 	os << to_utf8(branch);
 #ifdef FILEFORMAT
-	os << '\n' 
-	   << "inverted " 
+	os << '\n'
+	   << "inverted "
 	   << inverted;
 #endif
 }

@@ -111,7 +111,8 @@ struct GuiWorkArea::Private
 	void hideCursor();
 	/// show the cursor if it is not visible
 	void showCursor();
-	///
+	/// Set the range and value of the scrollbar and connect to its valueChanged
+	/// signal.
 	void updateScrollbar();
 	/// Change the cursor when the mouse hovers over a clickable inset
 	void updateCursorShape();
@@ -127,7 +128,7 @@ struct GuiWorkArea::Private
 		delete screen_;
 		pixel_ratio_ = p->pixelRatio();
 		if (lyxrc.use_qimage) {
-			QImage *x = 
+			QImage *x =
 				new QImage(static_cast<int>(pixel_ratio_ * p->viewport()->width()),
 						   static_cast<int>(pixel_ratio_ * p->viewport()->height()),
 						   QImage::Format_ARGB32_Premultiplied);
@@ -136,7 +137,7 @@ struct GuiWorkArea::Private
 #endif
 			screen_ = x;
 		} else {
-			QPixmap *x = 
+			QPixmap *x =
 				new QPixmap(static_cast<int>(pixel_ratio_ * p->viewport()->width()),
 							static_cast<int>(pixel_ratio_ * p->viewport()->height()));
 #if QT_VERSION >= 0x050000
@@ -182,7 +183,7 @@ struct GuiWorkArea::Private
 	/// are ignored
 	bool dialog_mode_;
 	/// store the name of the context menu when the mouse is
-	/// pressed. This is used to get the correct context menu 
+	/// pressed. This is used to get the correct context menu
 	/// when the menu is actually shown (after releasing on Windows)
 	/// and after the DEPM has done its job.
 	std::string context_menu_name_;
@@ -190,6 +191,8 @@ struct GuiWorkArea::Private
 	/// stuff related to window title
 	///
 	support::FileName file_name_;
+	///
+	bool shell_escape_;
 	///
 	bool read_only_;
 	///

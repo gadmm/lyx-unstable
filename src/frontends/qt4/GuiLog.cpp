@@ -45,9 +45,9 @@ namespace frontend {
 // FIXME: These regexes are incomplete. It would be good if we could collect those used in LaTeX::scanLogFile
 //        and LaTeX::scanBlgFile and re-use them here!(spitz, 2013-05-27)
 // Information
-QRegExp exprInfo("^(Document Class:|LaTeX Font Info:|File:|Package:|Language:|Underfull|Overfull|.*> INFO - |\\(|\\\\).*$");
+QRegExp exprInfo("^(Document Class:|LaTeX Font Info:|File:|Package:|Language:|.*> INFO - |\\(|\\\\).*$");
 // Warnings
-QRegExp exprWarning("^(LaTeX Warning|LaTeX Font Warning|Package [\\w\\.]+ Warning|Class \\w+ Warning|Warning--|.*> WARN - ).*$");
+QRegExp exprWarning("^(LaTeX Warning|LaTeX Font Warning|Package [\\w\\.]+ Warning|Class \\w+ Warning|Warning--|Underfull|Overfull|.*> WARN - ).*$");
 // Errors
 QRegExp exprError("^(!|.*---line [0-9]+ of file|.*> FATAL - |.*> ERROR - |Missing character: There is no ).*$");
 
@@ -237,9 +237,9 @@ bool GuiLog::initialiseParams(string const & data)
 
 	logTypeCO->setEnabled(logtype == "latex");
 	logTypeCO->clear();
-	
+
 	FileName log(logfile);
-	
+
 	if (logtype == "latex") {
 		type_ = LatexLog;
 		logTypeCO->addItem(qt_("LaTeX"), toqstr(logtype));
@@ -307,6 +307,8 @@ void GuiLog::getContents(ostream & ss) const
 	// FIXME UNICODE
 	// Our caller interprets the file contents as UTF8, but is that
 	// correct?
+	// spitz: No it isn't (generally). The log file encoding depends on the TeX
+	// _output_ encoding (T1 etc.). We should account for that. See #10728.
 	if (in) {
 		ss << in.rdbuf();
 		success = ss.good();

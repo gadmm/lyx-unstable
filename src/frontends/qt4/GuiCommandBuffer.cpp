@@ -79,7 +79,7 @@ protected:
 	}
 };
 
-} // end of anon
+} // namespace
 
 
 GuiCommandBuffer::GuiCommandBuffer(GuiView * view)
@@ -128,11 +128,11 @@ GuiCommandBuffer::GuiCommandBuffer(GuiView * view)
 	top->setMargin(0);
 	setFocusProxy(edit_);
 
-	LastCommandsSection::LastCommands last_commands 
+	LastCommandsSection::LastCommands last_commands
 		= theSession().lastCommands().getcommands();
-	LastCommandsSection::LastCommands::const_iterator it 
+	LastCommandsSection::LastCommands::const_iterator it
 		= last_commands.begin();
-	LastCommandsSection::LastCommands::const_iterator end 
+	LastCommandsSection::LastCommands::const_iterator end
 		= last_commands.end();
 
 	upPB->setEnabled(it != end);
@@ -252,7 +252,7 @@ void GuiCommandBuffer::down()
 			   && history_pos_ != history_.end() - 1);
 	upPB->setEnabled(history_pos_ != history_.begin());
 }
-	
+
 
 void GuiCommandBuffer::hideParent()
 {
@@ -272,7 +272,7 @@ public:
 	bool operator()(string const & s) const { return prefixIs(s, p); }
 };
 
-} // end of anon namespace
+} // namespace
 
 
 string const GuiCommandBuffer::historyUp()
@@ -292,12 +292,6 @@ string const GuiCommandBuffer::historyDown()
 		return string();
 
 	return *(++history_pos_);
-}
-
-
-docstring const GuiCommandBuffer::getCurrentState() const
-{
-	return view_->currentBufferView()->cursor().currentState();
 }
 
 

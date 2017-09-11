@@ -510,7 +510,7 @@ void getArgInsets(otexstream & os, OutputParams const & runparams, Layout::LaTeX
 }
 
 
-} // namespace anon
+} // namespace
 
 
 void pushLanguageName(string const & lang_name, bool localswitch)
@@ -563,7 +563,7 @@ void addArgInsets(Paragraph const & par, string const & prefix,
 	}
 }
 
-} // anon namespace
+} // namespace
 
 
 void latexArgInsets(Paragraph const & par, otexstream & os,
@@ -639,7 +639,7 @@ namespace {
 
 // output the proper paragraph start according to latextype.
 void parStartCommand(Paragraph const & par, otexstream & os,
-		     OutputParams const & runparams, Layout const & style) 
+		     OutputParams const & runparams, Layout const & style)
 {
 	switch (style.latextype) {
 	case LATEX_COMMAND:
@@ -666,7 +666,7 @@ void parStartCommand(Paragraph const & par, otexstream & os,
 	}
 }
 
-} // namespace anon
+} // namespace
 
 // FIXME: this should be anonymous
 void TeXOnePar(Buffer const & buf,
@@ -1400,7 +1400,7 @@ void latexParagraphs(Buffer const & buf,
 			TeXOnePar(buf, text, pit, os, runparams, everypar);
 			continue;
 		}
-		
+
 		TeXEnvironmentData const data =
 			prepareEnvironment(buf, text, par, os, runparams);
 		// pit can be changed in TeXEnvironment.
@@ -1486,7 +1486,7 @@ pair<bool, int> switchEncoding(odocstream & os, BufferParams const & bparams,
 	Encoding const & oldEnc = *runparams.encoding;
 	bool moving_arg = runparams.moving_arg;
 	// If we switch from/to CJK, we need to switch anyway, despite custom inputenc
-	bool const from_to_cjk = 
+	bool const from_to_cjk =
 		(oldEnc.package() == Encoding::CJK && newEnc.package() != Encoding::CJK)
 		|| (oldEnc.package() != Encoding::CJK && newEnc.package() == Encoding::CJK);
 	if (!force && !from_to_cjk

@@ -96,7 +96,7 @@ msgstr ""
 "Project-Id-Version: LyX 2.3\n"
 "Report-Msgid-Bugs-To: lyx-devel@lists.lyx.org\n"
 "POT-Creation-Date: 2017-06-13 02:09+0200\n"
-"PO-Revision-Date: 2017-06-13 09:59+0100\n"
+"PO-Revision-Date: 2017-07-19 14:11+0100\n"
 "Last-Translator: Juergen Spitzmueller <spitz@lyx.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -6918,7 +6918,7 @@ msgstr "Optionales Foto für die Biografie"
 #: lib/layouts/scrlettr.layout:116 lib/layouts/scrlttr2.layout:149
 #: lib/layouts/sigplanconf.layout:84 lib/layouts/sigplanconf.layout:161
 #: lib/layouts/tcolorbox.module:134 src/frontends/qt4/GuiIndices.cpp:52
-#: src/mathed/MathMacroTemplate.cpp:493
+#: src/mathed/InsetMathMacroTemplate.cpp:493
 msgid "Name"
 msgstr "Name"
 
@@ -15204,7 +15204,7 @@ msgstr "Tropfen abwärts"
 msgid "Drop up"
 msgstr "Tropfen aufwärts"
 
-#: lib/layouts/shapepar.module:91 src/mathed/MathMacroTemplate.cpp:544
+#: lib/layouts/shapepar.module:91 src/mathed/InsetMathMacroTemplate.cpp:544
 msgid "TeX"
 msgstr "TeX"
 
@@ -15520,16 +15520,16 @@ msgstr "ERT"
 
 #: lib/layouts/stdinsets.inc:280 lib/layouts/stdinsets.inc:286
 msgid "Listings[[List of Listings]]"
-msgstr "Programm-Listings"
+msgstr "Programmlistings"
 
 #: lib/layouts/stdinsets.inc:303 lib/layouts/stdinsets.inc:309
 #: src/insets/InsetTOC.cpp:77
 msgid "List of Listings"
-msgstr "Programm-Listings"
+msgstr "Verzeichnis der Programmlistings"
 
 #: lib/layouts/stdinsets.inc:337 src/frontends/qt4/GuiDocument.cpp:1500
 msgid "Listings[[inset]]"
-msgstr "Programm-Listings"
+msgstr "Programmlistings"
 
 #: lib/layouts/stdinsets.inc:400
 msgid "Idx"
@@ -24720,7 +24720,7 @@ msgstr "Einfacher Text"
 
 #: lib/configure.py:650
 msgid "Plain text|a"
-msgstr "Einfacher Text|E"
+msgstr "Einfacher Text|T"
 
 #: lib/configure.py:651
 msgid "Plain text (pstotext)"
@@ -24793,7 +24793,7 @@ msgstr "Postscript"
 
 #: lib/configure.py:684
 msgid "Postscript|t"
-msgstr "Postscript|t"
+msgstr "Postscript|c"
 
 #: lib/configure.py:693
 msgid "PDF (ps2pdf)"
@@ -24920,7 +24920,7 @@ msgid "Table (CSV)"
 msgstr "Tabelle (CSV)"
 
 #: lib/configure.py:731 src/frontends/qt4/GuiView.cpp:1327
-#: src/mathed/MathMacroTemplate.cpp:549
+#: src/mathed/InsetMathMacroTemplate.cpp:549
 msgid "LyX"
 msgstr "LyX"
 
@@ -33371,25 +33371,25 @@ msgstr "Größe: %1$s"
 msgid "Can't change horizontal alignment in '%1$s'"
 msgstr "Die horizontale Ausrichtung kann in '%1$s' nicht geändert werden"
 
-#: src/mathed/MathMacro.cpp:1212 src/mathed/MathMacro.cpp:1218
+#: src/mathed/InsetMathMacro.cpp:1212 src/mathed/InsetMathMacro.cpp:1218
 #, c-format
 msgid "Macro: %1$s"
 msgstr "Makro: %1$s"
 
-#: src/mathed/MathMacroTemplate.cpp:501
+#: src/mathed/InsetMathMacroTemplate.cpp:501
 msgid "optional"
 msgstr "optional"
 
-#: src/mathed/MathMacroTemplate.cpp:1282
+#: src/mathed/InsetMathMacroTemplate.cpp:1282
 msgid "math macro"
 msgstr "Mathe-Makro"
 
-#: src/mathed/MathMacroTemplate.cpp:1389
+#: src/mathed/InsetMathMacroTemplate.cpp:1389
 #, c-format
 msgid "Math Macro: \\%1$s"
 msgstr "Mathe-Makro: \\%1$s"
 
-#: src/mathed/MathMacroTemplate.cpp:1404
+#: src/mathed/InsetMathMacroTemplate.cpp:1404
 #, c-format
 msgid "Invalid macro! \\%1$s"
 msgstr "Ungültiges Makro! \\%1$s"

@@ -1,5 +1,5 @@
 #LyX 2.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 543
+\lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -201,16 +201,16 @@ graphicboxes
 \pdf_quoted_options "linkcolor=black, citecolor=black, urlcolor=blue, filecolor=blue, pdfpagelayout=OneColumn, pdfnewwindow=true, pdfstartview=XYZ, plainpages=false"
 \papersize default
 \use_geometry false
-\use_package amsmath 2
-\use_package amssymb 2
-\use_package cancel 0
-\use_package esint 0
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
 \use_package mathdots 1
-\use_package mathtools 0
+\use_package mathtools 1
 \use_package mhchem 1
-\use_package stackrel 0
-\use_package stmaryrd 0
-\use_package undertilde 0
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
 \cite_engine basic
 \cite_engine_type default
 \biblio_style plain
@@ -220,6 +220,7 @@ graphicboxes
 \suppress_date false
 \justification true
 \use_refstyle 0
+\use_minted 0
 \notefontcolor #0000ff
 \index Índice
 \shortcut idx
@@ -39279,6 +39280,23 @@ Plantillas
 \end_layout
 
 \begin_layout Description
+Dia Esta plantilla soporta diagramas creados con el programa 
+\series bold
+
+\begin_inset CommandInset href
+LatexCommand href
+name "Dia"
+target "http://es.wikipedia.org/wiki/Dia_(programa)"
+literal "false"
+
+\end_inset
+
+
+\series default
+.
+\end_layout
+
+\begin_layout Description
 Diagrama
 \begin_inset space ~
 \end_inset
@@ -39305,20 +39323,195 @@ literal "false"
 \end_layout
 
 \begin_layout Description
-Dia Esta plantilla soporta diagramas creados con el programa 
-\series bold
+Figura
+\begin_inset space ~
+\end_inset
 
-\begin_inset CommandInset href
-LatexCommand href
-name "Dia"
-target "http://es.wikipedia.org/wiki/Dia_(programa)"
+Inkscape 
+\lang english
+This experimental template supports vector graphics (SVG) images that contain
+ text written in \SpecialChar LaTeX
+.
+ It relies on the optio
+\lang spanish
+n 
+\family sans
+Omitir texto en PDF y crear archivo LaTeX 
+\family default
+\lang english
+when saving a drawing as PDF with the program 
+\noun on
+Inkscape
+\noun default
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Inkscape"
 literal "false"
 
 \end_inset
 
-
-\series default
 .
+ This allows to include SVG documents in which \SpecialChar LaTeX
+ will typeset the text.
+ The benefit of such SVGs is a uniform text style throughout the whole document
+ and one can use \SpecialChar TeX
+ code commands in the text of the SVG.
+\begin_inset Newline newline
+\end_inset
+
+One can use \SpecialChar TeX
+ code commands like 
+\series bold
+
+\backslash
+Large
+\series default
+, 
+\series bold
+
+\backslash
+small
+\series default
+, etc.
+\begin_inset space \space{}
+\end_inset
+
+in the text of the SVG.
+ The size of the font will be taken from the settings of the \SpecialChar LyX
+ document.
+ Refer to 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Inkscape"
+literal "false"
+
+\end_inset
+
+ for more information and examples.
+\begin_inset Newline newline
+\end_inset
+
+Note that while the image text takes into account the surrounding font,
+ its preview in \SpecialChar LyX
+ does not.
+ Wrapping the external inset in a preview inset (menu 
+\family sans
+Insert\SpecialChar menuseparator
+Preview
+\family default
+) gives a better result.
+\begin_inset Newline newline
+\end_inset
+
+The template works very similarly to Xfig support.
+ \SpecialChar LyX
+ will extract the text in the image into a separate \SpecialChar TeX
+ file and creates a
+ PDF file for the rest.
+\end_layout
+
+\begin_layout Description
+Figura
+\begin_inset space ~
+\end_inset
+
+Xfig Esta plantilla soporta imágenes creadas con el programa 
+\begin_inset CommandInset href
+LatexCommand href
+name "Xfig"
+target "http://en.wikipedia.org/wiki/Xfig"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Description
+Gráficos
+\begin_inset space ~
+\end_inset
+
+vectoriales Sirve para insertar gráficos vectoriales.
+ Los gráficos se pueden tratar en el diálogo 
+\family sans
+Material Externo
+\family default
+ como las que habitualmente se incluyen mediante el diálogo 
+\family sans
+Gráficos
+\family default
+, tal como se explica en la sección
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Diálogo-Gráficos"
+
+\end_inset
+
+.
+ Aquí una imagen vectorial insertada: 
+\begin_inset External
+	template VectorGraphics
+	filename ../clipart/SVG-Drawing.svg
+	lyxscale 50
+	scale 33
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+Imagen
+\begin_inset space ~
+\end_inset
+
+mapa
+\begin_inset space ~
+\end_inset
+
+de
+\begin_inset space ~
+\end_inset
+
+bits Sirve para insertar imágenes bitmap.
+ Las imágenes se pueden tratar en el diálogo 
+\family sans
+Material Externo
+\family default
+ como las que habitualmente se incluyen mediante el diálogo 
+\family sans
+Gráficos
+\family default
+, tal como se explica en la sección
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Diálogo-Gráficos"
+
+\end_inset
+
+.
+ Aquí se ha insertado una imagen 
+\emph on
+raster
+\emph default
+: 
+\begin_inset External
+	template RasterImage
+	filename ../clipart/ToolbarEnvBox.png
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Description
@@ -39385,108 +39578,6 @@ ssconvert
 spreadsheet.lyx
 \emph default
  para ver ejemplos de uso y posibles limitaciones.
-\end_layout
-
-\begin_layout Description
-Fecha Esta inserta la fecha en el formato 
-\emph on
-Día-Mes-Año.
-
-\emph default
- A continuación hay una fecha insertada como material externo: 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-today 
-\end_layout
-
-\end_inset
-
-
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-¡Quitar el espacio protegido cuando se arregle el fallo 4398!
-\end_layout
-
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-La fecha no se muestra en \SpecialChar LyX
-, sólo en la salida.
- Hay otros dos métodos de insertar una fecha, con el menú 
-\family sans
-Insertar\SpecialChar menuseparator
-Fecha
-\family default
- y con el comando \SpecialChar LaTeX
- 
-\series bold
-
-\backslash
-today
-\series default
- en código \SpecialChar TeX
-.
- Los distintos métodos se comparan en el cuadro
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "tab:Comparación-de"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Description
-Tipografía
-\begin_inset space ~
-\end_inset
-
-musical
-\begin_inset space ~
-\end_inset
-
-Lilypond Esta plantilla sirve para tipografiar notación musical con el programa
-\begin_inset Newline linebreak
-\end_inset
-
-
-\series bold
-
-\begin_inset CommandInset href
-LatexCommand href
-name "LilyPond"
-target "http://es.wikipedia.org/wiki/GNU_LilyPond"
-literal "false"
-
-\end_inset
-
-
-\series default
-.
- Echa un vistazo al archivo de ejemplo
-\emph on
- lilypond.lyx
-\emph default
- para más información sobre el soporte de \SpecialChar LyX
- a LilyPond.
 \end_layout
 
 \begin_layout Description
@@ -39670,406 +39761,38 @@ Un PDF incluido girado -5°:
 \end_layout
 
 \begin_layout Description
-Imagen
+Tipografía
 \begin_inset space ~
 \end_inset
 
-mapa
+musical
 \begin_inset space ~
 \end_inset
 
-de
-\begin_inset space ~
-\end_inset
-
-bits Sirve para insertar imágenes bitmap.
- Las imágenes se pueden tratar en el diálogo 
-\family sans
-Material Externo
-\family default
- como las que habitualmente se incluyen mediante el diálogo 
-\family sans
-Gráficos
-\family default
-, tal como se explica en la sección
-\begin_inset space ~
+Lilypond Esta plantilla sirve para tipografiar notación musical con el programa
+\begin_inset Newline linebreak
 \end_inset
 
 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:Diálogo-Gráficos"
+\series bold
 
-\end_inset
-
-.
- Aquí se ha insertado una imagen 
-\emph on
-raster
-\emph default
-: 
-\begin_inset External
-	template RasterImage
-	filename ../clipart/ToolbarEnvBox.png
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Description
-Gráficos
-\begin_inset space ~
-\end_inset
-
-vectoriales Sirve para insertar gráficos vectoriales.
- Los gráficos se pueden tratar en el diálogo 
-\family sans
-Material Externo
-\family default
- como las que habitualmente se incluyen mediante el diálogo 
-\family sans
-Gráficos
-\family default
-, tal como se explica en la sección
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:Diálogo-Gráficos"
-
-\end_inset
-
-.
- Aquí una imagen vectorial insertada: 
-\begin_inset External
-	template VectorGraphics
-	filename ../clipart/SVG-Drawing.svg
-	lyxscale 50
-	scale 33
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Description
-Figura
-\begin_inset space ~
-\end_inset
-
-Xfig Esta plantilla soporta imágenes creadas con el programa 
 \begin_inset CommandInset href
 LatexCommand href
-name "Xfig"
-target "http://en.wikipedia.org/wiki/Xfig"
+name "LilyPond"
+target "http://es.wikipedia.org/wiki/GNU_LilyPond"
 literal "false"
 
 \end_inset
 
-.
-\end_layout
 
-\begin_layout Description
-Figura
-\begin_inset space ~
-\end_inset
-
-Inkscape 
-\lang english
-This experimental template supports vector graphics (SVG) images that contain
- text written in \SpecialChar LaTeX
-.
- It relies on the optio
-\lang spanish
-n 
-\family sans
-Omitir texto en PDF y crear archivo LaTeX 
-\family default
-\lang english
-when saving a drawing as PDF with the program 
-\noun on
-Inkscape
-\noun default
-, 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Inkscape"
-literal "false"
-
-\end_inset
-
-.
- This allows to include SVG documents in which \SpecialChar LaTeX
- will typeset the text.
- The benefit of such SVGs is a uniform text style throughout the whole document
- and one can use \SpecialChar TeX
- code commands in the text of the SVG.
-\begin_inset Newline newline
-\end_inset
-
-One can use \SpecialChar TeX
- code commands like 
-\series bold
-
-\backslash
-Large
 \series default
-, 
-\series bold
-
-\backslash
-small
-\series default
-, etc.
-\begin_inset space \space{}
-\end_inset
-
-in the text of the SVG.
- The size of the font will be taken from the settings of the \SpecialChar LyX
- document.
- Refer to 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Inkscape"
-literal "false"
-
-\end_inset
-
- for more information and examples.
-\begin_inset Newline newline
-\end_inset
-
-Note that while the image text takes into account the surrounding font,
- its preview in \SpecialChar LyX
- does not.
- Wrapping the external inset in a preview inset (menu 
-\family sans
-Insert\SpecialChar menuseparator
-Preview
-\family default
-) gives a better result.
-\begin_inset Newline newline
-\end_inset
-
-The template works very similarly to Xfig support.
- \SpecialChar LyX
- will extract the text in the image into a separate \SpecialChar TeX
- file and creates a
- PDF file for the rest.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float table
-placement !h
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "tab:Comparación-de"
-
-\end_inset
-
-Comparación de los métodos de inserción de fecha.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Tabular
-<lyxtabular version="3" rows="4" columns="4">
-<features tabularvalignment="middle">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Documento
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family sans
-Material externo\SpecialChar menuseparator
-Fecha
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family sans
-Insertar\SpecialChar menuseparator
-Fecha
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-comando 
-\series bold
-
-\backslash
-today
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\SpecialChar LyX
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-como recuadro
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-como fecha
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-como cuadro código \SpecialChar TeX
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\SpecialChar LaTeX
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-como fecha
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-como fecha
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-como comando
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-DVI, PDF, PS
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-como fecha
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-como fecha
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-como fecha
-\end_layout
-
-\end_inset
-</cell>
-</row>
-</lyxtabular>
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
+.
+ Echa un vistazo al archivo de ejemplo
+\emph on
+ lilypond.lyx
+\emph default
+ para más información sobre el soporte de \SpecialChar LyX
+ a LilyPond.
 \end_layout
 
 \begin_layout Standard
@@ -40664,7 +40387,7 @@ de
 código.
  
 \family default
-El paquete \SpecialChar LaTeX
+Los paquetes \SpecialChar LaTeX
  
 \series bold
 listings
@@ -40680,8 +40403,212 @@ status collapsed
 
 \end_inset
 
+ y 
+\series bold
+minted
+\series default
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+-paquetes ! minted
+\end_layout
+
+\end_inset
+
  provee un mecanismo potente y flexible para insertar código fuente en tu
  documento.
+ 
+\lang english
+One can only use one of these packages in a document.
+ 
+\series bold
+listings
+\series default
+ is used by default.
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+
+\series bold
+\lang english
+Note:
+\series default
+ \SpecialChar LyX
+ does NOT want to encourage users to add the 
+\family typewriter
+-shell-escape
+\family default
+ option to converter definitions.
+ It works, but it is a huge security risk.
+ There is an active discussion about how to handle this.
+ Once that's been resolved, this can be updated appropriately.
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang english
+=====
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang english
+In order to use 
+\series bold
+minted
+\series default
+, you need to select it as the syntax highlighting package in the document
+ settings under 
+\family sans
+Listings
+\family default
+.
+ 
+\series bold
+minted
+\series default
+ requires also additionally the module 
+\family sans
+pygments
+\family default
+ of the software 
+\noun on
+Python
+\noun default
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+Under \SpecialChar LyX
+ for Windows 
+\family sans
+pygments
+\family default
+ is already installed.
+\end_layout
+
+\end_inset
+
+ and the option 
+\family typewriter
+-shell-escape
+\family default
+ for the \SpecialChar LaTeX
+ processor.
+ If you want for example view or export your document as the format 
+\family sans
+PDF
+\begin_inset space ~
+\end_inset
+
+(pdflatex)
+\family default
+, go to the \SpecialChar LyX
+ preferences and there to the section 
+\family sans
+File
+\begin_inset space ~
+\end_inset
+
+Handling\SpecialChar menuseparator
+Converters
+\family default
+.
+ There go to the entry 
+\family sans
+LaTeX
+\begin_inset space ~
+\end_inset
+
+(pdflatex) -> PDF
+\begin_inset space ~
+\end_inset
+
+(pdflatex)
+\family default
+ and look at the field 
+\family sans
+Converter
+\family default
+.
+ There you see by default the content
+\lang spanish
+
+\begin_inset Newline newline
+\end_inset
+
+
+\series bold
+pdflatex $$i
+\series default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\lang english
+Now change it to
+\lang spanish
+
+\begin_inset Newline newline
+\end_inset
+
+
+\series bold
+pdflatex $$i -shell-escape
+\begin_inset Newline newline
+\end_inset
+
+
+\series default
+\lang english
+and press the 
+\family sans
+Modify
+\family default
+ button and subsequently 
+\family sans
+Apply
+\family default
+ or 
+\family sans
+Save
+\family default
+.
+ The same can be done for the output formats 
+\family sans
+PDF
+\begin_inset space ~
+\end_inset
+
+(LuaTeX)
+\family default
+ and 
+\family sans
+PDF
+\begin_inset space ~
+\end_inset
+
+(XeTeX)
+\family default
+.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -40793,7 +40720,11 @@ Flotante
 \end_layout
 
 \begin_layout Standard
-Se puede añadir una leyenda a un listado de código con el menú 
+Se puede añadir una leyenda a listados de código 
+\lang english
+that are not inline
+\lang spanish
+ con el menú 
 \family sans
 Insertar\SpecialChar menuseparator
 Leyenda
@@ -40866,6 +40797,104 @@ def func(param):
 \begin_layout Plain Layout
 
     pass
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Greyedout
+status open
+
+\begin_layout Plain Layout
+
+\series bold
+Nota: 
+\series default
+\lang english
+The 
+\series bold
+listings
+\series default
+ package places captions before the listing by default.
+\begin_inset Newline newline
+\end_inset
+
+The 
+\series bold
+minted
+\series default
+ package places them after the listing by default if it is floating.
+ If tit is not floating  caption will be typeset before the listing if it
+ is inserted to its first line, otherwise  it will be typeset after the
+ listing.
+ If you want to force the placement in avery case before the listing, you
+ have to add the following lines as last thing to the preamble
+\lang spanish
+:
+\begin_inset Newline newline
+\end_inset
+
+
+\series bold
+
+\backslash
+@ifundefined{newfloat}
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Phantom HPhantom
+status open
+
+\begin_layout Plain Layout
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+{
+\backslash
+usepackage{float}}{}
+\begin_inset Newline newline
+\end_inset
+
+
+\backslash
+floatstyle{plaintop}
+\series default
+
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LyX
+ cargará automáticamente el paquete 
+\series bold
+float
+\series default
+ cuando uses 
+\lang english
+special document-wide float placement settings
+\lang spanish
+.
+ Para evitar que sea cargado dos veces se pone al principio el comando 
+\series bold
+
+\backslash
+@ifundefined
+\series default
+.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -40969,8 +40998,16 @@ tradicional
 
 mejorado
 \family default
- debería emplearse si se usan en el código caracteres nacionales como la
- diéresis alemana.
+ 
+\lang english
+is only meaningful for the 
+\series bold
+listings
+\series default
+ package
+\lang spanish
+ y debería emplearse si se usan en el código caracteres nacionales como
+ la diéresis alemana.
 \begin_inset Newline newline
 \end_inset
 
@@ -41288,9 +41325,13 @@ Para ver ahí una lista de las opciones disponibles, escribe una interrogación
 \end_layout
 
 \begin_layout Standard
-Para más información sobre el paquete 
+Para más información sobre los paquetes 
 \series bold
 listings
+\series default
+ y 
+\series bold
+minted
 \series default
 , consulta su documentación
 \begin_inset space ~
@@ -41299,7 +41340,7 @@ listings
 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "listings"
+key "listings,minted"
 literal "true"
 
 \end_inset
@@ -46525,6 +46566,42 @@ status collapsed
 \begin_layout Plain Layout
 \SpecialChar LaTeX
 -paquetes ! listings
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "minted"
+literal "true"
+
+\end_inset
+
+Documentación del paquete \SpecialChar LaTeX
+ 
+\series bold
+
+\begin_inset CommandInset href
+LatexCommand href
+name "minted"
+target "ftp://tug.ctan.org/pub/tex-archive/macros/latex/contrib/minted/minted.pdf"
+literal "false"
+
+\end_inset
+
+
+\series default
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+-paquetes ! minted
 \end_layout
 
 \end_inset

@@ -20,12 +20,12 @@
 #include "support/strfwd.h"
 
 #include <QMainWindow>
+#include <QMenu>
 
 class QCloseEvent;
 class QDragEnterEvent;
 class QDropEvent;
 class QLabel;
-class QMenu;
 class QShowEvent;
 
 
@@ -110,7 +110,7 @@ public:
 	/// display a message in the view
 	/// could be called from any thread
 	void message(docstring const &);
-	
+
 	bool getStatus(FuncRequest const & cmd, FuncStatus & flag);
 	/// dispatch command.
 	/// \return true if the \c FuncRequest has been dispatched.
@@ -173,7 +173,7 @@ public:
 
 	///
 	TocModels & tocModels();
-	
+
 	/// called on timeout
 	void autoSave();
 
@@ -191,7 +191,7 @@ public:
 	/// \return the \c Workarea at index \c index
 	GuiWorkArea * workArea(int index);
 
-	/// Add a \c WorkArea 
+	/// Add a \c WorkArea
 	/// \return the \c Workarea associated to \p  Buffer
 	/// \retval 0 if no \c WorkArea is found.
 	GuiWorkArea * addWorkArea(Buffer & buffer);
@@ -208,7 +208,7 @@ public:
 	GuiWorkArea const * currentMainWorkArea() const;
 	/// return the current document WorkArea (it may not have the focus).
 	GuiWorkArea * currentMainWorkArea();
-	
+
 	/// Current ratio between physical pixels and device-independent pixels
 	double pixelRatio() const;
 
@@ -226,6 +226,8 @@ public Q_SLOTS:
 	void clearMessage();
 	///
 	void updateWindowTitle(GuiWorkArea * wa);
+	///
+	void disableShellEscape();
 
 private Q_SLOTS:
 	///
@@ -304,7 +306,7 @@ public:
 	void hideAll() const;
 
 	/// Update all visible dialogs.
-	/** 
+	/**
 	 *  Check the status of all visible dialogs and disable or reenable
 	 *  them as appropriate.
 	 *
@@ -343,6 +345,8 @@ public:
 	void hideDialog(std::string const & name, Inset * inset);
 	///
 	void disconnectDialog(std::string const & name);
+	///
+	bool develMode() const { return devel_mode_; }
 
 private:
 	/// Saves the layout and geometry of the window
@@ -374,7 +378,7 @@ private:
 
 	///
 	enum RenameKind { LV_WRITE_AS, LV_VC_RENAME, LV_VC_COPY };
-	/// Save a buffer as a new file. 
+	/// Save a buffer as a new file.
 	/**
 	Write a buffer to a new file name and rename the buffer
     according to the new file name.
@@ -407,7 +411,7 @@ private:
 	/// closes the tabworkarea and all tabs. If we are in a close event,
 	/// all buffers will be closed, otherwise they will be hidden.
 	bool closeTabWorkArea(TabWorkArea * twa);
-	/// gives the user the possibility to save his work 
+	/// gives the user the possibility to save his work
 	/// or to discard the changes. If hiding is true, the
 	/// document will be reloaded.
 	bool saveBufferIfNeeded(Buffer & buf, bool hiding);
@@ -459,6 +463,8 @@ private:
 	/// Request to give focus to minibuffer
 	bool minibuffer_focus_;
 
+	/// Statusbar widget that shows shell-escape status
+	QLabel * shell_escape_;
 	/// Statusbar widget that shows read-only status
 	QLabel * read_only_;
 	/// Statusbar widget that shows version control status
@@ -469,6 +475,20 @@ private:
 
 	// movability flag of all toolbars
 	bool toolbarsMovable_;
+
+	// developer mode
+	bool devel_mode_;
+};
+
+
+class SEMenu : public QMenu
+{
+	Q_OBJECT
+public:
+	explicit SEMenu(QWidget * parent);
+
+public Q_SLOTS:
+	void showMenu(QPoint const &) { exec(QCursor::pos()); }
 };
 
 } // namespace frontend

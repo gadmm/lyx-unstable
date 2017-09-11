@@ -1,5 +1,5 @@
 #LyX 2.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 543
+\lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -105,14 +105,14 @@ enumitem
 \use_geometry false
 \use_package amsmath 1
 \use_package amssymb 1
-\use_package cancel 0
+\use_package cancel 1
 \use_package esint 1
 \use_package mathdots 1
-\use_package mathtools 0
+\use_package mathtools 1
 \use_package mhchem 1
-\use_package stackrel 0
-\use_package stmaryrd 0
-\use_package undertilde 0
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
 \cite_engine basic
 \cite_engine_type default
 \biblio_style plain
@@ -121,7 +121,8 @@ enumitem
 \paperorientation portrait
 \suppress_date false
 \justification true
-\use_refstyle 0
+\use_refstyle 1
+\use_minted 0
 \notefontcolor #0000ff
 \branch Frage
 \selected 1
@@ -216,7 +217,7 @@ literal "false"
 \begin_inset Newline newline
 \end_inset
 
-Version 2.2.x
+Version 2.3.x
 \begin_inset Note Note
 status collapsed
 
@@ -8602,10 +8603,12 @@ Unformatiert
 \end_layout
 
 \begin_layout Verbatim
+
 Dies ist Unformatiert.
 \end_layout
 
 \begin_layout Verbatim
+
 Die folgenden 2 Zeilen sind leer:
 \end_layout
 
@@ -8618,6 +8621,7 @@ Die folgenden 2 Zeilen sind leer:
 \end_layout
 
 \begin_layout Verbatim
+
 Fast alles ist in Unformatiert erlaubt:"%&$§#~'`
 \backslash
 }][{|
@@ -8641,6 +8645,7 @@ Unformatiert
 \end_layout
 
 \begin_layout Verbatim*
+
 Dies ist Unformatiert*.
 \end_layout
 
@@ -17368,9 +17373,8 @@ status collapsed
 \begin_layout Standard
 \SpecialChar LyX
  setzt Anführungszeichen normalerweise richtig.
- Insbesondere wird es unterschiedliche Anführungszeichen für den Beginn
- und das Ende des eingeschlossenen Textes benutzen.
- Zum Beispiel „Anfang Ende“.
+ Insbesondere werden unterschiedliche Anführungszeichen für den Beginn und
+ das Ende des eingeschlossenen Textes benutzt, zum Beispiel „Anfang Ende“.
  Das Tastaturzeichen 
 \family sans
 "
@@ -17379,7 +17383,7 @@ status collapsed
 \family sans
 Umschalt+2)
 \family default
- wird sie automatisch erzeugen.
+ erzeugt sie automatisch.
 \end_layout
 
 \begin_layout Standard
@@ -17415,77 +17419,858 @@ der
 Anführungszeichen
 \family default
  einstellen.
+ Beachten Sie aber, dass \SpecialChar LyX
+ für die ausgewählte Hauptsprache des Dokuments
+ jeweils einen sinnvollen Vorschlag macht.
+ Es stehen 14 Varianten zur Auswahl:
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring <<Äußere>> und <<innere>>:
+\noindent
+
+\family sans
+\begin_inset Quotes eld
+\end_inset
+
+Äußere
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+und
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Quotes els
+\end_inset
+
+innere
+\begin_inset Quotes ers
+\end_inset
+
+
+\family default
+ Produziert 
+\begin_inset Quotes eld
+\end_inset
+
+diese äußeren
+\begin_inset Quotes erd
+\end_inset
+
+ und 
+\begin_inset Quotes els
+\end_inset
+
+diese inneren
+\begin_inset Quotes ers
+\end_inset
+
+ Anführungszeichen (bspw.
+ in den USA gebräuchlich)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring <<Äußere>> und <<innere>>:
+
+\family sans
+\begin_inset Quotes sld
+\end_inset
+
+Äußere
+\begin_inset Quotes sld
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+und
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Quotes sls
+\end_inset
+
+innere
+\begin_inset Quotes srs
+\end_inset
+
+
+\family default
+ Produziert 
+\begin_inset Quotes sld
+\end_inset
+
+diese äußeren
+\begin_inset Quotes sld
+\end_inset
+
+ und 
+\begin_inset Quotes sls
+\end_inset
+
+diese inneren
+\begin_inset Quotes srs
+\end_inset
+
+ Anführungszeichen (bspw.
+ in Schweden gebräuchlich)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring <<Äußere>> und <<innere>>:
+
+\family sans
+\begin_inset Quotes gld
+\end_inset
+
+Äußere
+\begin_inset Quotes grd
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+und
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Quotes gls
+\end_inset
+
+innere
+\begin_inset Quotes grs
+\end_inset
+
+
+\family default
+ Produziert 
+\begin_inset Quotes gld
+\end_inset
+
+diese äußeren
+\begin_inset Quotes grd
+\end_inset
+
+ und 
+\begin_inset Quotes gls
+\end_inset
+
+diese inneren
+\begin_inset Quotes grs
+\end_inset
+
+ Anführungszeichen (bspw.
+ in Deutschland gebräuchlich)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring <<Äußere>> und <<innere>>:
+
+\family sans
+\begin_inset Quotes pld
+\end_inset
+
+Äußere
+\begin_inset Quotes prd
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+und
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Quotes pls
+\end_inset
+
+innere
+\begin_inset Quotes prs
+\end_inset
+
+
+\family default
+ Produziert 
+\begin_inset Quotes pld
+\end_inset
+
+diese äußeren
+\begin_inset Quotes prd
+\end_inset
+
+ und 
+\begin_inset Quotes pls
+\end_inset
+
+diese inneren
+\begin_inset Quotes prs
+\end_inset
+
+ Anführungszeichen (bspw.
+ in Polen gebräuchlich)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring <<Äußere>> und <<innere>>:
+
+\family sans
+\begin_inset Quotes cld
+\end_inset
+
+Äußere
+\begin_inset Quotes crd
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+und
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Quotes cls
+\end_inset
+
+innere
+\begin_inset Quotes crs
+\end_inset
+
+
+\family default
+ Produziert 
+\begin_inset Quotes cld
+\end_inset
+
+diese äußeren
+\begin_inset Quotes crd
+\end_inset
+
+ und 
+\begin_inset Quotes cls
+\end_inset
+
+diese inneren
+\begin_inset Quotes crs
+\end_inset
+
+ Anführungszeichen (bspw.
+ in der Schweiz gebräuchlich)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring <<Äußere>> und <<innere>>:
+
+\family sans
+\begin_inset Quotes ald
+\end_inset
+
+Äußere
+\begin_inset Quotes ard
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+und
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Quotes als
+\end_inset
+
+innere
+\begin_inset Quotes ars
+\end_inset
+
+
+\family default
+ Produziert 
+\begin_inset Quotes ald
+\end_inset
+
+diese äußeren
+\begin_inset Quotes ard
+\end_inset
+
+ und 
+\begin_inset Quotes als
+\end_inset
+
+diese inneren
+\begin_inset Quotes ars
+\end_inset
+
+ Anführungszeichen (bspw.
+ in Dänemark gebräuchlich)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring <<Äußere>> und <<innere>>:
+
+\family sans
+\begin_inset Quotes qrd
+\end_inset
+
+Äußere
+\begin_inset Quotes qrd
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+und
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Quotes qls
+\end_inset
+
+innere
+\begin_inset Quotes qls
+\end_inset
+
+
+\family default
+ Produziert 
+\begin_inset Quotes qrd
+\end_inset
+
+diese äußeren
+\begin_inset Quotes qrd
+\end_inset
+
+ und 
+\begin_inset Quotes qls
+\end_inset
+
+diese inneren
+\begin_inset Quotes qls
+\end_inset
+
+ Anführungszeichen (so genannte 
+\emph on
+einfache
+\emph default
+ oder 
+\emph on
+nicht-typographische Anführungszeichen
+\emph default
+)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring <<Äußere>> und <<innere>>:
+
+\family sans
+\begin_inset Quotes bld
+\end_inset
+
+Äußere
+\begin_inset Quotes brd
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+und
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Quotes bls
+\end_inset
+
+innere
+\begin_inset Quotes brs
+\end_inset
+
+
+\family default
+ Produziert 
+\begin_inset Quotes bld
+\end_inset
+
+diese äußeren
+\begin_inset Quotes brd
+\end_inset
+
+ und 
+\begin_inset Quotes bls
+\end_inset
+
+diese inneren
+\begin_inset Quotes brs
+\end_inset
+
+ Anführungszeichen (bspw.
+ in Großbritannien gebräuchlich)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring <<Äußere>> und <<innere>>:
+
+\family sans
+\begin_inset Quotes fld
+\end_inset
+
+Äußere
+\begin_inset Quotes frd
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+und
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Quotes fls
+\end_inset
+
+innere
+\begin_inset Quotes frs
+\end_inset
+
+
+\family default
+ Produziert 
+\begin_inset Quotes fld
+\end_inset
+
+diese äußeren
+\begin_inset Quotes frd
+\end_inset
+
+ und 
+\begin_inset Quotes fls
+\end_inset
+
+diese inneren
+\begin_inset Quotes frs
+\end_inset
+
+ Anführungszeichen (bspw.
+ in Frankreich gebräuchlich)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring <<Äußere>> und <<innere>>:
+
+\family sans
+\begin_inset Quotes ild
+\end_inset
+
+Äußere
+\begin_inset Quotes ird
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+und
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Quotes ils
+\end_inset
+
+innere
+\begin_inset Quotes irs
+\end_inset
+
+
+\family default
+ Produziert 
+\begin_inset Quotes ild
+\end_inset
+
+diese äußeren
+\begin_inset Quotes ird
+\end_inset
+
+ und 
+\begin_inset Quotes ils
+\end_inset
+
+diese inneren
+\begin_inset Quotes irs
+\end_inset
+
+ Anführungszeichen (ein anderer in Frankreich gebräuchlicher Stil)
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Vielleicht wundern Sie sich, warum man hier nicht einfach nur die äußeren
+ Anführungszeichen verwendet.
+ Der Grund ist, dass Sie dann nicht einfach zu einem anderen Stil wechseln
+ können (in dem sich die inneren Anführungszeichen von den äußeren unterscheiden
+).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring <<Äußere>> und <<innere>>:
+
+\family sans
+\begin_inset Quotes rld
+\end_inset
+
+Äußere
+\begin_inset Quotes rrd
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+und
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Quotes rls
+\end_inset
+
+innere
+\begin_inset Quotes rrs
+\end_inset
+
+
+\family default
+ Produziert 
+\begin_inset Quotes rld
+\end_inset
+
+diese äußeren
+\begin_inset Quotes rrd
+\end_inset
+
+ und 
+\begin_inset Quotes rls
+\end_inset
+
+diese inneren
+\begin_inset Quotes rrs
+\end_inset
+
+ Anführungszeichen (bspw.
+ in Russland gebräuchlich)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring <<Äußere>> und <<innere>>:
+
+\family sans
+\begin_inset Quotes wld
+\end_inset
+
+Äußere
+\begin_inset Quotes wrd
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+und
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Quotes wls
+\end_inset
+
+innere
+\begin_inset Quotes wrs
+\end_inset
+
+
+\family default
+ Produziert 
+\begin_inset Quotes wld
+\end_inset
+
+diese äußeren
+\begin_inset Quotes wrd
+\end_inset
+
+ und 
+\begin_inset Quotes wls
+\end_inset
+
+diese inneren
+\begin_inset Quotes wrs
+\end_inset
+
+ Anführungszeichen (ein weiterer in Schweden gebräuchlicher Stil)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring <<Äußere>> und <<innere>>:
+\begin_inset Quotes jld
+\end_inset
+
+
+\family sans
+Äußere
+\family default
+
+\begin_inset Quotes jrd
+\end_inset
+
+
+\family sans
+
+\begin_inset space ~
+\end_inset
+
+und
+\begin_inset space ~
+\end_inset
+
+
+\family default
+
+\begin_inset Quotes jls
+\end_inset
+
+
+\family sans
+innere
+\family default
+
+\begin_inset Quotes jrs
+\end_inset
+
+ Produziert 
+\begin_inset Quotes jld
+\end_inset
+
+diese äußeren
+\begin_inset Quotes jrd
+\end_inset
+
+ und 
+\begin_inset Quotes jls
+\end_inset
+
+diese inneren
+\begin_inset Quotes jrs
+\end_inset
+
+ Anführungszeichen (bspw.
+ in Japan gebräuchlich)
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Beachten Sie, dass diese Zeichen hier nur mit ähnlich aussehenden mathematischen
+ Symbolen emuliert werden, weil viele Kodierungen die entsprechenden japanischen
+ Zeichen nicht enthalten.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring <<Äußere>> und <<innere>>:
+\begin_inset Quotes kld
+\end_inset
+
+
+\family sans
+Äußere
+\family default
+
+\begin_inset Quotes krd
+\end_inset
+
+
+\family sans
+
+\begin_inset space ~
+\end_inset
+
+und
+\begin_inset space ~
+\end_inset
+
+
+\family default
+
+\begin_inset Quotes kls
+\end_inset
+
+
+\family sans
+innere
+\family default
+
+\begin_inset Quotes krs
+\end_inset
+
+ Produziert 
+\begin_inset Quotes kld
+\end_inset
+
+diese äußeren
+\begin_inset Quotes krd
+\end_inset
+
+ und 
+\begin_inset Quotes kls
+\end_inset
+
+diese inneren
+\begin_inset Quotes krs
+\end_inset
+
+ Anführungszeichen (bspw.
+ in Nordkorea und China gebräuchlich)
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Beachten Sie, dass diese Zeichen hier nur mit ähnlich aussehenden mathematischen
+ Symbolen emuliert werden, weil viele Kodierungen die entsprechenden Zeichen
+ nicht enthalten.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Innere Anführungszeichen
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+In vielen Schriftkulturen, so etwa auch in der deutschsprachigen, sind dies
+ einfache Anführungszeichen.
+ Wie aber die britischen und französischen Beispiele zeigen, ist dies nicht
+ notwendigermaßen der Fall (und spezifisch der britische Fall zeigt, dass
  
-\end_layout
+\begin_inset Quotes gld
+\end_inset
 
-\begin_layout Standard
-Über 
-\family sans
-Anführungszeichen
-\family default
- können Sie sechs verschiedene Anführungszeichen auswählen:
-\end_layout
+äußere
+\begin_inset Quotes grd
+\end_inset
 
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
+ nicht zwingend 
+\begin_inset Quotes gld
+\end_inset
 
-\family sans
-“Text”
-\family default
- benutzt die Anführungszeichen: “doppelt”
-\end_layout
+doppelte
+\begin_inset Quotes grd
+\end_inset
 
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
+ meint).
+ Daher sprechen wir lieber von 
+\begin_inset Quotes gls
+\end_inset
 
-\family sans
-”Text”
-\family default
- benutzt die Anführungszeichen: ”doppelt”
-\end_layout
+inneren
+\begin_inset Quotes grs
+\end_inset
 
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
+ und 
+\begin_inset Quotes gld
+\end_inset
 
-\family sans
-„Text“
-\family default
- benutzt die Anführungszeichen: „doppelt“
-\end_layout
+äußeren Anführungszeichen
+\begin_inset Quotes grd
+\end_inset
 
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-
-\family sans
-„Text”
-\family default
- benutzt die Anführungszeichen: „doppelt”
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-
-\family sans
-«Text»
-\family default
- benutzt die Anführungszeichen: «doppelt»
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-
-\family sans
-»Text«
-\family default
- benutzt die Anführungszeichen: »doppelt«
-\end_layout
-
-\begin_layout Standard
-Um ein einfaches Anführungszeichens zu schreiben wollen, benutzen Sie 
-\family sans
-Alt+"
-\family default
 .
+\end_layout
+
+\end_inset
+
+ für eingebettete Zitate (und andere Aufgaben in manchen Sprachen, im Deutschen
+ etwa für 
+\begin_inset Quotes gls
+\end_inset
+
+Distanzierungsmarkierungen
+\begin_inset Quotes grs
+\end_inset
+
+) können mit Hilfe des Tastaturkürzels 
+\begin_inset Info
+type  "shortcut"
+arg   "quote-insert inner"
+\end_inset
+
+ oder über das Menü 
+\family sans
+Einfügen\SpecialChar menuseparator
+Sonderzeichen
+\family default
+ eingegeben werden.
+\end_layout
+
+\begin_layout Standard
+Standardmäßig sind die Anführungszeichen statisch.
+ Das heißt, ein Anführungszeichen behält den Stil, der eingestellt war,
+ als es eingefügt wurde, selbst wenn der dokumentweite Stil geändert wird.
+ Das erlaubt es Ihnen, Anführungszeichen verschiedenen Stils einzufügen.
+ Wenn Sie die Option 
+\family sans
+Dynamische Anführungszeichen
+\family default
+ in 
+\family sans
+Dokument\SpecialChar menuseparator
+Einstellungen\SpecialChar menuseparator
+Sprache
+\family default
+ aktivieren, werden hingegen spezielle Anführungszeichen eingefügt (im \SpecialChar LyX
+-Fenster
+ sind diese durch eine spezielle Farbe markiert).
+ Diese Anführungszeichen übernehmen automatisch immer den Hauptstil (inklusive
+ Änderungen desselben).
+ Diese Anführungszeichen machen es Ihnen leicht, den Stil in einem Schritt
+ zu ändern (bspw.
+ dann, wenn Ihr Verlag einen anderen Stil fordert).
+\end_layout
+
+\begin_layout Standard
+Einzelne Anführungszeichen können über ein Kontextmenü, das bei Rechtsklick
+ auf ein Anführungszeichen erscheint, leicht geändert werden (bspw.
+ hinsichtlich Stil, Ebene, Seite).
 \end_layout
 
 \begin_layout Subsection
@@ -25996,7 +26781,11 @@ B.
 \family sans
 „fig
 \family default
-“ haben) umzuformatieren, verwendet man den Befehl
+“ haben) umzuformatieren, verwendet man im Fall von 
+\series bold
+refstyle
+\series default
+ den Befehl
 \begin_inset Newline newline
 \end_inset
 
@@ -26012,8 +26801,52 @@ pageref{#1}}}
 \begin_inset Newline newline
 \end_inset
 
-Für weitere Informationen über das Format, siehe die Dokumentation der Pakete,
- 
+Bitte beachten Sie, dass weder 
+\series bold
+prettyref
+\series default
+ noch 
+\series bold
+refstyle
+\series default
+ Formate für alle verfügbarren Typen von Verweisen vordefiniert.
+ Dies trifft insbesondere auf viele der verfügbaren mathematischer 
+\begin_inset Quotes gls
+\end_inset
+
+Theorem
+\begin_inset Quotes grs
+\end_inset
+
+-Umgebungen zu.
+ Sollten Sie also formatierte Querverweise beispielsweise auf (mathematische)
+ Sätze machen wollen, müssen Sie das relevante Format selbst definieren.
+ Für 
+\series bold
+prettyref
+\series default
+ würde das bspw.
+\begin_inset space \space{}
+\end_inset
+
+so aussehen:
+\begin_inset Newline newline
+\end_inset
+
+
+\series bold
+
+\backslash
+newrefformat{prop}{Satz 
+\backslash
+ref{#1}}
+\series default
+
+\begin_inset Newline newline
+\end_inset
+
+Für weitere Informationen zur Definition formatierter Querverweise konsultieren
+ Sie bitte die Dokumentation der Pakete, 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "prettyref,refstyle"
@@ -26022,6 +26855,22 @@ literal "true"
 \end_inset
 
 .
+\begin_inset Newline newline
+\end_inset
+
+Die Optionen 
+\family sans
+Plural
+\family default
+ und 
+\family sans
+Großschreibung
+\family default
+ sind nur bei formatierten Querverweisen mit 
+\series bold
+refstyle
+\series default
+ aktiviert.
 \end_layout
 
 \begin_layout Description
@@ -26033,6 +26882,62 @@ reference "tab:Ein-Tabellen-Gleitobjekt"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Description
+Nur
+\begin_inset space ~
+\end_inset
+
+Marke: gibt nur die \SpecialChar LaTeX
+-Marke für den Querverweis aus: 
+\begin_inset CommandInset ref
+LatexCommand labelonly
+reference "tab:Ein-Tabellen-Gleitobjekt"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Das ist sinnvoll, wenn Sie über den \SpecialChar TeX
+-Modus einen Befehl für Querverweise
+ eingeben wollen, der von \SpecialChar LyX
+ nicht unterstützt wird.
+ Wenn Sie 
+\series bold
+refstyle
+\series default
+ verwenden, können Sie in diesem Fall zusätzlich die Option 
+\family sans
+Ohne
+\begin_inset space ~
+\end_inset
+
+Präfix
+\family default
+ aktivieren, womit nur der Teil des Schlüssels, der nach dem Separator 
+\begin_inset Quotes gld
+\end_inset
+
+:
+\begin_inset Quotes grd
+\end_inset
+
+ kommt, ausgegeben wird.
+ Diese Form wird beispielsweise für 
+\series bold
+refstyle
+\series default
+s 
+\emph on
+Range-
+\emph default
+Kommandos (für Seitenbereiche) benötigt.
 \end_layout
 
 \begin_layout Standard
@@ -26672,24 +27577,6 @@ Es gibt zwei Möglichkeiten, in einem \SpecialChar LyX
 
 \begin_layout Enumerate
 Sie können eine Literaturverzeichnis-Datenbank einfügen.
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-Bekannt als 
-\begin_inset Quotes gld
-\end_inset
-
-Bib\SpecialChar TeX
--Datenbank
-\begin_inset Quotes grd
-\end_inset
-
-.
-\end_layout
-
-\end_inset
-
  Dies wird in Abschnitt
 \begin_inset space \space{}
 \end_inset
@@ -26702,7 +27589,6 @@ reference "sec:Literaturverzeichnis-Datenbanken"
 \end_inset
 
  beschrieben.
- .
 \end_layout
 
 \begin_layout Enumerate
@@ -26711,7 +27597,7 @@ Sie können ein Literaturverzeichnis von Hand einfügen.
 \family sans
 Literaturverzeichnis
 \family default
- (siehe Abschnitt
+ benutzt (siehe den nächsten Abschnitt sowie Abschnitt
 \begin_inset space \space{}
 \end_inset
 
@@ -26722,11 +27608,38 @@ reference "subsec:Literaturverzeichnis-Umgebung"
 
 \end_inset
 
-) benutzt.
+).
+\end_layout
+
+\begin_layout Standard
+Wenn Sie etwas anderes als die nummerischen Verweise, die in diesem Dokument
+ verwendet werden, brauchen (beispielsweise Autor-Jahr-Verweise), oder wenn
+ Sie mehr als eine handvoll Literatureinträge haben, sollten Sie ernsthaft
+ in Erwägung ziehen, eine Literaturdatenbank zu verwenden.
+\end_layout
+
+\begin_layout Standard
+In diesem Dokument werden zwei Literaturverzeichnisse benutzt, um die Unterschie
+de zu zeigen: ein Literaturverzeichnis mithilfe der Absatzumgebung 
+\family sans
+Literaturverzeichnis
+\family default
+ und ein aus einer Datenbank erzeugtes.
+ Wie Sie sehen, enthält das Literaturverzeichnis, das mit einer Datenbank
+ erstellt wurde, nur die Einträge, auf die verwiesen wird.
+ Das heißt, die Datenbank-Methode nimmt Ihnen, unter anderem, die Mühe ab,
+ zu prüfen, welche Einträge Sie tatsächlich zitiert haben.
 \end_layout
 
 \begin_layout Subsection
 Die Literaturverzeichnis-Umgebung
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Die-Literaturverzeichnis-Umgebung"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -26754,6 +27667,39 @@ Marke
 Schlüssel
 \family default
  ist der symbolische Name, mit dem Sie auf diese Literaturangabe verweisen.
+ Jeder Eintrag muss einen eindeutigen Schlüssel erhalten, der nur aus ASCII-Zeic
+hen bestehen darf.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+ASCII bedeutet 
+\begin_inset CommandInset href
+LatexCommand href
+name "diesen Satz"
+target "https://de.wikipedia.org/wiki/American_Standard_Code_for_Information_Interchange#ASCII-Tabelle"
+literal "false"
+
+\end_inset
+
+ an Zeichen: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://de.wikipedia.org/wiki/American_Standard_Code_for_Information_Interchange
+\backslash
+#ASCII-Tabelle
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
  Nehmen wir zum Beispiel an, Ihre erste Literaturangabe wäre ein Buch über
  \SpecialChar LaTeX
 .
@@ -26766,20 +27712,10 @@ Schlüssel
 latexbuch
 \emph default
  dafür nehmen.
- Sie können auch eine 
-\family sans
-Marke
-\family default
- benutzen, die dann in dem grauen Kästchen erscheinen würde.
 \end_layout
 
 \begin_layout Standard
-Das 
-\family sans
-Marke
-\family default
-n-Feld ist nicht nutzlos.
- Sie können auf Ihre Literaturangaben verweisen, indem Sie 
+Sie können auf Ihre Literaturangaben verweisen, indem Sie 
 \family sans
 Einfügen\SpecialChar menuseparator
 Zitat
@@ -26816,7 +27752,7 @@ Literaturverweise erscheinen in der Ausgabe als Nummer des Literatureintrags
 Marke
 \family default
  für einen Eintrag, erscheint die Marke statt der Nummer.
- Hier sind zwei Beispiele, da erste ohne Marke, das zweite mit der Marke
+ Hier sind zwei Beispiele, das erste ohne Marke, das zweite mit der Marke
  „Credits“:
 \end_layout
 
@@ -26851,6 +27787,92 @@ literal "true"
 \end_layout
 
 \begin_layout Standard
+Mithilfe des \SpecialChar LaTeX
+-Pakets 
+\series bold
+natbib
+\series default
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+-Paket ! natbib
+\end_layout
+
+\end_inset
+
+ können Sie auch Autor-Jahr- oder Autor-Nummer-Verweise erzeugen.
+ Dazu muss die Marke die Form 
+\begin_inset Quotes gld
+\end_inset
+
+Autor(Jahr)
+\begin_inset Quotes grd
+\end_inset
+
+ oder 
+\begin_inset Quotes eld
+\end_inset
+
+Autor A and Autor B(Jahr)
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\emph on
+ohne
+\emph default
+ Leerzeichen zwischen dem Autor\SpecialChar breakableslash
+den Autoren und der öffnenden Klammer vor
+ dem Jahr haben (die englische Form 
+\begin_inset Quotes gld
+\end_inset
+
+and
+\begin_inset Quotes grd
+\end_inset
+
+ als Abgrenzung zwischen verschiedenen Autoren ist ebenfalls nötig).
+ Wenn Sie dann 
+\family sans
+Natbib
+\begin_inset space ~
+\end_inset
+
+(BibTeX)
+\family default
+ in den Dokumenteinstellungen
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Dokument ! Einstellungen
+\end_layout
+
+\end_inset
+
+ unter 
+\family sans
+Literaturverzeichnis\SpecialChar menuseparator
+Stilformat
+\family default
+ (siehe 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Zitierformat"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) wählen, können Sie zwischen verschiedenen Autor-Jahr oder Autor-Nummer-Stilen
+ auswählen.
+\end_layout
+
+\begin_layout Standard
 Um alle Literatureinträge auszurichten, kann man im Menü 
 \family sans
 Bearbeiten\SpecialChar menuseparator
@@ -26863,40 +27885,25 @@ type  "icon"
 arg   "layout-paragraph"
 \end_inset
 
-) eine längste Marke angeben.
+) eine 
+\begin_inset Quotes gld
+\end_inset
+
+längste Marke
+\begin_inset Quotes grd
+\end_inset
+
+ angeben.
  Es werden dann alle Einträge mit der Breite der angegebenen Marke eingerückt.
 \end_layout
 
 \begin_layout Subsection
-Literaturverzeichnis-Datenbanken (Bib\SpecialChar TeX
-)
+Literaturverzeichnis-Datenbanken 
 \begin_inset Index idx
 status collapsed
 
 \begin_layout Plain Layout
 Literaturverzeichnis ! Datenbanken
-\end_layout
-
-\end_inset
-
-
-\begin_inset Index idx
-status collapsed
-
-\begin_layout Plain Layout
-Literaturverzeichnis ! Bib\SpecialChar TeX
-
-\end_layout
-
-\end_inset
-
-
-\begin_inset Index idx
-status collapsed
-
-\begin_layout Plain Layout
-Bib\SpecialChar TeX
-
 \end_layout
 
 \end_inset
@@ -26912,23 +27919,22 @@ name "sec:Literaturverzeichnis-Datenbanken"
 \end_layout
 
 \begin_layout Standard
-Literaturverzeichnis-Datenbanken sind nützlich, wenn Sie dasselbe Literaturverze
-ichnis in mehreren Dokumenten benutzen wollen.
+Literaturverzeichnis-Datenbanken sind nützlich, wenn Sie dieselben Referenzen
+ in mehreren Dokumenten benutzen wollen.
+ Außerdem ist deren Form dann auch stets konsistent.
+ Mithilfe der Datenbank können sie systematisch Literatur Ihres Arbeitsgebiets
+ sammeln, ablegen und kommentieren.
 \begin_inset Foot
 status collapsed
 
 \begin_layout Plain Layout
-Sie sind auch nützlich um eine Datenbank von Artikeln mit Notizen dazu zu
- haben.
- Die meisten der Literaturverzeichnis-Datenbankprogramme erlauben es, Anmerkunge
-n und Rezensionen zusammen mit Literaturquellen zu speichern.
+Die meisten der Literaturverzeichnis-Datenbankprogramme erlauben es, Anmerkungen
+ und Rezensionen zusammen mit den Literaturangaben zu speichern.
 \end_layout
 
 \end_inset
 
- Außerdem sehen sie dann auch gleich aus.
- Sie können alle Literaturangaben Ihres Arbeitsgebiets in einer Datenbank
- sammeln.
+
 \end_layout
 
 \begin_layout Standard
@@ -26964,7 +27970,136 @@ http://wiki.lyx.org/BibTeX/Programs
 \end_layout
 
 \begin_layout Standard
-Um eine Datenbank zu benutzen, wählen Sie 
+\SpecialChar LyX
+ unterstützt zwei verschiedene Zugänge zu Literaturdatenbanken in einem
+ Dokument.
+ Bib\SpecialChar TeX
+ ist die klassische Methode; lange Zeit war dies die einzige Möglichkeit,
+ in \SpecialChar LaTeX
+ Literaturdatenbanken zu nutzen.
+ Sie ist sehr etabliert und ausgereift, und es gibt eine große Menge existierend
+er Stile, auf die man zurückgreifen kann.
+ Allerdings hat Bib\SpecialChar TeX
+ auch Schwächen, vor allem dann, wenn Sie komplexere
+ Anforderungen haben oder bestimmte Sprachen oder Schriften benötigen.
+ Diese Schwächen versucht 
+\series bold
+biblatex
+\series default
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+-Paket ! biblatex
+\end_layout
+
+\end_inset
+
+ zu beseitigen.
+ 
+\series bold
+biblatex
+\series default
+ kann dasselbe Datenbankformat wie Bib\SpecialChar TeX
+ lesen (wenn dieses auch erheblich
+ für 
+\noun on
+Biblatex
+\noun default
+ erweitert wurde)
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Das heißt: Während 
+\noun on
+Biblatex
+\noun default
+ jede klasische Bib\SpecialChar TeX
+-Datenbank lesen kann, scheitert Bib\SpecialChar TeX
+ umgekehrt beim Versuch,
+ Datenbanken zu interpretieren, die spezifische Erweiterungen von 
+\noun on
+Biblatex
+\noun default
+ verwenden.
+\end_layout
+
+\end_inset
+
+, aber die Handhabung im Rahmen der Erstellung von Referenzen und Bibliographien
+ unterscheidet sich erheblich.
+\end_layout
+
+\begin_layout Standard
+Um festzulegen, ob Bib\SpecialChar TeX
+ oder 
+\series bold
+biblatex
+\series default
+ verwendet werden soll, wird in den Dokumenteinstellungen (Menü 
+\family sans
+Dokument\SpecialChar menuseparator
+Einstellungen
+\family default
+)
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Dokument ! Einstellungen
+\end_layout
+
+\end_inset
+
+ unter 
+\family sans
+Literaturverzeichnis
+\family default
+ das 
+\family sans
+Stilformat
+\family default
+ auf ein Bib\SpecialChar TeX
+- oder ein 
+\family sans
+Biblatex
+\family default
+-Format gesetzt.
+\end_layout
+
+\begin_layout Subsubsection
+Bib\SpecialChar TeX
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Literaturverzeichnis ! Bib\SpecialChar TeX
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Bib\SpecialChar TeX
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Um auf eine Datenbank mit Bib\SpecialChar TeX
+ zuzugreifen, verwenden Sie das Menü 
 \family sans
 Einfügen\SpecialChar menuseparator
 Liste
@@ -26976,16 +28111,12 @@ Liste
 \end_inset
 
 Inhaltsverzeichnis\SpecialChar menuseparator
-Bib\SpecialChar softhyphen
-TeX-Literaturverzeichnis
+Bib(la)TeX-Literaturverzeichnis
 \family default
-, woraufhin das 
-\family sans
-BibTeX-Literaturverzeichnis
-\family default
--Fenster geöffnet wird.
- Sie können dort Datenbanken hinzufügen und auch wieder löschen.
- Außerdem können Sie eine Stildatei auswählen.
+.
+ Es wird ein Fenster geöffnet, indem Sie Datenbanken hinzufügen und eine
+ Bib\SpecialChar TeX
+-Stildatei auswählen können.
  Die Option 
 \family sans
 Literaturverzeichnis
@@ -27003,18 +28134,28 @@ Inhaltsverzeichnis
 \family sans
 Inhalt
 \family default
- können Sie festlegen, was gedruckt werden soll.
+ können Sie festlegen, ob alle Einträge der Datenbank oder nur die im Dokument
+ zitierten, gedruckt werden sollen.
 \end_layout
 
 \begin_layout Standard
-Die Stildatei ist eine Textdatei mit der Endung 
-\family typewriter
+Die Bib\SpecialChar TeX
+-Stildatei ist eine Textdatei mit der Endung 
+\begin_inset Quotes gld
+\end_inset
+
+
+\family sans
 .bst
 \family default
+
+\begin_inset Quotes grd
+\end_inset
+
 , die das Aussehen der Literatureinträge definiert.
  Ihre \SpecialChar LaTeX
--Distribution sollte mehrere anbieten, und viele Verleger liefern
- eigene Stildateien, so dass Sie sich um das Aussehen nicht kümmern müssen.
+-Distribution sollte mehrere anbieten und viele Verleger liefern eigene
+ Stildateien, so dass Sie sich um das Aussehen nicht kümmern müssen.
  Sie können auch eine eigene Stildatei erstellen, aber das ist etwas für
  Experten.
 \begin_inset Foot
@@ -27038,138 +28179,36 @@ literal "false"
 
 \end_inset
 
-
+ In diesem Dokument wird die Bib\SpecialChar TeX
+-Stildatei 
+\family sans
+alphadin.bst
+\family default
+ verwendet, die einen alphanumerischen Stil nach DIN-Norm bietet.
 \end_layout
 
 \begin_layout Standard
 Ein Querverweis auf einen Datenbankeintrag erfolgt wie oben beschrieben.
 \end_layout
 
-\begin_layout Standard
-\SpecialChar LyX
- verwendet Bib\SpecialChar TeX
-, um ein Literaturverzeichnis aus einer Datenbank zu erstellen.
- Sie können festlegen, welche seiner Varianten von \SpecialChar LyX
- als Prozessor verwendet
- wird; entweder im Menü 
-\family sans
-Dokument\SpecialChar menuseparator
-Einstellungen\SpecialChar menuseparator
-Literaturverzeichnis
-\family default
- oder 
-\family sans
-Werkzeuge\SpecialChar menuseparator
-Einstellungen\SpecialChar menuseparator
-Ausgabe\SpecialChar menuseparator
-LaTeX
-\family default
-.
- Die folgenden Varianten sind möglich:
-\end_layout
-
-\begin_layout Description
-biber bietet volle Unterstützung von Unicode, unbegrenzter Speicher, funktionier
-t nicht mit anderen Literaturpaketen (wie z.
-\begin_inset space \thinspace{}
-\end_inset
-
-B.
- 
-\series bold
-natbib
-\series default
-), nur mit dem Paket 
-\series bold
-biblatex
-\series default
-; empfohlen für mehrsprachige Texte und für Dokumente deren Sprache keine
- lateinischen Buchstaben verwendet
-\end_layout
-
-\begin_layout Description
-bibtex der Standard; erlaubt keine Sonderzeichen, die nicht in einer 7-Bit
- Kodierung kodiert werden können, begrenzter Speicher, funktioniert mit
- allen Literaturpaketen, mit Ausnahme von 
-\series bold
-biblatex
-\end_layout
-
-\begin_layout Description
-bibtex8 erlaubt alle Zeichen, die in einer 8-Bit Kodierung kodiert werden
- können, größerer Speicher als 
-\family sans
-bibtex
-\family default
-, funktioniert mit allen Literaturpaketen
-\end_layout
-
-\begin_layout Standard
-Bib\SpecialChar TeX
- kann durch Optionen gesteuert werden, die Sie unterhalb der Festlegung
- der Variante eingeben können.
- Bevor Sie Optionen verwenden, lesen Sie unbedingt das Bib\SpecialChar TeX
--Handbuch 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "BibTeX"
-literal "true"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-Wenn Sie im Menü 
-\family sans
-Dokument\SpecialChar menuseparator
-Einstellungen\SpecialChar menuseparator
-Literaturverzeichnis 
-\family default
-die Option 
-\family sans
-Ab\SpecialChar softhyphen
-schnitt\SpecialChar softhyphen
-spezifisches
-\begin_inset space \space{}
-\end_inset
-
-Literaturverzeichnis
-\family default
- angekreuzt haben, können Sie mehrfache und unterteilte Literaturverzeichnisse
- erstellen.
- Mehr darüber finden Sie im Abschnitt 
-\emph on
-Literaturverzeichnisse mit Bib\SpecialChar TeX
-
-\emph default
- in den 
-\emph on
-Handbuchergänzungen
-\emph default
-.
-\end_layout
-
-\begin_layout Standard
-In diesem Dokument werden zwei Literaturverzeichnisse benutzt, um die Unterschie
-de zu zeigen.
- Wie Sie sehen, enthält das Literaturverzeichnis, das mit einer Datenbank
- erstellt wurde, nur die Einträge, auf die verwiesen wird.
- Als Stildatei wurde 
-\family typewriter
-alphadin.bst
-\family default
- benutzt, um das komplizierte deutsche Verweisschema automatisch zu verwenden.
-\end_layout
-
-\begin_layout Subsection
-Literaturverzeichnis-Gestaltung
+\begin_layout Subsubsection
+Biblatex
 \begin_inset Index idx
 status collapsed
 
 \begin_layout Plain Layout
-Literaturverzeichnis ! Gestaltung
+Literaturverzeichnis ! Biblatex
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+-Paket ! biblatex
 \end_layout
 
 \end_inset
@@ -27178,18 +28217,67 @@ Literaturverzeichnis ! Gestaltung
 \end_layout
 
 \begin_layout Standard
-Im Literaturverweisdialog können Sie eine 
+Der Zugang zu einer Databank mittels 
+\series bold
+biblatex
+\series default
+ ist fast identisch wie der mittels Bib\SpecialChar TeX
+: Wählen Sie 
 \family sans
-Formatierung
-\family default
- festlegen.
- Dazu müssen Sie in 
-\family sans
-Dokument\SpecialChar menuseparator
-Einstellungen\SpecialChar menuseparator
-Literaturverzeichnis
-\family default
+Einfügen\SpecialChar menuseparator
+Liste
+\begin_inset space \thinspace{}
+\end_inset
 
+/
+\begin_inset space \thinspace{}
+\end_inset
+
+Inhaltsverzeichnis\SpecialChar menuseparator
+Bib(la)TeX-Literaturverzeichnis
+\family default
+.
+ Im Gegensatz zu BibTeX können Sie keine Stildatei auswählen.
+ Die anderen Dialogoptionen sind dieselben wie bei Bib\SpecialChar TeX
+.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+biblatex
+\series default
+ verwendet zwei verschiedene Stildateien: eine Bibliographie-Stildatei (eine
+ Textdatei mit der Endung 
+\family sans
+.bbx
+\family default
+) bestimmt, wie die Literaturverzeichniseinträge aussehen, eine Zitierstildatei
+ (Endung 
+\family sans
+.cbx
+\family default
+) bestimmt die Form der Literaturverweise im Text.
+ Üblicherweise kommen diese Dateien paarweise, und es ist zumeist sinnvoll,
+ passende Stilpaare zu verwenden.
+ Es ist aber möglich, jeden beliebigen Bibliographiestil mit jedem beliebigen
+ Zitierstil zu mischen.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+biblatex
+\series default
+-Stile werden nicht im Dialog 
+\family sans
+Bib(la)TeX
+\begin_inset space ~
+\end_inset
+
+Bibliography
+\family default
+ festgelgt, sondern in den Dokumenteinstellungen.
 \begin_inset Index idx
 status collapsed
 
@@ -27199,28 +28287,657 @@ Dokument ! Einstellungen
 
 \end_inset
 
- die Option 
+ Im Dialog können Sie aber im Feld 
 \family sans
-Natbib
+Optionen
 \family default
- anklicken.
+, das nur sichtbar ist, wenn Sie 
+\series bold
+biblatex
+\series default
+ verwenden, Optionen eingeben, die festlegen, wie das Literaturverzeichnis
+ gedruckt wird (z.
+\begin_inset space \thinspace{}
+\end_inset
 
-\family sans
- 
-\family default
-Damit wird die Standardeinstellung überschrieben.
- Globale Einstellungen müssen Sie in den Bib\SpecialChar TeX
--Stildateien vornehmen.
+B.
+ wie dessen Überschrift aussieht).
+ Diese Optionen sind ausführlich im Handbuch von 
+\series bold
+biblatex
+\series default
+ beschrieben, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Biblatex"
+literal "true"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-Im Dialogfenster können Sie auch Text, der vor oder nach dem Verweis erscheinen
- soll, festlegen.
- Hier erscheint der Text „Kapitel
+Ein Querverweis auf einen Datenbankeintrag erfolgt wie in Abschnitt
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Die-Literaturverzeichnis-Umgebung"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ beschrieben.
+\end_layout
+
+\begin_layout Subsubsection
+Literaturverzeichnis-Erzeugung
+\end_layout
+
+\begin_layout Standard
+Um ein Literaturverzeichnis aus einer Datenbank zu erstellen, verwendet
+ \SpecialChar LyX
+ einen Literaturverzeichnis-Prozessor.
+ Das ist ein externes Programm, das eine Datenbank einliest, die Referenzen
+ sortiert und die Daten in so verarbeitet, dass sie in das Dokument eingebunden
+ werden können.
+ Das klassische Programm dieser Art heißt 
+\family sans
+bibtex
+\family default
+.
+ Wie der ganze Ansatz hat es den Vorteil, dass es sehr ausgereift und weit
+ verbreitet ist, aber den Nachteil, dass es aufgrund des Alters große Einschränk
+ungen mit sich bringt.
+\end_layout
+
+\begin_layout Standard
+Inzwischen wurden moderne Alternativen entwickelt, die einige der Einschränkunge
+n zu beheben versuchen.
+ \SpecialChar LyX
+ unterstützt einige von ihnen, und Sie können zusätzlich auch eigene Prozessore
+n verwenden.
+ Auf einer allgemeinen Ebene können Sie dies in 
+\family sans
+
+\begin_inset Info
+type  "menu"
+arg   "dialog-show prefs"
+\end_inset
+
+\SpecialChar menuseparator
+Ausgabe\SpecialChar menuseparator
+LaTeX
+\family default
+ konfigurieren, für einzelne Dokumente in 
+\family sans
+
+\begin_inset Info
+type  "menu"
+arg   "dialog-show document"
+\end_inset
+
+\SpecialChar menuseparator
+Literaturverzeichnis
+\family default
+.
+ Die folgenden Varianten sind per Voreinstellung verfügbar:
+\end_layout
+
+\begin_layout Description
+biber ist ein spezifischer moderner Prozessor,
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+-Paket ! biber
+\end_layout
+
+\end_inset
+
+ der exklusiv für 
+\series bold
+biblatex
+\series default
+ entwickelt wurde (er funktioniert nicht mit Bib\SpecialChar TeX
+!).
+ 
+\series bold
+biber
+\series default
+ bietet volle Unterstützung von Unicode, unbegrenzten Speicher, und ermöglicht
+ viele Besonderheiten von 
+\series bold
+biblatex
+\family sans
+\series default
+.
+
+\family default
+ Wenn Sie 
+\noun on
+Biblatex
+\noun default
+ verwenden, empfehlen wir 
+\family sans
+biber
+\family default
+ dringend.
+\end_layout
+
+\begin_layout Description
+bibtex ist der Standard; es erlaubt keine Sonderzeichen im Literaturverzeichnis,
+ die nicht in einer 7-Bit-Kodierung kodiert werden können, der Speicher
+ ist begrenzt.
+ 
+\family sans
+Bibtex
+\family default
+ funktioniert mit allen Literaturpaketen, aber aufgrund des begrenzten Speichers
+ ist die Chance groß, dass es selbst mit einer mittelgroßen 
+\series bold
+biblatex
+\series default
+-Bibliographie an seine Grenzen stößt.
+\end_layout
+
+\begin_layout Description
+bibtex8 erlaubt alle Zeichen, die in einer 8-Bit Kodierung kodiert werden
+ können (aber kein Unicode), größerer Speicher als 
+\family sans
+bibtex
+\family default
+, funktioniert mit allen Literaturpaketen, aber mit komplexeren 
+\series bold
+biblatex
+\series default
+-Bibliographien wird es an seine Grenzen stoßen.
+ Außerdem werden nicht alle 
+\series bold
+biblatex
+\series default
+-Features unterstützt.
+\end_layout
+
+\begin_layout Standard
+In der Standardeinstellung (mit Prozessor 
+\begin_inset Quotes gld
+\end_inset
+
+Standard
+\begin_inset Quotes grd
+\end_inset
+
+ in 
+\family sans
+
+\begin_inset Info
+type  "menu"
+arg   "dialog-show document"
+\end_inset
+
+\SpecialChar menuseparator
+Literaturverzeichnis
+\family default
+ sowie Prozessor 
+\begin_inset Quotes gld
+\end_inset
+
+Automatisch
+\begin_inset Quotes grd
+\end_inset
+
+ in 
+\family sans
+
+\begin_inset Info
+type  "menu"
+arg   "dialog-show prefs"
+\end_inset
+
+\SpecialChar menuseparator
+Ausgabe\SpecialChar menuseparator
+LaTeX\SpecialChar menuseparator
+Literaturverzeichnis-Erzeugung
+\family default
+) wählt \SpecialChar LyX
+ den angemessensten (verfügbaren) Prozessor für die verwendeten
+ Literaturverzeichnismethode (
+\series bold
+biber
+\series default
+ für 
+\series bold
+biblatex
+\series default
+, 
+\family sans
+bibtex
+\family default
+ für Bib\SpecialChar TeX
+-basierte Literaturverzeichnisstile).
+ Das sollte in den meisten Fällen die richtige Wahl sein.
+\end_layout
+
+\begin_layout Standard
+In japanischen Dokumenten wird ein spezieller Prozessor verwendet.
+ Normalerweise ist das 
+\family sans
+pbibtex
+\family default
+, eine Variante von 
+\family sans
+bibtex
+\family default
+, die spezifisch für japanische Schrift entwickelt wurde.
+ In 
+\family sans
+
+\begin_inset Info
+type  "menu"
+arg   "dialog-show prefs"
+\end_inset
+
+\SpecialChar menuseparator
+Ausgabe\SpecialChar menuseparator
+LaTeX
+\family default
+ können Sie diesen konfigurieren.
+\end_layout
+
+\begin_layout Standard
+Der ausgewählte Prozessor kann durch Optionen gesteuert werden, die Sie
+ unterhalb der Auswahl eingeben können.
+ Bevor Sie Optionen verwenden, lesen Sie unbedingt das Handbuch von Bib\SpecialChar TeX
+
+ oder 
+\series bold
+biber
+\series default
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "BibTeX,biber"
+literal "true"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Anpassung
+\end_layout
+
+\begin_layout Standard
+\SpecialChar LyX
+ unterstützt einige Spezifika wie abschnittsspezifische Literaturverzeichnisse
+ und mehrere Literaturverzeichnisse pro Dokument.
+ Diese werden im Abschnitt 
+\emph on
+Literaturverzeichnisse mit Bib\SpecialChar TeX
+ oder Biblatex
+\emph default
+ in den 
+\emph on
+Handbuchergänzungen
+\emph default
+ erläutert.
+\end_layout
+
+\begin_layout Subsection
+Format der Literaturverweise
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Literaturverzeichnis ! Literaturverweise
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Zitierformat"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Es gibt viele verschiedene gebräuchliche Formen von Literaturverweisen,
+ bspw.
+ nummerische Verweise (wie Sie in diesem Dokument verwendet werden), alphanumeri
+sche Verweise (wie 
+\begin_inset Quotes gld
+\end_inset
+
+Mil08
+\begin_inset Quotes grd
+\end_inset
+
+) oder Autor-Jahr-Verweise (wie 
+\begin_inset Quotes gld
+\end_inset
+
+Miller 2008a
+\begin_inset Quotes grd
+\end_inset
+
+).
+ \SpecialChar LyX
+ unterstützt diese Formate über spezifische Pakete und deren Stildateien.
+\end_layout
+
+\begin_layout Standard
+Standardmäßig wird ein einfacher nummerischer Stil (wie in diesem Dokument)
+ verwendet.
+ In 
+\family sans
+
+\begin_inset Info
+type  "menu"
+arg   "dialog-show document"
+\end_inset
+
+\SpecialChar menuseparator
+Literaturverzeichnis
+\family default
+ finden Sie allerdings eine Bandbreite an Möglichkeiten vor, dies zu ändern
+ und an Ihren bevorzugten Literaturverzeichnisstil anzupassen.
+\end_layout
+
+\begin_layout Standard
+Mit der 
+\family sans
+Literaturverzeichnis
+\family default
+-Umgebung ist Ihre einzige Alternative neben einer manuellen Formatierung
+ von Literaturverzeichnismarken 
+\family sans
+Natbib
+\family default
+, welches Ihnen Autor-Jahr- und Autor-Nummern-Verweise erlaubt (siehe oben
+ Abschnitt
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Literaturverzeichnis-Umgebung"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ für Einzelheiten).
+\end_layout
+
+\begin_layout Standard
+Alle anderen Optionen setzen eine Datenbankmethode voraus, entweder 
+\family sans
+Bib\SpecialChar TeX
+
+\family default
+ oder 
+\noun on
+Biblatex
+\noun default
+ (siehe Abschnitt
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Literaturverzeichnis-Datenbanken"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ Die folgenden Möglichkeiten stehen zur Auswahl:
+\end_layout
+
+\begin_layout Description
+
+\family sans
+Schlicht
+\begin_inset space ~
+\end_inset
+
+(BibTeX)
+\family default
+ der normale 
+\family sans
+BibTeX-
+\family default
+basierte Ansatz ohne zusätzliches Paket (einfache nummerische Verweise)
+\end_layout
+
+\begin_layout Description
+
+\family sans
+Biblatex
+\family default
+ lädt das 
+\family sans
+Biblatex
+\family default
+-Paket und lässt Sie einen Stil in den Auswahllisten 
+\family sans
+Biblatex-Zitierstil
+\family default
+ und 
+\family sans
+Biblatex-Bibliographiestil
+\family default
+ unterhalb treffen.
+ Viele verschiedene Stilvarianten werden unterstützt.
+ Optionen für das 
+\family sans
+Biblatex
+\family default
+-Paket können Sie in das Feld 
+\family sans
+Optionen
+\family default
+ eingeben.
+\end_layout
+
+\begin_layout Description
+
+\family sans
+Biblatex
+\begin_inset space ~
+\end_inset
+
+(Natbib-Modus)
+\family default
+ lädt das 
+\family sans
+Biblatex
+\family default
+-Paket im 
+\begin_inset Quotes gld
+\end_inset
+
+Natbib-Kompatibilitäts-Modus
+\begin_inset Quotes grd
+\end_inset
+
+.
+ Dies ist eine spezifische Variante spezifisch für Anwender, die von 
+\family sans
+Natbib
+\family default
+ (siehe unten) herkommen oder das Verhalten von 
+\family sans
+Natbib
+\family default
+ möglichst eng nachbilden möchten.
+ Im Vergleich zum normalen 
+\family sans
+Biblatex
+\family default
+ umfasst diese Option ein paar zusätzliche Verweisstile.
+ Die Stilauswahl und die Handhabung von Optionen sind identisch.
+ Alle 
+\family sans
+Biblatex
+\family default
+-Stile unterstützen auch diese Variante.
+\end_layout
+
+\begin_layout Description
+
+\family sans
+Jurabib
+\begin_inset space ~
+\end_inset
+
+(BibTeX)
+\family default
+ lädt das Paket 
+\family sans
+Jurabib
+\family default
+, das spezifische Autor-Jahr-Stile anbietet, die in den Rechtswissenschaften
+ gebräuchlich sind.
+\end_layout
+
+\begin_layout Description
+
+\family sans
+Natbib
+\begin_inset space ~
+\end_inset
+
+(BibTeX)
+\family default
+ lädt das Paket 
+\family sans
+Natbib
+\family default
+, das Autor-Jahr-Stile vor allem für die Geisteswissenschaften unterstützt.
+\end_layout
+
+\begin_layout Standard
+Die 
+\family sans
+Biblatex
+\family default
+-Varianten und 
+\family sans
+Natbib
+\family default
+ erlauben zusätzlich die Auswahl zwischen Autor-Jahr- und Autor-Nummern-Verweise
+n.
+ Sie müssen einen davon im Dialog auswählen.
+ Beachten Sie, dass dies im Fall von 
+\family sans
+Biblatex
+\family default
+ nur die Darstellung im \SpecialChar LyX
+-Arbeitsbereich verändert.
+ Ob die Ausgabe nummerische, Autor-Jahr oder ein anderes Format (etwa ein
+ alphanumerisches) verwendet hängt hier ausschließlich vom verwendeten Stil
+ ab (allerdings schlägt \SpecialChar LyX
+ beim Wechsel zwischen 
+\begin_inset Quotes gld
+\end_inset
+
+Autor-Jahr
+\begin_inset Quotes grd
+\end_inset
+
+ und 
+\begin_inset Quotes gld
+\end_inset
+
+Autor-Nummer
+\begin_inset Quotes grd
+\end_inset
+
+ einen jeweils passenden Stil vor).
+ Mit 
+\family sans
+Natbib
+\family default
+ wird die Auswahl hier hingegen den Stil fest vorgeben.
+\end_layout
+
+\begin_layout Standard
+Im Literaturverweisfenster können Sie für jede Autor-Jahr- oder Autor-Nummer-Aus
+wahl zwischen mehreren Stilvarianten auswählen.
+ Manche Varianten bieten auch zusätzliche Optionen, etwa die Anfangsgroßschreibu
+ng eines Namenspräfixes, wenn der Verweis am Satzanfang steht (
+\begin_inset Quotes gld
+\end_inset
+
+Van Beethoven
+\begin_inset Quotes grd
+\end_inset
+
+ statt 
+\begin_inset Quotes gld
+\end_inset
+
+van Beethoven
+\begin_inset Quotes grd
+\end_inset
+
+), oder die Vergrößerung oder Verkleinerung der Anzahl an zitierten Koautoren
+ (d.
+\begin_inset space \thinspace{}
+\end_inset
+
+h., die Verwendung oder Nichtverwendung von 
+\begin_inset Quotes gld
+\end_inset
+
+et al.
+\begin_inset Quotes grd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Im Dialogfenster können Sie auch Text, der nach dem jeweiligen Verweis erscheine
+n soll, festlegen (bspw.
+ Seitenangaben).
+ Diese werden dann nach den Stilvorgaben formatiert (bspw.
+ mit oder ohne 
+\begin_inset Quotes gld
+\end_inset
+
+S.
+\begin_inset Quotes grd
+\end_inset
+
+).
+ Im folgenden Beispiel erscheint der Text „Kapitel
 \begin_inset space \space{}
 \end_inset
 
 3“ nach dem Verweis: 
+\end_layout
+
+\begin_layout Quote
+Bitte lesen Sie auch 
 \begin_inset CommandInset citation
 LatexCommand cite
 after "Kapitel 3"
@@ -27233,11 +28950,144 @@ literal "true"
 \end_layout
 
 \begin_layout Standard
-In den 
-\emph on
-Handbuchergänzungen
-\emph default
- finden Sie noch ein paar weitere Dinge über Literaturverzeichnisse.
+Alle Stile außer 
+\family sans
+Schlicht (BibTeX)
+\family default
+ bieten zusätzlich auch die Möglichkeit, Text einzugeben, der dem Verweis
+ vorangestellt wird (wie z.
+\begin_inset space \thinspace{}
+\end_inset
+
+B.
+ 
+\begin_inset Quotes gld
+\end_inset
+
+vgl.
+\begin_inset Quotes grd
+\end_inset
+
+).
+ Dieser Text wird dann etwa auch in Klammern eingeschlossen, wenn der Stil
+ dies vorsieht.
+\end_layout
+
+\begin_layout Standard
+Beachten Sie, dass diese Texte davor und danach jeweils die ganze Referenz
+ betreffen.
+ Das heißt, wenn Sie in einer Referenz auf mehrere Titel verweisen, wird
+ der 
+\begin_inset Quotes gld
+\end_inset
+
+Text davor
+\begin_inset Quotes grd
+\end_inset
+
+ vor dem ersten Titel stehen, der 
+\begin_inset Quotes gld
+\end_inset
+
+Text danach
+\begin_inset Quotes grd
+\end_inset
+
+ nach dem letzten.
+ Manche 
+\family sans
+Biblatex
+\family default
+-Stile ermöglichen die Angabe von Text vor und nach jedem einzelnen Titel
+ in Mehrfachverweisen (sog.
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset Quotes gld
+\end_inset
+
+
+\lang english
+qualified citation lists
+\lang ngerman
+
+\begin_inset Quotes grd
+\end_inset
+
+).
+ \SpecialChar LyX
+ unterstützt dies.
+ Wenn Sie einen solchen Stil verwenden, und wenn der aktuelle Verweis mehrere
+ Titel enthält, hat das Fenster 
+\begin_inset Quotes gld
+\end_inset
+
+Ausgewählte Verweise
+\begin_inset Quotes grd
+\end_inset
+
+ drei Spalten: 
+\begin_inset Quotes gld
+\end_inset
+
+Text davor
+\begin_inset Quotes grd
+\end_inset
+
+, 
+\begin_inset Quotes gld
+\end_inset
+
+Zitierschlüssel
+\begin_inset Quotes grd
+\end_inset
+
+ und 
+\begin_inset Quotes gld
+\end_inset
+
+Text danach
+\begin_inset Quotes grd
+\end_inset
+
+.
+ Wenn Sie auf das Feld 
+\begin_inset Quotes gld
+\end_inset
+
+Text davor
+\begin_inset Quotes grd
+\end_inset
+
+ oder 
+\begin_inset Quotes gld
+\end_inset
+
+Text danach
+\begin_inset Quotes grd
+\end_inset
+
+ eines Eintrags doppelklicken, können Sie solche individuellen Textzusätze
+ eingeben.
+ Die Felder 
+\begin_inset Quotes gld
+\end_inset
+
+Allgemeiner Text davor
+\begin_inset Quotes grd
+\end_inset
+
+ und 
+\begin_inset Quotes gld
+\end_inset
+
+Allgemeiner Text danach
+\begin_inset Quotes grd
+\end_inset
+
+ können Sie weiterhin auch Text eingeben, der vor und nach der ganzen Liste
+ steht.
 \end_layout
 
 \begin_layout Section
@@ -29193,7 +31043,11 @@ inverted 0
 status open
 
 \begin_layout Standard
-Frage: Wer war der erste Physik-Nobelpreis-Gewinner?
+
+\series bold
+Frage:
+\series default
+ Wer war der erste Physik-Nobelpreis-Gewinner?
 \end_layout
 
 \end_inset
@@ -29207,7 +31061,11 @@ inverted 0
 status collapsed
 
 \begin_layout Standard
-Antwort: Wilhelm Conrad Röntgen
+
+\series bold
+Antwort:
+\series default
+ Wilhelm Conrad Röntgen
 \end_layout
 
 \end_inset
@@ -29237,9 +31095,6 @@ Zweige
  aktiv waren.
  Dies hilft um verschiedene Versionen einer Datei zu exportieren ohne den
  Überblick zu verlieren.
-\end_layout
-
-\begin_layout Standard
 \begin_inset VSpace bigskip
 \end_inset
 
@@ -29247,7 +31102,59 @@ Zweige
 \end_layout
 
 \begin_layout Standard
-Um konditionale Ausgaben zu erzeugen, wo keine Zweige angegeben werden können
+Es gibt auch umgekehrte Zweig-Einfügungen, deren Inhalt gerade dann ausgegeben
+ wird, wenn der Zweig 
+\emph on
+nicht
+\emph default
+ aktiviert ist.
+ Dadurch kann leicht alternativer Text für verschiedene Versionen eines
+ Dokuments eingegeben werden.
+ Um zu schauen, ob eine spezifische Einfügung umgekehrt ist, klicken Sie
+ mit der rechten Maustaste auf den Knopf der Einfügung und wählen 
+\family sans
+Einfügung
+\begin_inset space ~
+\end_inset
+
+umkehren
+\family default
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Branch Antwort
+inverted 1
+status open
+
+\begin_layout Standard
+
+\series bold
+Keine Antwort:
+\series default
+ Weil der Zweig 
+\begin_inset Quotes gld
+\end_inset
+
+Antwort
+\begin_inset Quotes grd
+\end_inset
+
+ deaktiviert ist.
+ 
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Um konditionale Ausgaben zu erzeugen, wo keine Zweige angegeben werden können,
  wie in Formeln, können spezielle \SpecialChar LaTeX
 -Definitionen für jeden Zweig angegeben
  werden.
@@ -29363,10 +31270,8 @@ inverted 0
 status collapsed
 
 \begin_layout Standard
-
-\lang english
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -36306,20 +38211,6 @@ Fügt das aktuelle Datum ein.
  Das Format hängt vom Datumsformat der Sprache ab, die aktuell für die Benutzero
 berfläche von \SpecialChar LyX
  verwendet wird.
- \SpecialChar LyX
- bietet mehrere Möglichkeiten ein Datum einzufügen, die im Abschnitt 
-\emph on
-Externes Material
-\emph default
- des 
-\emph on
-Eingebettete
-\begin_inset space ~
-\end_inset
-
-Objekte
-\emph default
- Handbuchs erklärt und auch verglichen sind.
 \end_layout
 
 \begin_layout Subsection
@@ -40994,8 +42885,25 @@ Literaturverzeichnis
 \end_layout
 
 \begin_layout Standard
-Hier können Sie einen Zitierstil unter Verwendung der \SpecialChar LaTeX
--Pakete 
+Hier können Sie einen spezifischen Zitierstil unter Verwendung der \SpecialChar LaTeX
+-Pakete
+ 
+\series bold
+bib\SpecialChar softhyphen
+latex
+\series default
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+-Paket ! biblatex
+\end_layout
+
+\end_inset
+
+, 
 \series bold
 natbib
 \series default
@@ -41026,8 +42934,9 @@ status collapsed
 \end_inset
 
  festlegen.
- Sie können ein abschnittsspezifisches Literaturverzeichnis unter Verwendung
- des \SpecialChar LaTeX
+ Wenn Sie Bib\SpecialChar TeX
+ verwenden, können Sie ein abschnittsspezifisches Literaturverzeich
+nis unter Verwendung des \SpecialChar LaTeX
 -Pakets 
 \series bold
 bibtopic
@@ -41043,12 +42952,19 @@ status collapsed
 
 \end_inset
 
- aktivieren und einen 
+ aktivieren.
+ Wenn Sie 
+\noun on
+Biblatex
+\noun default
+ verwenden, können Sie Stildateien auswählen und zusätzliche Optionen eingeben.
+ Schließlich können Sie einen 
 \family sans
 Prozessor
 \family default
  festlegen, der das Literaturverzeichnis erzeugt.
- Für eine detaillierte Beschreibung siehe Abschnitt
+ Für eine detaillierte Beschreibung dieser Möglichkeiten lesen Sie bitte
+ Abschnitt
 \begin_inset space ~
 \end_inset
 
@@ -42253,6 +44169,9 @@ arg   "closetab"
 \family default
 ) auf der rechten Seite der Reiterleiste um Registerkarten zu schließen.
  Ansonsten hat jede Registerkarte ihren eigenen Knopf zum Schließen.
+ Unabhängig davon, ob diese Option aktiviert ist oder nicht, lässt sich
+ eine Registerkarte jederzeit durch Klick mit der mittleren Maustaste auf
+ den Reiter schließen.
 \end_layout
 
 \begin_layout Standard
@@ -45308,6 +47227,108 @@ status collapsed
 \begin_layout Plain Layout
 
 http://www.ctan.org/tex-archive/info/bibtex/tamethebeast/ttb_en.pdf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Biblatex"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset href
+LatexCommand href
+name "Dokumentation"
+target "http://www.ctan.org/macros/latex/contrib/biblatex/doc/biblatex.pdf"
+literal "false"
+
+\end_inset
+
+ des \SpecialChar LaTeX
+-Pakets 
+\series bold
+biblatex
+\series default
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+-Paket ! biblatex
+\end_layout
+
+\end_inset
+
+:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://mirrors.ctan.org/macros/latex/contrib/biblatex/doc/biblatex.pdf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "biber"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset href
+LatexCommand href
+name "Dokumentation"
+target "http://mirrors.ctan.org/biblio/biber/documentation/biber.pdf"
+literal "false"
+
+\end_inset
+
+ des \SpecialChar LaTeX
+-Pakets 
+\series bold
+biber
+\series default
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+-Paket ! biber
+\end_layout
+
+\end_inset
+
+:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://mirrors.ctan.org/biblio/biber/documentation/biber.pdf
 \end_layout
 
 \end_inset

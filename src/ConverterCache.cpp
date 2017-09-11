@@ -76,7 +76,7 @@ public:
 	unsigned long checksum;
 };
 
-}
+} // namespace
 
 
 /** The cache contains one item per orig file and target format, so use a
@@ -254,7 +254,7 @@ void ConverterCache::init()
 
 void ConverterCache::writeIndex() const
 {
-	if (!lyxrc.use_converter_cache 
+	if (!lyxrc.use_converter_cache
 		  || cache_dir.empty())
 		return;
 	pimpl_->writeIndex();

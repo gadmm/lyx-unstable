@@ -431,7 +431,7 @@ bool translate_len(string const & length, string & valstring, string & unit)
 	return true;
 }
 
-}
+} // namespace
 
 
 string translate_len(string const & length)

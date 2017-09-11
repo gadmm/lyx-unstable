@@ -52,7 +52,7 @@ namespace lyx {
  * The documentation below primarily describes the purpose and syntax
  * of the various LFUNs.
  *
- * The list is alphabetized. Try to keep it that way, and don't forget to add 
+ * The list is alphabetized. Try to keep it that way, and don't forget to add
  * doxygen commentary. This allows the file LFUNs.lyx to be auto-generated.
  * (If you should want to do that, see the gen_lfuns.py script, which is in
  * the development/tools/ directory.)
@@ -1393,6 +1393,19 @@ void LyXAction::init()
  * \endvar
  */
 		{ LFUN_DEPTH_INCREMENT, "depth-increment", Noop, Edit },
+
+
+/*!
+ * \var lyx::FuncCode lyx::LFUN_DEVEL_MODE_TOGGLE
+ * \li Action: toggle a mode where more information is given in UI
+ * \li Syntax: devel-mode-toggle
+ * \li Notion: in so called "devel" mode, the information given in the
+ *             status bar is more precise, and the help documents are
+ *             open in editing mode.
+ * \li Origin: lasgouttes, 23 Jul 2017
+ * \endvar
+ */
+		{ LFUN_DEVEL_MODE_TOGGLE, "devel-mode-toggle", NoBuffer, System },
 
 
 /*!
@@ -3544,7 +3557,7 @@ void LyXAction::init()
  * \li Action: Inserts various characters into the document.
  * \li Syntax: specialchar-insert <CHAR>
  * \li Params: <CHAR>: hyphenation, allowbreak, ligature-break, slash,
-   	   		   		   nobreakdash, dots, end-of-sentence, menu-separator, 
+   	   		   		   nobreakdash, dots, end-of-sentence, menu-separator,
  					   lyx, tex, latex, latex2e.
  * \li Origin: JSpitzm, 6 Dec 2007
  * \endvar

@@ -49,7 +49,7 @@ struct Speller {
 typedef std::map<std::string, Speller> Spellers;
 typedef map<std::string, PersonalWordList *> LangPersonalWordList;
 
-} // anon namespace
+} // namespace
 
 struct AspellChecker::Private
 {
@@ -124,7 +124,6 @@ struct AspellChecker::Private
 	{
 		return "/lib/aspell-0.60";
 	}
-
 };
 
 
@@ -144,9 +143,9 @@ AspellChecker::Private::~Private()
 
 	LangPersonalWordList::const_iterator pdit = personal_.begin();
 	LangPersonalWordList::const_iterator pdet = personal_.end();
-	
+
 	for (; pdit != pdet; ++pdit) {
-		if ( 0 == pdit->second)
+		if (0 == pdit->second)
 			continue;
 		PersonalWordList * pd = pdit->second;
 		pd->save();
@@ -186,7 +185,7 @@ bool AspellChecker::Private::checkAspellData(AspellConfig * config,
 	string const & lang, string const & variety)
 {
 	FileName base(basepath);
-	bool have_dict = base.isDirectory() ;
+	bool have_dict = base.isDirectory();
 
 	if (have_dict) {
 		FileName data(addPath(base.absFileName(), datapath));
@@ -200,7 +199,7 @@ bool AspellChecker::Private::checkAspellData(AspellConfig * config,
 			have_dict = isValidDictionary(config, lang, variety);
 		}
 	}
-	return have_dict ;
+	return have_dict;
 }
 
 
@@ -208,8 +207,8 @@ AspellConfig * AspellChecker::Private::getConfig(string const & lang, string con
 {
 	AspellConfig * config = new_aspell_config();
 	bool have_dict = false;
-	string const sysdir = lyx::support::package().system_support().absFileName() ;
-	string const userdir = lyx::support::package().user_support().absFileName() ;
+	string const sysdir = lyx::support::package().system_support().absFileName();
+	string const userdir = lyx::support::package().user_support().absFileName();
 
 	LYXERR(Debug::FILES, "aspell user dir: " << userdir);
 	have_dict = checkAspellData(config, userdir, dataDirectory(), dictDirectory(), lang, variety);
@@ -221,14 +220,14 @@ AspellConfig * AspellChecker::Private::getConfig(string const & lang, string con
 		// check for package data of OS installation
 		checkAspellData(config, osPackageBase(), osPackageDataDirectory(), osPackageDictDirectory(), lang, variety);
 	}
-	return config ;
+	return config;
 }
 
 
 void AspellChecker::Private::addToSession(AspellCanHaveError * speller, docstring const & word)
 {
 	string const word_to_add = toAspellWord(word);
-	if(1 != aspell_speller_add_to_session(to_aspell_speller(speller), word_to_add.c_str(), -1))
+	if (1 != aspell_speller_add_to_session(to_aspell_speller(speller), word_to_add.c_str(), -1))
 		LYXERR(Debug::GUI, "aspell add to session: " << aspell_error_message(speller));
 }
 
@@ -294,7 +293,7 @@ AspellSpeller * AspellChecker::Private::addSpeller(Language const * lang)
 		personal_[lang->lang()] = pd;
 		initSessionDictionary(m, pd);
 	}
-	
+
 	spellers_[lang->lang()] = m;
 	return m.e_speller ? to_aspell_speller(m.e_speller) : 0;
 }
@@ -352,7 +351,7 @@ string AspellChecker::Private::toAspellWord(docstring const & word) const
 
 
 SpellChecker::Result AspellChecker::Private::check(
-	AspellSpeller * m, WordLangTuple const & word) 
+	AspellSpeller * m, WordLangTuple const & word)
 	const
 {
 	SpellChecker::Result result = WORD_OK;
@@ -367,7 +366,7 @@ SpellChecker::Result AspellChecker::Private::check(
 		result = (word_ok) ? WORD_OK : UNKNOWN_WORD;
 		if (rest.empty())
 			break;
-		rest = split(rest,w1,'-');
+		rest = split(rest, w1, '-');
 	}
 	if (result == WORD_OK)
 		return result;
@@ -396,7 +395,7 @@ void AspellChecker::Private::remove(WordLangTuple const & word)
 	}
 }
 
-		
+
 void AspellChecker::Private::insert(WordLangTuple const & word)
 {
 	Spellers::iterator it = spellers_.find(word.lang()->lang());
@@ -431,7 +430,6 @@ AspellChecker::~AspellChecker()
 
 SpellChecker::Result AspellChecker::check(WordLangTuple const & word)
 {
-  
 	AspellSpeller * m = d->speller(word.lang());
 
 	if (!m)
@@ -529,8 +527,8 @@ int AspellChecker::numDictionaries() const
 {
 	return d->numDictionaries();
 }
-	
-	
+
+
 docstring const AspellChecker::error()
 {
 	Spellers::iterator it = d->spellers_.begin();

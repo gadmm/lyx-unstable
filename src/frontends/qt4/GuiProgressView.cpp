@@ -58,10 +58,10 @@ bool DebugSorter(DebugMap const & a, DebugMap const & b)
 {
 	return a.second < b.second;
 }
-}
+} // namespace
 
 
-GuiProgressView::GuiProgressView(GuiView & parent, Qt::DockWidgetArea area, 
+GuiProgressView::GuiProgressView(GuiView & parent, Qt::DockWidgetArea area,
 	Qt::WindowFlags flags)
 	: DockView(parent, "progress", qt_("Progress/Debug Messages"), area, flags)
 {
@@ -114,7 +114,7 @@ GuiProgressView::GuiProgressView(GuiView & parent, Qt::DockWidgetArea area,
 	connect(widget_->debugMessagesTW,
 		SIGNAL(itemActivated(QTreeWidgetItem *, int)),
 		this, SLOT(debugMessageActivated(QTreeWidgetItem *, int)));
-  
+
 	GuiProgress * progress =
 		dynamic_cast<GuiProgress *>(ProgressInterface::instance());
 

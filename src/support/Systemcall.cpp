@@ -40,7 +40,7 @@
 
 struct Sleep : QThread
 {
-	static void millisec(unsigned long ms) 
+	static void millisec(unsigned long ms)
 	{
 		QThread::usleep(ms * 1000);
 	}
@@ -55,7 +55,7 @@ namespace lyx {
 namespace support {
 
 
-class ProgressDummy : public ProgressInterface 
+class ProgressDummy : public ProgressInterface
 {
 public:
 	ProgressDummy() {}
@@ -231,8 +231,7 @@ string const parsecmd(string const & incmd, string & infile, string & outfile,
 	return trim(outcmd[0]);
 }
 
-} // namespace anon
-
+} // namespace
 
 
 int Systemcall::startscript(Starttype how, string const & what,
@@ -256,8 +255,8 @@ int Systemcall::startscript(Starttype how, string const & what,
 #ifdef Q_OS_WIN32
 	// QProcess::startDetached cannot provide environment variables. When the
 	// environment variables are set using the latexEnvCmdPrefix and the process
-	// is started with QProcess::startDetached, a console window is shown every 
-	// time a viewer is started. To avoid this, we fall back on Windows to the 
+	// is started with QProcess::startDetached, a console window is shown every
+	// time a viewer is started. To avoid this, we fall back on Windows to the
 	// original implementation that creates a QProcess object.
 	d.startProcess(cmd, path, lpath, false);
 	if (!d.waitWhile(SystemcallPrivate::Starting, process_events, -1)) {
@@ -410,7 +409,7 @@ bool queryStopCommand(QString const & cmd)
 			1, 1, _("&Stop it"), _("Let it &run")) == 0;
 }
 
-}
+} // namespace
 
 
 bool SystemcallPrivate::waitWhile(State waitwhile, bool process_events, int timeout)
@@ -453,7 +452,7 @@ bool SystemcallPrivate::waitWhile(State waitwhile, bool process_events, int time
 			waitAndProcessEvents();
 		}
 		return state != Error;
-	} 
+	}
 
 	// process events while waiting with timeout
 	QTime timer;
@@ -556,7 +555,7 @@ void SystemcallPrivate::processError(QProcess::ProcessError)
 }
 
 
-QString SystemcallPrivate::errorMessage() const 
+QString SystemcallPrivate::errorMessage() const
 {
 	if (!process_)
 		return "No QProcess available";

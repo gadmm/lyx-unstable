@@ -61,8 +61,8 @@ icon: argument is the name of the LFUN such as "paste". The syntax is the same
 
 buffer: argument can be one of "name", "path", "class". This inset output the
     filename, path, and textclass of this buffer.
-		
-lyxinfo: argument must (presently) be "version". This inset outputs information 
+
+lyxinfo: argument must (presently) be "version". This inset outputs information
 		about the version of LyX currently in use.
 
 There is currently no GUI, no menu entry for this inset. A user can define a
@@ -100,6 +100,11 @@ public:
 	docstring layoutName() const;
 	///
 	Inset * editXY(Cursor & cur, int x, int y);
+	/** FIXME: we would like to do that, but then InsetText::updateBuffer breaks
+	 * on info insets. Do we need to run this method on InsetInfo contents?
+	 * Having a InsetInfo that hides an InsetText is really annoying, actually.
+	 */
+	///bool isActive() const { return false; }
 	///
 	bool editable() const { return false; }
 	///

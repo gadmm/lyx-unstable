@@ -303,7 +303,7 @@ pair<bool, int> replaceOne(BufferView * bv, docstring searchstr,
 	return make_pair(true, 1);
 }
 
-} // namespace anon
+} // namespace
 
 
 docstring const find2string(docstring const & search,
@@ -517,7 +517,7 @@ bool findChange(BufferView * bv, bool forward)
 	return selectChange(cur, forward);
 }
 
-}
+} // namespace
 
 bool findNextChange(BufferView * bv)
 {
@@ -978,13 +978,13 @@ int MatchStringAdv::findAux(DocIterator const & cur, int len, bool at_begin) con
 		// plus the last subexpression, if a (.*?) was inserted in the constructor.
 		if (!braces_match(m[0].first, m[0].second, open_braces))
 			return 0;
-	
+
 		// Check braces on segments that matched all (.*?) subexpressions,
 		// except the last "padding" one inserted by lyx.
 		for (size_t i = 1; i < m.size() - 1; ++i)
 			if (!braces_match(m[i].first, m[i].second))
 				return false;
-	
+
 		// Exclude from the returned match length any length
 		// due to close wildcards added at end of regexp
 		if (close_wildcards == 0)
@@ -1338,7 +1338,7 @@ int findBackwardsAdv(DocIterator & cur, MatchStringAdv & match)
 }
 
 
-} // anonym namespace
+} // namespace
 
 
 docstring stringifyFromForSearch(FindAndReplaceOptions const & opt,
@@ -1419,7 +1419,7 @@ static void changeFirstCase(Buffer & buffer, TextCase first_case, TextCase other
 	pit->changeCase(buffer.params(), pos_type(1), right, others_case);
 }
 
-} // anon namespace
+} // namespace
 
 ///
 static void findAdvReplace(BufferView * bv, FindAndReplaceOptions const & opt, MatchStringAdv & matchAdv)
@@ -1612,4 +1612,4 @@ istringstream & operator>>(istringstream & is, FindAndReplaceOptions & opt)
 	return is;
 }
 
-} // lyx namespace
+} // namespace lyx

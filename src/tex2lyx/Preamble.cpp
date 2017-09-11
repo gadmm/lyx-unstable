@@ -1110,9 +1110,9 @@ void Preamble::handle_package(Parser &p, string const & name,
 	else if (is_known(name, known_lyx_packages) && options.empty()) {
 		if (name == "splitidx")
 			h_use_indices = "true";
-		if (name == "minted")
-			h_use_minted = "true";
-		if (name == "refstyle")
+		else if (name == "minted")
+			h_use_minted = true;
+		else if (name == "refstyle")
 			h_use_refstyle = true;
 		else if (name == "prettyref")
 			h_use_refstyle = false;
@@ -1829,7 +1829,7 @@ void Preamble::parse(Parser & p, string const & forceclass,
 				h_math_numbering_side = "right";
 				opts.erase(it);
 			}
-			
+
 			// paper orientation
 			if ((it = find(opts.begin(), opts.end(), "landscape")) != opts.end()) {
 				h_paperorientation = "landscape";
@@ -1914,13 +1914,19 @@ void Preamble::parse(Parser & p, string const & forceclass,
 		}
 
 		else if (t.cs() == "newtheorem") {
+			bool star = false;
+			if (p.next_token().character() == '*') {
+				p.get_token();
+				star = true;
+			}
 			string const name = p.getArg('{', '}');
 			string const opt1 = p.getFullOpt();
 			string const opt2 = p.getFullOpt();
 			string const body = p.verbatim_item();
 			string const opt3 = p.getFullOpt();
+			string const cmd = star ? "\\newtheorem*" : "\\newtheorem";
 
-			string const complete = "\\newtheorem{" + name + '}' +
+			string const complete = cmd + "{" + name + '}' +
 				          opt1 + opt2 + '{' + body + '}' + opt3;
 
 			add_known_theorem(name, opt1, !opt2.empty(), from_utf8(complete));
@@ -2136,7 +2142,7 @@ void Preamble::parse(Parser & p, string const & forceclass,
 	if (!forceclass.empty())
 		h_textclass = forceclass;
 	tc.setName(h_textclass);
-	if (!tc.load()) {
+	if (!LayoutFileList::get().haveClass(h_textclass) || !tc.load()) {
 		cerr << "Error: Could not read layout file for textclass \"" << h_textclass << "\"." << endl;
 		exit(EXIT_FAILURE);
 	}

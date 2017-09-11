@@ -161,7 +161,7 @@ public:
 			{ return removed_modules_; }
 	///
 	/// Add a module to the list of modules in use. This checks only that the
-	/// module is not already in the list, so use layoutModuleCanBeAdeed first 
+	/// module is not already in the list, so use layoutModuleCanBeAdeed first
 	/// if you want to check for compatibility.
 	/// \return true if module was successfully added.
 	bool addLayoutModule(std::string const & modName);
@@ -535,6 +535,8 @@ public:
 	std::string html_latex_end;
 	///
 	bool html_css_as_file;
+	/// allow the LaTeX backend to run external programs
+	bool shell_escape;
 	/// generate output usable for reverse/forward search
 	bool output_sync;
 	/// custom LaTeX macro from user instead our own

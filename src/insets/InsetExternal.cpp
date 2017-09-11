@@ -61,7 +61,7 @@ unsigned int const defaultLyxScale = 100;
 
 string defaultTemplateName;
 
-} // namespace anon
+} // namespace
 
 
 namespace lyx {
@@ -102,7 +102,7 @@ TempName & TempName::operator=(TempName const & other)
 			tempname_.removeFile();
 		support::TempFile f("lyxextXXXXXX.tmp");
 		f.setAutoRemove(false);
-		tempname_ = f.name(); 
+		tempname_ = f.name();
 	}
 	return *this;
 }
@@ -148,7 +148,7 @@ void clearIfNotFound(T & data, external::TransformID value,
 		data = T();
 }
 
-} // namespace anon
+} // namespace
 
 
 void InsetExternalParams::settemplate(string const & name)
@@ -170,7 +170,7 @@ void InsetExternalParams::settemplate(string const & name)
 	clearIfNotFound(resizedata,   external::Resize, ids);
 	clearIfNotFound(rotationdata, external::Rotate, ids);
 
-	// 
+	//
 	preview_mode = et->preview_mode;
 }
 
@@ -414,8 +414,7 @@ docstring screenLabel(InsetExternalParams const & params,
 	return gui;
 }
 
-} // namespace anon
-
+} // namespace
 
 
 InsetExternal::InsetExternal(Buffer * buf)
@@ -553,7 +552,7 @@ graphics::Params get_grfx_params(InsetExternalParams const & eparams)
 	return gparams;
 }
 
-} // namespace anon
+} // namespace
 
 
 static bool isPreviewWanted(InsetExternalParams const & params)

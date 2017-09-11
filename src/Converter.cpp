@@ -19,13 +19,17 @@
 #include "Encoding.h"
 #include "ErrorList.h"
 #include "Format.h"
+#include "InsetList.h"
 #include "Language.h"
 #include "LaTeX.h"
 #include "LyXRC.h"
 #include "Mover.h"
+#include "ParagraphList.h"
 #include "Session.h"
 
 #include "frontends/alert.h"
+
+#include "insets/InsetInclude.h"
 
 #include "support/debug.h"
 #include "support/FileNameList.h"
@@ -95,7 +99,7 @@ private:
 	string const to_;
 };
 
-} // namespace anon
+} // namespace
 
 
 Converter::Converter(string const & f, string const & t,
@@ -279,20 +283,52 @@ OutputParams::FLAVOR Converters::getFlavor(Graph::EdgePath const & path,
 }
 
 
-bool Converters::checkAuth(Converter const & conv, string const & doc_fname)
+bool Converters::checkAuth(Converter const & conv, string const & doc_fname,
+			   bool use_shell_escape)
 {
-	if (!conv.need_auth())
+	string conv_command = conv.command();
+	bool const has_shell_escape = contains(conv_command, "-shell-escape")
+				|| contains(conv_command, "-enable-write18");
+	if (conv.latex() && has_shell_escape && !use_shell_escape) {
+		docstring const shellescape_warning =
+		      bformat(_("<p>The following LaTeX backend has been "
+		        "configured to allow execution of external programs "
+		        "for any document:</p>"
+		        "<center><p><tt>%1$s</tt></p></center>"
+		        "<p>This is a dangerous configuration. Please, "
+		        "consider using the support offered by LyX for "
+		        "allowing this privilege only to documents that "
+			"actually need it, instead.</p>"),
+		        from_utf8(conv_command));
+		frontend::Alert::error(_("Security Warning"),
+					shellescape_warning , false);
+	} else if (!conv.latex())
+		use_shell_escape = false;
+	if (!conv.need_auth() && !use_shell_escape)
 		return true;
-	const docstring security_warning = bformat(
-	      _("<p>The requested operation requires the use of a converter from "
-	        "%2$s to %3$s:</p>"
+	size_t const token_pos = conv_command.find("$$");
+	bool const has_token = token_pos != string::npos;
+	string const command = use_shell_escape && !has_shell_escape
+		? (has_token ? conv_command.insert(token_pos, "-shell-escape ")
+			     : conv_command.append(" -shell-escape"))
+		: conv_command;
+	docstring const security_warning = (use_shell_escape
+	    ? bformat(_("<p>The following LaTeX backend has been requested "
+	        "to allow execution of external programs:</p>"
+	        "<center><p><tt>%1$s</tt></p></center>"
+	        "<p>The external programs can execute arbitrary commands on "
+	        "your system, including dangerous ones, if instructed to do "
+	        "so by a maliciously crafted LyX document.</p>"),
+	      from_utf8(command))
+	    : bformat(_("<p>The requested operation requires the use of a "
+	        "converter from %2$s to %3$s:</p>"
 	        "<blockquote><p><tt>%1$s</tt></p></blockquote>"
-	        "<p>This external program can execute arbitrary commands on your "
-	        "system, including dangerous ones, if instructed to do so by a "
-	        "maliciously crafted .lyx document.</p>"),
-	      from_utf8(conv.command()), from_utf8(conv.from()),
-	      from_utf8(conv.to()));
-	if (lyxrc.use_converter_needauth_forbidden) {
+	        "<p>This external program can execute arbitrary commands on "
+	        "your system, including dangerous ones, if instructed to do "
+	        "so by a maliciously crafted LyX document.</p>"),
+	      from_utf8(command), from_utf8(conv.from()),
+	      from_utf8(conv.to())));
+	if (lyxrc.use_converter_needauth_forbidden && !use_shell_escape) {
 		frontend::Alert::error(
 		    _("An external converter is disabled for security reasons"),
 		    security_warning + _(
@@ -302,29 +338,47 @@ bool Converters::checkAuth(Converter const & conv, string const & doc_fname)
 		    "Forbid needauth converters</i>.)"), false);
 		return false;
 	}
-	if (!lyxrc.use_converter_needauth)
+	if (!lyxrc.use_converter_needauth && !use_shell_escape)
 		return true;
-	static const docstring security_title =
-		_("An external converter requires your authorization");
+	docstring const security_title = use_shell_escape
+		? _("A LaTeX backend requires your authorization")
+		: _("An external converter requires your authorization");
 	int choice;
-	const docstring security_warning2 = security_warning +
-		_("<p>Would you like to run this converter?</p>"
-		  "<p><b>Only run if you trust the origin/sender of the LyX "
-		  "document!</b></p>");
+	docstring const security_warning2 = security_warning + (use_shell_escape
+		? _("<p>Should LaTeX backends be allowed to run external "
+		    "programs?</p><p><b>Allow them only if you trust the "
+		    "origin/sender of the LyX document!</b></p>")
+		: _("<p>Would you like to run this converter?</p>"
+		    "<p><b>Only run if you trust the origin/sender of the LyX "
+		    "document!</b></p>"));
+	docstring const no = use_shell_escape
+				? _("Do &not allow") : _("Do &not run");
+	docstring const yes = use_shell_escape ? _("A&llow") : _("&Run");
+	docstring const always = use_shell_escape
+					? _("&Always allow for this document")
+					: _("&Always run for this document");
 	if (!doc_fname.empty()) {
 		LYXERR(Debug::FILES, "looking up: " << doc_fname);
-		std::set<std::string> & auth_files = theSession().authFiles().authFiles();
-		if (auth_files.find(doc_fname) == auth_files.end()) {
-			choice = frontend::Alert::prompt(security_title, security_warning2,
-				0, 0, _("Do &not run"), _("&Run"), _("&Always run for this document"));
-			if (choice == 2)
-				auth_files.insert(doc_fname);
+		bool authorized = use_shell_escape
+			? theSession().shellescapeFiles().findAuth(doc_fname)
+			: theSession().authFiles().find(doc_fname);
+		if (!authorized) {
+			choice = frontend::Alert::prompt(security_title,
+							 security_warning2,
+							 0, 0, no, yes, always);
+			if (choice == 2) {
+				if (use_shell_escape)
+					theSession().shellescapeFiles().insert(doc_fname, true);
+				else
+					theSession().authFiles().insert(doc_fname);
+			}
 		} else {
 			choice = 1;
 		}
 	} else {
-		choice = frontend::Alert::prompt(security_title, security_warning2,
-			0, 0, _("Do &not run"), _("&Run"));
+		choice = frontend::Alert::prompt(security_title,
+						 security_warning2,
+						 0, 0, no, yes);
 	}
 	return choice != 0;
 }
@@ -459,7 +513,42 @@ bool Converters::convert(Buffer const * buffer,
 						   "tmpfile.out"));
 		}
 
-		if (!checkAuth(conv, buffer ? buffer->absFileName() : string()))
+		if (buffer && buffer->params().use_minted
+		    && lyxrc.pygmentize_command.empty() && conv.latex()) {
+			bool dowarn = false;
+			// Warn only if listings insets are actually used
+			for (Paragraph const & par : buffer->paragraphs()) {
+				InsetList const & insets = par.insetList();
+				pos_type lstpos = insets.find(LISTINGS_CODE, 0);
+				pos_type incpos = insets.find(INCLUDE_CODE, 0);
+				if (incpos >= 0) {
+					InsetInclude const * include =
+						static_cast<InsetInclude *>
+						        (insets.get(incpos));
+					if (include->params().getCmdName() !=
+					                        "inputminted") {
+						incpos = -1;
+					}
+				}
+				if (lstpos >= 0 || incpos >= 0) {
+					dowarn = true;
+					break;
+				}
+			}
+			if (dowarn) {
+				Alert::warning(_("Pygments driver command not found!"),
+				    _("The driver command necessary to use the minted package\n"
+				      "(pygmentize) has not been found. Make sure you have\n"
+				      "the python-pygments module installed or, if the driver\n"
+				      "is named differently, to add the following line to the\n"
+				      "document preamble:\n\n"
+				      "\\AtBeginDocument{\\renewcommand{\\MintedPygmentize}{driver}}\n\n"
+				      "where 'driver' is name of the driver command."));
+			}
+		}
+
+		if (!checkAuth(conv, buffer ? buffer->absFileName() : string(),
+			       buffer && buffer->params().shell_escape))
 			return false;
 
 		if (conv.latex()) {
@@ -470,6 +559,9 @@ bool Converters::convert(Buffer const * buffer,
 			command = subst(command, token_from, "");
 			command = subst(command, token_latex_encoding,
 			                buffer->params().encoding().latexName());
+			if (buffer->params().shell_escape
+			    && !contains(command, "-shell-escape"))
+				command += " -shell-escape ";
 			LYXERR(Debug::FILES, "Running " << command);
 			if (!runLaTeX(*buffer, command, runparams, errorList))
 				return false;
@@ -785,7 +877,7 @@ FormatList const Converters::intToFormat(vector<int> const & input)
 }
 
 
-FormatList const Converters::getReachableTo(string const & target, 
+FormatList const Converters::getReachableTo(string const & target,
 		bool const clear_visited)
 {
 	vector<int> const & reachablesto =
@@ -795,8 +887,8 @@ FormatList const Converters::getReachableTo(string const & target,
 }
 
 
-FormatList const Converters::getReachable(string const & from, 
-		bool const only_viewable, bool const clear_visited, 
+FormatList const Converters::getReachable(string const & from,
+		bool const only_viewable, bool const clear_visited,
 		set<string> const & excludes)
 {
 	set<int> excluded_numbers;

@@ -1,5 +1,5 @@
 #LyX 2.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 543
+\lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -198,6 +198,7 @@
 \suppress_date false
 \justification true
 \use_refstyle 0
+\use_minted 0
 \notefontcolor #0000ff
 \index Index
 \shortcut idx
@@ -26210,35 +26211,6 @@ aa
 
 \backslash
 AA
-\begin_inset Index idx
-status collapsed
-
-\begin_layout Plain Layout
-
-\lang english
-
-\backslash
-@
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-textrm{
-\backslash
-AA}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \end_inset
@@ -27635,11 +27607,7 @@ Centré est le standard prédéfini;
 \end_layout
 
 \begin_layout Description
-Indenté 
-\lang english
-this can be set using
-\lang french
- la fenêtre de dialogue 
+Indenté peut être sélectionné via la fenêtre de dialogue 
 \family sans
 Document\SpecialChar menuseparator
 Paramètres
@@ -27678,9 +27646,7 @@ Options mode math
 
 \begin_deeper
 \begin_layout Description
-Droite est le standard 
-\lang english
-in most cases
+Droite est le standard dans la plupart des cas;
 \end_layout
 
 \begin_layout Description
@@ -37548,13 +37514,9 @@ Certains caractères peuvent être obtenus en utilisant différentes commandes.
 \end_inset
 
 
-\lang english
-
 \begin_inset space \hfill{}
 \end_inset
 
-
-\lang french
 
 \begin_inset Tabular
 <lyxtabular version="3" rows="12" columns="2">
@@ -38183,7 +38145,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "Description"
-target "ftp://ftp.dante.de/tex-archive/info/math/voss/mathmode/Mathmode.pdf"
+target "https://www.tug.org/~hvoss/PDF/mathmode.pdf"
 literal "false"
 
 \end_inset

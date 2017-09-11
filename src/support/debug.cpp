@@ -18,7 +18,6 @@
 #include "support/gettext.h"
 #include "support/lstrings.h"
 #include "support/ProgressInterface.h"
-#include "support/regex.h"
 
 #include <iostream>
 #include <iomanip>
@@ -78,7 +77,7 @@ DebugErrorItem errorTags[] = {
 
 int const numErrorTags = sizeof(errorTags)/sizeof(errorTags[0]);
 
-} // namespace anon
+} // namespace
 
 
 int Debug::levelCount()
@@ -202,21 +201,19 @@ char const * LyXErr::stripName(char const * n)
 {
 	string const name = n;
 	// find the last occurence of /src/ in name
-	static const regex re("[\\/]src[\\/]");
-	string::const_iterator const begin = name.begin();
-	string::const_iterator it = begin;
-	string::const_iterator const end = name.end();
-	smatch results;
-	while (regex_search(it, end, results, re)) {
-		it = results[0].second;
-	}
-	return n + std::distance(begin, it);
+	size_t pos = name.rfind("/src/");
+	if (pos == string::npos)
+		pos = name.rfind("\\src\\");
+	if (pos == string::npos)
+		return n;
+	else
+		return n + pos + 5;
 }
 
 
 // It seems not possible to instantiate operator template out of class body
 template<class T>
-LyXErr & toStream(LyXErr & l, T t)	
+LyXErr & toStream(LyXErr & l, T t)
 {
 	if (l.enabled()){
 		l.stream() << t;

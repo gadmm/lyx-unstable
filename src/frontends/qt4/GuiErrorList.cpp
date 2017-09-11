@@ -52,7 +52,7 @@ string const guiErrorType(string const & s)
 	return s;
 }
 
-} // namespace anon
+} // namespace
 
 namespace lyx {
 namespace frontend {
@@ -152,7 +152,7 @@ bool GuiErrorList::initialiseParams(string const & data)
 	buf_ = from_master_ ?
 		bufferview()->buffer().masterBuffer()
 		: &bufferview()->buffer();
-	name_ = bformat(_("%1$s Errors (%2$s)"), 
+	name_ = bformat(_("%1$s Errors (%2$s)"),
 			        _(guiErrorType(error_type)),
 				    from_utf8(buf_->absFileName()));
 	paramsToDialog();

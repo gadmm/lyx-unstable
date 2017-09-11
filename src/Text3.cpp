@@ -78,7 +78,7 @@
 #include "support/regex.h"
 
 #include "mathed/InsetMathHull.h"
-#include "mathed/MathMacroTemplate.h"
+#include "mathed/InsetMathMacroTemplate.h"
 
 #include <clocale>
 #include <sstream>
@@ -452,7 +452,7 @@ static void outline(OutlineOp mode, Cursor & cur)
 				DocumentClass const & tc = buf.params().documentClass();
 				DocumentClass::const_iterator lit = tc.begin();
 				DocumentClass::const_iterator len = tc.end();
-				int const newtoclevel = 
+				int const newtoclevel =
 					(mode == OutlineIn ? toclevel + 1 : toclevel - 1);
 				LabelType const oldlabeltype = start->layout().labeltype;
 
@@ -484,14 +484,14 @@ bool Text::isRTL(Paragraph const & par) const
 	return par.isRTL(buffer.params());
 }
 
-	
+
 namespace {
-		
+
 	Language const * getLanguage(Cursor const & cur, string const & lang) {
 		return lang.empty() ? cur.getFont().language() : languages.getLanguage(lang);
 	}
 
-}
+} // namespace
 
 
 void Text::dispatch(Cursor & cur, FuncRequest & cmd)
@@ -518,7 +518,7 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 	cur.noScreenUpdate();
 
 	LBUFERR(this == cur.text());
-	
+
 	// NOTE: This should NOT be a reference. See commit 94a5481a.
 	CursorSlice const oldTopSlice = cur.top();
 	bool const oldBoundary = cur.boundary();
@@ -2046,7 +2046,7 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 			// don't pass "on" as argument
 			// (it would appear literally in the first cell)
 			docstring sel = cur.selectionAsString(false);
-			MathMacroTemplate * macro = new MathMacroTemplate(cur.buffer());
+			InsetMathMacroTemplate * macro = new InsetMathMacroTemplate(cur.buffer());
 			// create a macro template if we see "\\newcommand" somewhere, and
 			// an ordinary formula otherwise
 			if (!sel.empty()
@@ -2082,7 +2082,7 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 			MacroType type = MacroTypeNewcommand;
 			if (s2 == "def")
 				type = MacroTypeDef;
-			MathMacroTemplate * inset = new MathMacroTemplate(cur.buffer(),
+			InsetMathMacroTemplate * inset = new InsetMathMacroTemplate(cur.buffer(),
 				from_utf8(token(s, ' ', 0)), nargs, false, type);
 			inset->setBuffer(bv->buffer());
 			insertInset(cur, inset);

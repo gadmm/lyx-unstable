@@ -234,7 +234,7 @@ QFont symbolFont(QString const & family, bool * ok)
 	return font;
 }
 
-} // namespace anon
+} // namespace
 
 
 FontLoader::FontLoader()
@@ -301,7 +301,7 @@ QFont makeQFont(FontInfo const & f)
 		switch (f.family()) {
 		case ROMAN_FAMILY: {
 			QString family = makeFontName(toqstr(lyxrc.roman_font_name),
-				toqstr(lyxrc.roman_font_foundry)); 
+				toqstr(lyxrc.roman_font_foundry));
 			font.setFamily(family);
 #ifdef Q_OS_MAC
 #if QT_VERSION >= 0x040300 //&& QT_VERSION < 0x040800
@@ -370,7 +370,7 @@ QFont makeQFont(FontInfo const & f)
 	return font;
 }
 
-} // anon namespace
+} // namespace
 
 
 GuiFontInfo::GuiFontInfo(FontInfo const & f)

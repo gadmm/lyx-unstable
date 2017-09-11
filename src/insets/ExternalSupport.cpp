@@ -51,7 +51,7 @@ Template const * getTemplatePtr(InsetExternalParams const & params)
 
 void editExternal(InsetExternalParams const & params, Buffer const & buffer)
 {
-	theFormats().edit(buffer, params.filename, 
+	theFormats().edit(buffer, params.filename,
 		theFormats().getFormatFromFile(params.filename));
 }
 
@@ -75,7 +75,7 @@ string const subst_path(string const & input,
 	return subst(input, placeholder, path2);
 }
 
-} // namespace anon
+} // namespace
 
 
 string const doSubstitution(InsetExternalParams const & params,
@@ -348,7 +348,7 @@ string const substituteCommands(InsetExternalParams const & params,
 string const substituteOptions(InsetExternalParams const & params,
 			       string const & input, string const & format);
 
-} // namespace anon
+} // namespace
 
 
 void writeExternal(InsetExternalParams const & params,
@@ -553,7 +553,7 @@ string const substituteOptions(InsetExternalParams const & params,
 	return output;
 }
 
-} // namespace anon
+} // namespace
 
 } // namespace external
 

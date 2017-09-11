@@ -127,7 +127,7 @@ public:
 	/// truncates str to maxlenwith an ellipsis and replaces the characters '\n'
 	/// and '\t' with spaces
 	static void shortenForOutliner(docstring & str, size_t const maxlen);
-		
+
 	/// Appends a possibly abbreviated representation of our text to \param os,
 	/// where \param maxlen defines the maximum size of \param os. If \param
 	/// shorten is true, then os is shortened as above.
@@ -157,8 +157,8 @@ public:
 	/// read-write access to individual paragraph
 	Paragraph & getPar(pit_type pit) { return pars_[pit]; }
 	// Returns the current font and depth as a message.
-	/// FIXME: replace Cursor with DocIterator.
-	docstring currentState(Cursor const & cur) const;
+	// When \param devel_mode is true, add more precise information
+	docstring currentState(Cursor const & cur, bool devel_mode) const;
 
 	/** Find the word under \c from in the relative location
 	 *  defined by \c word_location.
@@ -172,7 +172,7 @@ public:
 	void selectAll(Cursor & cur);
 	/// convenience function get the previous word or an empty string
 	docstring previousWord(CursorSlice const & sl) const;
-	
+
 	/// what type of change operation to make
 	enum ChangeOp {
 		ACCEPT,

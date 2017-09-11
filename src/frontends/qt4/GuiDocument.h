@@ -90,6 +90,7 @@ public Q_SLOTS:
 private Q_SLOTS:
 	void updateNumbering();
 	void change_adaptor();
+	void shellescapeChanged();
 	void includeonlyClicked(QTreeWidgetItem * item, int);
 	void setListingsMessage();
 	void listingsPackageChanged(int);
@@ -257,7 +258,7 @@ private:
 	bool providesOSF(QString const & font) const;
 	/// does this font provide true Small Caps?
 	bool providesSC(QString const & font) const;
-	/** does this font provide OSF and Small Caps only via 
+	/** does this font provide OSF and Small Caps only via
 	 * a single, undifferentiated expert option?
 	 */
 	bool hasMonolithicExpertSet(QString const & font) const;

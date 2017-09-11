@@ -65,12 +65,9 @@ private:
 	/// return the next history entry if any
 	std::string const historyDown();
 
-	/// return the font and depth in the active BufferView as a message.
-	docstring const getCurrentState() const;
-
 	/// open a listbox and show the contents of the list. When reversed
 	/// is true, the contents of the list is filled bottom-up.
-	void showList(std::vector<std::string> const & list, 
+	void showList(std::vector<std::string> const & list,
 		QPoint const & pos, bool reversed = false) const;
 
 	/// return the possible completions

@@ -263,7 +263,7 @@ typedef map<string, GuiToolbar *> ToolbarMap;
 
 typedef shared_ptr<Dialog> DialogPtr;
 
-} // namespace anon
+} // namespace
 
 
 class GuiView::GuiViewPrivate
@@ -508,7 +508,7 @@ QSet<Buffer const *> GuiView::GuiViewPrivate::busyBuffers;
 
 GuiView::GuiView(int id)
 	: d(*new GuiViewPrivate(this)), id_(id), closing_(false), busy_(0),
-	  command_execute_(false), minibuffer_focus_(false)
+	  command_execute_(false), minibuffer_focus_(false), devel_mode_(false)
 {
 	connect(this, SIGNAL(bufferViewChanged()),
 	        this, SLOT(onBufferViewChanged()));
@@ -571,15 +571,31 @@ GuiView::GuiView(int id)
 	busyanim->start();
 	busylabel->hide();
 
-	connect(&d.processing_thread_watcher_, SIGNAL(started()), 
+	connect(&d.processing_thread_watcher_, SIGNAL(started()),
 		busylabel, SLOT(show()));
-	connect(&d.processing_thread_watcher_, SIGNAL(finished()), 
+	connect(&d.processing_thread_watcher_, SIGNAL(finished()),
 		busylabel, SLOT(hide()));
 
 	QFontMetrics const fm(statusBar()->fontMetrics());
-	int const roheight = max(int(d.normalIconSize), fm.height());
-	QSize const rosize(roheight, roheight);
-	QPixmap readonly = QIcon(getPixmap("images/", "emblem-readonly", "svgz,png")).pixmap(rosize);
+	int const iconheight = max(int(d.normalIconSize), fm.height());
+	QSize const iconsize(iconheight, iconheight);
+
+	QPixmap shellescape = QIcon(getPixmap("images/", "emblem-shellescape", "svgz,png")).pixmap(iconsize);
+	shell_escape_ = new QLabel(statusBar());
+	shell_escape_->setPixmap(shellescape);
+	shell_escape_->setScaledContents(true);
+	shell_escape_->setAlignment(Qt::AlignCenter);
+	shell_escape_->setContextMenuPolicy(Qt::CustomContextMenu);
+	shell_escape_->setToolTip(qt_("WARNING: LaTeX is allowed to execute "
+	                              "external commands for this document. "
+	                              "Right click to change."));
+	SEMenu * menu = new SEMenu(this);
+	connect(shell_escape_, SIGNAL(customContextMenuRequested(QPoint)),
+		menu, SLOT(showMenu(QPoint)));
+	shell_escape_->hide();
+	statusBar()->addPermanentWidget(shell_escape_);
+
+	QPixmap readonly = QIcon(getPixmap("images/", "emblem-readonly", "svgz,png")).pixmap(iconsize);
 	read_only_ = new QLabel(statusBar());
 	read_only_->setPixmap(readonly);
 	read_only_->setScaledContents(true);
@@ -638,6 +654,17 @@ GuiView::~GuiView()
 }
 
 
+void GuiView::disableShellEscape()
+{
+	BufferView * bv = documentBufferView();
+	if (!bv)
+		return;
+	theSession().shellescapeFiles().remove(bv->buffer().absFileName());
+	bv->buffer().params().shell_escape = false;
+	bv->processUpdateFlags(Update::Force);
+}
+
+
 QVector<GuiWorkArea*> GuiView::GuiViewPrivate::guiWorkAreas()
 {
 	QVector<GuiWorkArea*> areas;
@@ -691,7 +718,7 @@ void GuiView::processingThreadFinished()
 
 	Buffer::ExportStatus const status = watcher->result();
 	handleExportStatus(this, status, d.processing_format);
-	
+
 	updateToolbars();
 	BufferView const * const bv = currentBufferView();
 	if (bv && !bv->buffer().errorList("Export").empty()) {
@@ -715,6 +742,7 @@ void GuiView::saveLayout() const
 {
 	QSettings settings;
 	settings.setValue("zoom", lyxrc.currentZoom);
+	settings.setValue("devel_mode", devel_mode_);
 	settings.beginGroup("views");
 	settings.beginGroup(QString::number(id_));
 #if defined(Q_WS_X11) || defined(QPA_XCB)
@@ -746,6 +774,7 @@ bool GuiView::restoreLayout()
 	QSettings settings;
 	lyxrc.currentZoom = settings.value("zoom", lyxrc.zoom).toInt();
 	lyx::dispatch(FuncRequest(LFUN_BUFFER_ZOOM, convert<docstring>(lyxrc.currentZoom)));
+	devel_mode_ = settings.value("devel_mode", devel_mode_).toBool();
 	settings.beginGroup("views");
 	settings.beginGroup(QString::number(id_));
 	QString const icon_key = "icon_size";
@@ -784,7 +813,7 @@ bool GuiView::restoreLayout()
 
 	if (!restoreState(settings.value("layout").toByteArray(), 0))
 		initToolbars();
-	
+
 	// init the toolbars that have not been restored
 	Toolbars::Infos::iterator cit = guiApp->toolbars().begin();
 	Toolbars::Infos::iterator end = guiApp->toolbars().end();
@@ -990,7 +1019,7 @@ void GuiView::closeEvent(QCloseEvent * close_event)
 	LYXERR(Debug::DEBUG, "GuiView::closeEvent()");
 
 	if (!GuiViewPrivate::busyBuffers.isEmpty()) {
-		Alert::warning(_("Exit LyX"), 
+		Alert::warning(_("Exit LyX"),
 			_("LyX could not be closed because documents are being processed by LyX."));
 		close_event->setAccepted(false);
 		return;
@@ -1158,6 +1187,11 @@ void GuiView::updateWindowTitle(GuiWorkArea * wa)
 	// Tell Qt whether the current document is changed
 	setWindowModified(!buf.isClean());
 
+	if (buf.params().shell_escape)
+		shell_escape_->show();
+	else
+		shell_escape_->hide();
+
 	if (buf.hasReadonlyFlag())
 		read_only_->show();
 	else
@@ -1254,7 +1288,7 @@ void GuiView::showMessage()
 	if (msg.isEmpty()) {
 		BufferView const * bv = currentBufferView();
 		if (bv)
-			msg = toqstr(bv->cursor().currentState());
+			msg = toqstr(bv->cursor().currentState(devel_mode_));
 		else
 			msg = qt_("Welcome to LyX!");
 	}
@@ -1353,7 +1387,7 @@ void GuiView::setBusy(bool busy)
 		return;
 	}
 	QApplication::restoreOverrideCursor();
-	updateLayoutList();	
+	updateLayoutList();
 }
 
 
@@ -1467,7 +1501,7 @@ void GuiView::setCurrentWorkArea(GuiWorkArea * wa)
 
 	theGuiApp()->setCurrentView(this);
 	d.current_work_area_ = wa;
-	
+
 	// We need to reset this now, because it will need to be
 	// right if the tabWorkArea gets reset in the for loop. We
 	// will change it back if we aren't in that case.
@@ -1476,14 +1510,14 @@ void GuiView::setCurrentWorkArea(GuiWorkArea * wa)
 
 	for (int i = 0; i != d.splitter_->count(); ++i) {
 		if (d.tabWorkArea(i)->setCurrentWorkArea(wa)) {
-			LYXERR(Debug::DEBUG, "Current wa: " << currentWorkArea() 
+			LYXERR(Debug::DEBUG, "Current wa: " << currentWorkArea()
 				<< ", Current main wa: " << currentMainWorkArea());
 			return;
 		}
 	}
-	
+
 	d.current_main_work_area_ = old_cmwa;
-	
+
 	LYXERR(Debug::DEBUG, "This is not a tabbed wa");
 	on_currentWorkAreaChanged(wa);
 	BufferView & bv = wa->bufferView();
@@ -1591,7 +1625,7 @@ void GuiView::setBuffer(Buffer * newBuffer, bool switch_to)
 {
 	LYXERR(Debug::DEBUG, "Setting buffer: " << newBuffer << endl);
 	LASSERT(newBuffer, return);
-	
+
 	GuiWorkArea * wa = workArea(*newBuffer);
 	if (wa == 0) {
 		setBusy(true);
@@ -1898,6 +1932,10 @@ bool GuiView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 
 	case LFUN_TAB_GROUP_CLOSE:
 		enable = d.tabWorkAreaCount() > 1;
+		break;
+
+	case LFUN_DEVEL_MODE_TOGGLE:
+		flag.setOnOff(devel_mode_);
 		break;
 
 	case LFUN_TOOLBAR_TOGGLE: {
@@ -2880,7 +2918,7 @@ bool GuiView::closeWorkArea(GuiWorkArea * wa, bool close_buffer)
 	Buffer & buf = wa->bufferView().buffer();
 
 	if (GuiViewPrivate::busyBuffers.contains(&buf)) {
-		Alert::warning(_("Close document"), 
+		Alert::warning(_("Close document"),
 			_("Document could not be closed because it is being processed by LyX."));
 		return false;
 	}
@@ -3075,7 +3113,7 @@ void GuiView::gotoNextOrPreviousBuffer(NextOrPrevious np, bool const move)
 {
 	if (!documentBufferView())
 		return;
-	
+
 	if (TabWorkArea * twa = d.currentTabWorkArea()) {
 		Buffer * const curbuf = &documentBufferView()->buffer();
 		int nwa = twa->count();
@@ -3440,8 +3478,7 @@ bool GuiView::goToFileRow(string const & argument)
 
 void GuiView::toolBarPopup(const QPoint & /*pos*/)
 {
-	QMenu * menu = new QMenu;
-	menu = guiApp->menus().menu(toqstr("context-toolbars"), * this);
+	QMenu * menu = guiApp->menus().menu(toqstr("context-toolbars"), * this);
 	menu->exec(QCursor::pos());
 }
 
@@ -3524,12 +3561,12 @@ bool GuiView::GuiViewPrivate::asyncBufferProcessing(
 	if (syncFunc) {
 		status = (used_buffer->*syncFunc)(format, true);
 	} else if (previewFunc) {
-		status = (used_buffer->*previewFunc)(format); 
+		status = (used_buffer->*previewFunc)(format);
 	} else
 		return false;
 	handleExportStatus(gv_, status, format);
 	(void) asyncFunc;
-	return (status == Buffer::ExportSuccess 
+	return (status == Buffer::ExportSuccess
 			|| status == Buffer::PreviewSuccess);
 #endif
 }
@@ -3766,14 +3803,14 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 				dr.setMessage(_("Absolute filename expected."));
 				break;
 			}
-			
+
 			FileName filename(fname);
 			if (fname.empty()) {
 				FileDialog dlg(qt_("Select file to insert"));
 
 				FileDialog::Result result = dlg.open(toqstr(bv->buffer().filePath()),
 					QStringList(qt_("All Files (*)")));
-				
+
 				if (result.first == FileDialog::Later || result.second.isEmpty()) {
 					dr.setMessage(_("Canceled."));
 					break;
@@ -3860,6 +3897,14 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 
 		case LFUN_BUFFER_CLOSE_ALL:
 			closeBufferAll();
+			break;
+
+		case LFUN_DEVEL_MODE_TOGGLE:
+			devel_mode_ = !devel_mode_;
+			if (devel_mode_)
+				dr.setMessage(_("Developer mode is now enabled."));
+			else
+				dr.setMessage(_("Developer mode is now disabled."));
 			break;
 
 		case LFUN_TOOLBAR_TOGGLE: {
@@ -4136,7 +4181,7 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 					doc_buffer->absFileName(),
 						"tex")).mangledFileName()
 				: doc_buffer->latexName();
-			string const fulltexname = 
+			string const fulltexname =
 				support::makeAbsPath(texname, doc_master->temppath()).absFileName();
 			string const mastername =
 				removeExtension(doc_master->latexName());
@@ -4359,7 +4404,7 @@ bool isValidName(string const & name)
 				cmpCStr(name.c_str())) != end_dialognames;
 }
 
-} // namespace anon
+} // namespace
 
 
 void GuiView::resetDialogs()
@@ -4636,6 +4681,14 @@ Dialog * GuiView::build(string const & name)
 		return createGuiProgressView(*this);
 
 	return 0;
+}
+
+
+SEMenu::SEMenu(QWidget * parent)
+{
+	QAction * action = addAction(qt_("Disable Shell Escape"));
+	connect(action, SIGNAL(triggered()),
+		parent, SLOT(disableShellEscape()));
 }
 
 

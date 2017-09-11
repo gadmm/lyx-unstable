@@ -150,7 +150,7 @@ void showFileError(string const & error)
 			   "Please check your installation."), from_utf8(error)));
 }
 
-} // namespace anon
+} // namespace
 
 /// The main application class private implementation.
 struct LyX::Impl {
@@ -192,7 +192,7 @@ struct LyX::Impl {
 	Converters converters_;
 	/// The system converters after reading lyxrc.defaults.
 	Converters system_converters_;
-	
+
 	/// Global format information
 	Formats formats_;
 	/// The system formats after reading lyxrc.defaults.
@@ -419,8 +419,12 @@ void LyX::prepareExit()
 	// Write the index file of the converter cache
 	ConverterCache::get().writeIndex();
 
-	// close buffers first
-	pimpl_->buffer_list_.closeAll();
+	// closing buffer may throw exceptions, but we ignore them since we
+	// are quitting.
+	try {
+		// close buffers first
+		pimpl_->buffer_list_.closeAll();
+	} catch (ExceptionMessage const &) {}
 
 	// register session changes and shutdown server and socket
 	if (use_gui) {
@@ -512,7 +516,7 @@ int LyX::execWithoutGui(int & argc, char * argv[])
 	}
 
 	// Used to keep track of which buffers were explicitly loaded by user request.
-	// This is necessary because master and child document buffers are loaded, even 
+	// This is necessary because master and child document buffers are loaded, even
 	// if they were not named on the command line. We do not want to dispatch to
 	// those.
 	vector<Buffer *> command_line_buffers;
@@ -771,7 +775,7 @@ namespace {
 			return std::string(line, nameLen);
 		}
 	}
-}
+} // namespace
 
 void cleanDuplicateEnvVars()
 {
@@ -1380,7 +1384,7 @@ int parse_force(string const & arg, string const &, string &)
 }
 
 
-} // namespace anon
+} // namespace
 
 
 void LyX::easyParse(int & argc, char * argv[])

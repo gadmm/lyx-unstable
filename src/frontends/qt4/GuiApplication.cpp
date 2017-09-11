@@ -474,7 +474,7 @@ QString findImg(QString const & name)
 	return img_name;
 }
 
-} // namespace anon
+} // namespace
 
 
 QString themeIconName(QString const & action)
@@ -598,7 +598,7 @@ QPixmap getPixmap(QString const & path, QString const & name, QString const & ex
 	if (getPixmap(pixmap, fpath)) {
 		return pixmap;
 	}
-	
+
 	QStringList exts = ext.split(",");
 	fpath = ":/" + path + name + ".";
 	for (int i = 0; i < exts.size(); ++i) {
@@ -1727,13 +1727,8 @@ void GuiApplication::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 		current_view_->message(bformat(_("Opening help file %1$s..."),
 					       makeDisplayPath(fname.absFileName())));
 		Buffer * buf = current_view_->loadDocument(fname, false);
-
-#ifndef DEVEL_VERSION
 		if (buf)
-			buf->setReadonly(true);
-#else
-		(void) buf;
-#endif
+			buf->setReadonly(!current_view_->develMode());
 		break;
 	}
 
@@ -2657,7 +2652,7 @@ namespace {
 		const QFontInfo fi(font);
 		return fi.fixedPitch();
 	}
-}
+} // namespace
 
 
 QFont const GuiApplication::typewriterSystemFont()

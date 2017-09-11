@@ -58,7 +58,7 @@ docstring runMessage(unsigned int count)
 	return bformat(_("Waiting for LaTeX run number %1$d"), count);
 }
 
-} // anon namespace
+} // namespace
 
 /*
  * CLASS TEXERRORS
@@ -348,7 +348,7 @@ int LaTeX::run(TeXErrors & terr)
 	} else {
 		LYXERR(Debug::DEPEND, "Dep. file has NOT changed");
 	}
-	
+
 	// 3
 	// rerun bibtex?
 	// Complex bibliography packages such as Biblatex require
@@ -451,7 +451,7 @@ bool LaTeX::runMakeIndex(string const & f, OutputParams const & runparams,
 {
 	string tmp = runparams.use_japanese ?
 		lyxrc.jindex_command : lyxrc.index_command;
-	
+
 	if (!runparams.index_command.empty())
 		tmp = runparams.index_command;
 
@@ -651,6 +651,9 @@ int LaTeX::scanLogFile(TeXErrors & terr)
 		onlyFileName(changeExtension(file.absFileName(), ".log"));
 	LYXERR(Debug::LATEX, "Log file: " << tmp);
 	FileName const fn = FileName(makeAbsPath(tmp));
+	// FIXME we should use an ifdocstream here and a docstring for token
+	// below. The encoding of the log file depends on the _output_ (font)
+	// encoding of the TeX file (T1, TU etc.). See #10728.
 	ifstream ifs(fn.toFilesystemEncoding().c_str());
 	bool fle_style = false;
 	static regex const file_line_error(".+\\.\\D+:[0-9]+: (.+)");
@@ -825,7 +828,7 @@ int LaTeX::scanLogFile(TeXErrors & terr)
 				} while (!contains(tmp, "(job aborted"));
 
 				terr.insertError(0,
-						 from_local8bit("Emergency stop"),
+						 from_ascii("Emergency stop"),
 						 from_local8bit(errstr),
 						 child_name);
 			}
@@ -924,7 +927,7 @@ int LaTeX::scanLogFile(TeXErrors & terr)
 				// !pdfTeX error: pdflatex (file feyn10): Font feyn10 at 600 not found
 				retval |= ERRORS;
 				terr.insertError(0,
-						 from_local8bit("pdfTeX Error"),
+						 from_ascii("pdfTeX Error"),
 						 from_local8bit(token),
 						 child_name);
 			} else if (!ignore_missing_glyphs
@@ -933,11 +936,18 @@ int LaTeX::scanLogFile(TeXErrors & terr)
 				// Warning about missing glyph in selected font
 				// may be dataloss (bug 9610)
 				// but can be ignored for 'nullfont' (bug 10394).
-				retval |= LATEX_ERROR;
-				terr.insertError(0,
-						 from_local8bit("Missing glyphs!"),
-						 from_local8bit(token),
-						 child_name);
+				// as well as for ZERO WIDTH NON-JOINER (0x200C) which is
+				// missing in many fonts and output for ligature break (bug 10727).
+				// Since this error only occurs with utf8 output, we can safely assume
+				// that the log file is utf8-encoded
+				docstring const utoken = from_utf8(token);
+				if (!contains(utoken, 0x200C)) {
+					retval |= LATEX_ERROR;
+					terr.insertError(0,
+							 from_ascii("Missing glyphs!"),
+							 utoken,
+							 child_name);
+				}
 			} else if (!wait_for_error.empty()) {
 				// We collect information until we know we have an error.
 				wait_for_error += token + '\n';
@@ -1129,7 +1139,7 @@ int iterateLine(string const & token, regex const & reg, string const & closing,
 	return result;
 }
 
-} // anon namespace
+} // namespace
 
 
 void LaTeX::deplog(DepTable & head)

@@ -55,6 +55,7 @@
 #include "ParagraphParameters.h"
 #include "ParIterator.h"
 #include "PDFOptions.h"
+#include "Session.h"
 #include "SpellChecker.h"
 #include "sgml.h"
 #include "texstream.h"
@@ -76,7 +77,7 @@
 
 #include "mathed/InsetMathHull.h"
 #include "mathed/MacroTable.h"
-#include "mathed/MathMacroTemplate.h"
+#include "mathed/InsetMathMacroTemplate.h"
 #include "mathed/MathSupport.h"
 
 #include "graphics/GraphicsCache.h"
@@ -136,7 +137,7 @@ int const LYX_FORMAT = LYX_FORMAT_LYX;
 typedef map<string, bool> DepClean;
 typedef map<docstring, pair<InsetLabel const *, Buffer::References> > RefCache;
 
-} // namespace anon
+} // namespace
 
 
 // A storehouse for the cloned buffers.
@@ -536,7 +537,7 @@ Buffer::~Buffer()
 		Impl::BufferPositionMap::iterator end = d->children_positions.end();
 		for (; it != end; ++it) {
 			Buffer * child = const_cast<Buffer *>(it->first);
-			if (theBufferList().isLoaded(child)) { 
+			if (theBufferList().isLoaded(child)) {
 			 if (theBufferList().isOthersChild(this, child))
 				 child->setParent(0);
 			 else
@@ -979,6 +980,8 @@ int Buffer::readHeader(Lexer & lex)
 		docstring const s = _("\\begin_header is missing");
 		errorList.push_back(ErrorItem(_("Document header error"), s));
 	}
+
+	params().shell_escape = theSession().shellescapeFiles().find(absFileName());
 
 	params().makeDocumentClass();
 
@@ -1934,7 +1937,7 @@ void Buffer::writeLaTeXSource(otexstream & os,
 					    support::bformat(_("The languages %1$s are only supported by Polyglossia."), langs)
 					  : support::bformat(_("The language %1$s is only supported by Polyglossia."), langs);
 				if (!blangs.empty())
-					plangs += "\n"; 
+					plangs += "\n";
 			}
 
 			frontend::Alert::warning(
@@ -3598,7 +3601,7 @@ void Buffer::Impl::updateMacros(DocIterator & it, DocIterator & scope)
 				continue;
 
 			// get macro data
-			MathMacroTemplate & macroTemplate =
+			InsetMathMacroTemplate & macroTemplate =
 				*iit->inset->asInsetMath()->asMacroTemplate();
 			MacroContext mc(owner_, it);
 			macroTemplate.updateToContext(mc);
@@ -3748,7 +3751,7 @@ void Buffer::listParentMacros(MacroSet & macros, LaTeXFeatures & features) const
 		if (data) {
 			macros.insert(data);
 
-			// we cannot access the original MathMacroTemplate anymore
+			// we cannot access the original InsetMathMacroTemplate anymore
 			// here to calls validate method. So we do its work here manually.
 			// FIXME: somehow make the template accessible here.
 			if (data->optionals() > 0)
@@ -4100,7 +4103,7 @@ int AutoSaveBuffer::generateChild()
 	return pid;
 }
 
-} // namespace anon
+} // namespace
 
 
 FileName Buffer::getEmergencyFileName() const
@@ -5023,7 +5026,7 @@ void Buffer::updateBuffer(ParIterator & parit, UpdateType utype) const
 		// set the counter for this paragraph
 		d->setLabel(parit, utype);
 
-		// update change-tracking flag 
+		// update change-tracking flag
 		parit->addChangesToBuffer(*this);
 
 		// now the insets

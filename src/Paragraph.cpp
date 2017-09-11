@@ -87,7 +87,7 @@ namespace {
 /// Inset identifier (above 0x10ffff, for ucs-4)
 char_type const META_INSET = 0x200001;
 
-}
+} // namespace
 
 
 /////////////////////////////////////////////////////////////////////
@@ -397,7 +397,7 @@ public:
 	typedef SkipPositions::const_iterator SkipPositionsIterator;
 
 	void appendSkipPosition(SkipPositions & skips, pos_type const pos) const;
-	
+
 	Language * getSpellLanguage(pos_type const from) const;
 
 	Language * locateSpellRange(pos_type & from, pos_type & to,
@@ -412,7 +412,7 @@ public:
 	}
 
 	bool ignoreWord(docstring const & word) const ;
-	
+
 	void setMisspelled(pos_type from, pos_type to, SpellChecker::Result state)
 	{
 		pos_type textsize = owner_->size();
@@ -1569,7 +1569,7 @@ void flushString(ostream & os, docstring & s)
 	s.erase();
 }
 
-}
+} // namespace
 
 
 void Paragraph::write(ostream & os, BufferParams const & bparams,
@@ -2200,7 +2200,7 @@ bool corrected_env(otexstream & os, string const & suffix, string const & env,
 	return true;
 }
 
-} // namespace anon
+} // namespace
 
 
 int Paragraph::Private::startTeXParParams(BufferParams const & bparams,
@@ -2928,7 +2928,7 @@ void doFontSwitch(vector<html::FontTag> & tagsToOpen,
 		flag = false;
 	}
 }
-}
+} // namespace
 
 
 docstring Paragraph::simpleLyXHTMLOnePar(Buffer const & buf,
@@ -2967,13 +2967,13 @@ docstring Paragraph::simpleLyXHTMLOnePar(Buffer const & buf,
 	FontShape  curr_fs   = INHERIT_SHAPE;
 	FontFamily curr_fam  = INHERIT_FAMILY;
 	FontSize   curr_size = FONT_SIZE_INHERIT;
-	
-	string const default_family = 
-		buf.masterBuffer()->params().fonts_default_family;		
+
+	string const default_family =
+		buf.masterBuffer()->params().fonts_default_family;
 
 	vector<html::FontTag> tagsToOpen;
 	vector<html::EndFontTag> tagsToClose;
-	
+
 	// parsing main loop
 	for (pos_type i = initial; i < size(); ++i) {
 		// let's not show deleted material in the output
@@ -2996,7 +2996,7 @@ docstring Paragraph::simpleLyXHTMLOnePar(Buffer const & buf,
 		curstate = font.fontInfo().underbar();
 		if (font_old.underbar() != curstate)
 			doFontSwitch(tagsToOpen, tagsToClose, ubar_flag, curstate, html::FT_UBAR);
-	
+
 		// strikeout
 		curstate = font.fontInfo().strikeout();
 		if (font_old.strikeout() != curstate)
@@ -3627,7 +3627,7 @@ int Paragraph::fixBiblio(Buffer const & buffer)
 					 InsetCommandParams(BIBITEM_CODE));
 
 	Font font(inherit_font, buffer.params().language);
-	insertInset(0, inset, font, Change(track_changes ? Change::INSERTED 
+	insertInset(0, inset, font, Change(track_changes ? Change::INSERTED
 				                   : Change::UNCHANGED));
 
 	return 1;

@@ -94,7 +94,7 @@ char const * LaTeXSizeNames[NUM_SIZE + 4] =
 { "tiny", "scriptsize", "footnotesize", "small", "normalsize", "large",
   "Large", "LARGE", "huge", "Huge", "error8", "error9", "error10", "error11" };
 
-} // namespace anon
+} // namespace
 
 
 Font::Font(FontInfo bits, Language const * l)
@@ -356,7 +356,7 @@ int Font::latexWriteStartChanges(odocstream & os, BufferParams const & bparams,
 	if (!runparams.pass_thru && bits_.number() == FONT_ON
 	    && prev.fontInfo().number() != FONT_ON
 	    && (language()->lang() == "hebrew"
-		|| language()->lang() == "farsi" 
+		|| language()->lang() == "farsi"
 		|| language()->lang() == "arabic_arabi")) {
 		os << "{\\beginL ";
 		count += 9;

@@ -1,0 +1,60 @@
+#!/usr/bin/python
+
+# Copyright (C) 2010 Jose Aliste <jose.aliste@gmail.com>
+#               2011 Benjamin Kellermann <Benjamin.Kellermann@tu-dresden.de>
+#
+# Translated from Bash to Python by Juergen Spitzmueller <spitz@lyx.org> 2017.
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public Licence as published by the Free Software
+# Foundation; either version 2 of the Licence, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public Licence for more 
+# details.
+#
+# You should have received a copy of the GNU General Public Licence along with
+# this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
+# Street, Fifth Floor, Boston, MA  02110-1301, USA
+
+import sys, os.path
+from subprocess import Popen
+
+# The lyxclient command for backward search
+editor_cmd = "lyxclient -g %f %l"
+
+# Check we have (only) one argument
+if len(sys.argv) != 2:
+    print("Usage: evince_sync_lyx pdf_file")
+    sys.exit(1)
+
+# Arg 1 is supposed to be the PDF file
+pdf_file = os.path.abspath(sys.argv[1])
+
+# Check whether the file exists & is readable
+if not os.path.isfile(pdf_file):
+    print("%s is not valid/readable PDF file." % pdf_file)
+    sys.exit(1)
+
+# The accompanying synctex file has the same name than the PDF
+# but with .synctex.gz extension
+synctex_file, ext = os.path.splitext(pdf_file)
+synctex_file += ".synctex.gz"
+
+# If we have a synctex file, start the evince_backward_search script
+SyncTeX = False
+if os.path.isfile(synctex_file):
+    bsproc = Popen(["evince_backward_search", pdf_file, editor_cmd])
+    SyncTeX = True
+
+# Notwithstanding the previous, start evince and open the PDF
+vproc = Popen(['evince', pdf_file])
+vproc.wait()
+
+# If evince has been closed (hence vproc.wait()), we terminate
+# the evince_backward_search script (if we have started it)
+if SyncTeX:
+    bsproc.terminate()
+

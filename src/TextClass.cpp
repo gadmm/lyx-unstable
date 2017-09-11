@@ -138,7 +138,7 @@ string translateReadType(TextClass::ReadType rt)
 	return string();
 }
 
-} // namespace anon
+} // namespace
 
 
 // This string should not be translated here,
@@ -287,7 +287,7 @@ LexerKeyword textClassTags[] = {
 	{ "tocdepth",          TC_TOCDEPTH }
 };
 
-} //namespace anon
+} // namespace
 
 
 bool TextClass::convertLayoutFormat(support::FileName const & filename, ReadType rt)
@@ -413,11 +413,14 @@ TextClass::ReturnValues TextClass::read(Lexer & lexrc, ReadType rt)
 	if (!lexrc.isOK())
 		return ERROR;
 
-	// Format of files before the 'Format' tag was introduced
-	int format = 1;
-	bool error = false;
+	// The first usable line should be
+	// Format LAYOUT_FORMAT
+	if (lexrc.lex() != TC_FORMAT || !lexrc.next()
+	    || lexrc.getInteger() != LAYOUT_FORMAT)
+		return FORMAT_MISMATCH;
 
 	// parsing
+	bool error = false;
 	while (lexrc.isOK() && !error) {
 		int le = lexrc.lex();
 
@@ -442,8 +445,8 @@ TextClass::ReturnValues TextClass::read(Lexer & lexrc, ReadType rt)
 		switch (static_cast<TextClassTags>(le)) {
 
 		case TC_FORMAT:
-			if (lexrc.next())
-				format = lexrc.getInteger();
+			lexrc.next();
+			lexrc.printError("Duplicate Format directive");
 			break;
 
 		case TC_OUTPUTFORMAT:
@@ -522,9 +525,9 @@ TextClass::ReturnValues TextClass::read(Lexer & lexrc, ReadType rt)
 				error = !readStyle(lexrc, lay);
 				break;
 			}
-			
+
 			bool const have_layout = hasLayout(name);
-			
+
 			// If the layout already exists, then we want to add it to
 			// the existing layout, as long as we are not in an ProvideStyle
 			// block.
@@ -858,11 +861,6 @@ TextClass::ReturnValues TextClass::read(Lexer & lexrc, ReadType rt)
 			error = !readOutlinerName(lexrc);
 			break;
 		} // end of switch
-
-		// Note that this is triggered the first time through the loop unless
-		// we hit a format tag.
-		if (format != LAYOUT_FORMAT)
-			return FORMAT_MISMATCH;
 	}
 
 	// at present, we abort if we encounter an error,
@@ -1793,7 +1791,7 @@ Layout const & DocumentClass::getTOCLayout() const
 	for (; lit != len; ++lit) {
 		int const level = lit->toclevel;
 		// we don't want Part or unnumbered sections
-		if (level == Layout::NOT_IN_TOC || level < 0 
+		if (level == Layout::NOT_IN_TOC || level < 0
 		    || level >= minlevel || lit->counter.empty())
 			continue;
 		lay = &*lit;

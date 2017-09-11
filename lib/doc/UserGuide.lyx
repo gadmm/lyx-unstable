@@ -1,5 +1,5 @@
 #LyX 2.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 543
+\lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -96,14 +96,14 @@ enumitem
 \use_geometry false
 \use_package amsmath 1
 \use_package amssymb 1
-\use_package cancel 0
+\use_package cancel 1
 \use_package esint 1
 \use_package mathdots 1
-\use_package mathtools 0
+\use_package mathtools 1
 \use_package mhchem 1
-\use_package stackrel 0
+\use_package stackrel 1
 \use_package stmaryrd 1
-\use_package undertilde 0
+\use_package undertilde 1
 \cite_engine basic
 \cite_engine_type default
 \biblio_style plain
@@ -112,7 +112,8 @@ enumitem
 \paperorientation portrait
 \suppress_date false
 \justification true
-\use_refstyle 0
+\use_refstyle 1
+\use_minted 0
 \notefontcolor #0000ff
 \branch Question
 \selected 1
@@ -145,8 +146,6 @@ enumitem
 \html_css_as_file 0
 \html_be_strict true
 \author -712698321 "Jürgen Spitzmüller"
-\author 274215730 "scott"
-\author 424524441 "rgheck"
 \end_header
 
 \begin_body
@@ -4076,7 +4075,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! fancyhdr
+ packages ! fancyhdr
 \end_layout
 
 \end_inset
@@ -4580,7 +4579,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! setspace
+ packages ! setspace
 \end_layout
 
 \end_inset
@@ -6678,7 +6677,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! enumitem
+ packages ! enumitem
 \end_layout
 
 \end_inset
@@ -7267,7 +7266,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! enumitem
+ packages ! enumitem
 \end_layout
 
 \end_inset
@@ -7433,7 +7432,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! enumitem
+ packages ! enumitem
 \end_layout
 
 \end_inset
@@ -8338,12 +8337,14 @@ Verbatim
 \end_layout
 
 \begin_layout Verbatim
+
 This is Verbatim.
 \end_layout
 
 \begin_layout Verbatim
 \noindent
 \align block
+
 The following 2 lines are empty:
 \end_layout
 
@@ -8356,6 +8357,7 @@ The following 2 lines are empty:
 \end_layout
 
 \begin_layout Verbatim
+
 Almost everything is allowed in Verbatim:"%&$§#~'`
 \backslash
 }][{|
@@ -8379,6 +8381,7 @@ Verbatim
 \end_layout
 
 \begin_layout Verbatim*
+
 This is Verbatim*.
 \end_layout
 
@@ -13060,7 +13063,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! aeguill
+ packages ! aeguill
 \end_layout
 
 \end_inset
@@ -13386,7 +13389,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! fontenc
+ packages ! fontenc
 \end_layout
 
 \end_inset
@@ -13470,7 +13473,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! CJK
+ packages ! CJK
 \end_layout
 
 \end_inset
@@ -15611,7 +15614,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! pstricks
+ packages ! pstricks
 \end_layout
 
 \end_inset
@@ -16598,7 +16601,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! babel
+ packages ! babel
 \end_layout
 
 \end_inset
@@ -16942,40 +16945,22 @@ Additional Features
 \end_layout
 
 \begin_layout Subsubsection
-Quot
-\change_deleted -712698321 1482667523
-es
-\change_inserted -712698321 1482669265
-ation Marks
-\change_unchanged
-
+Quotation Marks
 \begin_inset Index idx
 status collapsed
 
 \begin_layout Plain Layout
-Typography ! Quot
-\change_deleted -712698321 1482669122
-es
-\change_inserted -712698321 1482669123
-ation marks
-\change_unchanged
-
+Typography ! Quotation marks
 \end_layout
 
 \end_inset
 
 
 \begin_inset Index idx
-status open
+status collapsed
 
 \begin_layout Plain Layout
-Quot
-\change_deleted -712698321 1482669129
-es
-\change_inserted -712698321 1482669204
-ation marks
-\change_unchanged
- | see
+Quotation marks | see
 \begin_inset ERT
 status collapsed
 
@@ -17007,32 +16992,9 @@ status collapsed
 
 \begin_layout Standard
 \SpecialChar LyX
- usually sets quot
-\change_deleted -712698321 1482666231
-es
-\change_inserted -712698321 1482666233
-ation marks
-\change_unchanged
- correctly.
- Specifically, it will 
-\change_deleted -712698321 1482667043
-use
-\change_inserted -712698321 1482667044
-insert
-\change_unchanged
- an opening 
-\change_deleted -712698321 1482666244
-quote
-\change_inserted -712698321 1482666245
-mark
-\change_unchanged
- at the beginning of quoted text, and use a closing 
-\change_deleted -712698321 1482666248
-quote
-\change_inserted -712698321 1482666249
-mark
-\change_unchanged
- at the end.
+ usually sets quotation marks correctly.
+ Specifically, it will insert an opening mark at the beginning of quoted
+ text, and use a closing mark at the end.
  For example, 
 \begin_inset Quotes eld
 \end_inset
@@ -17054,15 +17016,7 @@ You can specify what character the
 \family sans
 "
 \family default
- key produces 
-\change_inserted -712698321 1482669340
-by 
-\change_unchanged
-using the sub
-\change_inserted -712698321 1482667059
--
-\change_unchanged
-menu 
+ key produces by using the submenu 
 \family sans
 Language
 \family default
@@ -17081,48 +17035,24 @@ Document ! Settings
 
 \end_inset
 
- dialog 
-\change_deleted -712698321 1482667133
-in the box
-\change_inserted -712698321 1482669342
-and switching the
-\change_unchanged
- 
+ dialog and switching the 
 \family sans
 Quote Style
-\change_inserted -712698321 1482667108
-
 \family default
  (note that \SpecialChar LyX
- makes a sensible proposal for the selected main language)
-\change_unchanged
-.
- There are 
-\change_deleted -712698321 1482666221
-six
-\change_inserted -712698321 1482756786
-14
-\change_unchanged
- choices:
+ makes a sensible proposal for the selected main language).
+ There are 14
+\begin_inset space ~
+\end_inset
+
+choices:
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring <<Outer>> and <<inner>>:
 \noindent
 
-\change_deleted -712698321 1482666593
-
 \family sans
-\begin_inset Quotes eld
-\end_inset
-
-Text
-\begin_inset Quotes erd
-\end_inset
-
-
-\change_inserted -712698321 1482666647
-
 \begin_inset Quotes eld
 \end_inset
 
@@ -17147,35 +17077,15 @@ inner
 \end_inset
 
 
-\change_unchanged
-
 \family default
- 
-\change_deleted -712698321 1482666593
-Use quotes like
-\change_inserted -712698321 1482665592
-Produces
-\change_unchanged
- 
+ Produces 
 \begin_inset Quotes eld
 \end_inset
 
-th
-\change_inserted -712698321 1482665595
-e
-\change_deleted -712698321 1482666593
-i
-\change_unchanged
-s
-\change_inserted -712698321 1482665605
-e outer
-\change_unchanged
-
+these outer
 \begin_inset Quotes erd
 \end_inset
 
-
-\change_inserted -712698321 1482665637
  and 
 \begin_inset Quotes els
 \end_inset
@@ -17189,26 +17099,12 @@ these inner
 \end_inset
 
 g., in the US)
-\change_unchanged
-
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring <<Outer>> and <<inner>>:
 
-\change_deleted -712698321 1482666660
-
 \family sans
-\begin_inset Quotes sld
-\end_inset
-
-Text
-\begin_inset Quotes srd
-\end_inset
-
-
-\change_inserted -712698321 1482666671
-
 \begin_inset Quotes sld
 \end_inset
 
@@ -17233,14 +17129,8 @@ inner
 \end_inset
 
 
-\change_unchanged
-
 \family default
- 
-\change_deleted -712698321 1482666660
-Use quotes like ”this”
-\change_inserted -712698321 1482665692
-Produces 
+ Produces 
 \begin_inset Quotes sld
 \end_inset
 
@@ -17261,26 +17151,12 @@ these inner
 \end_inset
 
 g., in Sweden)
-\change_unchanged
-
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring <<Outer>> and <<inner>>:
 
-\change_deleted -712698321 1482666683
-
 \family sans
-\begin_inset Quotes gld
-\end_inset
-
-Text
-\begin_inset Quotes grd
-\end_inset
-
-
-\change_inserted -712698321 1482666696
-
 \begin_inset Quotes gld
 \end_inset
 
@@ -17305,22 +17181,8 @@ inner
 \end_inset
 
 
-\change_unchanged
-
 \family default
- 
-\change_deleted -712698321 1482666683
-Use quotes like 
-\begin_inset Quotes gld
-\end_inset
-
-this
-\begin_inset Quotes grd
-\end_inset
-
-
-\change_inserted -712698321 1482665749
-Produces 
+ Produces 
 \begin_inset Quotes gld
 \end_inset
 
@@ -17341,26 +17203,12 @@ these inner
 \end_inset
 
 g., in Germany)
-\change_unchanged
-
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring <<Outer>> and <<inner>>:
 
-\change_deleted -712698321 1482666707
-
 \family sans
-\begin_inset Quotes pld
-\end_inset
-
-Text
-\begin_inset Quotes prd
-\end_inset
-
-
-\change_inserted -712698321 1482666716
-
 \begin_inset Quotes pld
 \end_inset
 
@@ -17385,22 +17233,8 @@ inner
 \end_inset
 
 
-\change_unchanged
-
 \family default
- 
-\change_deleted -712698321 1482666707
-Use quotes like 
-\begin_inset Quotes pld
-\end_inset
-
-this
-\begin_inset Quotes prd
-\end_inset
-
-
-\change_inserted -712698321 1482665786
-Produces 
+ Produces 
 \begin_inset Quotes pld
 \end_inset
 
@@ -17421,26 +17255,12 @@ these inner
 \end_inset
 
 g., in Poland)
-\change_unchanged
-
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring <<Outer>> and <<inner>>:
 
-\change_deleted -712698321 1482666725
-
 \family sans
-\begin_inset Quotes cld
-\end_inset
-
-Text
-\begin_inset Quotes crd
-\end_inset
-
-
-\change_inserted -712698321 1482666730
-
 \begin_inset Quotes cld
 \end_inset
 
@@ -17465,22 +17285,8 @@ inner
 \end_inset
 
 
-\change_unchanged
-
 \family default
- 
-\change_deleted -712698321 1482666725
-Use quotes like 
-\begin_inset Quotes cld
-\end_inset
-
-this
-\begin_inset Quotes crd
-\end_inset
-
-
-\change_inserted -712698321 1482665816
-Produces 
+ Produces 
 \begin_inset Quotes cld
 \end_inset
 
@@ -17501,26 +17307,12 @@ these inner
 \end_inset
 
 g., in Switzerland)
-\change_unchanged
-
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring <<Outer>> and <<inner>>:
 
-\change_deleted -712698321 1482666741
-
 \family sans
-\begin_inset Quotes ald
-\end_inset
-
-Text
-\begin_inset Quotes ard
-\end_inset
-
-
-\change_inserted -712698321 1482666747
-
 \begin_inset Quotes ald
 \end_inset
 
@@ -17545,22 +17337,8 @@ inner
 \end_inset
 
 
-\change_unchanged
-
 \family default
- 
-\change_deleted -712698321 1482666741
-Use quotes like 
-\begin_inset Quotes ald
-\end_inset
-
-this
-\begin_inset Quotes ard
-\end_inset
-
-
-\change_inserted -712698321 1482665851
-Produces 
+ Produces 
 \begin_inset Quotes ald
 \end_inset
 
@@ -17585,8 +17363,6 @@ g., in Denmark)
 
 \begin_layout Labeling
 \labelwidthstring <<Outer>> and <<inner>>:
-
-\change_inserted -712698321 1482666768
 
 \family sans
 \begin_inset Quotes qrd
@@ -17635,8 +17411,6 @@ these inner
 
 \begin_layout Labeling
 \labelwidthstring <<Outer>> and <<inner>>:
-
-\change_inserted -712698321 1482666784
 
 \family sans
 \begin_inset Quotes bld
@@ -17690,8 +17464,6 @@ g., in Great Britain)
 \begin_layout Labeling
 \labelwidthstring <<Outer>> and <<inner>>:
 
-\change_inserted -712698321 1482666803
-
 \family sans
 \begin_inset Quotes fld
 \end_inset
@@ -17744,8 +17516,6 @@ g., in France)
 \begin_layout Labeling
 \labelwidthstring <<Outer>> and <<inner>>:
 
-\change_inserted -712698321 1482668207
-
 \family sans
 \begin_inset Quotes ild
 \end_inset
@@ -17793,14 +17563,10 @@ these inner
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1482668407
 Maybe you wonder why one does not simply use only outer marks in this case,
  since these look identical to the inner marks.
  The answer is that you cannot easily switch to another style then (where
  the inner marks differ).
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -17810,8 +17576,6 @@ Maybe you wonder why one does not simply use only outer marks in this case,
 
 \begin_layout Labeling
 \labelwidthstring <<Outer>> and <<inner>>:
-
-\change_inserted -712698321 1482666837
 
 \family sans
 \begin_inset Quotes rld
@@ -17865,8 +17629,6 @@ g., in Russia)
 \begin_layout Labeling
 \labelwidthstring <<Outer>> and <<inner>>:
 
-\change_inserted -712698321 1482756796
-
 \family sans
 \begin_inset Quotes wld
 \end_inset
@@ -17914,8 +17676,6 @@ these inner
 
 \begin_layout Labeling
 \labelwidthstring <<Outer>> and <<inner>>:
-
-\change_inserted -712698321 1482757086
 \begin_inset Quotes jld
 \end_inset
 
@@ -17976,12 +17736,8 @@ g., in Japan)
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1482757158
 Note that these characters are just emulated with similar-looking math symbols
  in many encodings that do not cover these glyphs.
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -17991,8 +17747,6 @@ Note that these characters are just emulated with similar-looking math symbols
 
 \begin_layout Labeling
 \labelwidthstring <<Outer>> and <<inner>>:
-
-\change_inserted -712698321 1482757171
 \begin_inset Quotes kld
 \end_inset
 
@@ -18053,8 +17807,6 @@ g., in North Korea and China)
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1482757171
 Note that these characters are just emulated with similar-looking math symbols
  in many encodings that do not cover these glyphs.
 \end_layout
@@ -18062,28 +17814,14 @@ Note that these characters are just emulated with similar-looking math symbols
 \end_inset
 
 
-\change_unchanged
-
 \end_layout
 
 \begin_layout Standard
-
-\change_deleted -712698321 1482667281
-For single
-\change_inserted -712698321 1482667281
-Inner
-\change_unchanged
- quot
-\change_deleted -712698321 1482666272
-es
-\change_inserted -712698321 1482667398
-ation marks
+Inner quotation marks
 \begin_inset Foot
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1482668512
 In many writing cultures, these are single quotation marks.
  But as the British and French styles show, this is not necessarily the
  case (and specifically the British style shows that 
@@ -18120,17 +17858,11 @@ outer
 \end_inset
 
  quotation marks.
-\change_unchanged
-
 \end_layout
 
 \end_inset
 
-
-\change_unchanged
- 
-\change_inserted -712698321 1482668702
-for quotations inside quotations (and other tasks in some languages, such
+ for quotations inside quotations (and other tasks in some languages, such
  as 
 \begin_inset Quotes els
 \end_inset
@@ -18139,35 +17871,21 @@ scare quotes
 \begin_inset Quotes ers
 \end_inset
 
-) 
-\change_deleted -712698321 1482667343
-you have to use
-\change_inserted -712698321 1482667350
-can be obtained by means of
-\change_unchanged
- the shortcut 
+) can be obtained by means of the shortcut 
 \begin_inset Info
 type  "shortcut"
-arg   "quote-insert single"
+arg   "quote-insert inner"
 \end_inset
 
-
-\change_inserted -712698321 1482668731
  and via the 
 \family sans
 Insert\SpecialChar menuseparator
 Special Characters
 \family default
- menu
-\change_unchanged
-.
-\change_inserted -712698321 1482667602
-
+ menu.
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1482668992
 By default, the quotation mark styles are persistent.
  That is to say, a quotation mark maintains the style that was current when
  it was inserted, even if the document-wide style changes.
@@ -18194,8 +17912,6 @@ g., if your publisher requests a different style).
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1482667904
 Individual quotation marks (i.
 \begin_inset space \thinspace{}
 \end_inset
@@ -18203,8 +17919,6 @@ Individual quotation marks (i.
 e., their level [inner, outer], side [opening, closing], and style) can be
  easily switched by a context menu that pops up if you right-click on a
  mark.
-\change_unchanged
-
 \end_layout
 
 \begin_layout Subsection
@@ -18375,13 +18089,7 @@ fest
 \begin_layout Subsection
 \SpecialChar LyX
  and \SpecialChar LaTeX
- 
-\change_deleted -712698321 1482669270
-l
-\change_inserted -712698321 1482669270
-L
-\change_unchanged
-ogos
+ Logos
 \begin_inset Index idx
 status collapsed
 
@@ -27309,7 +27017,7 @@ reference "subsec:Protected-Space"
 \end_layout
 
 \begin_layout Standard
-There are six formats of cross-references:
+There are eight formats of cross-references:
 \end_layout
 
 \begin_layout Description
@@ -27467,7 +27175,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! prettyref
+ packages ! prettyref
 \end_layout
 
 \end_inset
@@ -27478,7 +27186,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! refstyle
+ packages ! refstyle
 \end_layout
 
 \end_inset
@@ -27541,19 +27249,11 @@ fig
 \begin_inset Quotes erd
 \end_inset
 
-) can be done
-\change_inserted 424524441 1483414614
-, for 
+) can be done for 
 \series bold
 refstyle
 \series default
-,
-\change_unchanged
- with this command
-\change_inserted 424524441 1483414616
-:
-\change_unchanged
-
+ with this command:
 \begin_inset Newline newline
 \end_inset
 
@@ -27564,23 +27264,20 @@ refstyle
 newref{fig}{refcmd={Image on page 
 \backslash
 pageref{#1}}}
-\change_inserted 424524441 1484857490
-
 \series default
 
 \begin_inset Newline newline
 \end_inset
 
-Please note that neither 
+Note that neither 
 \series bold
 prettyref
 \series default
  nor 
 \series bold
-refstyle
+refstyle 
 \series default
- (nor \SpecialChar LyX
- itself) predefines reference formats for all available types.
+predefines reference formats for all available types.
  This is especially true for the wide variety of mathematical `theorem'
  environments.
  So if you want to make formatted references to, say, Propositions, then
@@ -27600,24 +27297,13 @@ prettyref
 newrefformat{prop}{Proposition 
 \backslash
 ref{#1}}
-\change_unchanged
-
 \series default
 
 \begin_inset Newline newline
 \end_inset
 
-For more information about 
-\change_inserted 424524441 1484843645
-defining formatted references
-\change_deleted 424524441 1484843647
-the format
-\change_unchanged
-, have a look at the package documentation
-\change_deleted 424524441 1484843659
-s,
-\change_unchanged
- 
+For more information about defining formatted references, have a look at
+ the package documentation 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "prettyref,refstyle"
@@ -27626,18 +27312,22 @@ literal "true"
 \end_inset
 
 .
-\change_inserted 424524441 1484843594
-
 \begin_inset Newline newline
 \end_inset
 
-The `Plural' and `Capitalized' options will be available with formatted
- references only if you are using the 
+The options 
+\family sans
+Plural
+\family default
+ and 
+\family sans
+Capitalized
+\family default
+ will be available with formatted references only if you are using the 
 \series bold
 refstyle
 \series default
  package.
- See its documentation, again, for more information.
 \end_layout
 
 \begin_layout Description
@@ -27653,33 +27343,41 @@ reference "fig:Two-distorted-images"
 \end_inset
 
 
-\change_inserted 424524441 1483414460
-
 \end_layout
 
 \begin_layout Description
-
-\change_inserted 424524441 1483817846
 Label
 \begin_inset space ~
 \end_inset
 
 only: prints only the \SpecialChar LaTeX
- label for the reference.
- This allows for customization, using ERT, if you want to issue a command
- that LyX does not support.
+ label for the reference: 
+\begin_inset CommandInset ref
+LatexCommand labelonly
+reference "fig:Two-distorted-images"
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This allows for customization, using \SpecialChar TeX
+ Code, if you want to issue a command
+ that \SpecialChar LyX
+ does not support.
  If you are using 
 \series bold
 refstyle
 \series default
 , then you may want to use the 
-\begin_inset Quotes eld
+\family sans
+No
+\begin_inset space ~
 \end_inset
 
-No prefix
-\begin_inset Quotes erd
-\end_inset
-
+Prefix
+\family default
  option, which will output only the part of the reference following the
  
 \begin_inset Quotes eld
@@ -27690,18 +27388,20 @@ No prefix
 \end_inset
 
  separator.
- This is the form needed for, e.g., 
+ This is the form needed for e.
+\begin_inset space \thinspace{}
+\end_inset
+
+g.
+\begin_inset space \space{}
+\end_inset
+
+
 \series bold
 refstyle
 \series default
-'s range commands.
-\change_deleted 424524441 1483414539
-
-\end_layout
-
-\begin_layout Standard
-The number and current page of the referenced document part in the output
- is automatically calculated by \SpecialChar LaTeX
+'s range commands.The number and current page of the referenced document
+ part in the output is automatically calculated by \SpecialChar LaTeX
 .
  The varieties are adjusted in the field 
 \family sans
@@ -27805,87 +27505,6 @@ Embedded
 Objects
 \emph default
  manual.
-\change_inserted 424524441 1483414754
-
-\end_layout
-
-\begin_layout Standard
-
-\change_inserted 424524441 1483414754
-\begin_inset Note Greyedout
-status open
-
-\begin_layout Plain Layout
-
-\change_inserted 424524441 1483414754
-
-\series bold
-Note:
-\series default
- It is recommended to use the \SpecialChar LaTeX
--package 
-\series bold
-refstyle
-\series default
-
-\begin_inset Index idx
-status collapsed
-
-\begin_layout Plain Layout
-
-\change_inserted 424524441 1483414754
-\SpecialChar LaTeX
--packages ! refstyle
-\end_layout
-
-\end_inset
-
- because 
-\series bold
-prettyref
-\series default
-
-\begin_inset Index idx
-status collapsed
-
-\begin_layout Plain Layout
-
-\change_inserted 424524441 1483414754
-\SpecialChar LaTeX
--packages ! prettyref
-\end_layout
-
-\end_inset
-
- does not know all of \SpecialChar LyX
-'s possible label shortcuts
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-
-\change_inserted 424524441 1483414754
-\begin_inset Quotes eld
-\end_inset
-
-fig:
-\begin_inset Quotes erd
-\end_inset
-
- is for example \SpecialChar LyX
-'s shortcut for labels in figure captions.
-\end_layout
-
-\end_inset
-
- and is not internationalized.
-\end_layout
-
-\end_inset
-
-
-\change_unchanged
-
 \end_layout
 
 \begin_layout Section
@@ -28354,41 +27973,8 @@ name "sec:Bibliography"
 
 \begin_layout Standard
 There are two ways of generating the bibliography in a \SpecialChar LyX
-
-\change_inserted -712698321 1483880152
- 
-\change_deleted -712698321 1483880151
--
-\change_unchanged
-document.
- You can include a bibliography database,
-\change_deleted -712698321 1483880276
-
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-Known under the name 
-\begin_inset Quotes eld
-\end_inset
-
-Bib\SpecialChar TeX
- database
-\begin_inset Quotes erd
-\end_inset
-
-.
-\end_layout
-
-\end_inset
-
-
-\change_unchanged
- which is explained in 
-\change_deleted -712698321 1483883190
-the next subsection
-\change_inserted -712698321 1483890955
-sec.
+ document.
+ You can include a bibliography database, which is explained in sec.
 \begin_inset space ~
 \end_inset
 
@@ -28402,28 +27988,12 @@ noprefix "false"
 
 \end_inset
 
-
-\change_unchanged
 , or you can insert the bibliography manually, using the paragraph environment
  
 \family sans
 Bibliography
 \family default
-, which 
-\change_deleted -712698321 1483883190
-wa
-\change_inserted -712698321 1483883190
-i
-\change_unchanged
-s described in 
-\change_inserted -712698321 1483883197
-the following 
-\change_unchanged
-section
-\change_inserted -712698321 1483890942
- (but see also sec.
-\change_unchanged
-
+, which is described in the following section (but see also sec.
 \begin_inset space ~
 \end_inset
 
@@ -28434,46 +28004,17 @@ reference "subsec:Biblio_environment"
 
 \end_inset
 
-
-\change_inserted -712698321 1483883212
-)
-\change_unchanged
-.
+).
  If you want anything other than the numerical citations that are used in
- this document, 
-\change_deleted -712698321 1483883190
-like
-\change_inserted -712698321 1483880176
-such as
-\change_unchanged
- author-year citations, 
-\change_inserted -712698321 1483883518
-and if you have more than a handful of references, 
-\change_unchanged
-then you 
-\change_deleted -712698321 1483883190
-must
-\change_inserted -712698321 1483883526
-should seriously consider
-\change_unchanged
-
+ this document, such as author-year citations, and if you have more than
+ a handful of references, then you should seriously consider
 \emph on
  
 \emph default
-us
-\change_inserted -712698321 1483880298
-ing
-\change_deleted -712698321 1483883190
-e
-\change_unchanged
- a bibliography database.
-\change_inserted -712698321 1483883092
-
+using a bibliography database.
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483883578
 In order to demonstrate the difference between these two approaches, we
  use two bibliographies in this document, a 
 \family sans
@@ -28484,13 +28025,10 @@ Bibliography
  only the database entries that are referenced in the document.
  In other words, the database approach relieves you, amongst other things,
  from the burden to check which entries you have actually cited.
-\change_unchanged
-
 \end_layout
 
 \begin_layout Subsection
-
-\change_inserted -712698321 1483885645
+The Bibliography Environment
 \begin_inset CommandInset label
 LatexCommand label
 name "subsec:The-Bibliography-Environment"
@@ -28498,8 +28036,6 @@ name "subsec:The-Bibliography-Environment"
 \end_inset
 
 
-\change_unchanged
-The Bibliography Environment
 \end_layout
 
 \begin_layout Standard
@@ -28520,15 +28056,46 @@ Label
 .
  The key is the symbolic name by which you will refer to this bibliography
  entry.
- 
-\change_inserted -712698321 1483880726
-Each entry needs to be given a unique key, which is one word consisting
+ Each entry needs to be given a unique key, which is one word consisting
  of ASCII characters only.
- 
-\change_unchanged
-For example, our second entry in the bibliography is a book about \SpecialChar LaTeX
- and we
- used 
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+ASCII means 
+\begin_inset CommandInset href
+LatexCommand href
+name "this set"
+target "https://en.wikipedia.org/wiki/ASCII#Character_set"
+literal "false"
+
+\end_inset
+
+ of characters:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://en.wikipedia.org/wiki/ASCII
+\backslash
+#Character_set
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ For example, our second entry in the bibliography is a book about \SpecialChar LaTeX
+ and
+ we used 
 \begin_inset Quotes eld
 \end_inset
 
@@ -28537,8 +28104,6 @@ latexcompanion
 \end_inset
 
 , a short form of its title, as the key.
-\change_inserted -712698321 1483880732
-
 \end_layout
 
 \begin_layout Standard
@@ -28619,17 +28184,26 @@ literal "true"
 \end_inset
 
 
-\change_inserted -712698321 1483880908
-
 \end_layout
 
 \begin_layout Standard
+You can also produce author-year or author-number citations, using the \SpecialChar LaTeX
 
-\change_inserted -712698321 1483881419
-You can also produce author-year or author-number citations, using 
-\family sans
+ package 
+\series bold
 natbib
-\family default
+\series default
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+ packages ! natbib
+\end_layout
+
+\end_inset
+
 .
  In order to do so, the label needs to be given the form 
 \begin_inset Quotes eld
@@ -28656,19 +28230,16 @@ without
  Then, if you select 
 \family sans
 Natbib
-\family default
- in the 
-\family sans
-Document\SpecialChar menuseparator
-Settings
-\family default
+\begin_inset space ~
+\end_inset
 
+(BibTeX)
+\family default
+ in the document settings
 \begin_inset Index idx
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483881295
 Document ! Settings
 \end_layout
 
@@ -28677,9 +28248,13 @@ Document ! Settings
  dialog under 
 \family sans
 Bibliography\SpecialChar menuseparator
-Style engines
+Style
+\begin_inset space ~
+\end_inset
+
+format
 \family default
- (see below 
+ (see 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "subsec:Citation-Format"
@@ -28690,8 +28265,6 @@ noprefix "false"
 \end_inset
 
 ), you can select between different author-year or author-number styles.
-\change_unchanged
-
 \end_layout
 
 \begin_layout Standard
@@ -28717,11 +28290,6 @@ arg   "layout-paragraph"
 
 \begin_layout Subsection
 Bibliography databases
-\change_deleted -712698321 1483882661
- (Bib\SpecialChar TeX
-)
-\change_unchanged
-
 \begin_inset Index idx
 status collapsed
 
@@ -28731,21 +28299,6 @@ Bibliography ! Databases
 
 \end_inset
 
-
-\change_deleted -712698321 1483882653
-
-\begin_inset Index idx
-status collapsed
-
-\begin_layout Plain Layout
-Bibliography ! Bib\SpecialChar TeX
-
-\end_layout
-
-\end_inset
-
-
-\change_unchanged
 
 \begin_inset CommandInset label
 LatexCommand label
@@ -28757,13 +28310,8 @@ name "subsec:Bibliography-databases"
 \end_layout
 
 \begin_layout Standard
-Bibliography databases are useful if you use the same 
-\change_deleted -712698321 1483881524
-bibliography
-\change_inserted -712698321 1483881525
-references
-\change_unchanged
- in different documents.
+Bibliography databases are useful if you use the same references in different
+ documents.
 \begin_inset Foot
 status collapsed
 
@@ -28834,80 +28382,110 @@ http://wiki.lyx.org/BibTeX/Programs
 \end_inset
 
 .
-\change_inserted -712698321 1483881708
-
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483885542
 \SpecialChar LyX
  supports two different approaches to use bibliography databases in a document.
  Bib\SpecialChar TeX
  is the classic technique that has been the only way to use such databases
  for a long time.
- It is quite established and mature, and there is a huge range of existing
- styles available, but it has its drawbacks, especially when it comes to
- more complex bibliographic needs and support for specific languages and
- scripts.
- Those are addressed by a rather new and ambitious approach, 
-\family sans
-Biblatex
-\family default
-.
- 
-\family sans
-Biblatex
-\family default
- reads the same database format than Bib\SpecialChar TeX
- (although it has been significantly
- extended beyond Bib\SpecialChar TeX
-'s scope
-\begin_inset Foot
+ It is quite established and mature and there is a huge range of existing
+ styles available.
+ But it has its drawbacks, especially when it comes to more complex bibliographi
+c needs and support for specific languages and scripts.
+ Those are addressed by 
+\series bold
+biblatex
+\series default
+
+\begin_inset Index idx
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483882543
-Meaning: While 
-\family sans
-Biblatex
-\family default
- can handle any classic Bib\SpecialChar TeX
- database, Bib\SpecialChar TeX
- might conversely fail to correctly
- handle databases that use specific 
-\family sans
-Biblatex
-\family default
- features.
-\change_unchanged
-
+\SpecialChar LaTeX
+ packages ! biblatex
 \end_layout
 
 \end_inset
 
-), but it uses a different framework to generate citations and references
+.
+ It reads the same database format than Bib\SpecialChar TeX
+ (although it has been significantly
+ extended beyond Bib\SpecialChar TeX
+'s scope)
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Meaning: While 
+\noun on
+Biblatex
+\noun default
+ can handle any classic Bib\SpecialChar TeX
+ database, Bib\SpecialChar TeX
+ might conversely fail to correctly
+ handle databases that use specific 
+\noun on
+Biblatex
+\noun default
+ features.
+\end_layout
+
+\end_inset
+
+, but it uses a different framework to generate citations and references
  from it.
 \end_layout
 
 \begin_layout Standard
+To select if Bib\SpecialChar TeX
+ or 
+\series bold
+biblatex
+\series default
+ should be used, set in the document settings (menu 
+\family sans
+Document\SpecialChar menuseparator
+Settings
+\family default
+)
+\begin_inset Index idx
+status collapsed
 
-\change_inserted -712698321 1483882638
-Both approaches are described in turn.
+\begin_layout Plain Layout
+Document ! Settings
+\end_layout
+
+\end_inset
+
+ under 
+\family sans
+Bibliography
+\family default
+ the 
+\family sans
+Style
+\begin_inset space ~
+\end_inset
+
+format
+\family default
+ to a Bib\SpecialChar TeX
+ or a 
+\family sans
+Biblatex
+\family default
+ format.
 \end_layout
 
 \begin_layout Subsubsection
-
-\change_inserted -712698321 1483882655
 Bib\SpecialChar TeX
 
 \begin_inset Index idx
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483882655
 Bibliography ! Bib\SpecialChar TeX
 
 \end_layout
@@ -28915,22 +28493,10 @@ Bibliography ! Bib\SpecialChar TeX
 \end_inset
 
 
-\change_unchanged
-
 \end_layout
 
 \begin_layout Standard
-To 
-\change_deleted -712698321 1483882678
-use
-\change_inserted -712698321 1483882681
-access
-\change_unchanged
- a database
-\change_inserted -712698321 1483882690
- via Bib\SpecialChar TeX
-
-\change_unchanged
+To access a database via Bib\SpecialChar TeX
 , use the menu 
 \family sans
 Insert\SpecialChar menuseparator
@@ -28939,26 +28505,18 @@ List
 /
 \family sans
 TOC\SpecialChar menuseparator
-Bib
-\change_inserted -712698321 1483882685
-(la)
-\change_unchanged
-TeX
+Bib(la)TeX
 \begin_inset space ~
 \end_inset
 
 Bibliography
 \family default
 .
- A gray box will be inserted and a window appears.
- In this window you can add one or more databases and select a 
-\change_inserted -712698321 1483882797
-Bib\SpecialChar TeX
+ A window will appear in which you can add one or more databases and select
+ a Bib\SpecialChar TeX
 
 \family sans
- 
-\change_unchanged
-style
+ style
 \family default
  file.
  The option 
@@ -28975,12 +28533,8 @@ Content
 \end_layout
 
 \begin_layout Standard
-The 
-\change_inserted -712698321 1483882781
-Bib\SpecialChar TeX
- 
-\change_unchanged
-style file is a text file with the file extension 
+The Bib\SpecialChar TeX
+ style file is a text file with the file extension 
 \begin_inset Quotes eld
 \end_inset
 
@@ -29020,36 +28574,37 @@ literal "false"
 
 \end_inset
 
-
-\change_inserted -712698321 1483883972
- In this document, we used the Bib\SpecialChar TeX
+ In this document we used the Bib\SpecialChar TeX
  style 
 \family sans
 alphadin.bst
 \family default
 , which provides an alpha-numeric style in accordance with the German Standards
  Institute (DIN).
-\change_unchanged
-
 \end_layout
 
 \begin_layout Standard
 Inserting a citation reference works as described in the previous section.
-\change_inserted -712698321 1483883993
-
 \end_layout
 
 \begin_layout Subsubsection
-
-\change_inserted -712698321 1483883999
 Biblatex
 \begin_inset Index idx
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483884003
 Bibliography ! Biblatex
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+ packages ! biblatex
 \end_layout
 
 \end_inset
@@ -29058,14 +28613,12 @@ Bibliography ! Biblatex
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483884100
 Accessing a database via 
-\family sans
-Biblatex
-\family default
+\series bold
+biblatex
+\series default
  is almost identical to Bib\SpecialChar TeX
-: use the menu 
+: Use the menu 
 \family sans
 Insert\SpecialChar menuseparator
 List
@@ -29080,36 +28633,22 @@ Bib(la)TeX
 Bibliography
 \family default
 .
- A gray box will be inserted and a window appears.
- In this window you can add one or more databases, but as opposed to Bib\SpecialChar TeX
-,
+ In contrary to Bib\SpecialChar TeX
  you cannot select a 
 \family sans
 style
 \family default
- file (we will explain later, why).
- As with Bib\SpecialChar TeX
-, the option 
-\family sans
-Add bibliography to TOC
-\family default
- adds a table of contents entry for the bibliography.
- In the 
-\family sans
-Content
-\family default
- drop box you can select whether to include all the entries in the database
- in the document or just the cited references.
+ file.
+ The other dialog options are the same as with Bib\SpecialChar TeX
+.
 \end_layout
 
 \begin_layout Standard
 
-\change_inserted -712698321 1483884492
-
-\family sans
-Biblatex
-\family default
- has two different style files: a bibliography style file (a text file with
+\series bold
+biblatex
+\series default
+ has two different style files: a bibliography style file (text file with
  the file extension 
 \begin_inset Quotes eld
 \end_inset
@@ -29122,8 +28661,8 @@ Biblatex
 \begin_inset Quotes erd
 \end_inset
 
-) controls how the bibliography entries will look like, and a citation style
- file (extension 
+) controls how the bibliography entries will look like and a citation style
+ file (text file with the file extension 
 \begin_inset Quotes eld
 \end_inset
 
@@ -29136,18 +28675,17 @@ Biblatex
 \end_inset
 
 ) controls the look of the citation references in the text.
- Usually, such style files come in pairs, and it makes most sense to use
- matching styles, but it is possible to mix any citation style with any
- bibliography style.
+ Usually such style files come in pairs and it makes sense to use matching
+ styles.
+ It is nevertheless possible to mix any citation style with any bibliography
+ style.
 \end_layout
 
 \begin_layout Standard
 
-\change_inserted -712698321 1483891283
-
-\family sans
-Biblatex
-\family default
+\series bold
+biblatex
+\series default
  styles are not set in the 
 \family sans
 Bib(la)TeX
@@ -29156,32 +28694,31 @@ Bib(la)TeX
 
 Bibliography
 \family default
- dialog, but in the 
-\family sans
-Document Settings
-\family default
- dialog (in 
-\family sans
-Document\SpecialChar menuseparator
-Settings\SpecialChar menuseparator
-Bibliography
-\family default
-).
- However, in the former dialog (in the 
+ dialog, but in the document settings.
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Document ! Settings
+\end_layout
+
+\end_inset
+
+ However, in the dialog in the 
 \family sans
 Options
 \family default
- field which is only visible if you use 
-\family sans
-Biblatex
-\family default
-), you can enter options that change the way the bibliography is displayed
- (for instance concerning its heading).
- These options are detailed in the 
-\family sans
-Biblatex
-\family default
- manual 
+ field, which is only visible if you use 
+\series bold
+biblatex
+\series default
+, you can enter options that determine how the bibliography is printed (for
+ example how its heading will appear).
+ These options are deescribed in detail in the 
+\series bold
+biblatex
+\series default
+ manual, 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Biblatex"
@@ -29190,13 +28727,9 @@ literal "true"
 \end_inset
 
 .
-\change_unchanged
-
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483885667
 Inserting a citation reference works as described in section
 \begin_inset space ~
 \end_inset
@@ -29215,8 +28748,6 @@ noprefix "false"
 \end_layout
 
 \begin_layout Subsubsection
-
-\change_inserted -712698321 1483885726
 Bibliography Processors
 \end_layout
 
@@ -29305,20 +28836,35 @@ available by default
 
 \begin_layout Description
 biber 
+\change_inserted -712698321 1483886386
+a specific, modern processor
+\change_unchanged
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+ packages ! biber
+\end_layout
+
+\end_inset
+
+
 \change_inserted -712698321 1483886257
-a specific, modern processor developed exclusively for 
-\family sans
+ developed exclusively for 
+\noun on
 Biblatex
-\family default
+\noun default
  (it does not work with Bib\SpecialChar TeX
 !).
  
-\family sans
-Biber
-\family default
- 
 \change_unchanged
-provides full Unicode support, unlimited memory
+
+\series bold
+biber
+\series default
+ provides full Unicode support, unlimited memory
 \change_deleted -712698321 1483886272
 , but does not work with other bibliography packages (e.
 \begin_inset space \thinspace{}
@@ -29339,9 +28885,13 @@ biblatex
 
 \series default
  and many specific features 
-\family sans
-Biblatex
-\family default
+\change_unchanged
+
+\series bold
+biblatex
+\change_inserted -712698321 1483886347
+
+\series default
  makes use of
 \change_unchanged
 ; 
@@ -29350,9 +28900,13 @@ recommended for multilingual texts and for languages that don't use Latin
  letters
 \change_inserted -712698321 1483886386
 if you use the 
-\family sans
-Biblatex
-\family default
+\change_unchanged
+
+\series bold
+biblatex
+\change_inserted -712698321 1483886386
+
+\series default
  approach, it is strongly recommended to use 
 \family sans
 biber
@@ -29372,19 +28926,15 @@ except
 although
 \change_unchanged
  
-\change_inserted -712698321 1483886476
-it will probably fail with even moderately sized 
-\change_deleted -712698321 1483886506
-b
 \change_inserted -712698321 1483886506
-
-\family sans
-B
+it will probably fail with even moderately sized 
 \change_unchanged
-iblatex
+
+\noun on
+Biblatex
 \change_inserted -712698321 1483886524
 
-\family default
+\noun default
  bibliographies, due to the limited memory.
 \change_unchanged
 
@@ -29402,13 +28952,21 @@ bibtex
 , works with all bibliography packages
 \change_inserted -712698321 1484330876
 , although more complex 
-\family sans
-Biblatex
-\family default
+\change_unchanged
+
+\series bold
+biblatex
+\change_inserted -712698321 1484330876
+
+\series default
  bibliographies will exceed its limits, and not all 
-\family sans
-Biblatex
-\family default
+\change_unchanged
+
+\series bold
+biblatex
+\change_inserted -712698321 1484330876
+
+\series default
  features are supported.
 \end_layout
 
@@ -29447,10 +29005,22 @@ LaTeX
 ), \SpecialChar LyX
  selects the most appropriate (available) processor for the current bibliogra
 phy approach (
-\family sans
+\change_unchanged
+
+\series bold
 biber
-\family default
- for Biblatex, 
+\change_inserted -712698321 1484331301
+
+\series default
+ for 
+\change_unchanged
+
+\series bold
+biblatex
+\change_inserted -712698321 1484331301
+
+\series default
+, 
 \family sans
 bibtex
 \family default
@@ -29487,69 +29057,27 @@ LaTeX
 \end_layout
 
 \begin_layout Standard
-
-\change_deleted -712698321 1483886683
-Bib\SpecialChar TeX
-
-\change_inserted -712698321 1484331419
-Selected bibliography processors
-\change_unchanged
- can be controlled with options that you can add below the 
-\change_deleted -712698321 1484331437
-specification of the variants
-\change_inserted -712698321 1484331439
-selection
-\change_unchanged
-.
+Selected bibliography processors can be controlled with options that you
+ can add below the selection.
  Before adding options, it is strongly recommended that you read the manual
- 
-\change_inserted -712698321 1483886810
-pages 
-\change_unchanged
-of 
-\change_deleted -712698321 1483886842
-
-\family sans
-Bib\SpecialChar TeX
-
-\change_inserted -712698321 1483886842
-bibtex
-\change_unchanged
-
-\family default
- 
-\change_deleted -712698321 1483886972
-
+ of Bib\SpecialChar TeX
+ or 
+\series bold
+biber
+\series default
+, 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "BibTeX"
+key "BibTeX,biber"
 literal "true"
 
 \end_inset
 
-
-\change_inserted -712698321 1483886836
- or 
-\family sans
-bibtex8
-\family default
-, or the 
-\family sans
-biber
-\family default
- manual
-\change_unchanged
 .
-\change_inserted -712698321 1483887134
-
 \end_layout
 
 \begin_layout Subsubsection
-
-\change_inserted -712698321 1483887497
 Customizing
-\change_unchanged
-
 \end_layout
 
 \begin_layout Standard
@@ -29595,6 +29123,10 @@ Customizing Bibliographies
 \emph on
 with Bib\SpecialChar TeX
 
+\change_inserted -712698321 1501054457
+ or Biblatex
+\change_unchanged
+
 \emph default
  of the 
 \emph on
@@ -29631,16 +29163,12 @@ Bibliography ! Citation format
 \end_inset
 
 
-\change_inserted -712698321 1483881374
-
 \begin_inset CommandInset label
 LatexCommand label
 name "subsec:Citation-Format"
 
 \end_inset
 
-
-\change_unchanged
 
 \end_layout
 
@@ -29733,9 +29261,9 @@ reference "subsec:The-Bibliography-Environment"
 \change_inserted -712698321 1483888505
 All other choices require a database approach, either Bib\SpecialChar TeX
  or 
-\family sans
+\noun on
 Biblatex
-\family default
+\noun default
  (see 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -29750,31 +29278,24 @@ noprefix "false"
  Currently, the following options are available:
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Description
+Basic
+\begin_inset space ~
+\end_inset
 
+(BibTeX) 
 \change_inserted -712698321 1483888574
-
-\family sans
-Basic (BibTeX)
-\family default
-: the default 
+the default 
 \family sans
 BibTeX-based approached without any additional packages (simple numeric
  citations)
 \end_layout
 
-\begin_layout Itemize
-
+\begin_layout Description
+Biblatex 
 \change_inserted -712698321 1483889266
-
-\family sans
-Biblatex
-\family default
-: loads the 
-\family sans
-Biblatex
-\family default
- package and lets you select a style in the combo boxes 
+loads the Biblatex package and lets you select a style in the combo boxes
+ 
 \family sans
 Biblatex citation style
 \family default
@@ -29795,14 +29316,18 @@ Options
  field.
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Description
+Biblatex
+\begin_inset space ~
+\end_inset
 
+(natbib
+\begin_inset space ~
+\end_inset
+
+mode) 
 \change_inserted -712698321 1483889302
-
-\family sans
-Biblatex (natbib mode)
-\family default
-: loads the 
+loads the 
 \family sans
 Biblatex
 \family default
@@ -29832,34 +29357,34 @@ Biblatex
 , this option has some additional styles.
  Style selection and option handling are identical.
  All 
-\family sans
+\noun on
 Biblatex
-\family default
+\noun default
  styles are also supported by this variant.
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Description
+Jurabib
+\begin_inset space ~
+\end_inset
 
+(BibTeX) 
 \change_inserted -712698321 1483889321
-
-\family sans
-Jurabib (BibTeX)
-\family default
-: loads the 
+loads the 
 \family sans
 Jurabib
 \family default
  package which provides author-year styles particularly suited for law studies.
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Description
+Natbib
+\begin_inset space ~
+\end_inset
 
+(BibTeX) 
 \change_inserted -712698321 1483891582
-
-\family sans
-Natbib (BibTeX)
-\family default
-: loads the 
+loads the 
 \family sans
 Natbib
 \family default
@@ -30073,10 +29598,10 @@ literal "true"
 
 \begin_layout Standard
 
-\change_inserted -712698321 1484998090
+\change_inserted -712698321 1501054733
 All styles except for 
 \family sans
-Basic
+Basic (BibTeX)
 \family default
  also provide a means to add text that precedes the reference (such as 
 \begin_inset Quotes eld
@@ -31124,7 +30649,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! splitidx
+ packages ! splitidx
 \end_layout
 
 \end_inset
@@ -31307,7 +30832,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! nomencl
+ packages ! nomencl
 \end_layout
 
 \end_inset
@@ -32278,7 +31803,11 @@ inverted 0
 status open
 
 \begin_layout Standard
-Question: Who was the first physics Nobel prize winner?
+
+\series bold
+Question:
+\series default
+ Who was the first physics Nobel prize winner?
 \end_layout
 
 \end_inset
@@ -32292,7 +31821,11 @@ inverted 0
 status collapsed
 
 \begin_layout Standard
-Answer: Wilhelm Conrad Röntgen
+
+\series bold
+Answer:
+\series default
+ Wilhelm Conrad Röntgen
 \end_layout
 
 \end_inset
@@ -32395,69 +31928,56 @@ Exam-Question-Answer.pdf
 
  if both branches were active.
  This helps you to export different versions of your document easily.
-\change_inserted 424524441 1468296009
+\begin_inset VSpace bigskip
+\end_inset
+
 
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted 424524441 1468297080
-As of LyX 2.3.0, there are also 
-\begin_inset Quotes eld
-\end_inset
-
-inverted
-\begin_inset Quotes erd
-\end_inset
-
- branch insets, whose content is output just in case the branch is 
+There are also inverted branch insets, whose content is output just in case
+ the branch is 
 \emph on
 not
 \emph default
  activated.
- 
-\begin_inset Branch Question
+ This make it easy to add alternative text for different versions of a document.
+ To control whether a particular inset is inverted, right-click on the inset
+ button and choose 
+\family sans
+Invert
+\begin_inset space ~
+\end_inset
+
+Inset
+\family default
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Branch Answer
 inverted 1
 status open
 
 \begin_layout Standard
 
-\change_inserted 424524441 1468296217
-For example, this material will only appear when the Question branch is
- deactivated.
-\change_unchanged
+\series bold
+No answer:
+\series default
+ Because the 
+\begin_inset Quotes eld
+\end_inset
 
+Answer
+\begin_inset Quotes erd
+\end_inset
+
+ branch is deactivated.
 \end_layout
 
 \end_inset
 
- This make it easy to add alternative text for different versions of a document.
- To control whether a particular inset is 
-\begin_inset Quotes eld
-\end_inset
 
-inverted
-\begin_inset Quotes erd
-\end_inset
-
-, right-click on the inset button and choose 
-\begin_inset Quotes eld
-\end_inset
-
-
-\change_unchanged
-Invert Inset
-\change_inserted 424524441 1468297080
-
-\begin_inset Quotes erd
-\end_inset
-
-.
-\change_deleted 424524441 1468296150
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset VSpace bigskip
 \end_inset
 
@@ -32581,7 +32101,7 @@ status collapsed
 
 \begin_layout Standard
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -32717,7 +32237,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! hyperref
+ packages ! hyperref
 \end_layout
 
 \end_inset
@@ -33213,7 +32733,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! caption
+ packages ! caption
 \end_layout
 
 \end_inset
@@ -34201,7 +33721,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! fancyhdr
+ packages ! fancyhdr
 \end_layout
 
 \end_inset
@@ -34433,7 +33953,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! preview-latex
+ packages ! preview-latex
 \end_layout
 
 \end_inset
@@ -36783,7 +36303,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! dvipost
+ packages ! dvipost
 \end_layout
 
 \end_inset
@@ -38846,7 +38366,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! tipa
+ packages ! tipa
 \end_layout
 
 \end_inset
@@ -39876,21 +39396,6 @@ Inserts the actual date.
  The format depends on the date format of the language that is used for
  \SpecialChar LyX
 's menus.
- \SpecialChar LyX
- offers various ways to insert a date which are explained and also compared
- in the section 
-\emph on
-External Material
-\emph default
- of the 
-\emph on
-Embedded
-\begin_inset space ~
-\end_inset
-
-Objects
-\emph default
- manual.
 \end_layout
 
 \begin_layout Subsection
@@ -43266,7 +42771,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! prettyref
+ packages ! prettyref
 \end_layout
 
 \end_inset
@@ -43277,7 +42782,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! refstyle
+ packages ! refstyle
 \end_layout
 
 \end_inset
@@ -43652,7 +43157,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! babel
+ packages ! babel
 \end_layout
 
 \end_inset
@@ -43668,7 +43173,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! polyglossia
+ packages ! polyglossia
 \end_layout
 
 \end_inset
@@ -43754,7 +43259,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! inputenc
+ packages ! inputenc
 \end_layout
 
 \end_inset
@@ -44050,7 +43555,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! CJK
+ packages ! CJK
 \end_layout
 
 \end_inset
@@ -44103,7 +43608,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! japanese
+ packages ! japanese
 \end_layout
 
 \end_inset
@@ -44238,7 +43743,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! CJK
+ packages ! CJK
 \end_layout
 
 \end_inset
@@ -44302,7 +43807,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! ucs
+ packages ! ucs
 \end_layout
 
 \end_inset
@@ -44326,7 +43831,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! inputenc
+ packages ! inputenc
 \end_layout
 
 \end_inset
@@ -44753,14 +44258,8 @@ Bibliography
 \end_layout
 
 \begin_layout Standard
-Here you can specify if a 
-\change_inserted -712698321 1483887883
-specific 
-\change_unchanged
-citation style using the \SpecialChar LaTeX
- packages
-\change_inserted -712698321 1483887840
- 
+Here you can specify if a specific citation style using the \SpecialChar LaTeX
+ packages 
 \series bold
 biblatex
 \series default
@@ -44769,17 +44268,13 @@ biblatex
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483887846
 \SpecialChar LaTeX
--packages ! biblatex
+ packages ! biblatex
 \end_layout
 
 \end_inset
 
-,
-\change_unchanged
- 
+, 
 \series bold
 natbib
 \series default
@@ -44789,7 +44284,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! natbib
+ packages ! natbib
 \end_layout
 
 \end_inset
@@ -44804,20 +44299,14 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! jurabib
+ packages ! jurabib
 \end_layout
 
 \end_inset
 
  should be used.
- 
-\change_inserted -712698321 1483887869
-If you use Bib\SpecialChar TeX
-, y
-\change_deleted -712698321 1483887870
-Y
-\change_unchanged
-ou can enable a 
+ If you use Bib\SpecialChar TeX
+, you can enable a 
 \family sans
 Sectioned bibliography
 \family default
@@ -44832,38 +44321,23 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! bibtopic
+ packages ! bibtopic
 \end_layout
 
 \end_inset
 
-
-\change_inserted -712698321 1483887945
 .
- If you use Biblatex, you can select the style files and specify further
- options.
-
-\change_unchanged
- 
-\change_inserted -712698321 1483887949
-Finally,
-\change_deleted -712698321 1483887950
-and
-\change_unchanged
- you can select a
-\change_inserted -712698321 1483887962
- document-specific
-\change_unchanged
- 
+ If you use 
+\noun on
+Biblatex
+\noun default
+, you can select the style files and specify further options.
+ Finally, you can select a document-specific 
 \family sans
 Processor
 \family default
  for the generation of the bibliography.
- For a further description 
-\change_inserted -712698321 1483887970
-of all this, 
-\change_unchanged
-see section
+ For a further description of these possibilities see section
 \begin_inset space ~
 \end_inset
 
@@ -44937,7 +44411,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! amsmath
+ packages ! amsmath
 \end_layout
 
 \end_inset
@@ -44952,7 +44426,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! amssymb
+ packages ! amssymb
 \end_layout
 
 \end_inset
@@ -44967,7 +44441,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! cancel
+ packages ! cancel
 \end_layout
 
 \end_inset
@@ -44982,7 +44456,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! esint
+ packages ! esint
 \end_layout
 
 \end_inset
@@ -44997,7 +44471,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! mathdots
+ packages ! mathdots
 \end_layout
 
 \end_inset
@@ -45012,7 +44486,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! mathtools
+ packages ! mathtools
 \end_layout
 
 \end_inset
@@ -45027,7 +44501,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! mhchem
+ packages ! mhchem
 \end_layout
 
 \end_inset
@@ -45042,7 +44516,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! stackrel
+ packages ! stackrel
 \end_layout
 
 \end_inset
@@ -45057,7 +44531,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! stmaryrd
+ packages ! stmaryrd
 \end_layout
 
 \end_inset
@@ -45072,7 +44546,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! undertilde
+ packages ! undertilde
 \end_layout
 
 \end_inset
@@ -46210,12 +45684,8 @@ arg   "closetab"
 \family default
 ) at the right side of the tab bar to close tabs.
  Otherwise every document tab has its own close button.
-
-\change_inserted 274215730 1469338548
- Regardless of this option, one may always close a tab by middle-clicking
+ Regardless of this option, one can always close a tab by middle-clicking
  it in the tab bar.
-\change_unchanged
-
 \end_layout
 
 \begin_layout Standard
@@ -47534,7 +47004,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! babel
+ packages ! babel
 \end_layout
 
 \end_inset
@@ -47554,7 +47024,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! polyglossia
+ packages ! polyglossia
 \end_layout
 
 \end_inset
@@ -49631,13 +49101,9 @@ http://www.ctan.org/tex-archive/info/bibtex/tamethebeast/ttb_en.pdf
 \end_inset
 
 
-\change_inserted -712698321 1483884806
-
 \end_layout
 
 \begin_layout Bibliography
-
-\change_inserted -712698321 1483884882
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
 key "Biblatex"
@@ -49648,17 +49114,29 @@ literal "true"
 
 \begin_inset CommandInset href
 LatexCommand href
-name "Manual"
+name "Documentation"
 target "http://www.ctan.org/macros/latex/contrib/biblatex/doc/biblatex.pdf"
 literal "false"
 
 \end_inset
 
- of the 
-\family sans
-Biblatex
-\family default
- package:
+ of the \SpecialChar LaTeX
+ package 
+\series bold
+biblatex
+\series default
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+ packages ! biblatex
+\end_layout
+
+\end_inset
+
+:
 \begin_inset Newline newline
 \end_inset
 
@@ -49668,15 +49146,62 @@ status collapsed
 
 \begin_layout Plain Layout
 
-\change_inserted -712698321 1483884888
-
 http://mirrors.ctan.org/macros/latex/contrib/biblatex/doc/biblatex.pdf
 \end_layout
 
 \end_inset
 
 
-\change_unchanged
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "biber"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset href
+LatexCommand href
+name "Documentation"
+target "http://mirrors.ctan.org/biblio/biber/documentation/biber.pdf"
+literal "false"
+
+\end_inset
+
+ of the \SpecialChar LaTeX
+ package 
+\series bold
+biber
+\series default
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+ packages ! biber
+\end_layout
+
+\end_inset
+
+:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://mirrors.ctan.org/biblio/biber/documentation/biber.pdf
+\end_layout
+
+\end_inset
+
 
 \end_layout
 
@@ -49851,7 +49376,7 @@ literal "false"
 \end_inset
 
  of the \SpecialChar LaTeX
--package 
+ package 
 \series bold
 caption
 \series default
@@ -49861,7 +49386,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! caption
+ packages ! caption
 \end_layout
 
 \end_inset
@@ -49902,7 +49427,7 @@ literal "false"
 \end_inset
 
  of the \SpecialChar LaTeX
--package 
+ package 
 \series bold
 enumitem
 \series default
@@ -49912,7 +49437,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! enumitem
+ packages ! enumitem
 \end_layout
 
 \end_inset
@@ -49953,7 +49478,7 @@ literal "false"
 \end_inset
 
  of the \SpecialChar LaTeX
--package 
+ package 
 \series bold
 fancyhdr
 \series default
@@ -49963,7 +49488,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! fancyhdr
+ packages ! fancyhdr
 \end_layout
 
 \end_inset
@@ -50004,7 +49529,7 @@ literal "false"
 \end_inset
 
  of the \SpecialChar LaTeX
--package 
+ package 
 \series bold
 hyperref
 \series default
@@ -50014,7 +49539,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! hyperref
+ packages ! hyperref
 \end_layout
 
 \end_inset
@@ -50055,7 +49580,7 @@ literal "false"
 \end_inset
 
  of the \SpecialChar LaTeX
--package 
+ package 
 \series bold
 nomencl
 \series default
@@ -50065,7 +49590,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! nomencl
+ packages ! nomencl
 \end_layout
 
 \end_inset
@@ -50106,7 +49631,7 @@ literal "false"
 \end_inset
 
  of the \SpecialChar LaTeX
--package 
+ package 
 \series bold
 prettyref
 \series default
@@ -50116,7 +49641,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! prettyref
+ packages ! prettyref
 \end_layout
 
 \end_inset
@@ -50157,7 +49682,7 @@ literal "false"
 \end_inset
 
  of the \SpecialChar LaTeX
--package 
+ package 
 \series bold
 refstyle
 \series default
@@ -50167,7 +49692,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \SpecialChar LaTeX
--packages ! refstyle
+ packages ! refstyle
 \end_layout
 
 \end_inset

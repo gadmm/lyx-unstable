@@ -55,7 +55,7 @@ namespace {
 Package package_;
 bool initialised_ = false;
 
-} // namespace anon
+} // namespace
 
 
 void init_package(string const & command_line_arg0,
@@ -101,7 +101,7 @@ string const & with_version_suffix();
 
 string const fix_dir_name(string const & name);
 
-} // namespace anon
+} // namespace
 
 
 Package::Package(string const & command_line_arg0,
@@ -247,7 +247,7 @@ string const & with_version_suffix()
 	return program_suffix.empty() ? program_suffix : with_version_suffix;
 }
 
-} // namespace anon
+} // namespace
 
 
 FileName const & Package::top_srcdir()
@@ -302,8 +302,8 @@ bool isBuildDir(FileName const & abs_binary, string const & dir_location,
         return true;
     }
     //  cmake file, no Makefile in lib
-    FileName build_boost_dir = FileName(addPath(search_dir + "/3rdparty", "boost"));
-    if (!fileSearch(build_boost_dir.absFileName(), "cmake_install.cmake").empty()) {
+    FileName build_src_dir = FileName(addPath(search_dir, "src"));
+    if (!fileSearch(build_src_dir.absFileName(), "cmake_install.cmake").empty()) {
         return true;
     }
 
@@ -374,7 +374,7 @@ bool doesFileExist(FileName & result, string const & search_dir, string const & 
 bool lyxBinaryPath(FileName & lyx_binary, string const & search_dir, string const & ext)
 {
     lyx_binary = FileName();
-    if(false) {   
+    if(false) {
     } else if (doesFileExist(lyx_binary, search_dir, "lyx" + ext)) {
     } else if (doesFileExist(lyx_binary, search_dir, "LyX" + ext)) {
     } else if (doesFileExist(lyx_binary, search_dir, "lyx" + string(PROGRAM_SUFFIX) + ext)) {
@@ -397,9 +397,9 @@ FileName findLyxBinary(FileName const & abs_binary)
     else if (!abs_binary.extension().empty()) {
         ext = "." + abs_binary.extension();
     }
-    
+
     string binary_dir = onlyPath(abs_binary.absFileName());
-      
+
     FileName lyx_binary;
     if (lyxBinaryPath(lyx_binary, binary_dir, ext))
         return lyx_binary;
@@ -407,7 +407,7 @@ FileName findLyxBinary(FileName const & abs_binary)
     string search_dir = onlyPath(FileName(addPath(binary_dir, "/../")).absFileName());
     if (lyxBinaryPath(lyx_binary, search_dir, ext))
         return lyx_binary;
-    
+
     return FileName();
 }
 
@@ -799,7 +799,7 @@ string const relative_system_support_dir()
 	return result;
 }
 
-} // namespace anon
+} // namespace
 
 } // namespace support
 } // namespace lyx

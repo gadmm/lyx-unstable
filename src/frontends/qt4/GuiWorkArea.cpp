@@ -212,7 +212,7 @@ public:
 	int cursorWidth() const { return cursor_width_; }
 	void recomputeWidth() {
 		cursor_width_ = lyxrc.cursor_width
-			? lyxrc.cursor_width 
+			? lyxrc.cursor_width
 			: 1 + int((lyxrc.currentZoom + 50) / 200.0);
 	}
 
@@ -233,7 +233,7 @@ private:
 	QRect rect_;
 	/// x position (were the vertical line is drawn)
 	int x_;
-	
+
 	int cursor_width_;
 };
 
@@ -250,14 +250,14 @@ GuiWorkArea::Private::Private(GuiWorkArea * parent)
   cursor_visible_(false), cursor_(0),
   need_resize_(false), schedule_redraw_(false), preedit_lines_(1),
   pixel_ratio_(1.0),
-  completer_(new GuiCompleter(p, p)), dialog_mode_(false),
+  completer_(new GuiCompleter(p, p)), dialog_mode_(false), shell_escape_(false),
   read_only_(false), clean_(true), externally_modified_(false)
 {
 }
 
 
 GuiWorkArea::GuiWorkArea(QWidget * /* w */)
-: d(new Private(this)) 
+: d(new Private(this))
 {
 }
 
@@ -325,10 +325,6 @@ void GuiWorkArea::init()
 			generateSyntheticMouseEvent();
 		});
 
-	// Initialize the vertical Scroll Bar
-	QObject::connect(verticalScrollBar(), SIGNAL(valueChanged(int)),
-		this, SLOT(scrollTo(int)));
-
 	LYXERR(Debug::GUI, "viewport width: " << viewport()->width()
 		<< "  viewport height: " << viewport()->height());
 
@@ -370,7 +366,7 @@ void GuiWorkArea::Private::setCursorShape(Qt::CursorShape shape)
 
 void GuiWorkArea::Private::updateCursorShape()
 {
-	setCursorShape(buffer_view_->clickableInset() 
+	setCursorShape(buffer_view_->clickableInset()
 		? Qt::PointingHandCursor : Qt::IBeamCursor);
 }
 
@@ -675,14 +671,18 @@ void GuiWorkArea::toggleCursor()
 
 void GuiWorkArea::Private::updateScrollbar()
 {
+	// Prevent setRange() and setSliderPosition from causing recursive calls via
+	// the signal valueChanged. (#10311)
+	QObject::disconnect(p->verticalScrollBar(), SIGNAL(valueChanged(int)),
+	                    p, SLOT(scrollTo(int)));
 	ScrollbarParameters const & scroll_ = buffer_view_->scrollbarParameters();
-	// Block signals to prevent setRange() and setSliderPosition from causing
-	// recursive calls via the signal valueChanged. (#10311)
-	QSignalBlocker blocker(p->verticalScrollBar());
 	p->verticalScrollBar()->setRange(scroll_.min, scroll_.max);
 	p->verticalScrollBar()->setPageStep(scroll_.page_step);
 	p->verticalScrollBar()->setSingleStep(scroll_.single_step);
 	p->verticalScrollBar()->setSliderPosition(0);
+	// Connect to the vertical scroll bar
+	QObject::connect(p->verticalScrollBar(), SIGNAL(valueChanged(int)),
+	                 p, SLOT(scrollTo(int)));
 }
 
 
@@ -775,9 +775,9 @@ void GuiWorkArea::contextMenuEvent(QContextMenuEvent * e)
 		}
 		name = d->buffer_view_->contextMenu(pos.x(), pos.y());
 	}
-	
+
 	if (name.empty()) {
-		QAbstractScrollArea::contextMenuEvent(e);
+		e->accept();
 		return;
 	}
 	// always show mnemonics when the keyboard is used to show the context menu
@@ -785,7 +785,7 @@ void GuiWorkArea::contextMenuEvent(QContextMenuEvent * e)
 	bool const keyboard = (e->reason() == QContextMenuEvent::Keyboard);
 	QMenu * menu = guiApp->menus().menu(toqstr(name), *d->lyx_view_, keyboard);
 	if (!menu) {
-		QAbstractScrollArea::contextMenuEvent(e);
+		e->accept();
 		return;
 	}
 	// Position the menu to the right.
@@ -891,7 +891,7 @@ void GuiWorkArea::mouseMoveEvent(QMouseEvent * e)
 			// in the first place.
 			return;
 		}
-		
+
 		d->synthetic_mouse_event_.restart_timeout = true;
 		d->synthetic_mouse_event_.timeout.start();
 		// Fall through to handle this event...
@@ -976,7 +976,7 @@ void GuiWorkArea::generateSyntheticMouseEvent()
 		if (up || down) {
 			int dist = up ? -e_y : e_y - wh;
 			time = max(min(200, 250000 / (dist * dist)), 1) ;
-			
+
 			if (time < 40) {
 				step = 80000 / (time * time);
 				time = 40;
@@ -1401,11 +1401,13 @@ void GuiWorkArea::updateWindowTitle()
 {
 	Buffer const & buf = bufferView().buffer();
 	if (buf.fileName() != d->file_name_
+	    || buf.params().shell_escape != d->shell_escape_
 	    || buf.hasReadonlyFlag() != d->read_only_
 	    || buf.lyxvc().vcstatus() != d->vc_status_
 	    || buf.isClean() != d->clean_
 	    || buf.notifiesExternalModification() != d->externally_modified_) {
 		d->file_name_ = buf.fileName();
+		d->shell_escape_ = buf.params().shell_escape;
 		d->read_only_ = buf.hasReadonlyFlag();
 		d->vc_status_ = buf.lyxvc().vcstatus();
 		d->clean_ = buf.isClean();
@@ -1626,7 +1628,7 @@ void TabWorkArea::paintEvent(QPaintEvent * event)
 	if (tabBar()->isVisible()) {
 		QTabWidget::paintEvent(event);
 	} else {
-		// Prevent the selected tab to influence the 
+		// Prevent the selected tab to influence the
 		// painting of the frame of the tab widget.
 		// This is needed for gtk style in Qt.
 		QStylePainter p(this);

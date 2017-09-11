@@ -1247,8 +1247,8 @@ void Paragraph::Private::latexSpecialChar(otexstream & os,
 		}
 		break;
 	case '\"':
-		os << "\\char34" << termcmd;
-		column += 9;
+		os << "\\textquotedbl" << termcmd;
+		column += 14;
 		break;
 
 	case '$': case '&':
@@ -1499,8 +1499,17 @@ void Paragraph::Private::validate(LaTeXFeatures & features) const
 	}
 
 	// then the contents
+	BufferParams const bp = features.buffer().masterParams();
 	for (pos_type i = 0; i < int(text_.size()) ; ++i) {
-		BufferEncodings::validate(text_[i], features);
+		char_type c = text_[i];
+		if (c == 0x0022) {
+			if (features.runparams().isFullUnicode() && bp.useNonTeXFonts)
+				features.require("textquotedblp");
+			else if (bp.main_font_encoding() != "T1"
+				 || ((&owner_->getFontSettings(bp, i))->language()->internalFontEncoding()))
+				features.require("textquotedbl");
+		}
+		BufferEncodings::validate(c, features);
 	}
 }
 
@@ -3862,13 +3871,13 @@ void Paragraph::locateWord(pos_type & from, pos_type & to,
 			to = from;
 			return;
 		}
-		// no break here, we go to the next
+		// fall through
 
 	case WHOLE_WORD:
 		// If we are already at the beginning of a word, do nothing
 		if (!from || isWordSeparator(from - 1))
 			break;
-		// no break here, we go to the next
+		// fall through
 
 	case PREVIOUS_WORD:
 		// always move the cursor to the beginning of previous word

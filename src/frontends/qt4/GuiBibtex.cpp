@@ -304,6 +304,11 @@ void GuiBibtex::updateContents()
 	bool bibtopic = usingBibtopic();
 	bool biblatex = usingBiblatex();
 
+	if (biblatex)
+		setTitle(qt_("Biblatex Bibliography"));
+	else
+		setTitle(qt_("BibTeX Bibliography"));
+
 	databaseLW->clear();
 
 	docstring bibs = params_["bibfiles"];
@@ -338,7 +343,11 @@ void GuiBibtex::updateContents()
 	if (usingBiblatex() && !buffer().masterParams().multibib.empty())
 		btPrintCO->addItem(qt_("all reference units"), toqstr("bibbysection"));
 
-	btPrintCO->setCurrentIndex(btPrintCO->findData(toqstr(params_["btprint"])));
+	docstring btprint = params_["btprint"];
+	if (btprint.empty())
+		// default
+		btprint = from_ascii("btPrintCited");
+	btPrintCO->setCurrentIndex(btPrintCO->findData(toqstr(btprint)));
 
 	// Only useful for biblatex
 	biblatexOptsLA->setVisible(biblatex);

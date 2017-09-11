@@ -6,8 +6,10 @@
 #
 # Author : John Perry <john.perry@usm.edu>
 #          Guillaume Munch-Maccagnoni <gm@lyx.org>
+# Reviewed following tickets #10722 & #10723
+#          by Jean-Pierre Chrétien <jpc@lyx.org>
 
-Format 63
+Format 64
 
 Provides amscls 1
 Provides amsmath 1
@@ -305,37 +307,37 @@ End
 
 Style AuthorNote
   CopyStyle TitleNote
-  LabelString "Author Note: "
+  LabelString "Note: "
   LatexName authornote
 End
 
 Style ACM_Volume
   CopyStyle ACM_Journal
-  LabelString "ACM Volume: "
+  LabelString "Volume: "
   LatexName acmVolume
 End
 
 Style ACM_Number
   CopyStyle ACM_Journal
-  LabelString "ACM Number: "
+  LabelString "Number: "
   LatexName acmNumber
 End
 
 Style ACM_Article
   CopyStyle ACM_Journal
-  LabelString "ACM Article: "
+  LabelString "Article: "
   LatexName acmArticle
 End
 
 Style ACM_Year
   CopyStyle ACM_Journal
-  LabelString "ACM Year: "
+  LabelString "Year: "
   LatexName acmYear
 End
 
 Style ACM_Month
   CopyStyle ACM_Journal
-  LabelString "ACM Month: "
+  LabelString "Month: "
   LatexName acmMonth
 End
 
@@ -347,19 +349,19 @@ End
 
 Style ACM_Submission_ID
   CopyStyle ACM_Journal
-  LabelString "ACM Submission ID: "
+  LabelString "Submission ID: "
   LatexName acmSubmissionID
 End
 
 Style ACM_Price
   CopyStyle ACM_Journal
-  LabelString "ACM Price: "
+  LabelString "Price: "
   LatexName acmPrice
 End
 
 Style ACM_ISBN
   CopyStyle ACM_Journal
-  LabelString "ACM ISBN: "
+  LabelString "ISBN: "
   LatexName acmISBN
 End
 

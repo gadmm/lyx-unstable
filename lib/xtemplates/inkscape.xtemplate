@@ -4,6 +4,7 @@
 # This file is part of LyX, the document processor.
 # Licence details can be found in the file COPYING.
 #
+# author Daniel Gloger
 # author Martin Vermeer
 #
 # based on external templates by:
@@ -73,6 +74,22 @@ Template Inkscape
 		ReferencedFile latex "$$AbsOrRelPathMaster$$Basename.eps_tex"
 		ReferencedFile latex "$$AbsPath$$Basename.eps"
 		ReferencedFile dvi   "$$AbsPath$$Basename.eps"
+	FormatEnd
+	Format Ascii
+		Product "[InkscapeGraphics: $$FName]"
+	FormatEnd
+	Format DocBook
+		Product "<graphic fileref=\"$$AbsOrRelPathMaster$$Basename.eps\"></graphic>"
+		UpdateFormat eps
+		UpdateResult "$$AbsPath$$Basename.eps"
+		ReferencedFile docbook     "$$AbsPath$$Basename.eps"
+		ReferencedFile docbook-xml "$$AbsPath$$Basename.eps"
+	FormatEnd
+	Format XHTML
+		Product "<img src=\"$$AbsOrRelPathMaster$$Basename.svg\" />"
+		UpdateFormat svg
+		UpdateResult "$$AbsPath$$Basename.svg"
+		ReferencedFile xhtml "$$AbsPath$$Basename.svg"
 	FormatEnd
 TemplateEnd
 

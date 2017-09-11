@@ -17,6 +17,17 @@ You can download LyX 2.3.0beta1 from ftp://ftp.lyx.org/pub/lyx/devel/.
 
 We appreciate your help in testing this pre-release!
 
+If a file from an earlier version of LyX is opened *and saved* with
+any version of 2.3.x, then the original file will automatically be
+backed up. The backup file will be found in the backup directory, if one
+is set under Tools> Preferences> Paths, or else in the same folder as
+the original file, if no backup directory is set. The filename of the
+backup file will be:
+    ORIGNAME-lyxformat-NUM.lyx~
+where NUM is the LyX format number of the original file. In the case of
+2.2.x file, this will be 508, but in the case of older files it will be
+different.
+
 The file lib/RELEASE-NOTES lists some known issues and problems compared
 to the current stable releases (LyX 2.2.x). We strongly recommend that
 packagers of LyX on various platforms and distributions read this file.
@@ -24,14 +35,14 @@ packagers of LyX on various platforms and distributions read this file.
 As with any major release, this one comes with a lot of new features but
 also some bugs. If you think you have found a bug in LyX 2.3.0beta1, either
 email the LyX developers' mailing list (lyx-devel at lists.lyx.org),
-or open a bug report at http://www.lyx.org/trac/wiki/BugTrackerHome.
+or open a bug report at https://www.lyx.org/trac/wiki/BugTrackerHome.
 Please specify if the behavior you are reporting is different from behavior
 in a previous LyX version.
 
 If you have trouble using LyX or have a question, consult the
 documentation that comes with LyX (under Help) and the LyX wiki, which you
-will find at http://wiki.lyx.org/. You can also send email to the LyX users'
+will find at https://wiki.lyx.org/. You can also send email to the LyX users'
 list (lyx-users at lists.lyx.org).
 
 The LyX team.
-http://www.lyx.org
+https://www.lyx.org

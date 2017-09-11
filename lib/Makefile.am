@@ -464,6 +464,7 @@ dist_images_DATA1X = \
 	images/down.svgz \
 	images/editclear.svgz \
 	images/emblem-readonly.svgz \
+	images/emblem-shellescape.svgz \
 	images/ert-insert.svgz \
 	images/file-open.svgz \
 	images/float-insert_figure.svgz \
@@ -2127,6 +2128,10 @@ dist_layouts_DATA =\
 	layouts/book.layout \
 	layouts/braille.module \
 	layouts/broadway.layout \
+	layouts/bxjsarticle.layout \
+	layouts/bxjsbook.layout \
+	layouts/bxjsreport.layout \
+	layouts/bxjsslide.layout \
 	layouts/changebars.module \
 	layouts/chess.layout \
 	layouts/cl2emult.layout \

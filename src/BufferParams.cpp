@@ -2088,13 +2088,12 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	// http://www.mail-archive.com/lyx-devel@lists.lyx.org/msg144349.html
 	os << from_ascii(features.getColorOptions());
 
-	// If we use hyperref, jurabib, japanese, varioref or vietnamese,
+	// If we use hyperref, jurabib, japanese or varioref,
 	// we have to call babel before
 	if (use_babel
 	    && (features.isRequired("jurabib")
 		|| features.isRequired("hyperref")
 		|| features.isRequired("varioref")
-		|| features.isRequired("vietnamese")
 		|| features.isRequired("japanese"))) {
 			os << features.getBabelPresettings();
 			// FIXME UNICODE
@@ -2290,8 +2289,7 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 	// called after babel, though.
 	if (use_babel && !features.isRequired("jurabib")
 	    && !features.isRequired("hyperref")
-		&& !features.isRequired("varioref")
-	    && !features.isRequired("vietnamese")
+	    && !features.isRequired("varioref")
 	    && !features.isRequired("japanese")) {
 		os << features.getBabelPresettings();
 		// FIXME UNICODE
@@ -2661,8 +2659,16 @@ vector<string> BufferParams::backends() const
 			v.push_back("luatex");
 			v.push_back("dviluatex");
 		}
-	} else
-		v.push_back(buffmt);
+	} else {
+		string rbuffmt = buffmt;
+		// If we use an OutputFormat in Japanese docs,
+		// we need special format in order to get the path
+		// via pLaTeX (#8823)
+		if (documentClass().hasOutputFormat()
+		    && encoding().package() == Encoding::japanese)
+			rbuffmt += "-ja";
+		v.push_back(rbuffmt);
+	}
 
 	v.push_back("xhtml");
 	v.push_back("text");
@@ -2727,14 +2733,15 @@ string BufferParams::getDefaultOutputFormat() const
 	if (!default_output_format.empty()
 	    && default_output_format != "default")
 		return default_output_format;
-	if (isDocBook()
-	    || encoding().package() == Encoding::japanese) {
+	if (isDocBook()) {
 		FormatList const & formats = exportableFormats(true);
 		if (formats.empty())
 			return string();
 		// return the first we find
 		return formats.front()->name();
 	}
+	if (encoding().package() == Encoding::japanese)
+		return lyxrc.default_platex_view_format;
 	if (useNonTeXFonts)
 		return lyxrc.default_otf_view_format;
 	return lyxrc.default_view_format;

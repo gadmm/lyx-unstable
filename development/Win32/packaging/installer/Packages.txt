@@ -266,7 +266,10 @@ datetime2-german
 tracklang
 acrotex
 zhmetrics
+logreq
 conv-xkv
 minted
 fvextra
 xstring
+luatex85
+bxjscls

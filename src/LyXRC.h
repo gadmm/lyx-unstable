@@ -70,6 +70,7 @@ public:
 		RC_DEFAULT_DECIMAL_POINT,
 		RC_DEFAULT_LENGTH_UNIT,
 		RC_DEFAULT_OTF_VIEW_FORMAT,
+		RC_DEFAULT_PLATEX_VIEW_FORMAT,
 		RC_DEFAULT_VIEW_FORMAT,
 		RC_DEFFILE,
 		RC_DIALOGS_ICONIFY_WITH_MAIN,
@@ -174,7 +175,6 @@ public:
 		RC_USE_SYSTEM_COLORS,
 		RC_USE_TOOLTIP,
 		RC_USE_PIXMAP_CACHE,
-		RC_USE_QIMAGE,
 		RC_USE_SYSTEM_THEME_ICONS,
 		RC_VIEWDVI_PAPEROPTION,
 		RC_VIEWER,
@@ -295,9 +295,10 @@ public:
 	bool allow_geometry_session;
 	/// Scrolling speed of the mouse wheel
 	double mouse_wheel_speed;
-	/// Zoom factor for screen fonts
-	int zoom;
-	/// Current zoom factor for screen fonts
+	/// Default zoom factor for screen fonts
+	int defaultZoom;
+	/// Actual zoom factor for screen fonts
+	/// (default zoom plus buffer zoom factor)
 	int currentZoom;
 	/// Screen font sizes in points for each font size
 	std::string font_sizes[10];
@@ -333,8 +334,6 @@ public:
 	bool use_system_colors;
 	/// Use pixmap cache?
 	bool use_pixmap_cache;
-	/// Use QImage backend?
-	bool use_qimage;
 	/// Spellchecker engine: aspell, hunspell, etc
 	std::string spellchecker;
 	/// Alternate language for spellchecker
@@ -390,6 +389,8 @@ public:
 	std::string gui_language;
 	///
 	std::string default_otf_view_format;
+	///
+	std::string default_platex_view_format;
 	///
 	std::string default_view_format;
 	/// all available viewers

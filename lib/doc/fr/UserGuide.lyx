@@ -30477,18 +30477,26 @@ Bibliography Processors
 \begin_layout Standard
 Pour créer la bibliographie à partir de la base de donnée et des citations
  que vous avez insérées dans votre document, \SpecialChar LyX
- utilise le programme Bib\SpecialChar TeX
+ utilise 
+\lang english
+a bibliography processor, that is an external program that reads the database,
+ sorts the citations and processes the data in a way it can be included
+ in the document.
+ The classic program is called Bib\SpecialChar TeX
 .
- Vous pouvez choisir quelle variante du programme doit être utilisée pour
- le traitement, Ce programme peut être contrôlé par un certain nombre d'options
- que vous pouvez ajouter dans 
+ It has the advantage that it is very mature and widespread, but the disadvantag
+e that it has severe limitations, due to its age.
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Meanwhile, some alternatives have been developed that address some of these
+ limitations.
+ LyX natively supports some of them and lets you select a custom processor.
+ You can do this on a general level in 
 \family sans
-Document\SpecialChar menuseparator
-Paramètres\SpecialChar menuseparator
-Bibliographie
-\family default
- ou dans 
-\family sans
+\lang french
 Outils\SpecialChar menuseparator
 Préférences\SpecialChar menuseparator
 Sorties
@@ -30498,20 +30506,25 @@ Sorties
 \family sans
 LaTeX
 \family default
- dans le champ 
+\lang english
+ or for individual documents in 
 \family sans
-Commande
-\begin_inset space ~
-\end_inset
-
-BibTeX
+\lang french
+Document\SpecialChar menuseparator
+Paramètres\SpecialChar menuseparator
+Bibliographie
 \family default
+\lang english
 .
- Les variantes suivantes sont autorisées:
+ The following variants are available by default:
 \end_layout
 
 \begin_layout Description
 biber 
+\lang english
+a specific, modern processor
+\lang french
+
 \begin_inset Index idx
 status collapsed
 
@@ -30522,21 +30535,36 @@ Paquetages \SpecialChar LaTeX
 
 \end_inset
 
-fournit une fonctionnalité Unicode complète, une mémoire sans limite, mais
- ne fonctionne pas avec d'autres paquetages bibliographiques que le paquetage
-\begin_inset space ~
-\end_inset
-
-
+ 
+\lang english
+developed exclusively for 
 \series bold
 biblatex
 \series default
- (comme par exemple 
+ (it does not work with
+\lang french
+ Bib\SpecialChar TeX
+!).
+ 
 \series bold
-natbib
+biber
 \series default
-); cette option est recommandée pour les textes multilingues et pour les
- langues qui n'utilisent pas l'alphabet latin;
+ fournit une fonctionnalité Unicode complète, une mémoire sans limite et
+ 
+\lang english
+many specific features 
+\series bold
+biblatex
+\series default
+ makes use of; if you use the 
+\series bold
+biblatex
+\series default
+ approach, it is strongly recommended to use 
+\series bold
+biber
+\series default
+.
 \end_layout
 
 \begin_layout Description
@@ -30546,18 +30574,119 @@ bibtex le standard, ne permet pas l'usage de caractères spéciaux dans les
 \end_inset
 
 bits, possède une mémoire limitée, fonctionne avec tous les paquetages bibliogra
-phiques sauf 
+phiques, 
+\lang english
+although it will probably fail with 
 \series bold
-biblatex;
+biblatex
+\series default
+ bibliographies due to the limited memory.
 \end_layout
 
 \begin_layout Description
-bibtex8 autorise tous les caractères encodables sur 8 bits, possède une
- mémoire plus grande que 
+bibtex8 autorise tous les caractères encodables sur 8 bits (
+\lang english
+but no Unicode support
+\lang french
+), possède une mémoire plus grande que 
 \family sans
 bibtex
 \family default
-, fonctionne avec tous les paquetages bibliographiques.
+, fonctionne avec tous les paquetages bibliographiques, 
+\lang english
+although more complex 
+\series bold
+biblatex
+\series default
+ bibliographies will exceed its limits, and not all 
+\series bold
+biblatex
+\series default
+ features are supported.
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+By default (with the 
+\family sans
+Processor
+\family default
+ set in 
+\family sans
+\lang french
+Document\SpecialChar menuseparator
+Paramètres\SpecialChar menuseparator
+Bibliographie
+\family default
+\lang english
+ and with 
+\family sans
+Automatic
+\family default
+ as setting for the 
+\family sans
+Processor
+\family default
+ in 
+\family sans
+T
+\lang french
+Outils\SpecialChar menuseparator
+Préférences\SpecialChar menuseparator
+Sorties
+\family default
+\SpecialChar menuseparator
+
+\family sans
+LaTeX
+\family default
+), \SpecialChar LyX
+ 
+\lang english
+selects an appropriate (available) processor for the current bibliography
+ approach (
+\series bold
+biber
+\series default
+ for 
+\series bold
+biblatex
+\series default
+, 
+\family sans
+bibtex
+\family default
+ for Bib\SpecialChar TeX
+-based bibliography styles).
+ This should suit most needs.
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+In Japanese documents, a specific processor is used.
+ By default this is pBib\SpecialChar TeX
+ (in \SpecialChar LyX
+ 
+\family sans
+pbibtex
+\family default
+), a Bib\SpecialChar TeX
+ variant specifically aimed at Japanese.
+ You can adjust it in 
+\family sans
+\lang french
+Outils\SpecialChar menuseparator
+Préférences\SpecialChar menuseparator
+Sorties
+\family default
+\SpecialChar menuseparator
+
+\family sans
+LaTeX
+\family default
+.
 \end_layout
 
 \begin_layout Standard
@@ -30596,49 +30725,25 @@ Customizing
 \end_layout
 
 \begin_layout Standard
-Quand vous activez l'option 
-\family sans
-Bibliographie
-\begin_inset space ~
-\end_inset
 
-en
-\begin_inset space ~
-\end_inset
-
-sections
-\family default
- dans le menu 
-\family sans
-Document\SpecialChar menuseparator
-Paramètres\SpecialChar menuseparator
-Bibliographie
-\family default
-, il est possible d'avoir des bibliographies multiples et par section.
- Ceci est expliqué avec d'autres particularités dans le manuel 
+\lang english
+\SpecialChar LyX
+ supports some specific tasks such as sectioned bibliographies and multiple
+ bibliographies.
+ These are explained in detail in section 
 \emph on
-Options avancées,
+Customizing Bibliographies
 \emph default
- section 
+ 
 \emph on
-Personnaliser les bibliographies avec Bib\SpecialChar TeX
-
+with Bib\SpecialChar TeX
+ or Biblatex
 \emph default
-.
-\end_layout
-
-\begin_layout Standard
-Nous avons utilisé deux bibliographies dans ce document pour montrer la
- différence entre les deux méthodes utilisées pour les créer.
- Comme vous pouvez le constater, la bibliographie qui a été créée à partir
- d'une base de données ne reprend que les entrées qui sont citées dans le
- corps du document.
- Nous avons utilisé le fichier de style 
-\family sans
-alphadin.bst
-\family default
- pour avoir dans notre bibliographie le système de clés de référence assez
- complexe utilisé en Allemagne.
+ of the 
+\emph on
+Additional Features
+\emph default
+ manual.
 \end_layout
 
 \begin_layout Subsection
@@ -30663,16 +30768,57 @@ name "subsec:Format-de-bibliographie"
 \end_layout
 
 \begin_layout Standard
-Dans la boîte de dialogue de citation, vous pouvez choisir un format de
- citation spécial.
- Pour utiliser cette fonction, vous avez besoin d'activer l'option 
-\family sans
-Natbib
-\family default
- dans la fenêtre de dialogue 
+
+\lang english
+Many different citation formats are common, e.
+\begin_inset space \thinspace{}
+\end_inset
+
+g.
+\begin_inset space \space{}
+\end_inset
+
+numerical citation (as 
+\begin_inset Quotes eld
+\end_inset
+
+1
+\begin_inset Quotes erd
+\end_inset
+
+ like in this document), alpha-numerical citations (as 
+\begin_inset Quotes eld
+\end_inset
+
+Mil08
+\begin_inset Quotes erd
+\end_inset
+
+) or author-year citations (as 
+\begin_inset Quotes eld
+\end_inset
+
+Miller (2008a)
+\begin_inset Quotes erd
+\end_inset
+
+).
+ \SpecialChar LyX
+ supports these formats via specific citation packages and their style
+ files.
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+By default a simple numeric citation style is used.
+ In
+\lang french
+ 
 \family sans
 Document\SpecialChar menuseparator
-Paramètres
+Paramètres\SpecialChar menuseparator
+Bibliographie
 \family default
 
 \begin_inset Index idx
@@ -30684,49 +30830,335 @@ Document ! Paramètres
 
 \end_inset
 
- dans la rubrique 
+ 
+\lang english
+you have a range of other options, depending on your preferred bibliography
+ approach.
+ With the 
 \family sans
-Bibliographie
+Bibliography
 \family default
-.
- Donner un style de citation pour une référence donnée remplace le style
- appliqué implicitement.
- Pour le style appliqué à l'ensemble des citations de votre document, utilisez
- les fichiers de styles BiB\SpecialChar TeX
-, comme c'est expliqué dans la section précédente.
+ environment your only choice besides manual formatting of the bibliography
+ labels, is there to use 
+\family sans
+Natbib
+\begin_inset space ~
+\end_inset
+
+(BibTeX)
+\family default
+\series bold
+ 
+\series default
+as 
+\family sans
+Style
+\begin_inset space ~
+\end_inset
+
+format
+\family default
+ which gives you author-year and author-numerical citations (see above 
+\lang french
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:L'environnement-Bibliographie"
+
+\end_inset
+
+
+\lang english
+ for details).
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Greyedout
-status open
+
+\lang english
+With a bibliography database (see 
+\lang french
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Bases-de-Données-Biblio"
+
+\end_inset
+
+
+\lang english
+) one has in contrary to the 
+\family sans
+Bibliography
+\family default
+ environment full access to the formatting styles.
+ These style formats are available:
+\end_layout
+
+\begin_layout Description
+
+\lang english
+Basic
+\begin_inset space ~
+\end_inset
+
+(BibTeX) the default Bib\SpecialChar TeX
+-based approached without any additional packages
+ (simple numeric citations).
+\end_layout
+
+\begin_layout Description
+
+\lang english
+Biblatex loads the package
+\lang french
+ 
+\series bold
+biblatex
+\series default
+
+\begin_inset Index idx
+status collapsed
 
 \begin_layout Plain Layout
-
-\series bold
-Nota:
-\series default
- vous ne pouvez pas utiliser tous les styles bibliographiques énumérés dans
- la fenêtre.
- Si vous avez une erreur de compilation, changez de style.
- Les styles finissant par 
-\begin_inset Quotes cld
-\end_inset
-
-nat
-\begin_inset Quotes crd
-\end_inset
-
- sont sûrement compatibles.
+Paquetages \SpecialChar LaTeX
+ ! biblatex
 \end_layout
 
 \end_inset
 
+ 
+\lang english
+and lets you select a style in the dropdown boxes 
+\family sans
+Biblatex citation style
+\family default
+ and 
+\family sans
+Biblatex bibliography style
+\family default
+ below.
+ Options to the package 
+\series bold
+biblatex
+\series default
+ can be entered in the 
+\family sans
+Options
+\family default
+ field.
+\end_layout
 
+\begin_layout Description
+
+\lang english
+Biblatex
+\begin_inset space ~
+\end_inset
+
+(natbib
+\begin_inset space ~
+\end_inset
+
+mode) loads the package 
+\series bold
+biblatex
+\series default
+ with the natbib compatibility mode.
+ This is a specific variant for users who switch an existing document that
+ uses 
+\series bold
+natbib
+\series default
+ or want to emulate 
+\family sans
+the 
+\family default
+\series bold
+natbib
+\series default
+ behavior very closely.
+ Compared to normal 
+\family sans
+Biblatex
+\family default
+ this option has some additional styles.
+ All 
+\series bold
+biblatex
+\series default
+ styles are also supported by this variant.
+\end_layout
+
+\begin_layout Description
+
+\lang english
+Jurabib
+\begin_inset space ~
+\end_inset
+
+(BibTeX) loads the package
+\lang french
+ 
+\series bold
+jurabib
+\series default
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Paquetages \SpecialChar LaTeX
+ ! jurabib
+\end_layout
+
+\end_inset
+
+ 
+\lang english
+which provides author-year styles particularly suited for law studies.
+\end_layout
+
+\begin_layout Description
+
+\lang english
+Natbib
+\begin_inset space ~
+\end_inset
+
+(BibTeX) loads the package
+\lang french
+ 
+\series bold
+natbib
+\series default
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Paquetages \SpecialChar LaTeX
+ ! natbib
+\end_layout
+
+\end_inset
+
+ 
+\lang english
+which provides citation styles particularly suited for the humanities.
 \end_layout
 
 \begin_layout Standard
-Vous pouvez aussi fournir, dans la fenêtre de citation, du texte qui apparaîtra
- avant ou après votre citation.
+
+\lang english
+The 
+\family sans
+Biblatex
+\family default
+ and 
+\family sans
+Natbib
+\family default
+ style formats provide the choice between author-year and author-numerical
+ citation styles.
+ You have to select one style in the dropdown box 
+\family sans
+Variant
+\family default
+.
+ Note that for the 
+\family sans
+Biblatex
+\family default
+ formats, this only affects the appearance in the \SpecialChar LyX
+ workarea.
+ Whether the output uses numerical, author-year or another format such as
+ alpha-numerical depends only on the selected 
+\family sans
+Biblatex citation style
+\family default
+.
+ However, when switching between Author-year and Author-number, a suitable
+ style is proposed.
+ With 
+\family sans
+Natbib
+\family default
+, on the other hand, the dialog selection will ultimately determine the
+ style.
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+For any author-year and author-numerical selection, multiple style variants
+ are available in the 
+\family sans
+Citation
+\family default
+ dialog.
+ Some selections also provide further options like the option to uppercase
+ a name prefix such as 
+\begin_inset Quotes eld
+\end_inset
+
+van Beethoven
+\begin_inset Quotes erd
+\end_inset
+
+ (to 
+\begin_inset Quotes eld
+\end_inset
+
+Van Beethoven
+\begin_inset Quotes erd
+\end_inset
+
+) or to expand or reduce the number of displayed others (i.
+\begin_inset space \thinspace{}
+\end_inset
+
+e.
+\begin_inset space \space{}
+\end_inset
+
+use or don't use 
+\begin_inset Quotes eld
+\end_inset
+
+et al.
+\begin_inset Quotes erd
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+In the citation dialog you can also set text to appear after a citation
+ reference, e.
+\begin_inset space \thinspace{}
+\end_inset
+
+g.
+ page numbers, which will then be formatted according to the style's needs
+ (e.
+\begin_inset space \thinspace{}
+\end_inset
+
+g.
+ with or without 
+\begin_inset Quotes eld
+\end_inset
+
+pp.
+\begin_inset Quotes erd
+\end_inset
+
+).
+
+\lang french
  Voici un exemple où nous fait que le texte 
 \begin_inset Quotes cld
 \end_inset
@@ -30753,6 +31185,111 @@ literal "true"
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+All styles except for 
+\family sans
+Basic (BibTeX)
+\family default
+ also provide the feature to add text that precedes the reference (such
+ as 
+\begin_inset Quotes eld
+\end_inset
+
+cf.
+\begin_inset Quotes erd
+\end_inset
+
+).
+ This text is then also included in the parentheses, if the style requires
+ this.
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+Note that these pre- and postnotes apply to the whole citation.
+ So if you refer to multiple references at once, the prenote will precede
+ the first citation in the list, the postnote will follow the last.
+ Some 
+\family sans
+Biblatex
+\family default
+ styles allow to add pre- and postnotes to any individual reference in a
+ multi-citation (so-called 
+\begin_inset Quotes eld
+\end_inset
+
+qualified citation lists
+\begin_inset Quotes erd
+\end_inset
+
+).
+ \SpecialChar LyX
+ supports this.
+ If you use such a style and if the current reference includes multiple
+ items the 
+\family sans
+Citation
+\family default
+ dialog will display three columns in the field 
+\family sans
+Selected Citations
+\family default
+: 
+\family sans
+Text
+\begin_inset space ~
+\end_inset
+
+before
+\family default
+, 
+\family sans
+Cite
+\begin_inset space ~
+\end_inset
+
+key
+\family default
+ and 
+\family sans
+Text
+\begin_inset space ~
+\end_inset
+
+after
+\family default
+.
+ If you double-click on an item's 
+\family sans
+Text
+\begin_inset space ~
+\end_inset
+
+before
+\family default
+ or 
+\family sans
+Text
+\begin_inset space ~
+\end_inset
+
+after
+\family default
+ field, you can add such individual pre- and postnotes.
+ In the 
+\family sans
+General text before
+\family default
+ and 
+\family sans
+General text after
+\family default
+ fields you can add pre- and postnotes that apply to the whole list.
 \end_layout
 
 \begin_layout Section
@@ -47372,6 +47909,64 @@ fonction-lyx
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Notez cependant que la définition des la combinaison de touches nécessite
+ une syntaxe spécifique pour la désignation de touches modificatrices particuliè
+res (e.
+\begin_inset space \thinspace{}
+\end_inset
+
+g., 
+\family typewriter
+M
+\family default
+, 
+\family typewriter
+S
+\family default
+, 
+\family typewriter
+C
+\family default
+ pour 
+\family sans
+Meta/Alt
+\family default
+, 
+\family sans
+Shift/Maj,
+\family default
+ 
+\family sans
+Ctrl
+\family default
+, respectivement) ainsi que pour les autres touches.
+ Notez en particulier que vous ne pouvez pas utiliser directement dans la
+ combinaison de touches des caractères qui ne soient pas alphanumériques:
+ au contraire, vous devez utiliser des commandes du standard 
+\family sans
+Xlib
+\family default
+ (voyez les fichiers d'association 
+\emph on
+bind
+\emph default
+ existants pour un exemple).
+ Donc si vous souhaitez associer une commande à la combinaison 
+\family sans
+Alt+Maj+:
+\family default
+, il vous faut la spécifier sous la forme 
+\family typewriter
+M-S-colon
+\family default
+.
+ Si vous utilisez la fenêtre de dialogue pour modifier ou saisir les association
+s de touches, vous n'avez pas à vous inquiéter de ceci, \SpecialChar LyX
+ convertit votre
+ saisie dans le syntaxe correcte.
 \end_layout
 
 \begin_layout Subsection

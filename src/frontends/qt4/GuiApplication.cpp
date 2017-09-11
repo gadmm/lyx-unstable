@@ -122,7 +122,6 @@
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <QX11Info>
-#undef CursorShape
 #undef None
 #elif defined(QPA_XCB)
 #include <xcb/xcb.h>
@@ -1439,7 +1438,7 @@ void GuiApplication::updateCurrentView(FuncRequest const & cmd, DispatchResult &
 		theSelection().haveSelection(bv->cursor().selection());
 
 		// update gui
-		current_view_->restartCursor();
+		current_view_->restartCaret();
 	}
 	if (dr.needMessageUpdate()) {
 		// Some messages may already be translated, so we cannot use _()
@@ -2070,9 +2069,8 @@ void GuiApplication::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 			if (current_view_ == 0)
 				createView();
 		}
-		// fall through
 	}
-
+	// fall through
 	default:
 		// The LFUN must be for one of GuiView, BufferView, Buffer or Cursor;
 		// let's try that:
@@ -2159,7 +2157,7 @@ void GuiApplication::processKeySym(KeySymbol const & keysym, KeyModifier state)
 		if (!keysym.isOK())
 			LYXERR(Debug::KEY, "Empty kbd action (probably composing)");
 		if (current_view_)
-			current_view_->restartCursor();
+			current_view_->restartCaret();
 		return;
 	}
 
@@ -2219,7 +2217,7 @@ void GuiApplication::processKeySym(KeySymbol const & keysym, KeyModifier state)
 			if (!isPrintable(encoded_last_key)) {
 				LYXERR(Debug::KEY, "Non-printable character! Omitting.");
 				if (current_view_)
-					current_view_->restartCursor();
+					current_view_->restartCaret();
 				return;
 			}
 			// The following modifier check is not needed on Mac.
@@ -2241,7 +2239,7 @@ void GuiApplication::processKeySym(KeySymbol const & keysym, KeyModifier state)
 			{
 				if (current_view_) {
 					current_view_->message(_("Unknown function."));
-					current_view_->restartCursor();
+					current_view_->restartCaret();
 				}
 				return;
 			}
@@ -2256,7 +2254,7 @@ void GuiApplication::processKeySym(KeySymbol const & keysym, KeyModifier state)
 			LYXERR(Debug::KEY, "Unknown Action and not isText() -- giving up");
 			if (current_view_) {
 				current_view_->message(_("Unknown function."));
-				current_view_->restartCursor();
+				current_view_->restartCaret();
 			}
 			return;
 		}
@@ -2724,7 +2722,8 @@ bool GuiApplication::notify(QObject * receiver, QEvent * event)
 #endif
 			// In release mode, try to exit gracefully.
 			this->exit(1);
-
+			// FIXME: GCC 7 thinks we can fall through here. Can we?
+			// fall through
 		case BufferException: {
 			if (!current_view_ || !current_view_->documentBufferView())
 				return false;

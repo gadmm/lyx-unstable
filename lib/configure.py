@@ -639,10 +639,13 @@ def checkFormatEntries(dtl_tools):
 \Format platex     tex    "LaTeX (pLaTeX)"        "" "" "%%" 	"document,menu=export"	""
 \Format literate   nw      NoWeb                  N  ""	"%%"	"document,menu=export"	""
 \Format sweave     Rnw    "Sweave"                S  "" "%%"	"document,menu=export"	""
+\Format sweave-ja  Rnw    "Sweave (Japanese)"     S  "" "%%"	"document,menu=export"	""
 \Format r          R      "R/S code"              "" "" "%%"	"document,menu=export"	""
 \Format knitr      Rnw    "Rnw (knitr)"           "" "" "%%"	"document,menu=export"	""
+\Format knitr-ja   Rnw    "Rnw (knitr, Japanese)" "" "" "%%"	"document,menu=export"	""
 \Format lilypond   ly     "LilyPond music"        "" ""	"%%"	"vector"	"text/x-lilypond"
 \Format lilypond-book    lytex "LilyPond book (LaTeX)"   "" ""	"%%"	"document,menu=export"	""
+\Format lilypond-book-ja lytex "LilyPond book (pLaTeX)"   "" ""	"%%"	"document,menu=export"	""
 \Format latex      tex    "LaTeX (plain)"         L  ""	"%%"	"document,menu=export"	"text/x-tex"
 \Format luatex     tex    "LaTeX (LuaTeX)"        "" ""	"%%"	"document,menu=export"	""
 \Format pdflatex   tex    "LaTeX (pdflatex)"      "" ""	"%%"	"document,menu=export"	""
@@ -795,6 +798,7 @@ def checkConverterEntries():
     checkProg('a Sweave -> LaTeX converter', ['Rscript --verbose --no-save --no-restore $$s/scripts/lyxsweave.R $$p$$i $$p$$o $$e $$r'],
         rc_entry = [r'''\converter sweave   latex      "%%"	"needauth"
 \converter sweave   pdflatex   "%%"	"needauth"
+\converter sweave-ja   platex     "%%"	"needauth"
 \converter sweave   xetex      "%%"	"needauth"
 \converter sweave   luatex     "%%"	"needauth"
 \converter sweave   dviluatex  "%%"	"needauth"'''])
@@ -802,15 +806,18 @@ def checkConverterEntries():
     checkProg('a knitr -> LaTeX converter', ['Rscript --verbose --no-save --no-restore $$s/scripts/lyxknitr.R $$p$$i $$p$$o $$e $$r'],
         rc_entry = [r'''\converter knitr   latex      "%%"	"needauth"
 \converter knitr   pdflatex   "%%"	"needauth"
+\converter knitr-ja   platex     "%%"	"needauth"
 \converter knitr   xetex      "%%"	"needauth"
 \converter knitr   luatex     "%%"	"needauth"
 \converter knitr   dviluatex  "%%"	"needauth"'''])
     #
     checkProg('a Sweave -> R/S code converter', ['Rscript --verbose --no-save --no-restore $$s/scripts/lyxstangle.R $$i $$e $$r'],
-        rc_entry = [ r'\converter sweave      r      "%%"    "needauth"' ])
+        rc_entry = [ r'\converter sweave      r      "%%"    "needauth"',
+                     r'\converter sweave-ja   r      "%%"    "needauth"' ])
     #
     checkProg('a knitr -> R/S code converter', ['Rscript --verbose --no-save --no-restore $$s/scripts/lyxknitr.R $$p$$i $$p$$o $$e $$r tangle'],
-        rc_entry = [ r'\converter knitr      r      "%%"    "needauth"' ])
+        rc_entry = [ r'\converter knitr      r      "%%"    "needauth"',
+                     r'\converter knitr-ja   r      "%%"    "needauth"' ])
     #
     checkProg('an HTML -> LaTeX converter', ['html2latex $$i', 'gnuhtml2latex',
         'htmltolatex -input $$i -output $$o', 'htmltolatex.jar -input $$i -output $$o'],
@@ -972,10 +979,16 @@ def checkConverterEntries():
 \converter fig        ppm        "fig2dev -L ppm $$i $$o"	""
 \converter fig        svg        "fig2dev -L svg $$i $$o"	""
 \converter fig        png        "fig2dev -L png $$i $$o"	""
-\converter svg        pdftex     "python -tt $$s/scripts/svg2pdftex.py $$i $$o" ""
-\converter svg        pstex      "python -tt $$s/scripts/svg2pstex.py $$i $$o" ""
 \converter fig        pdftex     "python -tt $$s/scripts/fig2pdftex.py $$i $$o"	""
 \converter fig        pstex      "python -tt $$s/scripts/fig2pstex.py $$i $$o"	""''')
+    #
+    checkProg('a SVG -> PDFTeX converter', [inkscape_name],
+        rc_entry = [ r'\converter svg        pdftex     "python -tt $$s/scripts/svg2pdftex.py %% $$i $$o" ""'],
+        path = [inkscape_path])
+    #
+    checkProg('a SVG -> PSTeX converter', [inkscape_name],
+        rc_entry = [ r'\converter svg        pstex     "python -tt $$s/scripts/svg2pstex.py %% $$i $$o" ""'],
+        path = [inkscape_path])
     #
     checkProg('a TIFF -> PS converter', ['tiff2ps $$i > $$o'],
         rc_entry = [ r'\converter tiff       eps        "%%"	""'])
@@ -1112,6 +1125,7 @@ def checkConverterEntries():
                 #       this, use different output folders for eps and pdf outputs.
                 addToRC(r'\converter lilypond-book latex    "lilypond-book --safe --lily-output-dir=ly-eps $$i"                                ""')
                 addToRC(r'\converter lilypond-book pdflatex "lilypond-book --safe --pdf --latex-program=pdflatex --lily-output-dir=ly-pdf $$i" ""')
+                addToRC(r'\converter lilypond-book-ja platex "lilypond-book --safe --pdf --latex-program=platex --lily-output-dir=ly-pdf $$i" ""')
                 addToRC(r'\converter lilypond-book xetex    "lilypond-book --safe --pdf --latex-program=xelatex --lily-output-dir=ly-pdf $$i"  ""')
                 addToRC(r'\converter lilypond-book luatex   "lilypond-book --safe --pdf --latex-program=lualatex --lily-output-dir=ly-pdf $$i" ""')
                 addToRC(r'\converter lilypond-book dviluatex "lilypond-book --safe --latex-program=dvilualatex --lily-output-dir=ly-eps $$i" ""')
@@ -1761,7 +1775,7 @@ if __name__ == '__main__':
     lyx_check_config = True
     lyx_kpsewhich = True
     outfile = 'lyxrc.defaults'
-    lyxrc_fileformat = 22
+    lyxrc_fileformat = 24
     rc_entries = ''
     lyx_keep_temps = False
     version_suffix = ''

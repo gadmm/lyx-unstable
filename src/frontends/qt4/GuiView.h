@@ -116,7 +116,7 @@ public:
 	/// \return true if the \c FuncRequest has been dispatched.
 	void dispatch(FuncRequest const & cmd, DispatchResult & dr);
 
-	void restartCursor();
+	void restartCaret();
 	/// Update the completion popup and the inline completion state.
 	/// If \c start is true, then a new completion might be started.
 	/// If \c keep is true, an active completion will be kept active
@@ -470,6 +470,9 @@ private:
 	/// Statusbar widget that shows version control status
 	QLabel * version_control_;
 
+	/// The rate from which the actual zoom value is calculated
+	/// from the default zoom pref
+	double zoom_ratio_ = 1.0;
 	/// Minimum zoom percentage
 	static int const zoom_min_ = 10;
 

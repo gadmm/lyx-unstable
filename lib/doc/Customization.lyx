@@ -1,5 +1,5 @@
 #LyX 2.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 541
+\lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -101,6 +101,7 @@ logicalmkup
 \suppress_date false
 \justification true
 \use_refstyle 0
+\use_minted 0
 \notefontcolor #0000ff
 \branch OutDated
 \selected 0
@@ -116,19 +117,18 @@ logicalmkup
 \paragraph_separation indent
 \paragraph_indentation default
 \is_math_indent 1
+\math_indentation default
+\math_numbering_side default
 \quotes_style english
 \dynamic_quotes 0
 \papercolumns 1
 \papersides 2
 \paperpagestyle headings
-\tracking_changes true
+\tracking_changes false
 \output_changes false
 \html_math_output 0
 \html_css_as_file 0
 \html_be_strict true
-\author -712698321 "Jürgen Spitzmüller"
-\author 2047637253 "Guillaume Munch"
-\author 2089657418 "Usti"
 \end_header
 
 \begin_body
@@ -180,7 +180,7 @@ literal "false"
 \begin_inset Newline newline
 \end_inset
 
-Version 2.2.x 
+Version 2.3.x 
 \end_layout
 
 \begin_layout Standard
@@ -594,20 +594,14 @@ $LANG_xxx.bind
 \end_inset
 
 , that will be used first.
-\change_inserted -712698321 1483535138
-
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-
-\change_inserted -712698321 1483874001
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483535144
 citeengines/
 \end_layout
 
@@ -618,11 +612,7 @@ citeengines/
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483869840
 .citeengine
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -639,8 +629,6 @@ noprefix "false"
 \end_inset
 
  for details.
-\change_unchanged
-
 \end_layout
 
 \begin_layout Labeling
@@ -911,20 +899,14 @@ status collapsed
 .
  That is, the files define which items appear in which menus and the items
  appearing on the toolbar.
-\change_inserted -712698321 1490533733
-
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-
-\change_inserted -712698321 1490533849
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1490533738
 xtemplates/
 \end_layout
 
@@ -935,8 +917,6 @@ xtemplates/
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1490533759
 .xtemplate
 \end_layout
 
@@ -952,8 +932,6 @@ reference "chap:Including-External-Material"
 \end_inset
 
 .
-\change_unchanged
-
 \end_layout
 
 \begin_layout Subsection
@@ -1046,45 +1024,6 @@ encodings
 
  this contains tables describing how different character encodings can be
  mapped to Unicode
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-
-\change_deleted -712698321 1490533856
-\begin_inset Flex Code
-status collapsed
-
-\begin_layout Plain Layout
-external_templates
-\end_layout
-
-\end_inset
-
- this file contains the templates available to the new 
-\begin_inset Flex Noun
-status collapsed
-
-\begin_layout Plain Layout
-External
-\begin_inset space ~
-\end_inset
-
-Template
-\end_layout
-
-\end_inset
-
- feature, see 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "chap:Including-External-Material"
-
-\end_inset
-
-.
-\change_unchanged
-
 \end_layout
 
 \begin_layout Labeling
@@ -6238,7 +6177,6 @@ status collapsed
 \begin_layout Plain Layout
 
 \family sans
-\lang french
 $HOME/.texliveXXXX
 \end_layout
 
@@ -6538,11 +6476,7 @@ Now the package is installed.
 status collapsed
 
 \begin_layout Plain Layout
-Slides
-\begin_inset space ~
-\end_inset
-
-(FoilTex)
+FoilTex
 \end_layout
 
 \end_inset
@@ -6559,7 +6493,15 @@ Document Class
 
 \end_inset
 
-.
+ (in the 
+\begin_inset Quotes eld
+\end_inset
+
+Presentations
+\begin_inset Quotes erd
+\end_inset
+
+ category).
  
 \end_layout
 
@@ -6866,7 +6808,7 @@ Format
  Any format is acceptable, but one would normally use the format current
  at the time.
  (In \SpecialChar LyX
- 2.2, the current layout format is 60.)
+ 2.3, the current layout format is 63.)
 \end_layout
 
 \begin_layout Standard
@@ -7033,7 +6975,7 @@ myclass.layout
 \begin_layout LyX-Code
 
 \backslash
-DeclareLaTeXClass{report}
+DeclareLaTeXClass{Report (Standard Class)}
 \end_layout
 
 \begin_layout Standard
@@ -7043,7 +6985,7 @@ to read
 \begin_layout LyX-Code
 
 \backslash
-DeclareLaTeXClass[report, myclass.sty]{report (myclass)}
+DeclareLaTeXClass[report, myclass.sty]{Report (My Class)}
 \end_layout
 
 \begin_layout Standard
@@ -7089,7 +7031,7 @@ Reconfigure
 status collapsed
 
 \begin_layout Plain Layout
-report (myclass)
+Report (My Class)
 \end_layout
 
 \end_inset
@@ -7216,7 +7158,7 @@ myclass.sty
 \begin_layout LyX-Code
 #
 \backslash
-DeclareLyXModule{My Package} 
+DeclareLyXModule{My Class} 
 \end_layout
 
 \begin_layout LyX-Code
@@ -7224,7 +7166,7 @@ DeclareLyXModule{My Package}
 \end_layout
 
 \begin_layout LyX-Code
-#Support for mypkg.sty.
+#Support for myclass.sty.
 \end_layout
 
 \begin_layout LyX-Code
@@ -7236,7 +7178,7 @@ DeclareLyXModule{My Package}
 \end_layout
 
 \begin_layout LyX-Code
-Format 60
+Format 63
 \begin_inset Newline newline
 \end_inset
 
@@ -7250,7 +7192,7 @@ Preamble
 
     
 \backslash
-usepackage{mypkg}
+usepackage{myclass}
 \begin_inset Newline newline
 \end_inset
 
@@ -7637,13 +7579,9 @@ LyXDir
 \begin_layout Standard
 Note that manual conversion does not affect included files, so these will
  have to be converted separately.
-\change_inserted -712698321 1483873435
-
 \end_layout
 
 \begin_layout Subsection
-
-\change_inserted -712698321 1483875083
 \begin_inset CommandInset label
 LatexCommand label
 name "subsec:Cite-Engine-Files"
@@ -7654,15 +7592,11 @@ Cite engine files
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483874213
 A specific form of layout files are the so-called 
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483873546
 *.citeengine
 \end_layout
 
@@ -7673,8 +7607,6 @@ status collapsed
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483873546
 citeengines/
 \end_layout
 
@@ -7703,8 +7635,6 @@ biblatex
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483874969
 More specifically, it is defined which packages \SpecialChar LyX
  needs to load, which citation
  commands are available, how these are to be displayed in \SpecialChar LyX
@@ -7717,8 +7647,7 @@ More specifically, it is defined which packages \SpecialChar LyX
  in 
 \family sans
 Document\SpecialChar menuseparator
-Settings\SpecialChar ldots
-\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
 Bibliography\SpecialChar menuseparator
 Style engine
 \family default
@@ -7726,8 +7655,6 @@ Style engine
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483875180
 Even though a cite engine file is essentially a normal layout file that
  could theoretically include any layout information, it usually primarily
  includes some specific parameters such as 
@@ -7735,11 +7662,7 @@ Even though a cite engine file is essentially a normal layout file that
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483874688
 MaxCiteNames
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -7749,11 +7672,7 @@ MaxCiteNames
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483875180
 CiteFramework
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -7763,11 +7682,7 @@ CiteFramework
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483874477
 CiteEngine
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -7777,11 +7692,7 @@ CiteEngine
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483874482
 CiteFormat
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -7805,8 +7716,6 @@ reference "subsec:Citation-format-description"
 \end_inset
 
 , as well as in the files themselves.
-\change_unchanged
-
 \end_layout
 
 \begin_layout Section
@@ -8337,7 +8246,6 @@ Reconfigure
 Once the layout file is installed, you can edit it and see your changes
  without having to reconfigure or to restart \SpecialChar LyX
 .
- 
 \begin_inset Foot
 status collapsed
 
@@ -8503,7 +8411,7 @@ to
 \end_layout
 
 \begin_layout Standard
-The module declaration should then be followed by lines like the following
+The module declaration should then be followed by lines like the following:
 \begin_inset Foot
 status collapsed
 
@@ -8516,7 +8424,7 @@ Preferably in English if the module should be published with \SpecialChar LyX
 
 \end_inset
 
-:
+
 \end_layout
 
 \begin_layout LyX-Code
@@ -8631,41 +8539,29 @@ somemodule.module
 \end_inset
 
 .
-\change_inserted -712698321 1483873000
-
 \end_layout
 
 \begin_layout Subsection
-
-\change_inserted -712698321 1483873010
 The CiteEngine file declaration
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483873022
 A cite engine file must begin with a line like the following:
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483873047
 #
 \backslash
 DeclareLyXCiteEngineModule[biblatex.sty]{Biblatex}
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483873077
-The mandatory argument, in curly brackets, is the name of the module, as
- it should appear in 
+The mandatory argument, in curly brackets, is the name of the cite style,
+ as it should appear in 
 \begin_inset Flex Noun
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483873068
 Document\SpecialChar menuseparator
 Settings\SpecialChar menuseparator
 Bibliography
@@ -8680,15 +8576,11 @@ Bibliography
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483873102
-The cite engine declaration should then be followed by lines like the following
+The cite engine declaration should then be followed by lines like the following:
 \begin_inset Foot
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483873000
 Preferably in English if the module should be published with \SpecialChar LyX
 .
  This description will appear in the list of messages to be translated and
@@ -8697,63 +8589,45 @@ Preferably in English if the module should be published with \SpecialChar LyX
 
 \end_inset
 
-:
+
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483873128
 # DescriptionBegin
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483873140
 #   Biblatex supports many author-year and numerical styles.
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483873152
 #   It is mainly aimed at the Humanities.
  It is highly
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483873160
 #   customizable, fully localized and provides many features
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483873170
 #   that are not possible with BibTeX.
  The use of 'biber' as
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483873174
 #   bibliography processor is advised.
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483873224
 # DescriptionEnd
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483873207
 The description is used in 
 \begin_inset Flex Noun
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483873194
 Document\SpecialChar menuseparator
 Settings\SpecialChar menuseparator
 Bibliography
@@ -8762,8 +8636,6 @@ Bibliography
 \end_inset
 
  to provide the user with information about the cite engine.
-\change_unchanged
-
 \end_layout
 
 \begin_layout Subsection
@@ -8955,19 +8827,13 @@ EndPreamble
 \end_inset
 
 .
-\change_inserted -712698321 1483872509
-
 \end_layout
 
 \begin_layout Description
-
-\change_inserted -712698321 1483874560
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483872558
 CiteEngine <engine>
 \end_layout
 
@@ -8994,8 +8860,6 @@ noprefix "false"
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483872548
 End
 \end_layout
 
@@ -9017,8 +8881,6 @@ noprefix "false"
 \end_inset
 
 ).
-\change_unchanged
-
 \end_layout
 
 \begin_layout Description
@@ -9059,8 +8921,6 @@ End
 \end_inset
 
 .
-
-\change_inserted -712698321 1483875199
  Primarily used in cite engine files (see 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -9072,19 +8932,13 @@ noprefix "false"
 \end_inset
 
 ).
-\change_unchanged
-
 \end_layout
 
 \begin_layout Description
-
-\change_inserted -712698321 1483874578
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483872820
 CiteFramework
 \end_layout
 
@@ -9096,12 +8950,8 @@ status collapsed
 
 \begin_layout Plain Layout
 
-\change_inserted -712698321 1483872852
-
 \emph on
 bibtex
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -9111,11 +8961,7 @@ bibtex
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483872857
 biblatex
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -9137,8 +8983,6 @@ noprefix "false"
 \end_inset
 
 ).
-\change_unchanged
-
 \end_layout
 
 \begin_layout Description
@@ -9820,19 +9664,13 @@ MMMMM
 \end_inset
 
 .)
-\change_inserted -712698321 1483872681
-
 \end_layout
 
 \begin_layout Description
-
-\change_inserted -712698321 1483874598
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483872687
 MaxCiteNames
 \end_layout
 
@@ -9843,8 +9681,6 @@ MaxCiteNames
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483872692
 integer
 \end_layout
 
@@ -9871,8 +9707,6 @@ noprefix "false"
 \end_inset
 
 ).
-\change_unchanged
-
 \end_layout
 
 \begin_layout Description
@@ -9987,19 +9821,13 @@ status collapsed
 \end_inset
 
 ] Deletes an existing style.
-\change_inserted 2047637253 1483900342
-
 \end_layout
 
 \begin_layout Description
-
-\change_inserted 2047637253 1483900479
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483900346
 OutlinerName
 \end_layout
 
@@ -10010,8 +9838,6 @@ OutlinerName
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483900369
 <type>
 \end_layout
 
@@ -10022,8 +9848,6 @@ status collapsed
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483900418
 <string>
 \end_layout
 
@@ -10034,8 +9858,6 @@ status collapsed
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483900414
 <type>
 \end_layout
 
@@ -10046,8 +9868,6 @@ status collapsed
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483900419
 <string>
 \end_layout
 
@@ -10055,8 +9875,6 @@ status collapsed
 
 .
  See also the AddToToc commands.
-\change_unchanged
-
 \end_layout
 
 \begin_layout Description
@@ -11322,14 +11140,10 @@ where the following commands are allowed:
 \end_layout
 
 \begin_layout Description
-
-\change_inserted 2047637253 1483963019
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483901753
 AddToToc
 \end_layout
 
@@ -11340,8 +11154,6 @@ AddToToc
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483963007
 string
 \end_layout
 
@@ -12097,19 +11909,13 @@ status collapsed
 
 , this argument will be inserted with a copy of the co-text (either selected
  text or the whole paragraph) as content.
-\change_inserted -712698321 1477038290
-
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1477038425
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1477038295
 PassThru
 \end_layout
 
@@ -12120,8 +11926,6 @@ PassThru
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1477038311
 
 \emph on
 inherited
@@ -12139,8 +11943,6 @@ inherited
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1477038356
 PassThru
 \end_layout
 
@@ -12148,8 +11950,6 @@ PassThru
 
  status is inherited by the inset or paragraph layout the argument belongs
  to, true and false change the status for the given argument only.
-\change_unchanged
-
 \end_layout
 
 \begin_layout Itemize
@@ -12183,19 +11983,13 @@ Defines individual characters that should be output in raw form, meaning
  arguments.
  That is, arguments do not inherit PassThruChars from their parent inset
  or layout.
-\change_inserted 2047637253 1483899840
-
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted 2047637253 1483900841
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483900841
 IsTocCaption
 \end_layout
 
@@ -12206,8 +12000,6 @@ IsTocCaption
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483900841
 
 \emph on
 0
@@ -12224,8 +12016,6 @@ status collapsed
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483900841
 1
 \end_layout
 
@@ -12234,8 +12024,6 @@ status collapsed
 ] If this is set to 1, the argument will output its content in the corresponding
  item in the table of contents.
  See AddToToc.
-\change_unchanged
-
 \end_layout
 
 \begin_layout Standard
@@ -13097,14 +12885,10 @@ TitleLatexName
 \end_layout
 
 \begin_layout Description
-
-\change_inserted 2047637253 1483902824
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483902211
 IsTocCaption
 \end_layout
 
@@ -13115,8 +12899,6 @@ IsTocCaption
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483902211
 
 \emph on
 0
@@ -13133,8 +12915,6 @@ status collapsed
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483902211
 1
 \end_layout
 
@@ -14986,7 +14766,7 @@ status collapsed
 
 \end_inset
 
-] Determines whether consecutive pragraphs of the same type are treated
+] Determines whether consecutive paragraphs of the same type are treated
  as belonging together.
  This has the effect that the 
 \begin_inset Flex Code
@@ -15546,19 +15326,13 @@ CopyStyle
 \end_inset
 
 , but you do not want to inherit its (required and optional) arguments.
-\change_inserted 2089657418 1476488475
-
 \end_layout
 
 \begin_layout Description
-
-\change_inserted 2089657418 1476488475
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2089657418 1476488475
 ResumeCounter
 \end_layout
 
@@ -15569,8 +15343,6 @@ ResumeCounter
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2089657418 1476488475
 
 \emph on
 0
@@ -15583,8 +15355,6 @@ status collapsed
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2089657418 1476488475
 1
 \end_layout
 
@@ -15596,8 +15366,6 @@ status collapsed
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2089657418 1476488475
 LabelType
 \end_layout
 
@@ -15608,16 +15376,12 @@ LabelType
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2089657418 1476488475
 Enumerate
 \end_layout
 
 \end_inset
 
 .
-\change_unchanged
-
 \end_layout
 
 \begin_layout Description
@@ -15852,19 +15616,13 @@ status collapsed
 
 ] Allow spell-checking paragraphs of this style.
  Default is true.
-\change_inserted 2089657418 1476488264
-
 \end_layout
 
 \begin_layout Description
-
-\change_inserted 2089657418 1476488264
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2089657418 1476488264
 StepMasterCounter
 \end_layout
 
@@ -15875,8 +15633,6 @@ StepMasterCounter
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2089657418 1476488264
 
 \emph on
 0
@@ -15889,8 +15645,6 @@ status collapsed
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2089657418 1476488264
 1
 \end_layout
 
@@ -15903,8 +15657,6 @@ status collapsed
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2089657418 1476488264
 LabelType
 \end_layout
 
@@ -15915,16 +15667,12 @@ LabelType
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2089657418 1476488264
 Enumerate
 \end_layout
 
 \end_inset
 
 .
-\change_unchanged
-
 \end_layout
 
 \begin_layout Description
@@ -16505,7 +16253,7 @@ g.
 \begin_inset space \space{}
 \end_inset
 
-from 2.0.x to 2.1.y) will introduce new translations or corrections.
+from 2.0.x to 2.1.0) will introduce new translations or corrections.
 \end_layout
 
 \begin_layout Subsection
@@ -18096,14 +17844,10 @@ InsetLayout
 \end_layout
 
 \begin_layout Description
-
-\change_inserted 2047637253 1483963036
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483900123
 AddToToc
 \end_layout
 
@@ -18114,8 +17858,6 @@ AddToToc
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483962897
 string
 \end_layout
 
@@ -18988,28 +18730,19 @@ status collapsed
 \end_inset
 
 ] Whether to include the contents of this inset in the strings generated
- for the `Outline' pane
-\change_inserted 2047637253 1483900773
- for all table of contents, regardless of the AddToToc setting
-\change_unchanged
-.
+ for the `Outline' pane for all table of contents, regardless of the AddToToc
+ setting.
  One would not, for example, want the content of a footnote in a section
  header to be included in the TOC displayed in the outline, but one would
  normally want the content of a character style displayed.
  Default is false: not to include.
-\change_inserted 2047637253 1483900609
-
 \end_layout
 
 \begin_layout Description
-
-\change_inserted 2047637253 1483901257
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483900725
 IsTocCaption
 \end_layout
 
@@ -19020,8 +18753,6 @@ IsTocCaption
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483900620
 
 \emph on
 0
@@ -19038,8 +18769,6 @@ status collapsed
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted 2047637253 1483900620
 1
 \end_layout
 
@@ -19048,8 +18777,6 @@ status collapsed
 ] If this is set to 1 and AddToToc is enabled, the inset adds a summary
  of its contents in its item in the table of contents.
  Otherwise, only the label appears.
-\change_unchanged
-
 \end_layout
 
 \begin_layout Description
@@ -20771,7 +20498,10 @@ or
 \emph default
  LabelFont
 \emph on
- or
+ 
+\family roman
+or
+\family default
 \emph default
  DefaultFont
 \end_layout
@@ -21417,30 +21147,22 @@ giant
 \end_layout
 
 \begin_layout Subsection
-
-\change_inserted -712698321 1483869872
 \begin_inset CommandInset label
 LatexCommand label
 name "subsec:Citation-engine-description"
 
 \end_inset
 
-Citation engine description
+Cite engine description
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483875281
 The 
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483869913
 CiteEngine
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21472,17 +21194,11 @@ cite engine
 \end_layout
 
 \begin_layout Enumerate
-
-\change_inserted -712698321 1483875764
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483870430
 default
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21504,17 +21220,11 @@ g.,
 \end_layout
 
 \begin_layout Enumerate
-
-\change_inserted -712698321 1483875766
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483870434
 authoryear
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21535,17 +21245,11 @@ Smith and Miller (2017b)
 \end_layout
 
 \begin_layout Enumerate
-
-\change_inserted -712698321 1483875769
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483870457
 numerical
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21567,14 +21271,10 @@ Smith and Miller [1]
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483870566
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483870552
 CiteEngine
 \end_layout
 
@@ -21584,51 +21284,35 @@ CiteEngine
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483870590
 CiteEngine default
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483870615
  cite
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483870633
  Citep*[][]
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483870652
  citeyearpar[][]=parencite*
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483870652
  ...
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483870668
 End
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483871113
 The tag following 
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871085
 CiteEngine
 \end_layout
 
@@ -21642,35 +21326,19 @@ CiteEngine
  command and the \SpecialChar LaTeX
  output or more complex in order to differentiate
  things.
- 
-\change_deleted -712698321 1483871114
-
-\end_layout
-
-\begin_layout Standard
-
-\change_inserted -712698321 1483871119
-The full syntax is:
+ The full syntax is:
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1484997816
 LyXName|alias$*<!_stardesc!_stardesctooltip>[][]=latexcmd
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483871222
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871181
 LyXName
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21680,11 +21348,7 @@ LyXName
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871216
 *.lyx
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21694,8 +21358,6 @@ status collapsed
 
 \begin_deeper
 \begin_layout Standard
-
-\change_inserted -712698321 1483871487
 For portability reasons, we try to use the same name for same-formatted
  commands in different cite packages (thus many names stem from natbib,
  and thus we need to differentiate a 
@@ -21703,8 +21365,6 @@ For portability reasons, we try to use the same name for same-formatted
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871402
 latexcmd
 \end_layout
 
@@ -21716,17 +21376,11 @@ latexcmd
 
 \end_deeper
 \begin_layout Itemize
-
-\change_inserted -712698321 1483871583
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871186
 alias
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21736,8 +21390,6 @@ alias
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871257
 LyXName
 \end_layout
 
@@ -21750,8 +21402,6 @@ LyXName
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871559
 alias
 \end_layout
 
@@ -21762,11 +21412,7 @@ alias
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871278
 ObsoletedBy
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21775,17 +21421,11 @@ ObsoletedBy
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483871307
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871296
 latexcmd
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21796,17 +21436,11 @@ latexcmd
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483871348
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871316
 Alias
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21816,11 +21450,7 @@ Alias
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871321
 latexcmd
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21831,8 +21461,6 @@ latexcmd
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871333
 latexcmd
 \end_layout
 
@@ -21843,8 +21471,6 @@ latexcmd
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871340
 LyXName
 \end_layout
 
@@ -21855,26 +21481,18 @@ LyXName
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483871604
 Note further:
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483871664
 Capitalization indicates that the command also has a capitalized form (
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
 
-\change_inserted -712698321 1483871622
-
 \backslash
 Latexcmd
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21886,12 +21504,8 @@ status collapsed
 
 \begin_layout Plain Layout
 
-\change_inserted -712698321 1483871626
-
 \backslash
 latexcmd
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21913,18 +21527,12 @@ Von Goethe
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483871690
 Brackets 
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871670
 []
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21933,18 +21541,12 @@ status collapsed
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483871747
 A star 
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871698
 *
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21955,12 +21557,8 @@ status collapsed
 
 \begin_layout Plain Layout
 
-\change_inserted -712698321 1483871718
-
 \backslash
 latexcmd*
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21972,12 +21570,8 @@ status collapsed
 
 \begin_layout Plain Layout
 
-\change_inserted -712698321 1483871724
-
 \backslash
 latexcmd
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -21988,8 +21582,6 @@ latexcmd
 
 \begin_deeper
 \begin_layout Standard
-
-\change_inserted -712698321 1483871864
 By default, the starred version means: Output all authors even if it should
  be shortened with 
 \begin_inset Quotes eld
@@ -22004,11 +21596,7 @@ et al.
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871835
 MaxCiteNames
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22017,19 +21605,13 @@ MaxCiteNames
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483872045
 If the star has a different meaning for a given command, it can be specified
  in angle brackets: 
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871856
 <!_stardesc!_stardesctooltip>
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22040,11 +21622,7 @@ status collapsed
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483872014
 !_
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22064,18 +21642,12 @@ Full aut&hor list
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483872164
 Note that these two macros have to be defined in a 
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483871983
 CiteFormat
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22085,11 +21657,7 @@ CiteFormat
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483872023
 !
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22098,31 +21666,21 @@ status collapsed
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483872092
 _stardesc Sta&rred command label
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1484997832
 _stardesctooltip Tooltip for the starred command checkbox.
 \end_layout
 
 \end_deeper
 \begin_layout Itemize
-
-\change_inserted -712698321 1484997948
 A dollar sign 
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1484997871
 $
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22156,7 +21714,7 @@ name "subsec:Citation-format-description"
 
 \end_inset
 
-Citation format description
+Cite format description
 \end_layout
 
 \begin_layout Standard
@@ -22191,73 +21749,39 @@ CiteFormat
 
 \begin_layout LyX-Code
 End
-\change_inserted -712698321 1483867197
-
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483867200
 or
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483867195
 CiteFormat
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483867204
  cite ...
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483867359
  citet*[][] ...
 \end_layout
 
 \begin_layout LyX-Code
-
-\change_inserted -712698321 1483867195
 End
-\change_unchanged
-
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483867269
-In the first case, 
-\change_deleted -712698321 1483867270
-T
-\change_inserted -712698321 1483867270
-t
-\change_unchanged
-he individual lines define how the bibliographic information associated
- with an article or book, respectively, is to be displayed, and such a definitio
-n can be given for any 
-\change_deleted -712698321 1483867550
-`
-\change_inserted -712698321 1483867550
-
+In the first case, the individual lines define how the bibliographic information
+ associated with an article or book, respectively, is to be displayed, and
+ such a definition can be given for any 
 \begin_inset Quotes els
 \end_inset
 
-
-\change_unchanged
 entry type
-\change_deleted -712698321 1483867552
-'
-\change_inserted -712698321 1483867552
-
 \begin_inset Quotes ers
 \end_inset
 
-
-\change_unchanged
  that might be present in a Bib\SpecialChar TeX
  file.
  \SpecialChar LyX
@@ -22276,13 +21800,9 @@ stdciteformats.inc
 
 , which is included in most of \SpecialChar LyX
 's document classes.
-\change_inserted -712698321 1483867288
-
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483875512
 In the second case, the lines define how a specific citation command (in
  the example 
 \begin_inset Flex Code
@@ -22290,12 +21810,8 @@ status collapsed
 
 \begin_layout Plain Layout
 
-\change_inserted -712698321 1483867674
-
 \backslash
 cite
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22306,12 +21822,8 @@ status collapsed
 
 \begin_layout Plain Layout
 
-\change_inserted -712698321 1483867679
-
 \backslash
 citet
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22331,8 +21843,6 @@ Bibliography\SpecialChar ldots
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483875503
 *.citeengine
 \end_layout
 
@@ -22350,8 +21860,6 @@ noprefix "false"
 \end_inset
 
 ).
-\change_unchanged
-
 \end_layout
 
 \begin_layout Standard
@@ -22529,29 +22037,19 @@ status collapsed
 
 .
  There must be no space between any of these.
-\change_inserted -712698321 1483867855
-
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483867910
 Next to the entry keys, there are some special keys that can be used for
  these conditionals:
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483868049
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483867962
 {%dialog%[[true]][[false]]}
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22576,14 +22074,10 @@ false
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483868068
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483868052
 {%export%[[true]][[false]]}
 \end_layout
 
@@ -22609,14 +22103,10 @@ false
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483868138
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483868076
 {%next%[[true]]}
 \end_layout
 
@@ -22638,14 +22128,10 @@ g., in a citation with multiple keys)
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483868174
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483868144
 {%second%[[true]][[false]]}
 \end_layout
 
@@ -22671,14 +22157,10 @@ false
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483868321
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483868259
 {%ifstar%[[true]][[false]]}
 \end_layout
 
@@ -22698,12 +22180,8 @@ status collapsed
 
 \begin_layout Plain Layout
 
-\change_inserted -712698321 1483868310
-
 \backslash
 cite*
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22712,14 +22190,10 @@ cite*
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483978485
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483868330
 {%ifentrytype:<type>%[[true]][[false]]}
 \end_layout
 
@@ -22738,11 +22212,7 @@ true
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483868364
 <type>
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22752,11 +22222,7 @@ status collapsed
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483868420
 {%ifentrytype:book%[[this is a book]][[this is no book]]}
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22765,14 +22231,10 @@ status collapsed
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1484997600
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483978499
 {%ifmultiple:<authortype>%[[true]][[false]]}
 \end_layout
 
@@ -22792,8 +22254,6 @@ true
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483978571
 {%ifmultiple:editor%[[eds.]][[ed.]]}
 \end_layout
 
@@ -22803,14 +22263,10 @@ status collapsed
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1484997681
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1484997608
 {%ifqualified%[[true]][[false]]}
 \end_layout
 
@@ -22830,20 +22286,14 @@ Biblatex
 \family default
  format for multi-reference citations), the false part if this is not the
  case.
-\change_unchanged
-
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483978958
 We said that 
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483978693
 %author%
 \end_layout
 
@@ -22876,8 +22326,6 @@ and
 \end_layout
 
 \begin_layout Enumerate
-
-\change_inserted -712698321 1483979807
 For name lists with pre- and surname, suitable for the main authors/editors
  of a bibliography item.
  The 
@@ -22885,11 +22333,7 @@ For name lists with pre- and surname, suitable for the main authors/editors
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483979800
 <nametype>
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22900,11 +22344,7 @@ status collapsed
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483979807
 <nametype:author>
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22914,17 +22354,11 @@ status collapsed
 
 \begin_deeper
 \begin_layout Itemize
-
-\change_inserted -712698321 1483979186
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483979743
 %abbrvnames:<nametype>%
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22942,11 +22376,7 @@ et al.
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483979186
 MaxCiteNames
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22955,17 +22385,11 @@ MaxCiteNames
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483979527
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483979748
 %fullnames:<nametype>%
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -22982,17 +22406,11 @@ et al.
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483979553
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483980138
 %forceabbrvnames:<nametype>%
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -23010,22 +22428,16 @@ et al.
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483979535
 MaxCiteNames
 \end_layout
 
 \end_inset
 
 .
-\change_unchanged
-
 \end_layout
 
 \end_deeper
 \begin_layout Enumerate
-
-\change_inserted -712698321 1483979413
 Alternative name lists with pre- and surname, if the order of pre- and surname
  inside the bibliography item differs (as in: 
 \begin_inset Quotes eld
@@ -23036,23 +22448,15 @@ Miller, John: Some text, in: Mary Smith, ed.: A volume
 \end_inset
 
 ):
-\change_unchanged
-
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-
-\change_inserted -712698321 1483979565
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483979751
 %abbrvbynames:<nametype>%
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -23070,30 +22474,20 @@ et al.
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483979565
 MaxCiteNames
 \end_layout
 
 \end_inset
 
  is reached.
-\change_unchanged
-
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483979570
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483979753
 %fullbynames:<nametype>%
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -23107,22 +22501,14 @@ et al.
 \end_inset
 
 ).
-\change_unchanged
-
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483979576
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483980143
 %forceabbrvbynames:<nametype>%
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -23140,8 +22526,6 @@ et al.
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483979574
 MaxCiteNames
 \end_layout
 
@@ -23152,43 +22536,29 @@ MaxCiteNames
 
 \end_deeper
 \begin_layout Enumerate
-
-\change_inserted -712698321 1483980219
 And finally name lists which consist of family names only, as used in author-yea
 r citation labels.
- these do not take a 
+ These do not take a 
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483979871
 <nametype>
-\change_unchanged
-
 \end_layout
 
 \end_inset
 
  part, but always return either an author list or, if this does not exist,
  an editor list (as common in author-year labels):
-\change_unchanged
-
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-
-\change_inserted -712698321 1483979715
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483979700
 %abbrvciteauthor%
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -23206,30 +22576,20 @@ et al.
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483979715
 MaxCiteNames
 \end_layout
 
 \end_inset
 
  is reached.
-\change_unchanged
-
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483979721
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483979703
 %fullciteauthor%
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -23243,22 +22603,14 @@ et al.
 \end_inset
 
 ).
-\change_unchanged
-
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483980272
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483979705
 %forceabbrvciteauthor%
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -23276,8 +22628,6 @@ et al.
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483979726
 MaxCiteNames
 \end_layout
 
@@ -23288,24 +22638,16 @@ MaxCiteNames
 
 \end_deeper
 \begin_layout Standard
-
-\change_inserted -712698321 1483980314
 The order of pre- and surname in the former two lists can be adjusted by
  these macros:
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483980535
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483980354
 !firstnameform %surname%, %prename%
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -23314,38 +22656,24 @@ status collapsed
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483980557
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483980367
 !othernameform %surname%, %prename%
-\change_unchanged
-
 \end_layout
 
 \end_inset
 
  (other authors in lists of type 1)
-\change_unchanged
-
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483980550
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483980373
 !firstbynameform %prename% %surname%
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -23354,17 +22682,11 @@ status collapsed
 \end_layout
 
 \begin_layout Itemize
-
-\change_inserted -712698321 1483980570
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483980381
 !otherbynameform %prename% %surname%
-\change_unchanged
-
 \end_layout
 
 \end_inset
@@ -23373,8 +22695,6 @@ status collapsed
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1483980643
 This allows you to configure namings like 
 \begin_inset Quotes eld
 \end_inset
@@ -23386,8 +22706,6 @@ Miller, Peter and Mary Smith: \SpecialChar ldots
 \end_inset
 
 .
-\change_unchanged
-
 \end_layout
 
 \begin_layout Standard
@@ -23514,11 +22832,7 @@ _pptext pp.
 
 \begin_layout Standard
 This defines a translatable piece of text, which allows relevant parts of
- the bibliography 
-\change_inserted -712698321 1483868477
-or citation 
-\change_unchanged
-to be translated.
+ the bibliography or citation to be translated.
  It can be included in a definition by treating it as a key: 
 \begin_inset Flex Code
 status collapsed
@@ -23540,25 +22854,17 @@ stdciteformats.inc
 
 \end_inset
 
-
-\change_inserted -712698321 1483868503
  and the diverse 
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1483868503
 *.citeengine
-\change_unchanged
-
 \end_layout
 
 \end_inset
 
- files
-\change_unchanged
-.
+ files.
  Note that these are not macros, in the sense just defined.
  They will not be expanded.
 \end_layout
@@ -25703,11 +25009,7 @@ Besides supporting the production of different products according to the
 \end_layout
 
 \begin_layout Section
-The external template configuration file
-\change_inserted -712698321 1490533960
-s
-\change_unchanged
-
+The external template configuration files
 \end_layout
 
 \begin_layout Standard
@@ -25735,85 +25037,39 @@ Having said that, we encourage you to submit any interesting templates that
 \end_layout
 
 \begin_layout Standard
-The external templates are defined in the
-\change_inserted -712698321 1490534022
- 
+The external templates are defined in the 
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-
-\change_inserted -712698321 1490533996
 *.xtemplate
 \end_layout
 
 \end_inset
 
- files that are stored in the
-\change_unchanged
- 
+ files that are stored in the 
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-LyXDir/lib/
-\change_deleted -712698321 1490533984
-external_
-\change_inserted -712698321 1490533984
-x
-\change_unchanged
-templates
-\change_inserted -712698321 1490534077
-/
-\change_unchanged
-
+LyXDir/lib/xtemplates/
 \end_layout
 
 \end_inset
 
- 
-\change_deleted -712698321 1490534025
-file
-\change_inserted -712698321 1490534028
-directory
-\change_unchanged
-.
- 
-\change_inserted -712698321 1490534233
-Each template is defined in a file of its own.
- 
-\change_unchanged
-You can place your own 
-\change_deleted -712698321 1490534089
-version
-\change_inserted -712698321 1490534090
-templates
-\change_unchanged
- in 
+ directory.
+ Each template is defined in a file of its own.
+ You can place your own templates in 
 \begin_inset Flex Code
 status collapsed
 
 \begin_layout Plain Layout
-UserDir/
-\change_deleted -712698321 1490534069
-external_
-\change_inserted -712698321 1490534069
-x
-\change_unchanged
-templates
-\change_inserted -712698321 1490534080
-/
-\change_unchanged
-
+UserDir/xtemplates/
 \end_layout
 
 \end_inset
 
-
-\change_inserted -712698321 1490534112
- or copy existing templates to that directory in order to modify them
-\change_unchanged
-.
+ or copy existing templates to that directory in order to modify them.
 \end_layout
 
 \begin_layout Standard
@@ -28326,9 +27582,25 @@ name "chap:Names-of-colors"
 \end_layout
 
 \begin_layout Standard
-The colors listed here are the standard colors and the those that you can
- adjust in the \SpecialChar LyX
+The colors listed below are the standard colors and those that you can adjust
+ in the \SpecialChar LyX
  preferences.
+\end_layout
+
+\begin_layout Section
+Color functions
+\end_layout
+
+\begin_layout Standard
+The following are no real colors, but rather act on color definitions:
+\end_layout
+
+\begin_layout Description
+ignore The color is ignored
+\end_layout
+
+\begin_layout Description
+inherit The color is inherited
 \end_layout
 
 \begin_layout Description
@@ -28347,6 +27619,14 @@ none
  No particular color – clear or default
 \end_layout
 
+\begin_layout Section
+Static colors
+\end_layout
+
+\begin_layout Standard
+These are fixed colors that cannot me customized:
+\end_layout
+
 \begin_layout Description
 black
 \end_layout
@@ -28356,15 +27636,11 @@ white
 \end_layout
 
 \begin_layout Description
-red
-\end_layout
-
-\begin_layout Description
-green
-\end_layout
-
-\begin_layout Description
 blue
+\end_layout
+
+\begin_layout Description
+brown
 \end_layout
 
 \begin_layout Description
@@ -28372,15 +27648,77 @@ cyan
 \end_layout
 
 \begin_layout Description
+darkgray
+\end_layout
+
+\begin_layout Description
+gray
+\end_layout
+
+\begin_layout Description
+green
+\end_layout
+
+\begin_layout Description
+lightgray
+\end_layout
+
+\begin_layout Description
+lime
+\end_layout
+
+\begin_layout Description
 magenta
+\end_layout
+
+\begin_layout Description
+olive
+\end_layout
+
+\begin_layout Description
+orange
+\end_layout
+
+\begin_layout Description
+pink
+\end_layout
+
+\begin_layout Description
+purple
+\end_layout
+
+\begin_layout Description
+red
+\end_layout
+
+\begin_layout Description
+teal
+\end_layout
+
+\begin_layout Description
+violet
 \end_layout
 
 \begin_layout Description
 yellow
 \end_layout
 
+\begin_layout Section
+Dynamic colors
+\end_layout
+
+\begin_layout Standard
+These are the colors allocated to specific elements in 
+\begin_inset Info
+type  "menu"
+arg   "dialog-show prefs"
+\end_inset
+
+:
+\end_layout
+
 \begin_layout Description
-added_space Added space marker color
+added_space Added space color
 \end_layout
 
 \begin_layout Description
@@ -28408,11 +27746,11 @@ buttonbg Color used for button background
 \end_layout
 
 \begin_layout Description
-buttonhoverbg Color used for button background under focus
+buttonframe Color for inset button frames
 \end_layout
 
 \begin_layout Description
-buttonframe Color for inset button frames
+buttonhoverbg Color used for button background under focus
 \end_layout
 
 \begin_layout Description
@@ -28440,11 +27778,11 @@ changedtextauthor5 Changed text color author 5
 \end_layout
 
 \begin_layout Description
-collapsable_inset_frame Collapsable insets framecolor
+collapsable Collapsable insets text color
 \end_layout
 
 \begin_layout Description
-collapsable_inset_text Collapsable insets text color
+collapsableframe Collapsable insets framecolor
 \end_layout
 
 \begin_layout Description
@@ -28460,11 +27798,11 @@ commandframe Frame color for command insets
 \end_layout
 
 \begin_layout Description
-comment color for comments
+commentbg Background color of comments
 \end_layout
 
 \begin_layout Description
-commentbg Background color of comments
+commentlabel Label color for comments
 \end_layout
 
 \begin_layout Description
@@ -28497,15 +27835,19 @@ footlabel Label color for footnotes
 \end_layout
 
 \begin_layout Description
+foreground Foreground color
+\end_layout
+
+\begin_layout Description
 graphicsbg Graphics inset background color
 \end_layout
 
 \begin_layout Description
-greyedout Label color for greyedout insets
+greyedoutbg Background color of greyedout inset
 \end_layout
 
 \begin_layout Description
-greyedoutbg Background color of greyedout inset
+greyedoutlabel Label color for greyedout insets
 \end_layout
 
 \begin_layout Description
@@ -28514,14 +27856,6 @@ greyedouttext Color for greyedout inset text
 
 \begin_layout Description
 indexlabel Label color for index insets
-\end_layout
-
-\begin_layout Description
-ignore The color is ignored
-\end_layout
-
-\begin_layout Description
-inherit The color is inherited
 \end_layout
 
 \begin_layout Description
@@ -28639,6 +27973,10 @@ previewframe Preview frame color
 
 \begin_layout Description
 regexpframe Color for regexp frame
+\end_layout
+
+\begin_layout Description
+scroll Color that indicates when a row can be scrolled 
 \end_layout
 
 \begin_layout Description

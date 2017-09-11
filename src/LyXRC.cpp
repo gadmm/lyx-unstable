@@ -59,7 +59,7 @@ namespace {
 
 // The format should also be updated in configure.py, and conversion code
 // should be added to prefs2prefs_prefs.py.
-static unsigned int const LYXRC_FILEFORMAT = 22; // ef: pygmentize_command
+static unsigned int const LYXRC_FILEFORMAT = 24; // lasgouttes: remove qimage
 
 // when adding something to this array keep it sorted!
 LexerKeyword lyxrcTags[] = {
@@ -98,6 +98,7 @@ LexerKeyword lyxrcTags[] = {
 	{ "\\default_decimal_point", LyXRC::RC_DEFAULT_DECIMAL_POINT },
 	{ "\\default_length_unit", LyXRC::RC_DEFAULT_LENGTH_UNIT },
 	{ "\\default_otf_view_format", LyXRC::RC_DEFAULT_OTF_VIEW_FORMAT },
+	{ "\\default_platex_view_format", LyXRC::RC_DEFAULT_PLATEX_VIEW_FORMAT },
 	{ "\\default_view_format", LyXRC::RC_DEFAULT_VIEW_FORMAT },
 	{ "\\dialogs_iconify_with_main", LyXRC::RC_DIALOGS_ICONIFY_WITH_MAIN },
 	{ "\\display_graphics", LyXRC::RC_DISPLAY_GRAPHICS },
@@ -195,7 +196,6 @@ LexerKeyword lyxrcTags[] = {
 	{ "\\use_converter_needauth_forbidden", LyXRC::RC_USE_CONVERTER_NEEDAUTH_FORBIDDEN },
 	{ "\\use_lastfilepos", LyXRC::RC_USELASTFILEPOS },
 	{ "\\use_pixmap_cache", LyXRC::RC_USE_PIXMAP_CACHE },
-	{ "\\use_qimage", LyXRC::RC_USE_QIMAGE },
 	// compatibility with versions older than 1.4.0 only
 	{ "\\use_system_colors", LyXRC::RC_USE_SYSTEM_COLORS },
 	{ "\\use_system_theme_icons", LyXRC::RC_USE_SYSTEM_THEME_ICONS },
@@ -237,6 +237,7 @@ void LyXRC::setDefaults()
 	view_dvi_paper_option.erase();
 	default_view_format = "pdf2";
 	default_otf_view_format = "pdf4";
+	default_platex_view_format = "pdf3";
 	chktex_command = "chktex -n1 -n3 -n6 -n9 -n22 -n25 -n30 -n38";
 	bibtex_command = "automatic";
 	fontenc = "default";
@@ -245,8 +246,8 @@ void LyXRC::setDefaults()
 	pygmentize_command = string();
 	dpi = 75;
 	// Because a screen is typically wider than a piece of paper:
-	zoom = 150;
-	currentZoom = zoom;
+	defaultZoom = 150;
+	currentZoom = defaultZoom;
 	allow_geometry_session = true;
 	// Default LaTeX font size:
 	font_sizes[FONT_SIZE_TINY] = "5.0";
@@ -327,7 +328,6 @@ void LyXRC::setDefaults()
 	use_system_colors = false;
 	use_tooltip = true;
 	use_pixmap_cache = false;
-	use_qimage = true;
 	converter_cache_maxage = 6 * 30 * 24 * 3600; // 6 months
 	user_name = to_utf8(support::user_name());
 	user_email = to_utf8(support::user_email());
@@ -624,9 +624,9 @@ LyXRC::ReturnValues LyXRC::read(Lexer & lexrc, bool check_format)
 			break;
 
 		case RC_SCREEN_ZOOM:
-			lexrc >> zoom;
-			if (zoom < 10)
-				zoom = 10;
+			lexrc >> defaultZoom;
+			if (defaultZoom < 10)
+				defaultZoom = 10;
 			break;
 
 		case RC_GEOMETRY_SESSION:
@@ -880,9 +880,6 @@ LyXRC::ReturnValues LyXRC::read(Lexer & lexrc, bool check_format)
 		case RC_USE_PIXMAP_CACHE:
 			lexrc >> use_pixmap_cache;
 			break;
-		case RC_USE_QIMAGE:
-			lexrc >> use_qimage;
-			break;
 		case RC_SPELLCHECKER:
 			lexrc >> spellchecker;
 			break;
@@ -1080,6 +1077,10 @@ LyXRC::ReturnValues LyXRC::read(Lexer & lexrc, bool check_format)
 
 		case RC_DEFAULT_OTF_VIEW_FORMAT:
 			lexrc >> default_otf_view_format;
+			break;
+
+		case RC_DEFAULT_PLATEX_VIEW_FORMAT:
+			lexrc >> default_platex_view_format;
 			break;
 
 		case RC_DEFAULT_VIEW_FORMAT:
@@ -1324,7 +1325,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_DEFFILE:
 		if (ignore_system_lyxrc ||
 		    def_file != system_lyxrc.def_file) {
@@ -1341,7 +1342,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		   << "# MISC SECTION ######################################\n"
 		   << "#\n\n";
 		// bind files are not done here.
-
+		// fall through
 	case RC_PATH_PREFIX:
 		if (ignore_system_lyxrc ||
 		    path_prefix != system_lyxrc.path_prefix) {
@@ -1349,6 +1350,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_UIFILE:
 		if (ignore_system_lyxrc ||
 		    ui_file != system_lyxrc.ui_file) {
@@ -1357,6 +1359,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_AUTOREGIONDELETE:
 		if (ignore_system_lyxrc ||
 		    auto_region_delete != system_lyxrc.auto_region_delete) {
@@ -1367,6 +1370,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_AUTORESET_OPTIONS:
 		if (ignore_system_lyxrc ||
 		    auto_reset_options != system_lyxrc.auto_reset_options) {
@@ -1378,6 +1382,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_AUTOSAVE:
 		if (ignore_system_lyxrc ||
 		    autosave != system_lyxrc.autosave) {
@@ -1386,6 +1391,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_DISPLAY_GRAPHICS:
 		if (ignore_system_lyxrc ||
 		    display_graphics != system_lyxrc.display_graphics) {
@@ -1397,6 +1403,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_SORT_LAYOUTS:
 		if (ignore_system_lyxrc ||
 		    sort_layouts != system_lyxrc.sort_layouts) {
@@ -1405,6 +1412,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_GROUP_LAYOUTS:
 		if (ignore_system_lyxrc ||
 		    group_layouts != system_lyxrc.group_layouts) {
@@ -1413,6 +1421,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_VIEWDVI_PAPEROPTION:
 		if (ignore_system_lyxrc ||
 		    view_dvi_paper_option
@@ -1424,6 +1433,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_CHKTEX_COMMAND:
 		if (ignore_system_lyxrc ||
 		    chktex_command != system_lyxrc.chktex_command) {
@@ -1431,6 +1441,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_BIBTEX_ALTERNATIVES: {
 		CommandSet::const_iterator it = bibtex_alternatives.begin();
 		CommandSet::const_iterator end = bibtex_alternatives.end();
@@ -1443,6 +1454,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		if (tag != RC_LAST)
 			break;
 	}
+	// fall through
 	case RC_BIBTEX_COMMAND:
 		if (ignore_system_lyxrc ||
 		    bibtex_command != system_lyxrc.bibtex_command) {
@@ -1450,6 +1462,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_JBIBTEX_COMMAND:
 		if (ignore_system_lyxrc ||
 		    jbibtex_command != system_lyxrc.jbibtex_command) {
@@ -1457,6 +1470,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_JBIBTEX_ALTERNATIVES: {
 		CommandSet::const_iterator it = jbibtex_alternatives.begin();
 		CommandSet::const_iterator end = jbibtex_alternatives.end();
@@ -1469,6 +1483,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		if (tag != RC_LAST)
 			break;
 	}
+	// fall through
 	case RC_INDEX_ALTERNATIVES: {
 		CommandSet::const_iterator it = index_alternatives.begin();
 		CommandSet::const_iterator end = index_alternatives.end();
@@ -1481,6 +1496,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		if (tag != RC_LAST)
 			break;
 	}
+	// fall through
 	case RC_INDEX_COMMAND:
 		if (ignore_system_lyxrc ||
 		    index_command != system_lyxrc.index_command) {
@@ -1488,6 +1504,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_JINDEX_COMMAND:
 		if (ignore_system_lyxrc ||
 		    jindex_command != system_lyxrc.jindex_command) {
@@ -1495,6 +1512,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_SPLITINDEX_COMMAND:
 		if (ignore_system_lyxrc ||
 		    splitindex_command != system_lyxrc.splitindex_command) {
@@ -1502,6 +1520,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_NOMENCL_COMMAND:
 		if (ignore_system_lyxrc ||
 		    nomencl_command != system_lyxrc.nomencl_command) {
@@ -1509,6 +1528,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_PYGMENTIZE_COMMAND:
 		if (ignore_system_lyxrc ||
 		    pygmentize_command != system_lyxrc.pygmentize_command) {
@@ -1516,6 +1536,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_TEX_EXPECTS_WINDOWS_PATHS:
 		// Don't write this setting to the preferences file,
 		// but allow temporary changes (bug 7557).
@@ -1525,6 +1546,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_TEX_ALLOWS_SPACES:
 		if (tex_allows_spaces != system_lyxrc.tex_allows_spaces) {
 			os << "\\tex_allows_spaces "
@@ -1532,6 +1554,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_KBMAP:
 		if (ignore_system_lyxrc ||
 		    use_kbmap != system_lyxrc.use_kbmap) {
@@ -1539,6 +1562,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_KBMAP_PRIMARY:
 		if (ignore_system_lyxrc ||
 		    primary_kbmap != system_lyxrc.primary_kbmap) {
@@ -1547,6 +1571,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_KBMAP_SECONDARY:
 		if (ignore_system_lyxrc ||
 		    secondary_kbmap != system_lyxrc.secondary_kbmap) {
@@ -1555,6 +1580,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_SERVERPIPE:
 		if (ignore_system_lyxrc ||
 		    lyxpipes != system_lyxrc.lyxpipes) {
@@ -1563,6 +1589,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_DATE_INSERT_FORMAT:
 		if (ignore_system_lyxrc ||
 		    date_insert_format != system_lyxrc.date_insert_format) {
@@ -1571,17 +1598,17 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_USER_NAME:
 		os << "\\user_name \"" << user_name << "\"\n";
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_USER_EMAIL:
 		os << "\\user_email \"" << user_email << "\"\n";
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_SHOW_BANNER:
 		if (ignore_system_lyxrc ||
 		    show_banner != system_lyxrc.show_banner) {
@@ -1589,7 +1616,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_PREVIEW:
 		if (ignore_system_lyxrc ||
 		    preview != system_lyxrc.preview) {
@@ -1609,7 +1636,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_PREVIEW_HASHED_LABELS:
 		if (ignore_system_lyxrc ||
 		    preview_hashed_labels !=
@@ -1619,7 +1646,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_PREVIEW_SCALE_FACTOR:
 		if (ignore_system_lyxrc ||
 		    preview_scale_factor != system_lyxrc.preview_scale_factor) {
@@ -1628,7 +1655,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_USE_CONVERTER_CACHE:
 		if (ignore_system_lyxrc ||
 		    use_converter_cache != system_lyxrc.use_converter_cache) {
@@ -1637,7 +1664,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_USE_CONVERTER_NEEDAUTH_FORBIDDEN:
 		if (ignore_system_lyxrc ||
 		    use_converter_needauth_forbidden != system_lyxrc.use_converter_needauth_forbidden) {
@@ -1646,7 +1673,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_USE_CONVERTER_NEEDAUTH:
 		if (ignore_system_lyxrc ||
 		    use_converter_needauth != system_lyxrc.use_converter_needauth) {
@@ -1655,7 +1682,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_CONVERTER_CACHE_MAXAGE:
 		if (ignore_system_lyxrc ||
 		    converter_cache_maxage != system_lyxrc.converter_cache_maxage) {
@@ -1668,7 +1695,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		os << "\n#\n"
 		   << "# SCREEN & FONTS SECTION ############################\n"
 		   << "#\n\n";
-
+		// fall through
 	case RC_ICON_SET:
 		if (ignore_system_lyxrc ||
 		    icon_set != system_lyxrc.icon_set) {
@@ -1677,7 +1704,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_USE_SYSTEM_THEME_ICONS:
 		if (ignore_system_lyxrc ||
 			  use_system_theme_icons != system_lyxrc.use_system_theme_icons) {
@@ -1687,7 +1714,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_SCREEN_DPI:
 		if (ignore_system_lyxrc ||
 		    dpi != system_lyxrc.dpi) {
@@ -1695,13 +1722,15 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_SCREEN_ZOOM:
 		if (ignore_system_lyxrc ||
-		    zoom != system_lyxrc.zoom) {
-			os << "\\screen_zoom " << zoom << '\n';
+		    defaultZoom != system_lyxrc.defaultZoom) {
+			os << "\\screen_zoom " << defaultZoom << '\n';
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_GEOMETRY_SESSION:
 		if (ignore_system_lyxrc ||
 		    allow_geometry_session != system_lyxrc.allow_geometry_session) {
@@ -1710,6 +1739,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_CURSOR_FOLLOWS_SCROLLBAR:
 		if (ignore_system_lyxrc ||
 		    cursor_follows_scrollbar
@@ -1719,6 +1749,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_CURSOR_WIDTH:
 		if (ignore_system_lyxrc ||
 			cursor_width
@@ -1728,6 +1759,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_SCROLL_BELOW_DOCUMENT:
 		if (ignore_system_lyxrc ||
 		    scroll_below_document
@@ -1737,6 +1769,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_PARAGRAPH_MARKERS:
 		if (ignore_system_lyxrc ||
 			paragraph_markers
@@ -1746,6 +1779,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_MAC_DONTSWAP_CTRL_META:
 		if (ignore_system_lyxrc ||
 		    mac_dontswap_ctrl_meta
@@ -1755,6 +1789,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_MAC_LIKE_CURSOR_MOVEMENT:
 		if (ignore_system_lyxrc ||
 		    mac_like_cursor_movement
@@ -1764,6 +1799,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_MACRO_EDIT_STYLE:
 		if (ignore_system_lyxrc ||
 		    macro_edit_style
@@ -1777,6 +1813,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_DIALOGS_ICONIFY_WITH_MAIN:
 		if (ignore_system_lyxrc ||
 		    dialogs_iconify_with_main
@@ -1786,6 +1823,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_SCREEN_FONT_ROMAN:
 		if (ignore_system_lyxrc ||
 		    roman_font_name != system_lyxrc.roman_font_name) {
@@ -1794,6 +1832,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_SCREEN_FONT_ROMAN_FOUNDRY:
 		if (ignore_system_lyxrc ||
 		    roman_font_foundry != system_lyxrc.roman_font_foundry) {
@@ -1802,6 +1841,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_SCREEN_FONT_SANS:
 		if (ignore_system_lyxrc ||
 		    sans_font_name != system_lyxrc.sans_font_name) {
@@ -1810,6 +1850,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_SCREEN_FONT_SANS_FOUNDRY:
 		if (ignore_system_lyxrc ||
 		    sans_font_foundry != system_lyxrc.sans_font_foundry) {
@@ -1818,6 +1859,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_SCREEN_FONT_TYPEWRITER:
 		if (ignore_system_lyxrc ||
 		    typewriter_font_name != system_lyxrc.typewriter_font_name) {
@@ -1826,6 +1868,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_SCREEN_FONT_TYPEWRITER_FOUNDRY:
 		if (ignore_system_lyxrc ||
 		    typewriter_font_foundry != system_lyxrc.typewriter_font_foundry) {
@@ -1834,7 +1877,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_SCREEN_FONT_SCALABLE:
 		if (ignore_system_lyxrc ||
 		    use_scalable_fonts != system_lyxrc.use_scalable_fonts) {
@@ -1844,6 +1887,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_SCREEN_FONT_SIZES:
 		if (ignore_system_lyxrc ||
 		    font_sizes[FONT_SIZE_TINY]
@@ -1886,6 +1930,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_FULL_SCREEN_LIMIT:
 		if (ignore_system_lyxrc ||
 		    full_screen_limit != system_lyxrc.full_screen_limit) {
@@ -1895,6 +1940,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_FULL_SCREEN_TOOLBARS:
 		if (ignore_system_lyxrc ||
 		    full_screen_toolbars != system_lyxrc.full_screen_toolbars) {
@@ -1904,6 +1950,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_FULL_SCREEN_SCROLLBAR:
 		if (ignore_system_lyxrc ||
 		    full_screen_scrollbar != system_lyxrc.full_screen_scrollbar) {
@@ -1913,6 +1960,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_FULL_SCREEN_STATUSBAR:
 		if (ignore_system_lyxrc ||
 		    full_screen_statusbar != system_lyxrc.full_screen_statusbar) {
@@ -1922,6 +1970,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_FULL_SCREEN_TABBAR:
 		if (ignore_system_lyxrc ||
 		    full_screen_tabbar != system_lyxrc.full_screen_tabbar) {
@@ -1931,6 +1980,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_FULL_SCREEN_MENUBAR:
 		if (ignore_system_lyxrc ||
 		    full_screen_menubar != system_lyxrc.full_screen_menubar) {
@@ -1940,6 +1990,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_FULL_SCREEN_WIDTH:
 		if (ignore_system_lyxrc ||
 		    full_screen_width != system_lyxrc.full_screen_width) {
@@ -1949,6 +2000,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_OPEN_BUFFERS_IN_TABS:
 		if (ignore_system_lyxrc ||
 		    open_buffers_in_tabs != system_lyxrc.open_buffers_in_tabs) {
@@ -1958,6 +2010,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_SINGLE_CLOSE_TAB_BUTTON:
 		if (ignore_system_lyxrc ||
 		    single_close_tab_button != system_lyxrc.single_close_tab_button) {
@@ -1967,6 +2020,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_SINGLE_INSTANCE:
 		if (ignore_system_lyxrc ||
 		    single_instance != system_lyxrc.single_instance) {
@@ -1976,6 +2030,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_FORWARD_SEARCH_DVI:
 		if (ignore_system_lyxrc ||
 		    forward_search_dvi != system_lyxrc.forward_search_dvi) {
@@ -1983,6 +2038,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_FORWARD_SEARCH_PDF:
 		if (ignore_system_lyxrc ||
 		    forward_search_pdf != system_lyxrc.forward_search_pdf) {
@@ -1995,6 +2051,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 			<< "# COLOR SECTION ###################################\n"
 			<< "#\n\n";
 
+	// fall through
 	case RC_SET_COLOR:
 		for (int i = 0; i < Color_ignore; ++i) {
 			ColorCode lc = static_cast<ColorCode>(i);
@@ -2013,6 +2070,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		 << "# PRINTER SECTION ###################################\n"
 		 << "#\n\n";
 
+	// fall through
 	case RC_PRINTLANDSCAPEFLAG:
 		if (ignore_system_lyxrc ||
 		    print_landscape_flag != system_lyxrc.print_landscape_flag) {
@@ -2021,7 +2079,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_PRINTPAPERFLAG:
 		if (ignore_system_lyxrc ||
 		    print_paper_flag != system_lyxrc.print_paper_flag) {
@@ -2030,7 +2088,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_PRINTPAPERDIMENSIONFLAG:
 		if (ignore_system_lyxrc ||
 		    print_paper_dimension_flag
@@ -2045,6 +2103,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		 << "# TEX SECTION #######################################\n"
 		 << "#\n\n";
 
+	// fall through
 	case RC_TEXINPUTS_PREFIX:
 		if (ignore_system_lyxrc ||
 		    texinputs_prefix != system_lyxrc.texinputs_prefix) {
@@ -2052,7 +2111,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_FONT_ENCODING:
 		if (ignore_system_lyxrc ||
 		    fontenc != system_lyxrc.fontenc) {
@@ -2065,6 +2124,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		   << "# FILE SECTION ######################################\n"
 		   << "#\n\n";
 
+	// fall through
 	case RC_DOCUMENTPATH:
 		if (ignore_system_lyxrc ||
 		    document_path != system_lyxrc.document_path) {
@@ -2073,6 +2133,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_USELASTFILEPOS:
 		if (ignore_system_lyxrc ||
 		    use_lastfilepos != system_lyxrc.use_lastfilepos) {
@@ -2081,6 +2142,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_LOADSESSION:
 		if (ignore_system_lyxrc ||
 		    load_session != system_lyxrc.load_session) {
@@ -2089,6 +2151,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_MOUSE_WHEEL_SPEED:
 		if (ignore_system_lyxrc ||
 		    mouse_wheel_speed != system_lyxrc.mouse_wheel_speed) {
@@ -2096,6 +2159,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_MOUSE_MIDDLEBUTTON_PASTE:
 		if (ignore_system_lyxrc ||
 		    mouse_middlebutton_paste != system_lyxrc.mouse_middlebutton_paste) {
@@ -2104,6 +2168,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_COMPLETION_INLINE_DELAY:
 		if (ignore_system_lyxrc ||
 		    completion_inline_delay != system_lyxrc.completion_inline_delay) {
@@ -2111,6 +2176,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_COMPLETION_INLINE_MATH:
 		if (ignore_system_lyxrc ||
 		    completion_inline_math != system_lyxrc.completion_inline_math) {
@@ -2119,6 +2185,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_COMPLETION_INLINE_TEXT:
 		if (ignore_system_lyxrc ||
 		    completion_inline_text != system_lyxrc.completion_inline_text) {
@@ -2127,6 +2194,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_COMPLETION_INLINE_DOTS:
 		if (ignore_system_lyxrc ||
 		    completion_inline_dots != system_lyxrc.completion_inline_dots) {
@@ -2135,6 +2203,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_AUTOCORRECTION_MATH:
 		if (ignore_system_lyxrc ||
 		    autocorrection_math != system_lyxrc.autocorrection_math) {
@@ -2143,6 +2212,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_COMPLETION_POPUP_DELAY:
 		if (ignore_system_lyxrc ||
 		    completion_popup_delay != system_lyxrc.completion_popup_delay) {
@@ -2150,6 +2220,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_COMPLETION_POPUP_MATH:
 		if (ignore_system_lyxrc ||
 		    completion_popup_math != system_lyxrc.completion_popup_math) {
@@ -2158,6 +2229,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_COMPLETION_POPUP_TEXT:
 		if (ignore_system_lyxrc ||
 		    completion_popup_text != system_lyxrc.completion_popup_text) {
@@ -2166,6 +2238,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_COMPLETION_CURSOR_TEXT:
 		if (ignore_system_lyxrc ||
 		    completion_cursor_text != system_lyxrc.completion_cursor_text) {
@@ -2174,6 +2247,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_COMPLETION_POPUP_AFTER_COMPLETE:
 		if (ignore_system_lyxrc ||
 		    completion_popup_after_complete
@@ -2183,6 +2257,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_COMPLETION_MINLENGTH:
 		if (ignore_system_lyxrc ||
 			completion_minlength != system_lyxrc.completion_minlength) {
@@ -2191,14 +2266,15 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
-		case RC_NUMLASTFILES:
+		// fall through
+	case RC_NUMLASTFILES:
 		if (ignore_system_lyxrc ||
 		    num_lastfiles != system_lyxrc.num_lastfiles) {
 			os << "\\num_lastfiles " << num_lastfiles << '\n';
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_CHECKLASTFILES:
 		if (ignore_system_lyxrc ||
 		    check_lastfiles != system_lyxrc.check_lastfiles) {
@@ -2207,6 +2283,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_EXAMPLEPATH:
 		if (ignore_system_lyxrc ||
 		    example_path != system_lyxrc.example_path) {
@@ -2215,6 +2292,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_TEMPLATEPATH:
 		if (ignore_system_lyxrc ||
 		    template_path != system_lyxrc.template_path) {
@@ -2223,6 +2301,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_TEMPDIRPATH:
 		if (ignore_system_lyxrc ||
 		    tempdir_path != system_lyxrc.tempdir_path) {
@@ -2231,6 +2310,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_THESAURUSDIRPATH:
 		if (ignore_system_lyxrc ||
 		    thesaurusdir_path != system_lyxrc.thesaurusdir_path) {
@@ -2239,6 +2319,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_HUNSPELLDIR_PATH:
 		if (ignore_system_lyxrc ||
 		    hunspelldir_path != system_lyxrc.hunspelldir_path) {
@@ -2247,6 +2328,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_PLAINTEXT_LINELEN:
 		if (ignore_system_lyxrc ||
 		    plaintext_linelen != system_lyxrc.plaintext_linelen) {
@@ -2254,6 +2336,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_MAKE_BACKUP:
 		if (ignore_system_lyxrc ||
 		    make_backup != system_lyxrc.make_backup) {
@@ -2261,6 +2344,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_SAVE_COMPRESSED:
 		if (ignore_system_lyxrc ||
 		    save_compressed != system_lyxrc.save_compressed) {
@@ -2268,6 +2352,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_SAVE_ORIGIN:
 		if (ignore_system_lyxrc ||
 		    save_origin != system_lyxrc.save_origin) {
@@ -2275,6 +2360,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_BACKUPDIR_PATH:
 		if (ignore_system_lyxrc ||
 		    backupdir_path != system_lyxrc.backupdir_path) {
@@ -2292,6 +2378,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		   << "# SPELLCHECKER SECTION ##############################\n"
 		   << "#\n\n";
 
+	// fall through
 	case RC_ACCEPT_COMPOUND:
 		if (ignore_system_lyxrc ||
 		    spellchecker_accept_compound != system_lyxrc.spellchecker_accept_compound) {
@@ -2300,6 +2387,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_ALT_LANG:
 		if (ignore_system_lyxrc ||
 		    spellchecker_alt_lang != system_lyxrc.spellchecker_alt_lang) {
@@ -2308,6 +2396,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_ESC_CHARS:
 		if (ignore_system_lyxrc ||
 		    spellchecker_esc_chars != system_lyxrc.spellchecker_esc_chars) {
@@ -2315,6 +2404,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_USE_SYSTEM_COLORS:
 		if (ignore_system_lyxrc ||
 		    use_system_colors != system_lyxrc.use_system_colors) {
@@ -2324,6 +2414,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_USE_TOOLTIP:
 		if (ignore_system_lyxrc ||
 		    use_tooltip != system_lyxrc.use_tooltip) {
@@ -2333,6 +2424,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_USE_PIXMAP_CACHE:
 		if (ignore_system_lyxrc ||
 		    use_pixmap_cache != system_lyxrc.use_pixmap_cache) {
@@ -2342,20 +2434,13 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-	case RC_USE_QIMAGE:
-		if (ignore_system_lyxrc ||
-		    use_qimage != system_lyxrc.use_qimage) {
-			os << "\\use_qimage "
-			   << convert<string>(use_qimage)
-			   << '\n';
-		}
-		if (tag != RC_LAST)
-			break;
+		// fall through
 
 		os << "\n#\n"
 		   << "# LANGUAGE SUPPORT SECTION ##########################\n"
 		   << "#\n\n";
 
+	// fall through
 	case RC_DEFAULT_DECIMAL_POINT:
 		if (ignore_system_lyxrc ||
 		    default_decimal_point != system_lyxrc.default_decimal_point) {
@@ -2363,7 +2448,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_DEFAULT_LENGTH_UNIT:
 		if (ignore_system_lyxrc ||
 		    default_length_unit != system_lyxrc.default_length_unit) {
@@ -2371,7 +2456,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_SPELLCHECKER:
 		if (ignore_system_lyxrc ||
 		    spellchecker != system_lyxrc.spellchecker) {
@@ -2379,7 +2464,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_SPELLCHECK_CONTINUOUSLY:
 		if (ignore_system_lyxrc ||
 		    spellcheck_continuously != system_lyxrc.spellcheck_continuously) {
@@ -2388,7 +2473,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_SPELLCHECK_NOTES:
 		if (ignore_system_lyxrc ||
 		    spellcheck_notes != system_lyxrc.spellcheck_notes) {
@@ -2397,7 +2482,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_VISUAL_CURSOR:
 		if (ignore_system_lyxrc ||
 			visual_cursor != system_lyxrc.visual_cursor) {
@@ -2405,6 +2490,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_CLOSE_BUFFER_WITH_LAST_VIEW:
 		if (ignore_system_lyxrc ||
 			close_buffer_with_last_view != system_lyxrc.close_buffer_with_last_view) {
@@ -2413,6 +2499,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_LANGUAGE_CUSTOM_PACKAGE:
 		if (ignore_system_lyxrc ||
 		    language_custom_package != system_lyxrc.language_custom_package) {
@@ -2421,6 +2508,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_LANGUAGE_GLOBAL_OPTIONS:
 		if (ignore_system_lyxrc ||
 		    language_global_options
@@ -2431,6 +2519,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_LANGUAGE_PACKAGE_SELECTION:
 		if (ignore_system_lyxrc ||
 		    language_package_selection != system_lyxrc.language_package_selection) {
@@ -2452,6 +2541,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_LANGUAGE_COMMAND_BEGIN:
 		if (ignore_system_lyxrc ||
 		    language_command_begin
@@ -2462,6 +2552,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_LANGUAGE_COMMAND_END:
 		if (ignore_system_lyxrc ||
 		    language_command_end
@@ -2471,6 +2562,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_LANGUAGE_COMMAND_LOCAL:
 		if (ignore_system_lyxrc ||
 		    language_command_local
@@ -2481,6 +2573,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_LANGUAGE_AUTO_BEGIN:
 		if (ignore_system_lyxrc ||
 		    language_auto_begin != system_lyxrc.language_auto_begin) {
@@ -2489,6 +2582,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_LANGUAGE_AUTO_END:
 		if (ignore_system_lyxrc ||
 		    language_auto_end != system_lyxrc.language_auto_end) {
@@ -2497,6 +2591,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_MARK_FOREIGN_LANGUAGE:
 		if (ignore_system_lyxrc ||
 		    mark_foreign_language
@@ -2511,6 +2606,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		   << "# 2nd MISC SUPPORT SECTION ##########################\n"
 		   << "#\n\n";
 
+	// fall through
 	case RC_AUTO_NUMBER:
 		if (ignore_system_lyxrc ||
 		    auto_number != system_lyxrc.auto_number) {
@@ -2518,6 +2614,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_GUI_LANGUAGE:
 		if (ignore_system_lyxrc ||
 		    gui_language != system_lyxrc.gui_language) {
@@ -2525,6 +2622,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_EXPORT_OVERWRITE:
 		if (ignore_system_lyxrc ||
 		    export_overwrite != system_lyxrc.export_overwrite) {
@@ -2544,7 +2642,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_SCROLL_WHEEL_ZOOM:
 		if (ignore_system_lyxrc ||
 			scroll_wheel_zoom != system_lyxrc.scroll_wheel_zoom) {
@@ -2572,6 +2670,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		   << "# FORMATS SECTION ##########################\n"
 		   << "#\n\n";
 
+	// fall through
 	case RC_FILEFORMAT:
 		// New/modified formats
 		for (Formats::const_iterator cit = theFormats().begin();
@@ -2617,6 +2716,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 				   << "\" \"\" \"\" \"\" \"\" \"\" \"\" \"\"\n";
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_VIEWER_ALTERNATIVES: {
 		Alternatives::const_iterator it = viewer_alternatives.begin();
 		Alternatives::const_iterator const en = viewer_alternatives.end();
@@ -2642,6 +2742,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		if (tag != RC_LAST)
 			break;
 	}
+	// fall through
 	case RC_EDITOR_ALTERNATIVES: {
 		Alternatives::const_iterator it = editor_alternatives.begin();
 		Alternatives::const_iterator const en = editor_alternatives.end();
@@ -2667,6 +2768,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		if (tag != RC_LAST)
 			break;
 	}
+	// fall through
 	case RC_DEFAULT_OTF_VIEW_FORMAT:
 		if ((ignore_system_lyxrc ||
 		     default_otf_view_format != system_lyxrc.default_otf_view_format)
@@ -2675,6 +2777,16 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
+	case RC_DEFAULT_PLATEX_VIEW_FORMAT:
+		if ((ignore_system_lyxrc ||
+		     default_platex_view_format != system_lyxrc.default_platex_view_format)
+		    && !default_platex_view_format.empty()) {
+			os << "\\default_platex_view_format " << default_platex_view_format << '\n';
+		}
+		if (tag != RC_LAST)
+			break;
+		// fall through
 	case RC_DEFAULT_VIEW_FORMAT:
 		if (ignore_system_lyxrc ||
 		    default_view_format != system_lyxrc.default_view_format) {
@@ -2682,6 +2794,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		}
 		if (tag != RC_LAST)
 			break;
+		// fall through
 	case RC_VIEWER:
 		// Ignore it
 		if (tag != RC_LAST)
@@ -2691,6 +2804,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		   << "# CONVERTERS SECTION ##########################\n"
 		   << "#\n\n";
 
+	// fall through
 	case RC_CONVERTER:
 		// Look for new converters
 		for (Converters::const_iterator cit = theConverters().begin();
@@ -2715,7 +2829,7 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 				   << "\" \"" << cit->to() << "\" \"\" \"\"\n";
 		if (tag != RC_LAST)
 			break;
-
+		// fall through
 	case RC_COPIER:
 		if (tag == RC_LAST)
 			os << "\n#\n"
@@ -2799,6 +2913,7 @@ void actOnUpdatedPrefs(LyXRC const & lyxrc_orig, LyXRC const & lyxrc_new)
 	case LyXRC::RC_DATE_INSERT_FORMAT:
 	case LyXRC::RC_GUI_LANGUAGE:
 	case LyXRC::RC_DEFAULT_OTF_VIEW_FORMAT:
+	case LyXRC::RC_DEFAULT_PLATEX_VIEW_FORMAT:
 	case LyXRC::RC_DEFAULT_VIEW_FORMAT:
 	case LyXRC::RC_DEFFILE:
 	case LyXRC::RC_DIALOGS_ICONIFY_WITH_MAIN:
@@ -2903,7 +3018,6 @@ void actOnUpdatedPrefs(LyXRC const & lyxrc_orig, LyXRC const & lyxrc_new)
 	case LyXRC::RC_USE_SYSTEM_COLORS:
 	case LyXRC::RC_USE_TOOLTIP:
 	case LyXRC::RC_USE_PIXMAP_CACHE:
-	case LyXRC::RC_USE_QIMAGE:
 	case LyXRC::RC_USE_SYSTEM_THEME_ICONS:
 	case LyXRC::RC_VIEWDVI_PAPEROPTION:
 	case LyXRC::RC_SINGLE_CLOSE_TAB_BUTTON:

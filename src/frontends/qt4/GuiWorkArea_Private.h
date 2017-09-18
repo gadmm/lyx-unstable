@@ -97,10 +97,6 @@ struct GuiWorkArea::Private
 
 	void paintPreeditText(GuiPainter & pain);
 
-	bool needResize() const {
-		return need_resize_ || p->pixelRatio() != pixel_ratio_;
-	}
-
 	///
 	GuiWorkArea * p;
 	///
@@ -122,8 +118,6 @@ struct GuiWorkArea::Private
 
 	///
 	bool need_resize_;
-	///
-	bool schedule_redraw_;
 
 	/// the current preedit text of the input method
 	docstring preedit_string_;
@@ -135,7 +129,7 @@ struct GuiWorkArea::Private
 	/// Ratio between physical pixels and device-independent pixels
 	/// We save the last used value to detect changes of the
 	/// current pixel_ratio of the viewport.
-	double pixel_ratio_;
+	double last_pixel_ratio_;
 	///
 	GuiCompleter * completer_;
 

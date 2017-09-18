@@ -7,19 +7,19 @@ AC_DEFUN([CHECK_WITH_ASPELL],
 	test "$with_aspell" = "no" && lyx_use_aspell=false
 
 	if $lyx_use_aspell ; then
-	AC_CHECK_HEADERS(aspell.h,
-		[lyx_use_aspell=true; break;],
-		[lyx_use_aspell=false])
-	AC_CHECK_LIB(aspell, new_aspell_config, LIBS="-laspell $LIBS", lyx_use_aspell=false)
+		AC_CHECK_HEADERS(aspell.h,
+			[lyx_use_aspell=true; break;],
+			[lyx_use_aspell=false])
+		AC_CHECK_LIB(aspell, new_aspell_config, LIBS="-laspell $LIBS", lyx_use_aspell=false)
 
-	AC_MSG_CHECKING([whether to use aspell])
-	if $lyx_use_aspell ; then
-		AC_MSG_RESULT(yes)
-		AC_DEFINE(USE_ASPELL, 1, [Define as 1 to use the aspell library])
-		lyx_flags="$lyx_flags use-aspell"
-	else
-		AC_MSG_RESULT(no)
-	fi
+		AC_MSG_CHECKING([whether to use aspell])
+		if $lyx_use_aspell ; then
+			AC_MSG_RESULT(yes)
+			AC_DEFINE(USE_ASPELL, 1, [Define as 1 to use the aspell library])
+			lyx_flags="$lyx_flags use-aspell"
+		else
+			AC_MSG_RESULT(no)
+		fi
 	fi
 	])
 
@@ -31,16 +31,16 @@ AC_DEFUN([CHECK_WITH_ENCHANT],
 	test "$with_enchant" = "no" && lyx_use_enchant=false
 
 	if $lyx_use_enchant; then
-	PKG_CHECK_MODULES([ENCHANT], [enchant], [], [lyx_use_enchant=false])
-	AC_MSG_CHECKING([whether to use enchant])
-	if $lyx_use_enchant ; then
-	    AC_MSG_RESULT(yes)
-	    AC_DEFINE(USE_ENCHANT, 1, [Define as 1 to use the enchant library])
-	    lyx_flags="$lyx_flags use-enchant"
-	else
-	    AC_MSG_RESULT(no)
-	fi
-    fi
+		PKG_CHECK_MODULES([ENCHANT], [enchant], [], [lyx_use_enchant=false])
+		AC_MSG_CHECKING([whether to use enchant])
+		if $lyx_use_enchant ; then
+		    AC_MSG_RESULT(yes)
+		    AC_DEFINE(USE_ENCHANT, 1, [Define as 1 to use the enchant library])
+		    lyx_flags="$lyx_flags use-enchant"
+		else
+		    AC_MSG_RESULT(no)
+		fi
+    	fi
     ])
 
 # Macro to add for using hunspell spellchecker libraries!     -*- sh -*-
@@ -80,7 +80,7 @@ AC_DEFUN([LYX_USE_INCLUDED_HUNSPELL],[
 	AC_MSG_RESULT([$lyx_cv_with_included_hunspell])
 	if test x$lyx_cv_with_included_hunspell = xyes ; then
 		lyx_included_libs="$lyx_included_libs hunspell"
-		HUNSPELL_CFLAGS='-I$(top_srcdir)/3rdparty/hunspell/1.3.3/src'
+		HUNSPELL_CFLAGS='-I$(top_srcdir)/3rdparty/hunspell/1.6.2/src'
 		HUNSPELL_LIBS='$(top_builddir)/3rdparty/hunspell/liblyxhunspell.a'
 		AC_SUBST(HUNSPELL_CFLAGS)
 		AC_SUBST(HUNSPELL_LIBS)
@@ -93,16 +93,15 @@ AC_DEFUN([LYX_CHECK_SPELL_ENGINES],
 [
 	LYX_USE_INCLUDED_HUNSPELL
 	if test x$lyx_cv_with_included_hunspell = xyes ; then
-dnl the user wanted to use the included hunspell, so do not check for the other spell checkers
-		lyx_use_aspell=false
-		lyx_use_enchant=false
+dnl the user wanted to use the included hunspell, so do not check for external hunspell
 		lyx_use_hunspell=true
+		AC_DEFINE(USE_HUNSPELL, 1, [Define as 1 to use the hunspell library])
 		lyx_flags="$lyx_flags use-hunspell"
 	else
-		CHECK_WITH_ASPELL
-		CHECK_WITH_ENCHANT
 		CHECK_WITH_HUNSPELL
 	fi
+	CHECK_WITH_ASPELL
+	CHECK_WITH_ENCHANT
 
 	AM_CONDITIONAL(USE_ASPELL, $lyx_use_aspell)
 	AM_CONDITIONAL(USE_ENCHANT, $lyx_use_enchant)

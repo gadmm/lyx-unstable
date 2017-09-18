@@ -237,8 +237,8 @@ SyntheticMouseEvent::SyntheticMouseEvent()
 GuiWorkArea::Private::Private(GuiWorkArea * parent)
 : p(parent), buffer_view_(0), lyx_view_(0),
   caret_(0), caret_visible_(false),
-  need_resize_(false), schedule_redraw_(false), preedit_lines_(1),
-  pixel_ratio_(1.0),
+  need_resize_(false), preedit_lines_(1),
+  last_pixel_ratio_(1.0),
   completer_(new GuiCompleter(p, p)), dialog_mode_(false), shell_escape_(false),
   read_only_(false), clean_(true), externally_modified_(false)
 {
@@ -449,7 +449,7 @@ void GuiWorkArea::toggleCaret()
 }
 
 
-void GuiWorkArea::redraw(bool update_metrics)
+void GuiWorkArea::scheduleRedraw(bool update_metrics)
 {
 	if (!isVisible())
 		// No need to redraw in this case.
@@ -629,18 +629,6 @@ void GuiWorkArea::Private::showCaret()
 	point.x_ -= buffer_view_->horizScrollOffset();
 
 	caret_->update(point.x_, point.y_, h, l_shape, isrtl, completable);
-
-	if (schedule_redraw_) {
-		// This happens when a graphic conversion is finished. As we don't know
-		// the size of the new graphics, it's better the update everything.
-		// We can't use redraw() here because this would trigger a infinite
-		// recursive loop with showCaret().
-		buffer_view_->resize(p->viewport()->width(), p->viewport()->height());
-		p->viewport()->update();
-		updateScrollbar();
-		schedule_redraw_ = false;
-		return;
-	}
 
 	p->viewport()->update(caret_->rect());
 }
@@ -1237,13 +1225,15 @@ void GuiWorkArea::paintEvent(QPaintEvent * ev)
 	// LYXERR(Debug::PAINTING, "paintEvent begin: x: " << rc.x()
 	//	<< " y: " << rc.y() << " w: " << rc.width() << " h: " << rc.height());
 
-	if (d->needResize()) {
+	if (d->need_resize_ || pixelRatio() != d->last_pixel_ratio_) {
 		d->resizeBufferView();
 		if (d->caret_visible_) {
 			d->hideCaret();
 			d->showCaret();
 		}
 	}
+
+	d->last_pixel_ratio_ = pixelRatio();
 
 	GuiPainter pain(viewport(), pixelRatio());
 	d->buffer_view_->draw(pain, d->caret_visible_);
@@ -1349,12 +1339,6 @@ void GuiWorkArea::updateWindowTitle()
 bool GuiWorkArea::isFullScreen() const
 {
 	return d->lyx_view_ && d->lyx_view_->isFullScreen();
-}
-
-
-void GuiWorkArea::scheduleRedraw()
-{
-	d->schedule_redraw_ = true;
 }
 
 
@@ -1770,7 +1754,7 @@ void TabWorkArea::on_currentTabChanged(int i)
 	GuiWorkArea * wa = workArea(i);
 	LASSERT(wa, return);
 	wa->setUpdatesEnabled(true);
-	wa->redraw(true);
+	wa->scheduleRedraw(true);
 	wa->setFocus();
 	///
 	currentWorkAreaChanged(wa);

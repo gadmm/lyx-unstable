@@ -845,8 +845,10 @@ void GuiWorkArea::mousePressEvent(QMouseEvent * e)
 
 void GuiWorkArea::mouseReleaseEvent(QMouseEvent * e)
 {
-	if (d->synthetic_mouse_event_.timeout.running())
+	if (d->synthetic_mouse_event_.timeout.running()) {
 		d->synthetic_mouse_event_.timeout.stop();
+		d->stopScrolling();
+	}
 
 	FuncRequest const cmd(LFUN_MOUSE_RELEASE, e->x(), e->y(),
 			q_button_state(e->button()), q_key_state(e->modifiers()));
@@ -963,6 +965,9 @@ void GuiWorkArea::generateSyntheticMouseEvent()
 	bool const up = e_y < 0;
 	bool const down = e_y > wh;
 
+	if (!up && !down)
+		d->stopScrolling();
+
 	// Set things off to generate the _next_ 'pseudo' event.
 	int step = 50;
 	if (d->synthetic_mouse_event_.restart_timeout) {
@@ -981,6 +986,8 @@ void GuiWorkArea::generateSyntheticMouseEvent()
 		d->synthetic_mouse_event_.timeout.setTimeout(time);
 		d->synthetic_mouse_event_.timeout.start();
 	}
+	step = max(step, -wh);
+	step = min(step, wh);
 
 	// Can we scroll further ?
 	int const value = verticalScrollBar()->value();
@@ -991,12 +998,7 @@ void GuiWorkArea::generateSyntheticMouseEvent()
 	}
 
 	// Scroll
-	if (step <= 2 * wh) {
-		d->buffer_view_->scroll(up ? -step : step);
-		d->buffer_view_->updateMetrics();
-	} else {
-		d->buffer_view_->scrollDocView(value + (up ? -step : step), false);
-	}
+	d->scrollTo(up ? -step : step);
 
 	// In which paragraph do we have to set the cursor ?
 	Cursor & cur = d->buffer_view_->cursor();

@@ -91,7 +91,7 @@ QColor ColorCache::get(Color const & color) const
 QColor ColorCache::get(Color const & color, bool syscolors) const
 {
 	QColor const col = getPlain(color, syscolors);
-	return lyxrc.invert_colors ? invert(col) : col;
+	return (lyxrc.invert_colors != invert_debug) ? invert(col) : col;
 }
 
 

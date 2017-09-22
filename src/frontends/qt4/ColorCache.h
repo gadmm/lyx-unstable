@@ -48,6 +48,8 @@ public:
 	/// clear all colors
 	void clear() { initialized_ = false; }
 
+	/// switched when Debug::PAINTING is set to produce a flicker
+	bool invert_debug = false;
 private:
 	///
 	void init();

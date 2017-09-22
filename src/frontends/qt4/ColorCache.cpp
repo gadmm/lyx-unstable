@@ -17,7 +17,7 @@
 
 namespace lyx {
 
-namespace{
+namespace {
 
 QPalette::ColorRole role(ColorCode col)
 {
@@ -54,6 +54,20 @@ QPalette::ColorRole role(ColorCode col)
 	}
 }
 
+
+QColor invert(QColor col)
+{
+	static std::vector<int> gamma = [](){
+		std::vector<int> gamma(256);
+		double const gamma_val = 2.4;
+		for (int i = 0; i <= 255; ++i)
+			gamma[i] = round(255 * pow(double(255 - i)/255, 1/gamma_val));
+		return gamma;
+	}();
+	return {gamma[col.red()], gamma[col.green()], gamma[col.blue()]};
+}
+
+
 } // namespace
 
 
@@ -74,8 +88,14 @@ QColor ColorCache::get(Color const & color) const
 }
 
 
-/// get the given color
 QColor ColorCache::get(Color const & color, bool syscolors) const
+{
+	QColor const col = getPlain(color, syscolors);
+	return lyxrc.invert_colors ? invert(col) : col;
+}
+
+
+QColor ColorCache::getPlain(Color const & color, bool syscolors) const
 {
 	if (!initialized_)
 		const_cast<ColorCache *>(this)->init();
@@ -117,7 +137,7 @@ bool ColorCache::isSystem(ColorCode const color) const
 }
 
 
-QColor const rgb2qcolor(RGBColor const & rgb)
+QColor rgb2qcolor(RGBColor const & rgb)
 {
 	return QColor(rgb.r, rgb.g, rgb.b);
 }

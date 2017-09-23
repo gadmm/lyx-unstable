@@ -73,6 +73,7 @@
 #include "frontends/NullPainter.h"
 #include "frontends/Painter.h"
 #include "frontends/Selection.h"
+#include "frontends/WorkArea.h"
 
 #include "support/convert.h"
 #include "support/debug.h"
@@ -228,14 +229,16 @@ enum ScreenUpdateStrategy {
 
 struct BufferView::Private
 {
-	Private(BufferView & bv) : update_strategy_(NoScreenUpdate),
+	Private(BufferView & bv, frontend::WorkArea & wa)
+		: update_strategy_(NoScreenUpdate),
 		wh_(0), cursor_(bv),
 		anchor_pit_(0), anchor_ypos_(0),
 		inlineCompletionUniqueChars_(0),
 		last_inset_(0), clickable_inset_(false),
 		mouse_position_cache_(),
 		bookmark_edit_position_(-1), gui_(0),
-		horiz_scroll_offset_(0), repaint_caret_row_(false)
+		  horiz_scroll_offset_(0), repaint_caret_row_(false),
+		  wa_(wa)
 	{
 		xsel_cache_.set = false;
 	}
@@ -318,12 +321,14 @@ struct BufferView::Private
 	CursorSlice caret_slice_;
 	/// indicates whether the caret slice needs to be repainted in this draw() run.
 	bool repaint_caret_row_;
+	///
+	frontend::WorkArea & wa_;
 };
 
 
-BufferView::BufferView(Buffer & buf)
+BufferView::BufferView(Buffer & buf, frontend::WorkArea & wa)
 	: width_(0), height_(0), full_screen_(false), buffer_(buf),
-      d(new Private(*this))
+	  d(new Private(*this, wa))
 {
 	d->xsel_cache_.set = false;
 	d->intl_.initKeyMapper(lyxrc.use_kbmap);

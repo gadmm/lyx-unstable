@@ -28,6 +28,7 @@ namespace support { class FileName; }
 
 namespace frontend { class Painter; }
 namespace frontend { class GuiBufferViewDelegate; }
+namespace frontend { class WorkArea; }
 
 class Buffer;
 class Change;
@@ -89,7 +90,7 @@ struct ScrollbarParameters
 class BufferView {
 public:
 	///
-	explicit BufferView(Buffer & buffer);
+	BufferView(Buffer & buffer, frontend::WorkArea & wa);
 	///
 	~BufferView();
 

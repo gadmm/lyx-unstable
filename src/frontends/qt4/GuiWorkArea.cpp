@@ -452,7 +452,7 @@ void GuiWorkArea::toggleCaret()
 }
 
 
-void GuiWorkArea::scheduleRedraw(bool update_metrics)
+void GuiWorkArea::scheduleRedraw(bool update_metrics, int offset)
 {
 	if (!isVisible())
 		// No need to redraw in this case.
@@ -473,7 +473,10 @@ void GuiWorkArea::scheduleRedraw(bool update_metrics)
 	d->updateCaretGeometry();
 
 	LYXERR(Debug::WORKAREA, "WorkArea::redraw screen");
-	viewport()->update();
+	if (offset < INT_MAX)
+		viewport()->scroll(0, -offset);
+	else
+		viewport()->update();
 
 	/// FIXME: is this still true now that paintEvent does the actual painting?
 	/// \warning: scrollbar updating *must* be done after the BufferView is drawn

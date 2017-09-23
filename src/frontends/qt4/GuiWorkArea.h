@@ -63,7 +63,7 @@ public:
 	///
 	BufferView const & bufferView() const;
 	///
-	void scheduleRedraw(bool update_metrics);
+	void scheduleRedraw(bool update_metrics, int offset = INT_MAX) override;
 
 	/// return true if the key is part of a shortcut
 	bool queryKeySym(KeySymbol const & key, KeyModifier mod) const;

@@ -636,7 +636,7 @@ void BufferView::scrollDocView(int const value, bool update)
 	// If the offset is less than 2 screen height, prefer to scroll instead.
 	if (abs(value) <= 2 * height_) {
 		d->anchor_ypos_ -= value;
-		buffer_.changed(true);
+		d->wa_.scheduleRedraw(true, value);
 		updateHoveredInset();
 		return;
 	}

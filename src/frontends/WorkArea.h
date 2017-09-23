@@ -16,6 +16,8 @@
 
 #include "frontends/KeyModifier.h"
 
+#include <climits>
+
 namespace lyx {
 
 class BufferView;
@@ -37,7 +39,7 @@ public:
 	virtual ~WorkArea() {}
 
 	/// Update metrics if needed and schedule a paint event
-	virtual void scheduleRedraw(bool update_metrics) = 0;
+	virtual void scheduleRedraw(bool update_metrics, int offset = INT_MAX) = 0;
 
 	/// close this work area.
 	/// Slot for Buffer::closing signal.

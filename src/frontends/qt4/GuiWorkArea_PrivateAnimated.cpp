@@ -66,13 +66,13 @@ void GuiWorkArea::PrivateAnimated::scrollTo(int const value)
 		//  * 0px -> 0ms
 		//  * 1 line height -> 100ms
 		//  * 1 page height -> 250ms
-		//  * stops increasing at 500ms.
+		//  * stops increasing at 350ms.
 		int const single_step = p->verticalScrollBar()->singleStep();
 		int const page_step = std::max(p->verticalScrollBar()->pageStep(),
 		                               single_step);
 		double const single_step_duration = 100;
 		double const page_step_duration = 250;
-		int const max_duration = 500;
+		int const max_duration = 350;
 		int const abs_offset = abs(offset);
 		int duration;
 		if (abs_offset <= single_step)

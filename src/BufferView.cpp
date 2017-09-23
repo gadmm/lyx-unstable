@@ -828,41 +828,36 @@ int BufferView::workWidth() const
 
 void BufferView::recenter()
 {
-	showCursor(d->cursor_, true, true);
+	scrollToCursor(d->cursor_, true);
 }
 
 
 void BufferView::showCursor()
 {
-	showCursor(d->cursor_, false, true);
+	scrollToCursor(d->cursor_, false);
 }
 
 
-void BufferView::showCursor(DocIterator const & dit,
-	bool recenter, bool update)
+void BufferView::showCursor(DocIterator const & dit, bool recenter)
 {
-	if (scrollToCursor(dit, recenter) && update) {
-		buffer_.changed(true);
-		updateHoveredInset();
-	}
+	scrollToCursor(dit, recenter);
 }
 
 
 void BufferView::scrollToCursor()
 {
-	if (scrollToCursor(d->cursor_, false)) {
-		buffer_.changed(true);
-		updateHoveredInset();
-	}
+	showCursor();
 }
 
 
-bool BufferView::scrollToCursor(DocIterator const & dit, bool const recenter)
+void BufferView::scrollToCursor(DocIterator const & dit, bool const recenter)
 {
 	// We are not properly started yet, delay until resizing is
 	// done.
 	if (height_ == 0)
-		return false;
+		return;
+
+	d->wa_.stopScrolling();
 
 	LYXERR(Debug::SCROLLING, "recentering!");
 
@@ -892,9 +887,8 @@ bool BufferView::scrollToCursor(DocIterator const & dit, bool const recenter)
 		int ypos = pm.position() + offset;
 		Dimension const & row_dim =
 			pm.getRow(cs.pos(), dit.boundary()).dimension();
-		int scrolled = 0;
 		if (recenter)
-			scrolled = scroll(ypos - height_/2);
+			scroll(ypos - height_/2);
 
 		// We try to visualize the whole row, if the row height is larger than
 		// the screen height, we scroll to a heuristic value of height_ / 4.
@@ -902,53 +896,53 @@ bool BufferView::scrollToCursor(DocIterator const & dit, bool const recenter)
 		// for a row in the inset that can be visualized completely.
 		else if (row_dim.height() > height_) {
 			if (ypos < defaultRowHeight())
-				scrolled = scroll(ypos - height_ / 4);
+				scroll(ypos - height_ / 4);
 			else if (ypos > height_ - defaultRowHeight())
-				scrolled = scroll(ypos - 3 * height_ / 4);
+				scroll(ypos - 3 * height_ / 4);
 		}
 
 		// If the top part of the row falls of the screen, we scroll
 		// up to align the top of the row with the top of the screen.
 		else if (ypos - row_dim.ascent() < 0 && ypos < height_) {
 			int ynew = row_dim.ascent();
-			scrolled = scrollUp(ynew - ypos);
+			scrollUp(ynew - ypos);
 		}
 
 		// If the bottom of the row falls of the screen, we scroll down.
 		else if (ypos + row_dim.descent() > height_ && ypos > 0) {
 			int ynew = height_ - row_dim.descent();
-			scrolled = scrollDown(ypos - ynew);
+			scrollDown(ypos - ynew);
 		}
 
 		// else, nothing to do, the cursor is already visible so we just return.
-		return scrolled != 0;
+		return;
 	}
+
+	// metrics for the paragraph are not known
+
+	bool const upwards = bot_pit < d->anchor_pit_;
 
 	// fix inline completion position
 	if (d->inlineCompletionPos_.fixIfBroken())
 		d->inlineCompletionPos_ = DocIterator();
 
 	tm.redoParagraph(bot_pit);
-	ParagraphMetrics const & pm = tm.parMetrics(bot_pit);
 	int offset = coordOffset(dit).y_;
 
 	d->anchor_pit_ = bot_pit;
-	CursorSlice const & cs = dit.innerTextSlice();
-	Dimension const & row_dim =
-		pm.getRow(cs.pos(), dit.boundary()).dimension();
 
+	int scroll_value;
 	if (recenter)
-		d->anchor_ypos_ = height_/2;
-	else if (d->anchor_pit_ == 0)
-		d->anchor_ypos_ = offset + pm.ascent();
-	else if (d->anchor_pit_ == max_pit)
-		d->anchor_ypos_ = height_ - offset - row_dim.descent();
-	else if (offset > height_)
-		d->anchor_ypos_ = height_ - offset - defaultRowHeight();
+		scroll_value = height_ / 2;
+	else if (offset > height_ / 2)
+		scroll_value = height_ / 4 - offset;
 	else
-		d->anchor_ypos_ = defaultRowHeight() * 2;
+		scroll_value = height_ / 4;
 
-	return true;
+	int const fake_travel = (upwards ? -1 : 1) * height_;
+	d->anchor_ypos_ = scroll_value + fake_travel;
+	updateMetrics();
+	d->wa_.scrollTo(fake_travel);
 }
 
 
@@ -2283,7 +2277,7 @@ int BufferView::scrollDown(int offset)
 			break;
 		tm.newParMetricsDown();
 	}
-	d->anchor_ypos_ -= offset;
+	d->wa_.scrollTo(offset);
 	return -offset;
 }
 
@@ -2306,7 +2300,7 @@ int BufferView::scrollUp(int offset)
 			break;
 		tm.newParMetricsUp();
 	}
-	d->anchor_ypos_ += offset;
+	d->wa_.scrollTo(-offset);
 	return offset;
 }
 

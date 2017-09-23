@@ -47,6 +47,13 @@ public:
 
 	/// Update window titles of all users.
 	virtual void updateWindowTitle() = 0;
+
+	/// Stop scrolling animation (if any)
+	virtual void stopScrolling() = 0;
+
+	/// scroll by a certain value (current position is 0 so the destination is
+	/// the offset)
+	virtual void scrollTo(int value) = 0;
 };
 
 } // namespace frontend

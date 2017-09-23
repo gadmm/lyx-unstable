@@ -671,6 +671,12 @@ void GuiWorkArea::Private::updateScrollbar()
 }
 
 
+void GuiWorkArea::stopScrolling()
+{
+	d->stopScrolling();
+}
+
+
 void GuiWorkArea::scrollTo(int value)
 {
 	d->scrollTo(value);

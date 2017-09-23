@@ -84,7 +84,16 @@ public:
 	/// Current ratio between physical pixels and device-independent pixels
 	double pixelRatio() const;
 
+	/// Stop scrolling animation
+	void stopScrolling() override;
+
 public Q_SLOTS:
+	/// Scroll the BufferView.
+	/**
+	  * This is a slot for the valueChanged() signal of the vertical scrollbar.
+	  * \p value value of the scrollbar.
+	*/
+	void scrollTo(int value) override;
 	///
 	void stopBlinkingCaret();
 	///
@@ -99,12 +108,6 @@ Q_SIGNALS:
 	void bufferViewChanged();
 
 private Q_SLOTS:
-	/// Scroll the BufferView.
-	/**
-	  * This is a slot for the valueChanged() signal of the vertical scrollbar.
-	  * \p value value of the scrollbar.
-	*/
-	void scrollTo(int value);
 	/// timer to limit triple clicks
 	void doubleClickTimeout();
 	/// toggle the caret's visibility

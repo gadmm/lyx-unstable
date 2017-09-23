@@ -44,12 +44,8 @@ void TocBuilder::pushItem(DocIterator const & dit, docstring const & s,
 void TocBuilder::captionItem(DocIterator const & dit, docstring const & s,
                              bool output_active)
 {
-	// first show the float before moving to the caption
-	docstring arg = "paragraph-goto " + dit.paragraphGotoArgument();
-	if (!stack_.empty())
-		arg = "paragraph-goto " +
-			(*toc_)[stack_.top().pos].dit().paragraphGotoArgument() + ";" + arg;
-	FuncRequest func(LFUN_COMMAND_SEQUENCE, arg);
+	// moves inside the caption
+	FuncRequest func(LFUN_PARAGRAPH_GOTO, dit.paragraphGotoArgument());
 
 	if (!stack_.empty() && !stack_.top().is_captioned) {
 		// The float we entered has not yet been assigned a caption.

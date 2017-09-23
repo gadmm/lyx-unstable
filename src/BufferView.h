@@ -207,7 +207,7 @@ public:
 	/// scroll document by the given number of pixels.
 	int scroll(int pixels);
 	/// Scroll the view by a number of pixels.
-	void scrollDocView(int pixels, bool update);
+	void scrollDocView(int pixels);
 	/// Set the cursor position based on the scrollbar one.
 	void setCursorFromScrollbar();
 

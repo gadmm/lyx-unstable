@@ -96,7 +96,7 @@ void GuiWorkArea::PrivateAnimated::setDocScrollValue(int value)
 	int offset = value - scrolled_;
 	if (!buffer_view_)
 		return;
-	buffer_view_->scrollDocView(offset, true);
+	buffer_view_->scrollDocView(offset);
 	scrolled_ = value;
 	hideCaret();
 	updateScrollbar();

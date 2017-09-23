@@ -624,7 +624,7 @@ string BufferView::contextMenu(int x, int y) const
 }
 
 
-void BufferView::scrollDocView(int const value, bool update)
+void BufferView::scrollDocView(int value)
 {
 	// The scrollbar values are relative to the top of the screen, therefore the
 	// offset is equal to the target value.
@@ -633,52 +633,12 @@ void BufferView::scrollDocView(int const value, bool update)
 	if (value == 0)
 		return;
 
-	// If the offset is less than 2 screen height, prefer to scroll instead.
-	if (abs(value) <= 2 * height_) {
-		d->anchor_ypos_ -= value;
-		d->wa_.scheduleRedraw(true, value);
-		updateHoveredInset();
-		return;
-	}
-
-	// cut off at the top
-	if (value <= d->scrollbarParameters_.min) {
-		DocIterator dit = doc_iterator_begin(&buffer_);
-		showCursor(dit, false, update);
-		LYXERR(Debug::SCROLLING, "scroll to top");
-		return;
-	}
-
-	// cut off at the bottom
-	if (value >= d->scrollbarParameters_.max) {
-		DocIterator dit = doc_iterator_end(&buffer_);
-		dit.backwardPos();
-		showCursor(dit, false, update);
-		LYXERR(Debug::SCROLLING, "scroll to bottom");
-		return;
-	}
-
-	// find paragraph at target position
-	int par_pos = d->scrollbarParameters_.min;
-	pit_type i = 0;
-	for (; i != int(d->par_height_.size()); ++i) {
-		par_pos += d->par_height_[i];
-		if (par_pos >= value)
-			break;
-	}
-
-	if (par_pos < value) {
-		// It seems we didn't find the correct pit so stay on the safe side and
-		// scroll to bottom.
-		LYXERR0("scrolling position not found!");
-		scrollDocView(d->scrollbarParameters_.max, update);
-		return;
-	}
-
-	DocIterator dit = doc_iterator_begin(&buffer_);
-	dit.pit() = i;
-	LYXERR(Debug::SCROLLING, "value = " << value << " -> scroll to pit " << i);
-	showCursor(dit, false, update);
+	value = max(d->scrollbarParameters_.min, value);
+	value = min(d->scrollbarParameters_.max, value);
+	d->anchor_ypos_ -= value;
+	d->wa_.scheduleRedraw(true, value);
+	updateHoveredInset();
+	return;
 }
 
 

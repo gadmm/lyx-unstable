@@ -680,7 +680,7 @@ void GuiWorkArea::scrollTo(int value)
 void GuiWorkArea::Private::scrollTo(int value)
 {
 	p->stopBlinkingCaret();
-	buffer_view_->scrollDocView(value, true);
+	buffer_view_->scrollDocView(value);
 	scrollFinish();
 }
 

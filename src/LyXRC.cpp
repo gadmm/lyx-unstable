@@ -291,7 +291,7 @@ void LyXRC::setDefaults()
 	spellchecker = "aspell";
 #endif
 	spellchecker_accept_compound = false;
-	spellcheck_continuously = false;
+	spellcheck_continuously = true;
 	completion_minlength = 6;
 	spellcheck_notes = true;
 	use_kbmap = false;
@@ -315,12 +315,12 @@ void LyXRC::setDefaults()
 	cursor_follows_scrollbar = false;
 	scroll_below_document = false;
 	scroll_wheel_zoom = SCROLL_WHEEL_ZOOM_CTRL;
-	paragraph_markers = false;
+	paragraph_markers = true;
 	mac_dontswap_ctrl_meta = false;
 	mac_like_cursor_movement = false;
 	macro_edit_style = MACRO_EDIT_INLINE_BOX;
 	dialogs_iconify_with_main = false;
-	preview = PREVIEW_OFF;
+	preview = PREVIEW_NO_MATH;
 	preview_hashed_labels  = false;
 	preview_scale_factor = 1.0;
 	use_converter_cache = true;
@@ -360,7 +360,7 @@ void LyXRC::setDefaults()
 	completion_inline_delay = 0.2;
 	default_decimal_point = ".";
 	default_length_unit = Length::CM;
-	cursor_width = 1;
+	cursor_width = 2;
 	close_buffer_with_last_view = "yes";
 	mouse_middlebutton_paste = true;
 	invert_colors = false;

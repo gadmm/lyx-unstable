@@ -797,6 +797,7 @@ bool BufferView::moveToPosition(pit_type bottom_pit, pos_type bottom_pos,
 		// To center the screen on this new position we need the
 		// paragraph position which is computed at draw() time.
 		// So we need a redraw!
+		// FIXME: still true with the new deferred painting?
 		buffer_.changed(false);
 		if (needsFitCursor())
 			showCursor();
@@ -2055,9 +2056,7 @@ void BufferView::clearSelection()
 	// not the more current external selection.
 	cap::clearSelection();
 	d->xsel_cache_.set = false;
-	// The buffer did not really change, but this causes the
-	// redraw we need because we cleared the selection above.
-	buffer_.changed(false);
+	d->wa_.scheduleRedraw(false);
 }
 
 
@@ -2141,7 +2140,7 @@ void BufferView::updateHoveredInset() const
 
 		// This event (moving without mouse click) is not passed further.
 		// This should be changed if it is further utilized.
-		buffer_.changed(false);
+		d->wa_.scheduleRedraw(false);
 	}
 }
 

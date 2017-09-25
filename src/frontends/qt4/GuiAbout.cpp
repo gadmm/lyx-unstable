@@ -105,12 +105,15 @@ static QString release_notes()
 			QString line;
 			bool incomment = false;
 			bool inlist = false;
+			out << "<body style=\"margin: 15px;\">";
 			do {
 				// a simple markdown parser
 				line = ts.readLine();
-				// skipe empty lines
-				if (line.isEmpty())
+				// empty lines are new paragraphs
+				if (line.isEmpty()) {
+					out << "<p align=\"justify\">";
 					continue;
+				}
 				// parse (:comments:)
 				if (line.startsWith("(:")) {
 					if (!line.endsWith(":)"))
@@ -125,9 +128,12 @@ static QString release_notes()
 				// detect links to the tracker
 				line.replace(QRegExp("(bug )(\\#)(\\d+)*"),
 					     "<a href=\"http://www.lyx.org/trac/ticket/\\3\">\\1\\3</a>");
+				// detect links
+				line.replace(QRegExp("<(http.*)>"),
+				             "<a href=\"\\1\">\\1</a>");
 
 				// headings
-				if (line.startsWith("!!!")) {
+				if (line.startsWith("!!!") || line.startsWith("###")) {
 					if (inlist) {
 					    out << "</li>";
 					    out << "</ul><br>";
@@ -135,14 +141,14 @@ static QString release_notes()
 					}
 					out << "<h4>" << line.mid(3) << "</h4>";
 				}
-				else if (line.startsWith("!!")) {
+				else if (line.startsWith("!!") || line.startsWith("##")) {
 					if (inlist) {
 					    out << "</li>";
 					    out << "</ul><br>";
 					    inlist = false;
 					}
 					out << "<h3>" << line.mid(2) << "</h3>";
-				} else if (line.startsWith("!")) {
+				} else if (line.startsWith("!") || line.startsWith("#")) {
 					if (inlist) {
 					    out << "</li>";
 					    out << "</ul><br>";
@@ -169,6 +175,7 @@ static QString release_notes()
 
 				out << " ";
 			} while (!line.isNull());
+			out << "</body>";
 		}
 	}
 	out.flush();

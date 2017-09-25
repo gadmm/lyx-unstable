@@ -1,12 +1,3 @@
-What is LyX unstable?
-
-    LyX unstable is a branch of LyX master that reads, edits and writes the
-    current LyX stable file format. See the documentation at
-    development/unstable/unstable.lyx for more information on the why and how.
-    LyX unstable edits LyX files with the 2.2 file format and follows the
-    current master branch (2.4dev). When LyX 2.3 releases, unstable will be
-    reset to the LyX 2.3 format.
-
 What is LyX?
 
     LyX is a document processor that encourages an approach to
@@ -31,3 +22,151 @@ What is LyX?
     LyX is stable and fully featured. It is a multi-platform, fully
     internationalized application running natively on Unix/Linux and
     the Macintosh and modern Windows platforms.
+
+What do I need to run LyX?
+
+    Either:
+    * a Unix-like system (including Windows with cygwin)
+    * Windows 2000 or newer
+    * Mac OS 10.4 or newer
+
+    A decent LaTeX2e installation (e.g. TeX Live for Linux, MikTeX for
+    Windows).
+
+    Python 2.7 to convert old LyX files and for helper scripts.
+    Note: Python 3 (3.3 or later) support is work in progress.
+
+How does the LyX version scheme work?
+
+    LyX uses a contiguous numbering scheme for versions, where a
+    number "2.x.y" indicates a stable release '2.x', maintenance
+    release 'y'.  In other words, LyX 2.2.0 was the first stable
+    release in the 2.2-series of LyX. At the time of writing, the
+    latest maintenance release in the 2.2-series was LyX 2.2.3.
+
+    Please note that maintenance releases are designed primarily to
+    fix bugs, and that the file format will _never_ change due to a
+    maintenance release.
+
+    In addition to the stable releases and maintenance releases, some
+    users may want to give a ''release candidate'' a try. This is a
+    release that should be stable enough for daily work, but yet may
+    be potentially unstable. If no major bugs are found, the release
+    candiate is soon released as the first stable release in a a new
+    series. To summarize, there are three possible types of file names
+    that are of interest to normal users:
+
+       lyx-2.2.0.tar.gz     -- stable release, first in the 2.2-series
+       lyx-2.2.3.tar.gz     -- fifth maintenance release of LyX 2.2
+       lyx-2.3.0rc1.tar.gz  -- potentially unstable release candidate
+
+    Note that the goal is not parallel development as for the linux
+    kernel --the team is too small to afford that-- but rather to
+    include all the simple and safe bug fixes. This is so that the
+    maintenance burden on us is not too high, and so that system
+    administrators can install new releases without fear. Experience
+    shows that these releases will contain a few new features, and
+    that the bulk of the patches will be documentation updates.
+
+    If you get the source from Git, the version string will look like
+    one of:
+
+       2.2.4dev     -- this is the stable branch on which maintenance
+               release 2.2.4 will eventually be tagged.
+       2.3.0dev     -- this is the main branch on which stable
+               release 2.3.0 will eventually be tagged.
+
+What's new?
+
+    Read NEWS.
+
+How do I upgrade from an earlier LyX version?
+
+    Read the file UPGRADING for info on this subject.
+
+What do I need to compile LyX from the source distribution?
+
+    * A good C++ compiler.  Development is being done mainly with
+      gcc/g++, but some others work also. As of LyX 2.3.0, you need
+      at least gcc 4.6.x.
+
+    * The Qt library, at least version 4.8.0. For all features
+      newer versions (e.g. Qt 5.6) are recommended.
+
+    Read the file "INSTALL" for more information on compiling.
+
+Okay, I've installed LyX. What now?
+
+    Once you've installed it, and everything looks fine, go read
+    the "Introduction" item under the Help menu.  You should follow
+    the instructions there, which tell you to read (or at least skim)
+    the Tutorial. After that, you should also read "Help>LaTeX
+    configuration" which provides info on your LaTeX configuration
+    as LyX sees it.  You might be missing a package or two that you'd
+    like to have.
+
+    User-level configuration is possible via the Tools>Preferences menu.
+
+Does LyX have support for non-English speakers/writers/readers?
+
+    Yes. LyX supports writing in many languages, including
+    right-to-left languages like Arabic or Hebrew.
+
+    Menus and error messages have been translated to many languages.
+    For the status of the different translations, see
+    http://www.lyx.org/I18n
+
+    Keymaps can ease typing in many languages.
+
+Internet resources of relevance to LyX
+
+    The LyX homepage contains valuable information about LyX and the
+    various LyX mailing lists, as well as links to mirrors and other
+    LyX homepages around the world:
+	http://www.lyx.org/
+
+    The LyX Wiki is the place where users can share information on
+    setting up and using LyX.
+	http://wiki.lyx.org/
+
+    The main LyX archive site:
+	ftp://ftp.lyx.org/pub/lyx/
+
+    The LyX Development page has information about the development
+    effort. LyX is under Git version control, so you can get the very
+    latest sources from there at any time.
+	http://www.lyx.org/Development
+
+How do I submit a bug report?
+
+    If possible, read the Introduction found under the Help menu in LyX.
+    You'll find detailed info on submitting bug reports there.
+
+    If you can't do that, send details to the LyX Developers' mailing
+    list, or use the LyX bug tracker at
+    http://www.lyx.org/trac/wiki/BugTrackerHome.
+    Don't forget to mention which version you are having problems with!
+
+How can I participate in the development of LyX?
+
+    Any help with the development of LyX is greatly appreciated ---
+    after all, LyX wouldn't be what it is today without the help
+    of volunteers. We need your help!
+
+    If you want to work on LyX, you should contact the developer's
+    mailing list for discussion on how to do your stuff.  LyX is being
+    cleaned up, and therefore it's important to follow some rules.
+    Read about those rules in development/Code_rules/.
+
+    If you don't know C++, there are many other ways to
+    contribute. Write documentation. Help to internationalize LyX
+    by translating documentation or menus/error messages, or by
+    writing a new keymap. Write a new textclass. Find bugs (but
+    please read the list of known bugs first). Contribute money.
+    Or just offer feature suggestions (but please read the online
+    TODO list first).
+
+Thank you for trying LyX. We appreciate your feedback in the mailing
+lists.
+
+The LyX Team.

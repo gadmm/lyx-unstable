@@ -1,0 +1,33 @@
+What is LyX unstable?
+---------------------
+
+LyX unstable is a branch of LyX master that reads, edits and writes the current
+LyX stable file format. See the documentation at
+`development/unstable/unstable.lyx` for more information on the why and how. LyX
+*2.3unstable* edits LyX files with the 2.2 file format and follows the current
+master branch (2.4dev). When LyX 2.3 releases, unstable will be reset to the LyX
+2.3 format.
+
+Please report bugs at <https://github.com/gadmm/lyx-unstable>.
+
+What is LyX?
+------------
+
+LyX is a document processor that encourages an approach to writing based on the
+structure of your documents, not their appearance. It is released under a Free
+Software / Open Source license.
+
+LyX is for people that write and want their writing to look great, right out of
+the box. No more endless tinkering with formatting details, “finger painting”
+font attributes or futzing around with page boundaries. You just write. In the
+background, Prof. Knuth's legendary TeX typesetting engine makes you look good.
+
+On screen, LyX looks like any word processor; its printed output — or richly
+cross-referenced PDF, just as readily produced — looks like nothing else. Gone
+are the days of industrially bland .docs, all looking similarly not-quite-right,
+yet coming out unpredictably different on different printer drivers. Gone are
+the crashes “eating” your dissertation the evening before going to press.
+
+LyX is stable and fully featured. It is a multi-platform, fully
+internationalized application running natively on Unix/Linux and the Macintosh
+and modern Windows platforms.

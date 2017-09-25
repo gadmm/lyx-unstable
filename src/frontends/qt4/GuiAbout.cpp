@@ -110,8 +110,9 @@ static QString release_notes()
 				// a simple markdown parser
 				line = ts.readLine();
 				// empty lines are new paragraphs
+				QString const newpar = "<p align=\"justify\">";
 				if (line.isEmpty()) {
-					out << "<p align=\"justify\">";
+					out << newpar;
 					continue;
 				}
 				// parse (:comments:)
@@ -136,7 +137,7 @@ static QString release_notes()
 				if (line.startsWith("!!!") || line.startsWith("###")) {
 					if (inlist) {
 					    out << "</li>";
-					    out << "</ul><br>";
+					    out << "</ul>" << newpar;
 					    inlist = false;
 					}
 					out << "<h4>" << line.mid(3) << "</h4>";
@@ -144,14 +145,14 @@ static QString release_notes()
 				else if (line.startsWith("!!") || line.startsWith("##")) {
 					if (inlist) {
 					    out << "</li>";
-					    out << "</ul><br>";
+					    out << "</ul>" << newpar;
 					    inlist = false;
 					}
 					out << "<h3>" << line.mid(2) << "</h3>";
 				} else if (line.startsWith("!") || line.startsWith("#")) {
 					if (inlist) {
 					    out << "</li>";
-					    out << "</ul><br>";
+					    out << "</ul>" << newpar;
 					    inlist = false;
 					}
 					out << "<h2>" << line.mid(1) << "</h2>";
@@ -168,7 +169,7 @@ static QString release_notes()
 				} else if (inlist) {
 					inlist = false;
 					out << "</li>";
-					out << "</ul><br>";
+					out << "</ul>" << newpar;
 					out << line;
 				} else
 					out << line;

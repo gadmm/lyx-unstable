@@ -86,17 +86,17 @@ static QString credits()
 static QString release_notes()
 {
 	QString res;
-	QFile file(toqstr(package().system_support().absFileName()) + "/RELEASE-NOTES");
+	QFile file(toqstr(package().system_support().absFileName()) + "/README.md");
 	QTextStream out(&res);
 
 	if (!file.exists()) {
-		out << qt_("ERROR: LyX wasn't able to find the RELEASE-NOTES file\n");
+		out << qt_("ERROR: LyX wasn't able to find the README.md file\n");
 		out << qt_("Please install correctly to see what has changed\n");
 		out << qt_("for this version of LyX.");
 	} else {
 		file.open(QIODevice::ReadOnly);
 		if (!file.isReadable()) {
-			out << qt_("ERROR: LyX wasn't able to read the RELEASE-NOTES file\n");
+			out << qt_("ERROR: LyX wasn't able to read the README.md file\n");
 			out << qt_("Please install correctly to see what has changed\n");
 			out << qt_("for this version of LyX.");
 		} else {

@@ -1,5 +1,4 @@
-What is LyX unstable?
----------------------
+# What is LyX unstable?
 
 LyX unstable is a branch of LyX master that reads, edits and writes the current
 LyX stable file format. See the documentation at
@@ -8,10 +7,9 @@ LyX stable file format. See the documentation at
 master branch (2.4dev). When LyX 2.3 releases, unstable will be reset to the LyX
 2.3 format.
 
-Please report bugs at <https://github.com/gadmm/lyx-unstable>.
+Please report bugs at <https://github.com/gadmm/lyx-unstable/issues>.
 
-What is LyX?
-------------
+# What is LyX?
 
 LyX is a document processor that encourages an approach to writing based on the
 structure of your documents, not their appearance. It is released under a Free

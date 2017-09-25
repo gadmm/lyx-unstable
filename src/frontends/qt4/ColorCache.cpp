@@ -15,6 +15,8 @@
 #include "ColorCache.h"
 #include "ColorSet.h"
 
+#include <cmath>
+
 namespace lyx {
 
 namespace {
@@ -61,7 +63,8 @@ QColor invert(QColor col)
 		std::vector<int> gamma(256);
 		double const gamma_val = 2.4;
 		for (int i = 0; i <= 255; ++i)
-			gamma[i] = round(255 * pow(double(255 - i)/255, 1/gamma_val));
+			gamma[i] = std::round(255 * std::pow(double(255 - i)/255,
+			                                     1/gamma_val));
 		return gamma;
 	}();
 	return {gamma[col.red()], gamma[col.green()], gamma[col.blue()]};

@@ -85,7 +85,7 @@ public:
 	double pixelRatio() const;
 
 	/// Stop scrolling animation
-	void stopScrolling() override;
+	void stopScrolling(bool emit) override;
 
 public Q_SLOTS:
 	/// Scroll the BufferView.

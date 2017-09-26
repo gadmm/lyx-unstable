@@ -10,6 +10,7 @@
 
 #include <config.h>
 
+#include "GuiView.h"
 #include "GuiWorkArea_PrivateAnimated.h"
 
 #include "BufferView.h"
@@ -33,10 +34,20 @@ GuiWorkArea::PrivateAnimated::PrivateAnimated(GuiWorkArea * parent)
 	scroll_animation_->setTargetObject(this);
 	scroll_animation_->setPropertyName("docScrollValue");
 	scroll_animation_->setEasingCurve(QEasingCurve(QEasingCurve::OutSine));
-	connect(scroll_animation_, SIGNAL(stateChanged(QAbstractAnimation::State,
-	                                               QAbstractAnimation::State)),
-	        this, SLOT(scrollAnimationFinish(QAbstractAnimation::State,
-	                                         QAbstractAnimation::State)));
+	connect(scroll_animation_, &QPropertyAnimation::stateChanged,
+	        this, &GuiWorkArea::PrivateAnimated::scrollingChanged);
+	connect(scroll_animation_, &QPropertyAnimation::finished,
+	        this, &GuiWorkArea::PrivateAnimated::scrollingFinished);
+}
+
+
+void GuiWorkArea::PrivateAnimated::setGuiView(GuiView * gv)
+{
+	GuiWorkArea::Private::setGuiView(gv);
+	connect(this, &GuiWorkArea::PrivateAnimated::scrollingStarted,
+	        lyx_view_, &GuiView::scrollingStarted);
+	connect(this, &GuiWorkArea::PrivateAnimated::scrollingFinished,
+	        lyx_view_, &GuiView::scrollingFinished);
 }
 
 
@@ -62,7 +73,7 @@ void GuiWorkArea::PrivateAnimated::scrollTo(int const value)
 		return;
 	int const offset = value + scroll_animation_->endValue().toInt()
 		- scroll_animation_->currentValue().toInt();
-	stopScrolling();
+	stopScrolling(false);
 	if (p->verticalScrollBar()->isSliderDown()) {
 		// do not attempt to animate when the slider is dragged
 		GuiWorkArea::Private::scrollTo(offset);
@@ -105,23 +116,26 @@ void GuiWorkArea::PrivateAnimated::setDocScrollValue(int value)
 }
 
 
-void GuiWorkArea::PrivateAnimated::stopScrolling()
+void GuiWorkArea::PrivateAnimated::stopScrolling(bool emit)
 {
 	scroll_animation_->stop();
 	scroll_animation_->setStartValue(0);
 	scroll_animation_->setEndValue(0);
 	scrolled_ = 0;
+	if (emit)
+		Q_EMIT scrollingFinished();
 }
 
 
 void
-GuiWorkArea::PrivateAnimated::scrollAnimationFinish
+GuiWorkArea::PrivateAnimated::scrollingChanged
 (QAbstractAnimation::State new_state, QAbstractAnimation::State old_state)
 {
-	if (old_state != QAbstractAnimation::Running
-	    || new_state != QAbstractAnimation::Stopped)
-		return;
-	scrollFinish();
+	if (new_state == QAbstractAnimation::Running)
+		Q_EMIT scrollingStarted();
+	if (old_state == QAbstractAnimation::Running
+	    && new_state == QAbstractAnimation::Stopped)
+		scrollFinish();
 }
 
 

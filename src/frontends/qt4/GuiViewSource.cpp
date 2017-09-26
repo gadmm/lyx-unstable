@@ -149,25 +149,6 @@ int ViewSourceWidget::updateDelay() const
 }
 
 
-void GuiViewSource::scheduleUpdate()
-{
-	update_timer_->start(widget_->updateDelay());
-}
-
-
-void GuiViewSource::scheduleUpdateNow()
-{
-	update_timer_->start(0);
-}
-
-
-void GuiViewSource::realUpdateView()
-{
-	widget_->updateView(bufferview());
-	updateTitle();
-}
-
-
 void ViewSourceWidget::updateView(BufferView const * bv)
 {
 	if (!bv) {
@@ -407,10 +388,15 @@ GuiViewSource::GuiViewSource(GuiView & parent,
 
 	// setting the update timer
 	update_timer_->setSingleShot(true);
-	connect(update_timer_, SIGNAL(timeout()),
-	        this, SLOT(realUpdateView()));
+	connect(update_timer_, &QTimer::timeout,
+	        this, &GuiViewSource::timerFinished);
+	connect(&parent, &GuiView::scrollingStarted,
+	        this, &GuiViewSource::scrollingStarted);
+	connect(&parent, &GuiView::scrollingFinished,
+	        this, &GuiViewSource::scrollingFinished);
 
-	connect(widget_, SIGNAL(needUpdate()), this, SLOT(scheduleUpdateNow()));
+	connect(widget_, &ViewSourceWidget::needUpdate,
+	        this, &GuiViewSource::scheduleUpdateNow);
 }
 
 
@@ -472,6 +458,49 @@ void GuiViewSource::restoreSession()
 {
 	DockView::restoreSession();
 	widget_->restoreSession(sessionKey());
+}
+
+
+void GuiViewSource::scrollingStarted()
+{
+	scrolling_ = true;
+	update_after_scrolling_ = false;
+}
+
+
+void GuiViewSource::scrollingFinished()
+{
+	scrolling_ = false;
+	if (update_after_scrolling_)
+		realUpdateView();
+	update_after_scrolling_ = false;
+}
+
+
+void GuiViewSource::timerFinished()
+{
+	update_after_scrolling_ = scrolling_;
+	if (!scrolling_)
+		realUpdateView();
+}
+
+
+void GuiViewSource::scheduleUpdate()
+{
+	update_timer_->start(widget_->updateDelay());
+}
+
+
+void GuiViewSource::scheduleUpdateNow()
+{
+	update_timer_->start(0);
+}
+
+
+void GuiViewSource::realUpdateView()
+{
+	widget_->updateView(bufferview());
+	updateTitle();
 }
 
 

@@ -858,7 +858,7 @@ void BufferView::scrollToCursor(DocIterator const & dit, bool const recenter)
 	if (height_ == 0)
 		return;
 
-	d->wa_.stopScrolling();
+	d->wa_.stopScrolling(false);
 
 	LYXERR(Debug::SCROLLING, "recentering!");
 
@@ -882,7 +882,6 @@ void BufferView::scrollToCursor(DocIterator const & dit, bool const recenter)
 	if (tm.contains(bot_pit)) {
 		ParagraphMetrics const & pm = tm.parMetrics(bot_pit);
 		LBUFERR(!pm.rows().empty());
-		// FIXME: smooth scrolling doesn't work in mathed.
 		CursorSlice const & cs = dit.innerTextSlice();
 		int offset = coordOffset(dit).y_;
 		int ypos = pm.position() + offset;

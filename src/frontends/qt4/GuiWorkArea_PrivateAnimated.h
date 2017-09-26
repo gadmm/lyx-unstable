@@ -31,21 +31,29 @@ class GuiWorkArea::PrivateAnimated : public QObject, public GuiWorkArea::Private
 public:
 	PrivateAnimated(GuiWorkArea *);
 	//
+	void setGuiView(GuiView * gv) override;
+	//
 	void scrollTo(int value) override;
 	// How much was scrolled so far in the current animation.
 	int scrolled_;
 	//
 	QPropertyAnimation * const scroll_animation_;
-
-public Q_SLOTS:
+	//
 	int docScrollValue() const;
 	//
+	void stopScrolling(bool emit) override;
+
+Q_SIGNALS:
+	//
+	void scrollingStarted();
+	//
+	void scrollingFinished();
+
+public Q_SLOTS:
 	void setDocScrollValue(int value);
 	//
-	void stopScrolling() override;
-	//
-	void scrollAnimationFinish(QAbstractAnimation::State new_state,
-	                           QAbstractAnimation::State old_state);
+	void scrollingChanged(QAbstractAnimation::State new_state,
+	                      QAbstractAnimation::State old_state);
 };
 
 

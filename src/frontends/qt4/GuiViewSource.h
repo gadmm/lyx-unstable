@@ -131,12 +131,22 @@ private Q_SLOTS:
 
 	/// update content
 	void realUpdateView();
+	//
+	void scrollingStarted();
+	//
+	void scrollingFinished();
+	//
+	void timerFinished();
 
 private:
 	/// The encapsulated widget.
 	ViewSourceWidget * widget_;
 	///
 	QTimer * update_timer_;
+	/// are we scrolling?
+	bool scrolling_ = false;
+	/// do we need to update after scrolling?
+	bool update_after_scrolling_ = false;
 };
 
 } // namespace frontend

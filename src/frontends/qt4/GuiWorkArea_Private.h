@@ -77,7 +77,8 @@ struct GuiWorkArea::Private
 	///
 	Private(GuiWorkArea *);
 	virtual ~Private();
-
+	///
+	virtual void setGuiView(GuiView * gv);
 	///
 	void resizeBufferView();
 
@@ -92,7 +93,7 @@ struct GuiWorkArea::Private
 	/// This is the main function called when the user scrolls
 	virtual void scrollTo(int value);
 	// Stop any current scrolling animation
-	virtual void stopScrolling() {}
+	virtual void stopScrolling(bool /* emit */ = true) {}
 	/// Perform clean-up tasks after scrolling
 	void scrollFinish();
 	/// Set the range and value of the scrollbar and connect to its valueChanged

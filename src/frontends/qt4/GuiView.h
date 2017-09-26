@@ -217,6 +217,10 @@ Q_SIGNALS:
 	void triggerShowDialog(QString const & qname, QString const & qdata, Inset * inset);
 	// emitted when the work area or its buffer view changed
 	void bufferViewChanged();
+	// emitted when the scrolling animation starts
+	void scrollingStarted();
+	// emitted when the scrolling animation finishes
+	void scrollingFinished();
 
 public Q_SLOTS:
 	///

@@ -348,7 +348,13 @@ void GuiWorkArea::Private::updateCursorShape()
 
 void GuiWorkArea::setGuiView(GuiView & gv)
 {
-	d->lyx_view_ = &gv;
+	d->setGuiView(&gv);
+}
+
+
+void GuiWorkArea::Private::setGuiView(GuiView * gv)
+{
+	lyx_view_ = gv;
 }
 
 
@@ -671,9 +677,9 @@ void GuiWorkArea::Private::updateScrollbar()
 }
 
 
-void GuiWorkArea::stopScrolling()
+void GuiWorkArea::stopScrolling(bool emit)
 {
-	d->stopScrolling();
+	d->stopScrolling(emit);
 }
 
 

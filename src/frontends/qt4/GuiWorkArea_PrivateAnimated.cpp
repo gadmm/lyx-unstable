@@ -32,7 +32,7 @@ GuiWorkArea::PrivateAnimated::PrivateAnimated(GuiWorkArea * parent)
 {
 	scroll_animation_->setTargetObject(this);
 	scroll_animation_->setPropertyName("docScrollValue");
-	scroll_animation_->setEasingCurve(QEasingCurve(QEasingCurve::OutQuad));
+	scroll_animation_->setEasingCurve(QEasingCurve(QEasingCurve::OutSine));
 	connect(scroll_animation_, SIGNAL(stateChanged(QAbstractAnimation::State,
 	                                               QAbstractAnimation::State)),
 	        this, SLOT(scrollAnimationFinish(QAbstractAnimation::State,
@@ -48,6 +48,16 @@ int GuiWorkArea::PrivateAnimated::docScrollValue() const
 
 void GuiWorkArea::PrivateAnimated::scrollTo(int const value)
 {
+	// duration is defined as a continuous piecewise affine function of the
+	// distance.
+	//  * 0px -> 0ms
+	//  * 1 line height -> 60ms
+	//  * 1 page height -> 150ms
+	//  * stops increasing at 350ms.
+	double const single_step_duration = 60;
+	double const page_step_duration = 150;
+	int const max_duration = 350;
+
 	if (value == 0)
 		return;
 	int const offset = value + scroll_animation_->endValue().toInt()
@@ -61,18 +71,9 @@ void GuiWorkArea::PrivateAnimated::scrollTo(int const value)
 	scroll_animation_->setEndValue(offset);
 	// compute duration
 	{
-		// duration is defined as a continuous piecewise affine function of the
-		// distance.
-		//  * 0px -> 0ms
-		//  * 1 line height -> 100ms
-		//  * 1 page height -> 250ms
-		//  * stops increasing at 350ms.
 		int const single_step = p->verticalScrollBar()->singleStep();
 		int const page_step = std::max(p->verticalScrollBar()->pageStep(),
 		                               single_step);
-		double const single_step_duration = 100;
-		double const page_step_duration = 250;
-		int const max_duration = 350;
 		int const abs_offset = abs(offset);
 		int duration;
 		if (abs_offset <= single_step)

@@ -940,7 +940,7 @@ void BufferView::scrollToCursor(DocIterator const & dit, bool const recenter)
 	else
 		scroll_value = height_ / 4;
 
-	int const fake_travel = (upwards ? -1 : 1) * height_;
+	int const fake_travel = (upwards ? -2 : 2) * height_;
 	d->anchor_ypos_ = scroll_value + fake_travel;
 	updateMetrics();
 	d->wa_.scrollTo(fake_travel);

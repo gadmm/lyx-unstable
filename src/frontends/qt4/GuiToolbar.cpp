@@ -227,15 +227,13 @@ void MenuButton::initialize()
 	connect(bar_, SIGNAL(updated()), m, SLOT(updateParent()));
 	connect(bar_, SIGNAL(updated()), this, SLOT(updateTriggered()));
 	ToolbarInfo const * tbinfo = guiApp->toolbars().info(tbitem_.name_);
-	if (!tbinfo) {
-		LYXERR0("Unknown toolbar " << tbitem_.name_);
-		return;
+	if (tbinfo) {
+		ToolbarInfo::item_iterator it = tbinfo->items.begin();
+		ToolbarInfo::item_iterator const end = tbinfo->items.end();
+		for (; it != end; ++it)
+			if (!getStatus(*it->func_).unknown())
+				m->add(bar_->addItem(*it));
 	}
-	ToolbarInfo::item_iterator it = tbinfo->items.begin();
-	ToolbarInfo::item_iterator const end = tbinfo->items.end();
-	for (; it != end; ++it)
-		if (!getStatus(*it->func_).unknown())
-			m->add(bar_->addItem(*it));
 	setMenu(m);
 }
 
@@ -269,51 +267,9 @@ void MenuButton::updateTriggered()
 }
 
 
-class InsetMenuButton::Private
+InsetMenuButton::InsetMenuButton(GuiToolbar * bar, ToolbarItem const & item)
+	: MenuButton(bar, item, false), text_class_(), inset_(nullptr)
 {
-	/// noncopyable
-	Private(Private const &);
-	void operator=(Private const &);
-public:
-	Private() : inset_(0)
-	{}
-
-	/// since Action retains a reference to the
-	/// FuncRequest, we need to keep these around
-	typedef std::list<FuncRequest> FuncCache;
-	///
-	DocumentClassConstPtr text_class_;
-	///
-	InsetText const * inset_;
-	///
-	FuncCache fcache_;
-};
-
-
-InsetMenuButton::InsetMenuButton(GuiToolbar * bar)
-	: QToolButton(bar), bar_(bar), d(new Private())
-{
-	setPopupMode(QToolButton::InstantPopup);
-	QString const label = qt_("Add Custom Inset");
-	setToolTip(label);
-	setStatusTip(label);
-	setText(label);
-	connect(bar, SIGNAL(iconSizeChanged(QSize)),
-		this, SLOT(setIconSize(QSize)));
-	initialize();
-}
-
-
-void InsetMenuButton::initialize()
-{
-	QString const label = qt_("Add Custom Inset");
-
-	QMenu * m = new QMenu(label, this);
-	m->setWindowTitle(label);
-	m->setTearOffEnabled(true);
-	setMenu(m);
-
-	connect(bar_, SIGNAL(updated()), this, SLOT(updateTriggered()));
 	updateTriggered();
 }
 
@@ -328,52 +284,44 @@ void InsetMenuButton::updateTriggered()
 			m->clear();
 		setEnabled(false);
 		setMinimumWidth(sizeHint().width());
-		d->text_class_.reset();
-		d->inset_ = 0;
-			d->fcache_.clear();
+		text_class_.reset();
+		inset_ = 0;
 		return;
     }
-    
+	setEnabled(true);
+
 	// we'll only update the inset list if the text class has changed
 	// or we've moved from one inset to another
 	DocumentClassConstPtr text_class = bv->buffer().params().documentClassPtr();
 	InsetText const * inset = &(bv->cursor().innerText()->inset());
-	if (d->text_class_ == text_class && d->inset_ == inset)
+	if (text_class_ == text_class && inset_ == inset)
 		return;
-    
+
 	if (m)
 		m->clear();
-	d->inset_ = inset;
-	d->text_class_ = text_class;
-	// FIXME If this is uncommented, then we crash.
-	// Presumably, the Action objects are still active
-	// for some reason, even though they have been
-	// removed from the menu.
-	//d->fcache_.clear();
-	
-	TextClass::InsetLayouts const & insetLayouts = d->text_class_->insetLayouts();
+	inset_ = inset;
+	text_class_ = text_class;
+
+	TextClass::InsetLayouts const & insetLayouts = text_class_->insetLayouts();
 	TextClass::InsetLayouts::const_iterator iit = insetLayouts.begin();
 	TextClass::InsetLayouts::const_iterator ien = insetLayouts.end();
-	
+
 	for (; iit != ien; ++iit) {
 		InsetLayout const & il = iit->second;
 		if (il.lyxtype() != InsetLayout::CUSTOM)
 			continue;
-        
+
 		docstring const name = iit->first;
 		QString const loc_item = toqstr(translateIfPossible(
-				prefixIs(name, from_ascii("Flex:")) ? 
+				prefixIs(name, from_ascii("Flex:")) ?
 				name.substr(5) : name));
 
-		FuncRequest const func(LFUN_FLEX_INSERT, 
+		auto func = make_shared<FuncRequest>(LFUN_FLEX_INSERT,
 			from_ascii("\"") + name + from_ascii("\""), FuncRequest::TOOLBAR);
-		d->fcache_.push_back(func);
-		FuncRequest const & cfunc = d->fcache_.back();
-		Action * act = 
-			new Action(getIcon(cfunc, false), loc_item, cfunc, loc_item, this);
+		Action * act =
+			new Action(func, getIcon(*func, false), loc_item, loc_item, this);
 		m->addAction(act);
 	}
-	setEnabled(!d->fcache_.empty());
 }
 
 
@@ -392,7 +340,7 @@ void GuiToolbar::add(ToolbarItem const & item)
 		break;
 	}
 	case ToolbarItem::INSETS: {
-		addWidget(new InsetMenuButton(this));
+		addWidget(new InsetMenuButton(this, item));
 		break;
 	}
 	case ToolbarItem::MINIBUFFER:

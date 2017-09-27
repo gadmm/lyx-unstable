@@ -16,6 +16,8 @@
 #ifndef GUITOOLBAR_H
 #define GUITOOLBAR_H
 
+#include "DocumentClassPtr.h"
+
 #include <QList>
 #include <QToolBar>
 #include <QToolButton>
@@ -26,6 +28,7 @@ namespace lyx {
 
 class DocumentClass;
 class Inset;
+class InsetText;
 
 namespace frontend {
 
@@ -49,6 +52,8 @@ public:
 private:
 	///
 	void initialize();
+
+protected:
 	///
 	GuiToolbar * bar_;
 	///
@@ -58,30 +63,27 @@ private Q_SLOTS:
 	///
 	void actionTriggered(QAction * action);
 	///
-	void updateTriggered();
+	virtual void updateTriggered();
 };
 
 
 
-class InsetMenuButton : public QToolButton
+class InsetMenuButton : public MenuButton
 {
 	Q_OBJECT
 public:
 	///
-	InsetMenuButton(GuiToolbar * bar);
+	InsetMenuButton(GuiToolbar * bar, ToolbarItem const & item);
 
 private:
 	///
-	void initialize();
+	DocumentClassConstPtr text_class_;
 	///
-	GuiToolbar * bar_;
-	///
-	class Private;
-	Private * d;
+	InsetText const * inset_;
 
 private Q_SLOTS:
 	///
-	void updateTriggered();
+	void updateTriggered() override;
 };
 
 

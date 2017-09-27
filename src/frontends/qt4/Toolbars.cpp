@@ -181,7 +181,8 @@ ToolbarInfo & ToolbarInfo::read(Lexer & lex)
 			break;
 
 		case TO_INSETS: {
-			add(ToolbarItem(ToolbarItem::INSETS, "Hi"));
+			add(ToolbarItem(ToolbarItem::INSETS, "custom-insets",
+			                from_ascii("Add Custom Inset")));
 			break;
         }
 

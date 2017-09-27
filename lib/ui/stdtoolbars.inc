@@ -96,8 +96,6 @@ ToolbarSet
 		Item "Toggle math toolbar" "toolbar-toggle math"
 		Item "Toggle table toolbar" "toolbar-toggle table"
 		Item "Toggle review toolbar" "toolbar-toggle review"
-		Separator
-		Insets
 	End
 
 	Toolbar "view/update" "View/Update"
@@ -128,6 +126,7 @@ ToolbarSet
 		Item "Insert index entry" "index-insert"
 		Item "Insert nomenclature entry" "nomencl-insert"
 		Separator
+		Insets
 		Item "Insert footnote" "footnote-insert"
 		Item "Insert margin note" "marginalnote-insert"
 		Item "Insert LyX note" "note-insert"

@@ -227,13 +227,10 @@ void MenuButton::initialize()
 	connect(bar_, SIGNAL(updated()), m, SLOT(updateParent()));
 	connect(bar_, SIGNAL(updated()), this, SLOT(updateTriggered()));
 	ToolbarInfo const * tbinfo = guiApp->toolbars().info(tbitem_.name_);
-	if (tbinfo) {
-		ToolbarInfo::item_iterator it = tbinfo->items.begin();
-		ToolbarInfo::item_iterator const end = tbinfo->items.end();
-		for (; it != end; ++it)
-			if (!getStatus(*it->func_).unknown())
-				m->add(bar_->addItem(*it));
-	}
+	if (tbinfo)
+		for (ToolbarItem const & it : tbinfo->items)
+			if (!getStatus(*it.func_).unknown())
+				m->add(bar_->addItem(it));
 	setMenu(m);
 }
 
@@ -268,50 +265,46 @@ void MenuButton::updateTriggered()
 
 
 InsetMenuButton::InsetMenuButton(GuiToolbar * bar, ToolbarItem const & item)
-	: MenuButton(bar, item, false), text_class_(), inset_(nullptr)
+	: MenuButton(bar, item, false), text_class_()
 {
+	setEnabled(false);
+	// prevent the ButtonMenu from deciding our enabled status (it is buggy)
+	disconnect(bar_, SIGNAL(updated()), menu(), SLOT(updateParent()));
+	setPopupMode(QToolButton::MenuButtonPopup);
+	connect(menu(), &QMenu::triggered,
+			this, &QToolButton::setDefaultAction);
 	updateTriggered();
 }
 
 
 void InsetMenuButton::updateTriggered()
 {
-	GuiView const & owner = bar_->owner();
-	BufferView const * bv = owner.currentBufferView();
-	QMenu * m = menu();
-	if (!bv) {
-		if (m)
-			m->clear();
-		setEnabled(false);
-		setMinimumWidth(sizeHint().width());
-		text_class_.reset();
-		inset_ = 0;
-		return;
-    }
-	setEnabled(true);
-
+	BufferView const * bv = bar_->owner().currentBufferView();
 	// we'll only update the inset list if the text class has changed
-	// or we've moved from one inset to another
-	DocumentClassConstPtr text_class = bv->buffer().params().documentClassPtr();
-	InsetText const * inset = &(bv->cursor().innerText()->inset());
-	if (text_class_ == text_class && inset_ == inset)
+	DocumentClassConstPtr text_class =
+		bv ? bv->buffer().params().documentClassPtr() : nullptr;
+	if (text_class_ == text_class)
 		return;
 
-	if (m)
-		m->clear();
-	inset_ = inset;
+	setEnabled(false);
+	menu()->clear();
+	setMinimumWidth(sizeHint().width());
 	text_class_ = text_class;
+	if (!bv)
+		return;
 
-	TextClass::InsetLayouts const & insetLayouts = text_class_->insetLayouts();
-	TextClass::InsetLayouts::const_iterator iit = insetLayouts.begin();
-	TextClass::InsetLayouts::const_iterator ien = insetLayouts.end();
+	QString const previous_action = defaultAction() ?
+		defaultAction()->text() : QString();
+	QAction * default_action = new QAction(icon(), text(), this);
+	connect(default_action, &QAction::triggered, this, &QToolButton::showMenu);
+	setDefaultAction(default_action);
+	setEnabled(false);
 
-	for (; iit != ien; ++iit) {
-		InsetLayout const & il = iit->second;
-		if (il.lyxtype() != InsetLayout::CUSTOM)
+	for (pair<docstring, InsetLayout> const & p : text_class_->insetLayouts()) {
+		InsetLayout const & il = p.second;
+		if (il.lyxtype() != InsetLayout::CUSTOM || !il.obsoleted_by().empty())
 			continue;
-
-		docstring const name = iit->first;
+		docstring const name = p.first;
 		QString const loc_item = toqstr(translateIfPossible(
 				prefixIs(name, from_ascii("Flex:")) ?
 				name.substr(5) : name));
@@ -319,8 +312,12 @@ void InsetMenuButton::updateTriggered()
 		auto func = make_shared<FuncRequest>(LFUN_FLEX_INSERT,
 			from_ascii("\"") + name + from_ascii("\""), FuncRequest::TOOLBAR);
 		Action * act =
-			new Action(func, getIcon(*func, false), loc_item, loc_item, this);
-		m->addAction(act);
+			new Action(func, icon(), loc_item, loc_item, this);
+		menu()->addAction(act);
+
+		if (!previous_action.isEmpty() && loc_item == previous_action)
+			setDefaultAction(act);
+		setEnabled(true);
 	}
 }
 

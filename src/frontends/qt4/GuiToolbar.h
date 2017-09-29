@@ -59,7 +59,7 @@ protected:
 	///
 	ToolbarItem const & tbitem_;
 
-private Q_SLOTS:
+protected Q_SLOTS:
 	///
 	void actionTriggered(QAction * action);
 	///
@@ -78,8 +78,6 @@ public:
 private:
 	///
 	DocumentClassConstPtr text_class_;
-	///
-	InsetText const * inset_;
 
 private Q_SLOTS:
 	///

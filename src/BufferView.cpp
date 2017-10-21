@@ -3063,9 +3063,9 @@ void BufferView::draw(frontend::Painter & pain, bool paint_caret)
 	 *      the existing one;
 	 *   2/ there is no need for a caret anymore.
 	 */
-	d->repaint_caret_row_ = !d->caret_slice_.empty() &&
+	d->repaint_caret_row_ =
 		((paint_caret && d->cursor_.top() != d->caret_slice_)
-		 || ! paint_caret);
+		 || (!paint_caret && !d->caret_slice_.empty()));
 
 	// Check whether the row where the cursor lives needs to be scrolled.
 	// Update the drawing strategy if needed.

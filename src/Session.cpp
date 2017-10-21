@@ -172,6 +172,9 @@ void LastOpenedSection::clear()
 }
 
 
+unsigned int const LastFilePosSection::num_last_file_pos_ = 100;
+
+
 void LastFilePosSection::read(istream & is)
 {
 	string tmp;
@@ -198,8 +201,8 @@ void LastFilePosSection::read(istream & is)
 				continue;
 			FileName const file(fname);
 			if (file.exists() && !file.isDirectory()
-			    && lastfilepos.size() < num_lastfilepos)
-				lastfilepos[file] = filepos;
+			    && last_file_pos_.size() < num_last_file_pos_)
+				last_file_pos_.emplace_back(file, filepos);
 			else
 				LYXERR(Debug::INIT, "LyX: Warning: Ignore pos of last file: " << fname);
 		} catch (...) {
@@ -212,28 +215,27 @@ void LastFilePosSection::read(istream & is)
 void LastFilePosSection::write(ostream & os) const
 {
 	os << '\n' << sec_lastfilepos << '\n';
-	for (FilePosMap::const_iterator file = lastfilepos.begin();
-		file != lastfilepos.end(); ++file) {
-		os << file->second.pit << ", " << file->second.pos << ", "
-		   << file->first << '\n';
-	}
+	for (pair<FileName, FilePos> const & p : last_file_pos_)
+		os << p.second.pit << ", " << p.second.pos << ", "
+		   << p.first << '\n';
 }
 
 
-void LastFilePosSection::save(FileName const & fname, FilePos const & pos)
+void LastFilePosSection::save(FileName const & fname, FilePos pos)
 {
-	lastfilepos[fname] = pos;
+	last_file_pos_.remove_if([&fname](pair<FileName, FilePos> const & p){
+			return fname == p.first;
+		});
+	last_file_pos_.emplace_front(fname, pos);
 }
 
 
 LastFilePosSection::FilePos LastFilePosSection::load(FileName const & fname) const
 {
-	FilePosMap::const_iterator entry = lastfilepos.find(fname);
-	// Has position information, return it.
-	if (entry != lastfilepos.end())
-		return entry->second;
-	// Not found, return the first paragraph
-	return FilePos();
+	for (pair<FileName, FilePos> const & p : last_file_pos_)
+		if (p.first == fname)
+			return p.second;
+	return {};
 }
 
 

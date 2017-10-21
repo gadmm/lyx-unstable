@@ -16,6 +16,7 @@
 #include "support/FileName.h"
 #include "support/types.h"
 
+#include <list>
 #include <map>
 #include <string>
 #include <vector>
@@ -147,21 +148,16 @@ class LastFilePosSection : SessionSection
 public:
 	///
 	struct FilePos {
-		FilePos() : pit(0), pos(0) {}
-		pit_type pit;
-		pos_type pos;
+		pit_type pit = 0;
+		pos_type pos = 0;
 	};
+	///
+	typedef std::list<std::pair<support::FileName, FilePos>> FilePosList;
 
 	///
-	typedef std::map<support::FileName, FilePos> FilePosMap;
-
-public:
-	///
-	LastFilePosSection() : num_lastfilepos(100) {}
-
+	LastFilePosSection() {}
 	///
 	void read(std::istream & is);
-
 	///
 	void write(std::ostream & os) const;
 
@@ -169,7 +165,7 @@ public:
 	    @param fname file entry for which to save position information
 	    @param pos position of the cursor when the BufferView is closed.
 	*/
-	void save(support::FileName const & fname, FilePos const & pos);
+	void save(support::FileName const & fname, FilePos pos);
 
 	/** load saved cursor position from the fname entry in the filepos map
 	    @param fname file entry for which to load position information
@@ -178,11 +174,11 @@ public:
 
 private:
 	/// default number of lastfilepos to save */
-	unsigned int const num_lastfilepos;
+	static unsigned int const num_last_file_pos_;
 
 
-	/// a map of file positions
-	FilePosMap lastfilepos;
+	/// a list of file positions ordered by age
+	FilePosList last_file_pos_;
 };
 
 

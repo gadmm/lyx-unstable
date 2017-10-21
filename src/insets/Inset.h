@@ -23,6 +23,7 @@
 
 #include "support/strfwd.h"
 #include "support/types.h"
+#include "support/FileNameList.h"
 
 #include <climits>
 
@@ -41,7 +42,7 @@ class DocIterator;
 class FuncRequest;
 class FuncStatus;
 class InsetArgument;
-class InsetCollapsable;
+class InsetCollapsible;
 class InsetCommand;
 class InsetIterator;
 class InsetLayout;
@@ -143,10 +144,10 @@ public:
 	virtual InsetText * asInsetText() { return 0; }
 	/// is this inset based on the InsetText class?
 	virtual InsetText const * asInsetText() const { return 0; }
-	/// is this inset based on the InsetCollapsable class?
-	virtual InsetCollapsable * asInsetCollapsable() { return 0; }
-	/// is this inset based on the InsetCollapsable class?
-	virtual InsetCollapsable const * asInsetCollapsable() const { return 0; }
+	/// is this inset based on the InsetCollapsible class?
+	virtual InsetCollapsible * asInsetCollapsible() { return 0; }
+	/// is this inset based on the InsetCollapsible class?
+	virtual InsetCollapsible const * asInsetCollapsible() const { return 0; }
 	/// is this inset based on the InsetTabular class?
 	virtual InsetTabular * asInsetTabular() { return 0; }
 	/// is this inset based on the InsetTabular class?
@@ -347,12 +348,12 @@ public:
 	/// InsetMathCommand and InsetInfo.
 	virtual bool isActive() const { return nargs() > 0; }
 	/// can the contents of the inset be edited on screen ?
-	// equivalent to isActive except for closed InsetCollapsable
+	// equivalent to isActive except for closed InsetCollapsible
 	virtual bool editable() const;
 	/// has the Inset settings that can be modified in a dialog ?
 	virtual bool hasSettings() const;
 	/// can we go further down on mouse click?
-	/// true for InsetCaption, InsetCollapsables (not ButtonOnly), InsetTabular
+	/// true for InsetCaption, InsetCollapsibles (not ButtonOnly), InsetTabular
 	virtual bool descendable(BufferView const &) const { return false; }
 	/// can we click at the specified position ?
 	virtual bool clickable(BufferView const &, int, int) const { return false; }
@@ -529,7 +530,7 @@ public:
 	                      UpdateType /* utype*/,
 	                      TocBackend & /* tocbackend */) const {}
 	/// Collect BibTeX information
-	virtual void collectBibKeys(InsetIterator const &) const {}
+	virtual void collectBibKeys(InsetIterator const &, support::FileNameList &) const {}
 	/// Update the counters of this inset and of its contents.
 	/// The boolean indicates whether we are preparing for output, e.g.,
 	/// of XHTML.

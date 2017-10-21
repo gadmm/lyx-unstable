@@ -263,7 +263,6 @@ Inset * createInsetHelper(Buffer * buf, FuncRequest const & cmd)
 
 		case LFUN_INFO_INSERT: {
 			InsetInfo * inset = new InsetInfo(buf, to_utf8(cmd.argument()));
-			inset->updateInfo();
 			return inset;
 		}
 
@@ -680,7 +679,7 @@ Inset * readInset(Lexer & lex, Buffer * buf)
 		}
 
 		// Set the buffer reference for proper parsing of some insets
-		// (InsetCollapsable for example)
+		// (InsetCollapsible for example)
 		inset->setBuffer(*buf);
 		inset->read(lex);
 		// Set again the buffer for insets that are created inside this inset

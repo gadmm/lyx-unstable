@@ -7,7 +7,7 @@
 
 # Author: Jürgen Spitzmüller <spitz@lyx.org>
 
-Format 64
+Format 65
 
 # FIXME: It is currently not possible to share a
 # counter in layouts with STATIC and ENUMERATE

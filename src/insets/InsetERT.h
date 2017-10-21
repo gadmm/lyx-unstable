@@ -13,12 +13,12 @@
 #ifndef INSETERT_H
 #define INSETERT_H
 
-#include "InsetCollapsable.h"
+#include "InsetCollapsible.h"
 
 
 namespace lyx {
 
-/** A collapsable text inset for LaTeX insertions.
+/** A collapsible text inset for LaTeX insertions.
 
   To write full ert (including styles and other insets) in a given
   space.
@@ -29,7 +29,7 @@ namespace lyx {
 
 class Language;
 
-class InsetERT : public InsetCollapsable {
+class InsetERT : public InsetCollapsible {
 public:
 	///
 	InsetERT(Buffer *, CollapseStatus status = Open);

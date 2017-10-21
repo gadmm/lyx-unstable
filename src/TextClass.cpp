@@ -62,7 +62,7 @@ namespace lyx {
 // You should also run the development/tools/updatelayouts.py script,
 // to update the format of all of our layout files.
 //
-int const LAYOUT_FORMAT = 64; //lasgouttes/rgheck: do not trim LabeString and friends.
+int const LAYOUT_FORMAT = 65; //spitz: Color collapsable -> collapsible.
 
 
 #ifdef FILEFORMAT

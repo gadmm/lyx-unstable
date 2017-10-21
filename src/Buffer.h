@@ -17,6 +17,7 @@
 #include "support/unique_ptr.h"
 #include "support/strfwd.h"
 #include "support/types.h"
+#include "support/FileNameList.h"
 
 #include <map>
 #include <list>
@@ -520,7 +521,7 @@ public:
 	/// or just for it, if it isn't a child.
 	BiblioInfo const & masterBibInfo() const;
 	/// collect bibliography info from the various insets in this buffer.
-	void collectBibKeys() const;
+	void collectBibKeys(support::FileNameList &) const;
 	/// add some BiblioInfo to our cache
 	void addBiblioInfo(BiblioInfo const & bi) const;
 	/// add a single piece of bibliography info to our cache
@@ -719,10 +720,6 @@ public:
 	/// return a list of all used branches (also in children)
 	void getUsedBranches(std::list<docstring> &, bool const from_master = false) const;
 
-	/// sets the buffer_ member for every inset in this buffer.
-	// FIXME This really shouldn't be needed, but at the moment it's not
-	// clear how to do it just for the individual pieces we need.
-	void setBuffersForInsets() const;
 	/// Updates screen labels and some other information associated with
 	/// insets and paragraphs. Actually, it's more like a general "recurse
 	/// through the Buffer" routine, that visits all the insets and paragraphs.

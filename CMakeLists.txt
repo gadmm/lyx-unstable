@@ -354,12 +354,14 @@ endforeach(_c_l)
 FIND_PROGRAM(LYX_GITVERSION git)
 #message(STATUS "gitversion = ${LYX_GITVERSION}")
 set(LYX_REVISION_VERSION ${LYX_PATCH_VERSION})
+set(LYX_PACKAGE_RELEASE "1")
 if(LYX_GITVERSION)
   if (LYX_LOCALVERSIONING)
     # Find the revision number and for later use
     EXECUTE_PROCESS(COMMAND ${LYX_GITVERSION} describe --match 2.0.0 HEAD
-      WORKING_DIRECTORY "${TOP_SRC_DIR}" OUTPUT_VARIABLE LYX_PACKAGE_RELEASE OUTPUT_STRIP_TRAILING_WHITESPACE)
-    if (LYX_PACKAGE_RELEASE MATCHES "^2\\.0\\.0\\-\([0-9]+\)\\-.*$")
+      WORKING_DIRECTORY "${TOP_SRC_DIR}" OUTPUT_VARIABLE tmp_LYX_PACKAGE_RELEASE OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if (tmp_LYX_PACKAGE_RELEASE MATCHES "^2\\.0\\.0\\-\([0-9]+\)\\-\(.*\)$")
+      set(LYX_PACKAGE_RELEASE ${CMAKE_MATCH_2})
       # We will add offset of 40000 to get appropriate value to
       # previous svn.
       # We use this value than also to set the package-patch-value
@@ -379,6 +381,7 @@ if(LYX_PROGRAM_SUFFIX AND NOT (APPLE AND LYX_BUNDLE))
 endif()
 set(_lyx "${PACKAGE_BASE}${PROGRAM_SUFFIX}")
 set(_tex2lyx tex2lyx${PROGRAM_SUFFIX})
+set(_convert lyxconvert${PROGRAM_SUFFIX})
 
 add_custom_target(lyx_version ALL
   COMMAND ${CMAKE_COMMAND} -DTOP_SRC_DIR=${TOP_SRC_DIR} -DTOP_CMAKE_PATH=${TOP_CMAKE_PATH} -DTOP_BINARY_DIR=${TOP_BINARY_DIR} -DLYX_DATE=${LYX_DATE} -P ${TOP_SCRIPT_PATH}/LyXGetVersion.cmake

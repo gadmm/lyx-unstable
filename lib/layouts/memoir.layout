@@ -7,7 +7,7 @@
 # feel free to contribute missing features!
 
 
-Format 64
+Format 65
 Columns            1
 Sides              2
 SecNumDepth        1
@@ -39,6 +39,12 @@ Style Standard
 	Align                 Block
 	AlignPossible         Block, Left, Right, Center
 	LabelType             No_Label
+	HTMLStyle
+		div.standard {
+			margin-bottom: 2ex;
+			text-align: left;
+		}
+	EndHTMLStyle
 End
 
 

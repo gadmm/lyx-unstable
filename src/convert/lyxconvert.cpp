@@ -1,14 +1,36 @@
-/*
-set cflags=`env PKG_CONFIG_PATH=/usr/local/qt5/lib/pkgconfig pkg-config --cflags Qt5Widgets`
-set libs=`env PKG_CONFIG_PATH=/usr/local/qt5/lib/pkgconfig pkg-config --libs --static Qt5Widgets`
-g++ -std=gnu++11 $cflags lyxconvert.cpp -o lyxconvert $libs
-*/
+/**
+ * \file lyxconvert.cpp
+ * This file is part of LyX, the document processor.
+ * Licence details can be found in the file COPYING.
+ *
+ * \author Stephan Witt
+ * \author Enrico Forestieri
+ *
+ * Full author contact details are available in file CREDITS.
+ *
+ * The code implements an utility program using the Qt-Framework
+ * to convert an image from a given format to another one.
+ * The image format of the files is either auto detected by Qt or
+ * may explicitely specified with command line arguments.
+ *
+ * Syntax:
+ * lyxconvert [-d] [-f infmt] [-t outfmt] inputfile outputfile
+ *  -d   turn on debug messages
+ *  -f   format of input file (from)
+ *  -t   format of output file (to)
+ *
+ * Example to convert a compressed SVG image to PNG:
+ * lyxconvert image.svgz image.png
+ */
+
 #include <iostream>
 #include <QApplication>
 #include <QImage>
 #include <QFile>
 #include <QPainter>
+#if (QT_VERSION >= 0x050300)
 #include <QPdfWriter>
+#endif
 
 
 const char * basename(const char * name)

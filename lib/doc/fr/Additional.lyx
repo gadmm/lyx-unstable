@@ -4914,8 +4914,8 @@ er
  (
 \begin_inset CommandInset href
 LatexCommand href
-name "http://elyxer.nongnu.org/"
-target "http://elyxer.nongnu.org/"
+name "http://pinchito.es/elyxer/"
+target "http://pinchito.es/elyxer/"
 literal "false"
 
 \end_inset
@@ -9433,13 +9433,13 @@ Cette section décrit comment utiliser \SpecialChar LyX
 Astronomy and Astrophysics
 \emph default
 \lang french
- (www.edpsciences.fr/aa/ 
+ (
 \begin_inset Flex URL
 status collapsed
 
 \begin_layout Plain Layout
 
-http://www.edpsciences.fr/aa/
+https://www.aanda.org/
 \end_layout
 
 \end_inset
@@ -25446,7 +25446,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://www.cs.virginia.edu/~nr/noweb/
+https://www.cs.tufts.edu/~nr/noweb/
 \end_layout
 
 \end_inset
@@ -26862,7 +26862,6 @@ status open
 
 \begin_layout Plain Layout
 
-\lang english
 3
 \end_layout
 

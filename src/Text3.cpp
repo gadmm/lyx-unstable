@@ -53,7 +53,7 @@
 #include "frontends/Selection.h"
 
 #include "insets/InsetArgument.h"
-#include "insets/InsetCollapsable.h"
+#include "insets/InsetCollapsible.h"
 #include "insets/InsetCommand.h"
 #include "insets/InsetExternal.h"
 #include "insets/InsetFloat.h"
@@ -245,7 +245,7 @@ static bool doInsertInset(Cursor & cur, Text * text,
 	if (!inset)
 		return false;
 
-	if (InsetCollapsable * ci = inset->asInsetCollapsable())
+	if (InsetCollapsible * ci = inset->asInsetCollapsible())
 		ci->setButtonLabel();
 
 	cur.recordUndo();
@@ -835,6 +835,8 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 				break;
 		}
 		cur.pos() = cur.lastpos();
+		cur.boundary(false);
+		cur.setCurrentFont();
 
 		needsUpdate |= cur != old_cur;
 		break;
@@ -1715,6 +1717,7 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 		// reset the anchor.
 		bvcur.setCursor(cur);
 		bvcur.selection(true);
+		bvcur.setCurrentFont();
 		if (cur.top() == old) {
 			// We didn't move one iota, so no need to update the screen.
 			cur.screenUpdateFlags(Update::SinglePar | Update::FitCursor);

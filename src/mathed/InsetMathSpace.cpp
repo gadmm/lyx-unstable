@@ -47,29 +47,29 @@ struct SpaceInfo {
 };
 
 SpaceInfo space_info[] = {
-	// name           width kind                            negative visible custom escape
-	{"!",                6, InsetSpaceParams::NEGTHIN,         true,  true,  false, true},
-	{"negthinspace",     6, InsetSpaceParams::NEGTHIN,         true,  true,  false, true},
-	{"negmedspace",      8, InsetSpaceParams::NEGMEDIUM,       true,  true,  false, true},
-	{"negthickspace",   10, InsetSpaceParams::NEGTHICK,        true,  true,  false, true},
-	{",",                6, InsetSpaceParams::THIN,            false, true,  false, true},
-	{"thinspace",        6, InsetSpaceParams::THIN,            false, true,  false, true},
-	{":",                8, InsetSpaceParams::MEDIUM,          false, true,  false, true},
-	{"medspace",         8, InsetSpaceParams::MEDIUM,          false, true,  false, true},
-	{";",               10, InsetSpaceParams::THICK,           false, true,  false, true},
-	{"thickspace",      10, InsetSpaceParams::THICK,           false, true,  false, true},
-	{"enskip",          10, InsetSpaceParams::ENSKIP,          false, true,  false, true},
-	{"enspace",         10, InsetSpaceParams::ENSPACE,         false, true,  false, true},
-	{"quad",            20, InsetSpaceParams::QUAD,            false, true,  false, true},
-	{"qquad",           40, InsetSpaceParams::QQUAD,           false, true,  false, true},
-	{"lyxnegspace",     -2, InsetSpaceParams::NEGTHIN,         true,  false, false, true},
-	{"lyxposspace",      2, InsetSpaceParams::THIN,            false, false, false, true},
-	{"hfill",           80, InsetSpaceParams::HFILL,           false, true,  false, true},
-	{"hspace*{\\fill}", 80, InsetSpaceParams::HFILL_PROTECTED, false, true,  false, true},
+	// name          width (mu)      kind                   negative visible custom escape
+	{"!",                3, InsetSpaceParams::NEGTHIN,         true,  true,  false, true},
+	{"negthinspace",     3, InsetSpaceParams::NEGTHIN,         true,  true,  false, true},
+	{"negmedspace",      4, InsetSpaceParams::NEGMEDIUM,       true,  true,  false, true},
+	{"negthickspace",    5, InsetSpaceParams::NEGTHICK,        true,  true,  false, true},
+	{",",                3, InsetSpaceParams::THIN,            false, true,  false, true},
+	{"thinspace",        3, InsetSpaceParams::THIN,            false, true,  false, true},
+	{":",                4, InsetSpaceParams::MEDIUM,          false, true,  false, true},
+	{"medspace",         4, InsetSpaceParams::MEDIUM,          false, true,  false, true},
+	{";",                5, InsetSpaceParams::THICK,           false, true,  false, true},
+	{"thickspace",       5, InsetSpaceParams::THICK,           false, true,  false, true},
+	{"enskip",           5, InsetSpaceParams::ENSKIP,          false, true,  false, true},
+	{"enspace",          5, InsetSpaceParams::ENSPACE,         false, true,  false, true},
+	{"quad",            18, InsetSpaceParams::QUAD,            false, true,  false, true},
+	{"qquad",           36, InsetSpaceParams::QQUAD,           false, true,  false, true},
+	{"lyxnegspace",     -1, InsetSpaceParams::NEGTHIN,         true,  false, false, true},
+	{"lyxposspace",      1, InsetSpaceParams::THIN,            false, false, false, true},
+	{"hfill",           72, InsetSpaceParams::HFILL,           false, true,  false, true},
+	{"hspace*{\\fill}", 72, InsetSpaceParams::HFILL_PROTECTED, false, true,  false, true},
 	{"hspace*",          0, InsetSpaceParams::CUSTOM_PROTECTED,false, true,  true,  true},
 	{"hspace",           0, InsetSpaceParams::CUSTOM,          false, true,  true,  true},
-	{" ",               10, InsetSpaceParams::NORMAL,          false, true,  false, true},
-	{"~",               10, InsetSpaceParams::PROTECTED,       false, true,  false, false},
+	{" ",                5, InsetSpaceParams::NORMAL,          false, true,  false, true},
+	{"~",                5, InsetSpaceParams::PROTECTED,       false, true,  false, false},
 };
 
 int const nSpace = sizeof(space_info)/sizeof(SpaceInfo);
@@ -122,37 +122,34 @@ Inset * InsetMathSpace::clone() const
 void InsetMathSpace::metrics(MetricsInfo & mi, Dimension & dim) const
 {
 	Changer dummy = mi.base.changeEnsureMath();
-	dim.asc = 4;
-	dim.des = 0;
+	dim.asc = mi.base.mu(4);
+	dim.des = 1 + (int) mi.base.solidLineThickness();
 	if (space_info[space_].custom)
 		dim.wid = abs(length_.inPixels(mi.base));
 	else
-		dim.wid = space_info[space_].width;
+		dim.wid = mi.base.mu(space_info[space_].width);
 }
 
 
 void InsetMathSpace::draw(PainterInfo & pi, int x, int y) const
 {
-	Changer dummy = pi.base.changeEnsureMath();
-	// Sadly, HP-UX CC can't handle that kind of initialization.
-	// XPoint p[4] = {{++x, y-3}, {x, y}, {x+width-2, y}, {x+width-2, y-3}};
 	if (!space_info[space_].visible)
 		return;
-
+	Changer dummy = pi.base.changeEnsureMath();
+	double t = pi.base.solidLineThickness();
 	Dimension const dim = dimension(*pi.base.bv);
-	int xp[4];
-	int yp[4];
-	int w = dim.wid;
 
-	xp[0] = ++x;        yp[0] = y - 3;
-	xp[1] = x;          yp[1] = y;
-	xp[2] = x + w - 2;  yp[2] = y;
-	xp[3] = x + w - 2;  yp[3] = y - 3;
+	double const x1 = x + t/2;
+	double const y1 = y;
+	double const x3 = x + dim.wid - t/2 - 1;
+	double const y3 = y - dim.asc;
+	double xp[4] = {x1, x1, x3, x3};
+	double yp[4] = {y3, y1, y1, y3};
 
-	pi.pain.lines(xp, yp, 4,
-			space_info[space_].custom ?
-			Color_special :
-			(isNegative() ? Color_latex : Color_math));
+	Color const col = space_info[space_].custom ?
+		Color_special : (isNegative() ? Color_latex : Color_math);
+	pi.pain.linesDouble(xp, yp, 4, col,
+	                    pi.pain.fill_none, pi.pain.line_solid, t);
 }
 
 

@@ -254,7 +254,9 @@ void InsetMathFrac::metrics(MetricsInfo & mi, Dimension & dim) const
 		Changer dummy2 = mi.base.changeEnsureMath();
 		cell(0).metrics(mi, dim0);
 		cell(1).metrics(mi, dim1);
-		dim.wid = max(dim0.wid, dim1.wid) + 2;
+		dim.wid = max(dim0.wid, dim1.wid);
+		if (kind_ != ATOP)
+			dim.wid += mathed_mu(mi.base.font, 4);
 		dim.asc = dim0.height() + dy/2 + dy;
 		int const t = (int) mi.base.solidLineThickness();
 		dim.des = max(0, dim1.height() + dy/2 - dy + t);
@@ -342,7 +344,7 @@ void InsetMathFrac::draw(PainterInfo & pi, int x, int y) const
 			(kind_ == CFRACRIGHT) ? x + dim.wid - dim0.wid - 2 :
 			// center
 			                        m - dim0.wid / 2;
-		int const t = (int) pi.base.solidLineThickness();
+		double const t = pi.base.solidLineThickness();
 		// take dy/2 for the spacing around the horizontal line. This is
 		// arbitrary. In LaTeX it is more complicated to ensure that displayed
 		// fractions line up next to each other.
@@ -350,11 +352,11 @@ void InsetMathFrac::draw(PainterInfo & pi, int x, int y) const
 		// rules 15a-e.
 		cell(0).draw(pi, xx, y - dim0.des - dy/2 - dy);
 		// center
-		cell(1).draw(pi, m - dim1.wid / 2, y + dim1.asc + dy/2 - dy + t);
+		cell(1).draw(pi, m - dim1.wid / 2, y + dim1.asc + dy/2 - dy + (int)t);
 		// horizontal line
 		if (kind_ != ATOP)
-			pi.pain.line(x, y - dy, x + dim.wid, y - dy,
-			             pi.base.font.color(), pi.pain.line_solid, t);
+			pi.pain.lineDouble(x, y - dy, x + dim.wid, y - dy,
+			                   pi.base.font.color(), pi.pain.line_solid, t);
 	}
 	} //switch (kind_)
 }

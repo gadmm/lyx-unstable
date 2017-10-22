@@ -31,12 +31,17 @@ public:
 
 	/// draw a line from point to point
 	void line(int, int, int, int, Color,
-		line_style = line_solid, int = thin_line) {}
+	          line_style = line_solid, int = thin_line) override {}
+	void lineDouble(double, double, double, double, Color,
+	                line_style = line_solid, double = thin_line) override {}
 
 	///
 	void lines(int const *, int const *, int, Color,
-		fill_style = fill_none, line_style = line_solid,
-		int = thin_line) {}
+	           fill_style = fill_none, line_style = line_solid,
+	           int = thin_line) override {}
+	void linesDouble(double const *, double const *, int, Color,
+	                 fill_style = fill_none, line_style = line_solid,
+	                 double = thin_line) override {};
 
 	///
 	void path(int const *, int const *, int const *, int const *,

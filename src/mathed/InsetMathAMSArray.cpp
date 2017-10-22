@@ -101,7 +101,7 @@ void InsetMathAMSArray::draw(PainterInfo & pi, int x, int y) const
 	}
 	Dimension const dim = dimension(*pi.base.bv);
 	int const yy = y - dim.ascent();
-	int const t = mathed_deco_thickness(pi.base);
+	double const t = mathed_deco_thickness(pi.base);
 	mathed_draw_deco(pi, x + 1 - t/2, yy,
 	                 5, dim.height(), from_ascii(name_left()));
 	mathed_draw_deco(pi, x + dim.width() - t/2 - 8, yy,

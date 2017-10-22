@@ -583,7 +583,7 @@ int mathed_string_width(FontInfo const & font, docstring const & s)
 }
 
 
-int mathed_deco_thickness(MetricsBase & mb)
+double mathed_deco_thickness(MetricsBase & mb)
 {
 	return 3 * (mb.solidLineThickness() - 1);
 }
@@ -592,18 +592,18 @@ int mathed_deco_thickness(MetricsBase & mb)
 void mathed_deco_metrics(MetricsBase & mb, Dimension & dim,
                          int num_w, int num_h)
 {
-	int const t = mathed_deco_thickness(mb);
-	dim.wid += num_w * t;
-	int const dh = num_h * t;
+	double const t = mathed_deco_thickness(mb);
+	dim.wid += (int) num_w * t;
+	int const dh = (int) num_h * t;
 	dim.des += dh/2;
 	dim.asc += dh - dh/2;
 }
 
 
-void mathed_draw_deco(PainterInfo & pi, int x, int y, int w, int h,
-	docstring const & name)
+void mathed_draw_deco(PainterInfo & pi, double x, double y, double w, double h,
+                      docstring const & name)
 {
-	int const t = pi.base.solidLineThickness();
+	double const t = pi.base.solidLineThickness();
 	w += mathed_deco_thickness(pi.base);
 	h += mathed_deco_thickness(pi.base);
 	if (name == ".") {
@@ -619,14 +619,14 @@ void mathed_draw_deco(PainterInfo & pi, int x, int y, int w, int h,
 		return;
 	}
 
-	int const n = (w < h) ? w : h;
+	int const n = std::min(w, h);
 	int const r = mds->angle;
 	double const * d = mds->data;
 
 	if (h > 70 && (name == "(" || name == ")"))
 		d = parenthHigh;
 
-	Matrix mt(r, w, h);
+	Matrix mt(r, (int)w, (int)h);
 	Matrix sqmt(r, n, n);
 
 	if (r > 0 && r < 3)
@@ -647,13 +647,12 @@ void mathed_draw_deco(PainterInfo & pi, int x, int y, int w, int h,
 			else
 				mt.transform(xx, yy);
 			mt.transform(x2, y2);
-			pi.pain.line(
-				int(x + xx + 0.5), int(y + yy + 0.5),
-				int(x + x2 + 0.5), int(y + y2 + 0.5),
-				pi.base.font.color(), Painter::line_solid, t);
+			pi.pain.lineDouble(x + xx, y + yy,
+			                   x + x2, y + y2,
+			                   pi.base.font.color(), Painter::line_solid, t);
 		} else {
-			int xp[32];
-			int yp[32];
+			double xp[32];
+			double yp[32];
 			int const n = int(d[i++]);
 			for (int j = 0; j < n; ++j) {
 				double xx = d[i++];
@@ -663,11 +662,12 @@ void mathed_draw_deco(PainterInfo & pi, int x, int y, int w, int h,
 					sqmt.transform(xx, yy);
 				else
 					mt.transform(xx, yy);
-				xp[j] = int(x + xx + 0.5);
-				yp[j] = int(y + yy + 0.5);
+				xp[j] = x + xx;
+				yp[j] = y + yy;
 				//  lyxerr << "P[" << j ' ' << xx << ' ' << yy << ' ' << x << ' ' << y << ']';
 			}
-			pi.pain.lines(xp, yp, n, pi.base.font.color(), Painter::fill_none, Painter::line_solid, t);
+			pi.pain.linesDouble(xp, yp, n, pi.base.font.color(),
+			                    Painter::fill_none, Painter::line_solid, t);
 		}
 	}
 }

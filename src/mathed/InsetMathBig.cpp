@@ -121,7 +121,7 @@ void InsetMathBig::draw(PainterInfo & pi, int x, int y) const
 {
 	Changer dummy = pi.base.changeEnsureMath();
 	Dimension const dim = dimension(*pi.base.bv);
-	int const t = mathed_deco_thickness(pi.base);
+	double const t = mathed_deco_thickness(pi.base);
 	mathed_draw_deco(pi, x + 1 + t/2, y - dim.ascent(),
 	                 dim.wid - 2*t - 2, dim.height(), word());
 }

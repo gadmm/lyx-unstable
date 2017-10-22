@@ -113,6 +113,7 @@ public:
 	 *  document font.
 	 */
 	int inPixels(Length const & len) const;
+	double inPixelsDouble(Length const & len) const;
 
 	/// \return true if the BufferView is at the top of the document.
 	bool isTopScreen() const;

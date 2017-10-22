@@ -114,9 +114,9 @@ void InsetMathDelim::draw(PainterInfo & pi, int x, int y) const
 {
 	Changer dummy = pi.base.changeEnsureMath();
 	Dimension const dim = dimension(*pi.base.bv);
-	int const t = mathed_deco_thickness(pi.base);
-	int const b = y - dim.asc + t/2;
-	cell(0).draw(pi, x + dw_ + 1 + t, y);
+	double const t = mathed_deco_thickness(pi.base);
+	double const b = y - dim.asc + t/2;
+	cell(0).draw(pi, x + dw_ + 1 + (int) t, y);
 	mathed_draw_deco(pi, x, b,
 	                 dw_ - t/2, dim.height() - t, left_);
 	mathed_draw_deco(pi, x + dim.width() - t/2 - dw_, b,

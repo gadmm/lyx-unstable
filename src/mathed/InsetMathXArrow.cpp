@@ -65,13 +65,13 @@ void InsetMathXArrow::draw(PainterInfo & pi, int x, int y) const
 	Changer dummy = pi.base.changeScript();
 	Dimension const dim = dimension(*pi.base.bv);
 	Dimension const & dim0 = cell(0).dimension(*pi.base.bv);
-	int const t = mathed_deco_thickness(pi.base);
+	double const t = mathed_deco_thickness(pi.base);
 	// center the cells with the decoration
 	cell(0).draw(pi, x + dim.width()/2 - dim0.width()/2,
-	             y - 1 - (3 * dy) / 2 - dim0.des - t);
+	             y - 1 - (3 * dy) / 2 - dim0.des - (int) t);
 	Dimension const & dim1 = cell(1).dimension(*pi.base.bv);
 	cell(1).draw(pi, x + dim.width()/2 - dim1.width()/2,
-	             y + 1 + dim1.asc - dy / 2 + t);
+	             y + 1 + dim1.asc - dy / 2 + (int) t);
 	mathed_draw_deco(pi, x, y - (3 * dy) / 2, dim.wid - 2, dy, name_);
 }
 

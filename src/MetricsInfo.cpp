@@ -42,9 +42,9 @@ MetricsBase::MetricsBase(BufferView * b, FontInfo f, int w)
 {
 	if (!b)
 		return;
-	solid_line_thickness_ = b->inPixels(Length(0.4, Length::PT));
+	solid_line_thickness_ = b->inPixelsDouble(Length(0.4, Length::PT));
 	solid_line_offset_ = 1 + solid_line_thickness_ / 2;
-	dotted_line_thickness_ = b->inPixels(Length(0.8, Length::PT));
+	dotted_line_thickness_ = b->inPixelsDouble(Length(0.8, Length::PT));
 }
 
 

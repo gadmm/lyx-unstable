@@ -148,11 +148,11 @@ void RowPainter::paintForeignMark(Row::Element const & e) const
 	if (lang == pi_.base.bv->buffer().params().language)
 		return;
 
-	int const desc = e.inset ? e.dim.descent() : 0;
-	int const y = yo_ + pi_.base.solidLineOffset()
+	double const desc = e.inset ? e.dim.descent() : 0;
+	double const y = yo_ + pi_.base.solidLineOffset()
 		+ desc + pi_.base.solidLineThickness() / 2;
-	pi_.pain.line(int(x_), y, int(x_ + e.full_width()), y, Color_language,
-	              Painter::line_solid, pi_.base.solidLineThickness());
+	pi_.pain.lineDouble(x_, y, x_ + e.full_width(), y, Color_language,
+	                    Painter::line_solid, pi_.base.solidLineThickness());
 }
 
 
@@ -162,7 +162,8 @@ void RowPainter::paintMisspelledMark(Row::Element const & e) const
 	// to avoid drawing at the same vertical offset
 	FontMetrics const & fm = theFontMetrics(e.font);
 	int const thickness = max(fm.lineWidth(), 2);
-	int const y = yo_ + pi_.base.solidLineOffset() + pi_.base.solidLineThickness()
+	double const y = yo_ + pi_.base.solidLineOffset()
+		+ pi_.base.solidLineThickness()
 		+ (e.change.changed() ? pi_.base.solidLineThickness() + 1 : 0)
 		+ 1 + thickness / 2;
 
@@ -205,9 +206,9 @@ void RowPainter::paintMisspelledMark(Row::Element const & e) const
 		if (x1 > x2)
 			swap(x1, x2);
 
-		pi_.pain.line(int(x_ + x1), y, int(x_ + x2), y,
-		              Color_error,
-		              Painter::line_onoffdash, thickness);
+		pi_.pain.lineDouble(x_ + x1, y, x_ + x2, y,
+		                    Color_error,
+		                    Painter::line_onoffdash, thickness);
 		pos = range.last + 1;
 	}
 }

@@ -63,15 +63,15 @@ public:
 	// Temporarily change the style to (script)script style
 	Changer changeScript();
 	///
-	int solidLineThickness() const { return solid_line_thickness_; }
+	double solidLineThickness() const { return solid_line_thickness_; }
 	///
-	int solidLineOffset() const { return solid_line_offset_; }
+	double solidLineOffset() const { return solid_line_offset_; }
 	///
-	int dottedLineThickness() const { return dotted_line_thickness_; }
+	double dottedLineThickness() const { return dotted_line_thickness_; }
 private:
-	int solid_line_thickness_ = 1;
-	int solid_line_offset_ = 1;
-	int dotted_line_thickness_ = 1;
+	double solid_line_thickness_ = 1;
+	double solid_line_offset_ = 1;
+	double dotted_line_thickness_ = 1;
 };
 
 

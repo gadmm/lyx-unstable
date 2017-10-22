@@ -66,8 +66,8 @@ GuiPainter::~GuiPainter()
 }
 
 
-void GuiPainter::setQPainterPen(QColor const & col,
-	Painter::line_style ls, int lw)
+void GuiPainter::setQPainterPen(QColor const & col, Painter::line_style ls,
+                                double lw)
 {
 	if (col == current_color_ && ls == current_ls_ && lw == current_lw_)
 		return;
@@ -86,7 +86,7 @@ void GuiPainter::setQPainterPen(QColor const & col,
 		pen.setStyle(Qt::DotLine); break;
 	}
 
-	pen.setWidth(lw);
+	pen.setWidthF(lw);
 
 	setPen(pen);
 }
@@ -175,55 +175,63 @@ void GuiPainter::point(int x, int y, Color col)
 }
 
 
-void GuiPainter::line(int x1, int y1, int x2, int y2,
-	Color col,
-	line_style ls,
-	int lw)
+void GuiPainter::lineDouble(double x1, double y1, double x2, double y2,
+                            Color col, line_style ls, double lw)
 {
-	setQPainterPen(computeColor(col), ls, lw);
-	bool const do_antialiasing = renderHints() & TextAntialiasing
-		&& x1 != x2 && y1 != y2;
-	setRenderHint(Antialiasing, do_antialiasing);
-	drawLine(x1, y1, x2, y2);
-	setRenderHint(Antialiasing, false);
+	vector<QPointF> points = {{x1, y1}, {x2, y2}};
+	linesDouble(move(points), col, fill_none, ls, lw);
 }
 
 
-void GuiPainter::lines(int const * xp, int const * yp, int np,
-	Color col,
-	fill_style fs,
-	line_style ls,
-	int lw)
+void GuiPainter::line(int x1, int y1, int x2, int y2,
+                      Color col, line_style ls, int lw)
 {
-	// double the size if needed
-	// FIXME THREAD
-	static QVector<QPoint> points(32);
-	if (np > points.size())
-		points.resize(2 * np);
+	lineDouble(x1, y1, x2, y2, col, ls, lw);
+}
 
-	// TODO: the proper way to not get blurry vertical and horizontal lines is
-	// to add 0.5 to all coordinates.
-	bool antialias = false;
-	for (int i = 0; i < np; ++i) {
-		points[i].setX(xp[i]);
-		points[i].setY(yp[i]);
-		if (i != 0)
-			antialias |= xp[i-1] != xp[i] && yp[i-1] != yp[i];
+
+void GuiPainter::linesDouble(vector<QPointF> points, Color col, fill_style fs,
+                             line_style ls, double lw)
+{
+	//offset for aligning the line on grid and avoid unnecessary blur
+	double const align = lw/2 - (int) lw/2;
+	for (QPointF & p : points) {
+		p.rx() += align;
+		p.ry() += align;
 	}
 	QColor const color = computeColor(col);
 	setQPainterPen(color, ls, lw);
-	bool const text_is_antialiased = renderHints() & TextAntialiasing;
-	setRenderHint(Antialiasing, antialias && text_is_antialiased);
+	setRenderHint(Antialiasing, true);
 	if (fs == fill_none) {
-		drawPolyline(points.data(), np);
+		drawPolyline(points.data(), points.size());
 	} else {
 		QBrush const oldbrush = brush();
 		setBrush(QBrush(color));
-		drawPolygon(points.data(), np, fs == fill_oddeven ?
+		drawPolygon(points.data(), points.size(), fs == fill_oddeven ?
 		            Qt::OddEvenFill : Qt::WindingFill);
 		setBrush(oldbrush);
 	}
 	setRenderHint(Antialiasing, false);
+}
+
+
+void GuiPainter::linesDouble(double const * xp, double const * yp, int np,
+                             Color col, fill_style fs, line_style ls, double lw)
+{
+	vector<QPointF> points(np);
+	for (int i = 0; i < np; ++i)
+		points[i] = {xp[i], yp[i]};
+	linesDouble(move(points), col, fs, ls, lw);
+}
+
+
+void GuiPainter::lines(int const * xp, int const * yp, int np,
+                       Color col, fill_style fs, line_style ls, int lw)
+{
+	vector<QPointF> points(np);
+	for (int i = 0; i < np; ++i)
+		points[i] = {(double)xp[i], (double)yp[i]};
+	linesDouble(move(points), col, fs, ls, lw);
 }
 
 
@@ -628,8 +636,8 @@ void GuiPainter::crossoutLines(FontInfo const & f, int x, int y, int width)
     //  \def\xout{\bgroup \markoverwith{\hbox to.35em{\hss/\hss}}\ULon}
 	// Let's mimick it somewhat.
 	double offset = max(0.35 * theFontMetrics(tmpf).em(), 1);
-	for (int i = 0 ; i < iround(width / offset) ; ++i)
-		text(x + iround(i * offset), y, '/', tmpf);
+	for (int i = 0 ; i < (int) round(width / offset) ; ++i)
+		text(x + (int) round(i * offset), y, '/', tmpf);
 }
 
 

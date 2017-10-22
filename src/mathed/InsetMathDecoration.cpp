@@ -112,7 +112,7 @@ void InsetMathDecoration::metrics(MetricsInfo & mi, Dimension & dim) const
 	dh_  = mathed_mu(mi.base.font, 6.0);
 	dw_  = mathed_mu(mi.base.font, 6.0);
 
-	int const t = mathed_deco_thickness(mi.base);
+	int const t = (int) mathed_deco_thickness(mi.base);
 
 	if (upper()) {
 		dy_ = -dim.asc - dh_ - t;
@@ -130,12 +130,12 @@ void InsetMathDecoration::draw(PainterInfo & pi, int x, int y) const
 
 	cell(0).draw(pi, x, y);
 	Dimension const & dim0 = cell(0).dimension(*pi.base.bv);
-	int const t = mathed_deco_thickness(pi.base);
+	double const t = mathed_deco_thickness(pi.base);
 	if (wide())
 		mathed_draw_deco(pi, x + 1, y + dy_, dim0.wid - t, dh_, key_->name);
 	else
 		mathed_draw_deco(pi, x + 1 + (dim0.wid - dw_) / 2,
-			y + dy_, dw_, dh_, key_->name);
+		                 y + dy_, dw_, dh_, key_->name);
 }
 
 

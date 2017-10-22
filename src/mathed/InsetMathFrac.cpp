@@ -256,7 +256,7 @@ void InsetMathFrac::metrics(MetricsInfo & mi, Dimension & dim) const
 		cell(1).metrics(mi, dim1);
 		dim.wid = max(dim0.wid, dim1.wid) + 2;
 		dim.asc = dim0.height() + dy/2 + dy;
-		int const t = mi.base.solidLineThickness();
+		int const t = (int) mi.base.solidLineThickness();
 		dim.des = max(0, dim1.height() + dy/2 - dy + t);
 	}
 	} //switch (kind_)
@@ -342,7 +342,7 @@ void InsetMathFrac::draw(PainterInfo & pi, int x, int y) const
 			(kind_ == CFRACRIGHT) ? x + dim.wid - dim0.wid - 2 :
 			// center
 			                        m - dim0.wid / 2;
-		int const t = pi.base.solidLineThickness();
+		int const t = (int) pi.base.solidLineThickness();
 		// take dy/2 for the spacing around the horizontal line. This is
 		// arbitrary. In LaTeX it is more complicated to ensure that displayed
 		// fractions line up next to each other.
@@ -674,7 +674,7 @@ void InsetMathBinom::draw(PainterInfo & pi, int x, int y) const
 	docstring const ket = kind_ == BRACE ? from_ascii("}") :
 		kind_ == BRACK ? from_ascii("]") : from_ascii(")");
 
-	int const t = mathed_deco_thickness(pi.base);
+	double const t = mathed_deco_thickness(pi.base);
 
 	int m = x + dim.width() / 2;
 	{

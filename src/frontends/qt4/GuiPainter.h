@@ -41,12 +41,11 @@ public:
 	virtual bool isNull() const { return false; }
 
 	/// draw a line from point to point
-	virtual void line(
-		int x1, int y1,
-		int x2, int y2,
-		Color,
-		line_style ls = line_solid,
-		int lw = thin_line);
+	void line(int x1, int y1, int x2, int y2, Color, line_style ls = line_solid,
+	          int lw = thin_line) override;
+	void lineDouble(double x1, double y1, double x2, double y2, Color,
+	                line_style ls = line_solid,
+	                double line_width = thin_line) override;
 
 	/**
 	 * lines -  draw a set of lines
@@ -54,14 +53,15 @@ public:
 	 * @param yp array of points' y co-ords
 	 * @param np size of the points array
 	 */
-	virtual void lines(
-		int const * xp,
-		int const * yp,
-		int np,
-		Color,
-		fill_style fs = fill_none,
-		line_style ls = line_solid,
-		int lw = thin_line);
+	void lines(int const * xp, int const * yp, int np, Color,
+	           fill_style = fill_none, line_style = line_solid,
+	           int line_width = thin_line) override;
+	void linesDouble(double const * xp, double const * yp, int np, Color,
+	                 fill_style = fill_none, line_style = line_solid,
+	                 double line_width = thin_line) override;
+	void linesDouble(std::vector<QPointF> points, Color col, fill_style fs,
+	                 line_style ls, double lw);
+
 
 	/**
 	 * path -  draw a path with bezier curves
@@ -178,8 +178,8 @@ private:
 		int x, int y, int width);
 
 	/// set pen parameters
-	void setQPainterPen(QColor const & col,
-		line_style ls = line_solid, int lw = thin_line);
+	void setQPainterPen(QColor const & col, line_style ls = line_solid,
+	                    double lw = thin_line);
 
 	// Direction for painting text
 	enum Direction { LtR, RtL, Auto };
@@ -194,7 +194,7 @@ private:
 
 	QColor current_color_;
 	Painter::line_style current_ls_;
-	int current_lw_;
+	double current_lw_;
 	///
 	bool const use_pixmap_cache_;
 	///

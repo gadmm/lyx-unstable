@@ -24,10 +24,11 @@
 #include "support/debug.h"
 #include "support/docstream.h"
 #include "support/lstrings.h"
-#include "support/lyxlib.h"
 
-#include <sstream>
+#include <cmath>
 #include <iomanip>
+#include <sstream>
+
 
 using namespace std;
 using namespace lyx::support;
@@ -199,7 +200,13 @@ bool Length::empty() const
 }
 
 
-int Length::inPixels(int text_width, int em_width_base) const
+int Length::inPixels(int text_width, double em_width_base) const
+{
+	return (int) std::round(inPixelsDouble(text_width, em_width_base));
+}
+
+
+double Length::inPixelsDouble(int text_width, double em_width_base) const
 {
 	// Zoom factor specified by user in percent
 	double const zoom = lyxrc.currentZoom / 100.0; // [percent]
@@ -220,8 +227,7 @@ int Length::inPixels(int text_width, int em_width_base) const
 	// is the same as on paper.
 
 	double const text_width_in = text_width / (zoom * dpi);
-	double const result = zoom * dpi * inInch(text_width_in, em_width_in);
-	return support::iround(result);
+	return zoom * dpi * inInch(text_width_in, em_width_in);
 }
 
 
@@ -311,6 +317,12 @@ double Length::inInch(double text_width, double em_width) const
 
 int Length::inPixels(MetricsBase const & base) const
 {
+	return (int) std::round(inPixelsDouble(base));
+}
+
+
+double Length::inPixelsDouble(MetricsBase const & base) const
+{
 	FontInfo fi = base.font;
 	if (unit_ == Length::MU)
 		// mu is 1/18th of an em in the math symbol font
@@ -318,7 +330,7 @@ int Length::inPixels(MetricsBase const & base) const
 	else
 		// Math style is only taken into account in the case of mu
 		fi.setStyle(LM_ST_TEXT);
-	return inPixels(base.textwidth, theFontMetrics(fi).em());
+	return inPixelsDouble(base.textwidth, theFontMetrics(fi).em());
 }
 
 
@@ -330,7 +342,7 @@ int Length::inBP() const
 	double const text_width_in = 210.0 / 2.54; // assume A4
 	double const em_width_in = 10.0 / 72.27;
 	double result = 72.0 * inInch(text_width_in, em_width_in);
-	return support::iround(result);
+	return (int) std::round(result);
 }
 
 

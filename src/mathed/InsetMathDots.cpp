@@ -59,7 +59,7 @@ void InsetMathDots::metrics(MetricsInfo & mi, Dimension & dim) const
 void InsetMathDots::draw(PainterInfo & pi, int x, int y) const
 {
 	Dimension const dim = dimension(*pi.base.bv);
-	int const t = mathed_deco_thickness(pi.base);
+	double const t = mathed_deco_thickness(pi.base);
 	if (key_->name == "adots" || key_->name == "iddots")
 		--y;
 	mathed_draw_deco(pi, x + 2, y - dh_,

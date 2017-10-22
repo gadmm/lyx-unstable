@@ -200,7 +200,7 @@ int GuiFontMetrics::width(docstring const & s) const
 		tl.beginLayout();
 		QTextLine line = tl.createLine();
 		tl.endLayout();
-		w = iround(line.horizontalAdvance());
+		w = (int) round(line.horizontalAdvance());
 	}
 	strwidth_cache_.insert(s, w, s.size() * sizeof(char_type));
 	return w;
@@ -387,7 +387,7 @@ GuiFontMetrics::breakAt_helper(docstring const & s, int const x,
 	line.setLineWidth(x);
 	tl.createLine();
 	tl.endLayout();
-	int const line_wid = iround(line.horizontalAdvance());
+	int const line_wid = (int) round(line.horizontalAdvance());
 	if ((force && line.textLength() == offset) || line_wid > x)
 		return {-1, -1};
 	/* Since QString is UTF-16 and docstring is UCS-4, the offsets may

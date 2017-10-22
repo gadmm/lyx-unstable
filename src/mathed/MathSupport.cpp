@@ -585,7 +585,7 @@ int mathed_string_width(FontInfo const & font, docstring const & s)
 
 double mathed_deco_thickness(MetricsBase & mb)
 {
-	return 3 * (mb.solidLineThickness() - 1);
+	return 3 * max(mb.solidLineThickness() - 1, 0.);
 }
 
 

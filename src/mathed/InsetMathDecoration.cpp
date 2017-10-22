@@ -112,13 +112,13 @@ void InsetMathDecoration::metrics(MetricsInfo & mi, Dimension & dim) const
 	dh_  = mathed_mu(mi.base.font, 6.0);
 	dw_  = mathed_mu(mi.base.font, 6.0);
 
-	int const t = (int) mathed_deco_thickness(mi.base);
+	double const t = (int) 3 * mi.base.solidLineThickness();
 
 	if (upper()) {
 		dy_ = -dim.asc - dh_ - t;
 		dim.asc += dh_ + 1 + t;
 	} else {
-		dy_ = dim.des + 1;
+		dy_ = dim.des + t;
 		dim.des += dh_ + 2 + t;
 	}
 }

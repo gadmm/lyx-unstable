@@ -38,21 +38,13 @@ namespace lyx {
 
 MetricsBase::MetricsBase(BufferView * b, FontInfo f, int w)
 	: bv(b), font(move(f)), fontname("mathnormal"),
-	  textwidth(w), macro_nesting(0),
-	  solid_line_thickness_(1), solid_line_offset_(1), dotted_line_thickness_(1)
+	  textwidth(w), macro_nesting(0)
 {
-	if (lyxrc.currentZoom >= 100) {
-		// derive the line thickness from zoom factor
-		// the zoom is given in percent
-		// (increase thickness at 200%, 300% etc.)
-		solid_line_thickness_ = lyxrc.currentZoom / 100;
-		// adjust line_offset_ too
-		solid_line_offset_ = 1 + solid_line_thickness_ / 2;
-		// derive the line thickness from zoom factor
-		// the zoom is given in percent
-		// (increase thickness at 150%, 250% etc.)
-		dotted_line_thickness_ = (lyxrc.currentZoom + 50) / 100;
-	}
+	if (!b)
+		return;
+	solid_line_thickness_ = b->inPixels(Length(0.4, Length::PT));
+	solid_line_offset_ = 1 + solid_line_thickness_ / 2;
+	dotted_line_thickness_ = b->inPixels(Length(0.8, Length::PT));
 }
 
 
@@ -111,11 +103,9 @@ MetricsInfo::MetricsInfo(BufferView * bv, FontInfo font, int textwidth,
 /////////////////////////////////////////////////////////////////////////
 
 PainterInfo::PainterInfo(BufferView * bv, lyx::frontend::Painter & painter)
-	: pain(painter), ltr_pos(false), change_(), selected(false),
+	: base(bv), pain(painter), ltr_pos(false), change_(), selected(false),
 	do_spellcheck(true), full_repaint(true), background_color(Color_background)
-{
-	base.bv = bv;
-}
+{}
 
 
 void PainterInfo::draw(int x, int y, char_type c)

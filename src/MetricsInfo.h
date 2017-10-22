@@ -39,8 +39,7 @@ class MacroContext;
 class MetricsBase {
 public:
 	///
-	MetricsBase(BufferView * bv = 0, FontInfo font = FontInfo(),
-	            int textwidth = 0);
+	MetricsBase(BufferView * bv, FontInfo font = FontInfo(), int textwidth = 0);
 
 	/// the current view
 	BufferView * bv;
@@ -70,9 +69,9 @@ public:
 	///
 	int dottedLineThickness() const { return dotted_line_thickness_; }
 private:
-	int solid_line_thickness_;
-	int solid_line_offset_;
-	int dotted_line_thickness_;
+	int solid_line_thickness_ = 1;
+	int solid_line_offset_ = 1;
+	int dotted_line_thickness_ = 1;
 };
 
 

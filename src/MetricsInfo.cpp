@@ -84,6 +84,12 @@ Changer MetricsBase::changeEnsureMath(Inset::mode_type mode)
 }
 
 
+int MetricsBase::mu(double len) const
+{
+	return mathed_mu(font, len);
+}
+
+
 /////////////////////////////////////////////////////////////////////////
 //
 // MetricsInfo

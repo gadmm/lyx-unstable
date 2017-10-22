@@ -50,7 +50,7 @@ void InsetMathXArrow::metrics(MetricsInfo & mi, Dimension & dim) const
 	cell(0).metrics(mi, dim0);
 	Dimension dim1;
 	cell(1).metrics(mi, dim1);
-	dim.wid = max(dim0.width(), dim1.width()) + mathed_mu(mi.base.font, 7.0);
+	dim.wid = max(dim0.width(), dim1.width()) + mi.base.mu(7);
 	dim.asc = dim0.height() + (3 * dy) / 2 + 1;
 	dim.des = dim1.height() - dy / 2 + 1;
 	// take into account the double spacing around the arrow

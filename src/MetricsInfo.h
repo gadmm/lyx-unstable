@@ -68,6 +68,8 @@ public:
 	double solidLineOffset() const { return solid_line_offset_; }
 	///
 	double dottedLineThickness() const { return dotted_line_thickness_; }
+	/// length of len mu in pixels
+	int mu(double len) const;
 private:
 	double solid_line_thickness_ = 1;
 	double solid_line_offset_ = 1;

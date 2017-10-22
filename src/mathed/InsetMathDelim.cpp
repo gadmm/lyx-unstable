@@ -99,8 +99,8 @@ void InsetMathDelim::metrics(MetricsInfo & mi, Dimension & dim) const
 	int a0 = max(dim0.asc, t.asc)   - h0;
 	int d0 = max(dim0.des, t.des)  + h0;
 	dw_ = dim0.height() / 5;
-	dw_ = max(dw_, mathed_mu(mi.base.font, 3.0));
-	dw_ = min(dw_, mathed_mu(mi.base.font, 5.0));
+	dw_ = max(dw_, mi.base.mu(3));
+	dw_ = min(dw_, mi.base.mu(5));
 	dw_ = max(dw_, 4);
 	dim.wid = dim0.width() + 2 * dw_ + 2;
 	dim.asc = max(a0, d0) + h0;

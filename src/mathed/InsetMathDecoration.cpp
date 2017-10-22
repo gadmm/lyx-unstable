@@ -109,8 +109,8 @@ void InsetMathDecoration::metrics(MetricsInfo & mi, Dimension & dim) const
 
 	cell(0).metrics(mi, dim);
 
-	dh_  = mathed_mu(mi.base.font, 6.0);
-	dw_  = mathed_mu(mi.base.font, 6.0);
+	dh_  = mi.base.mu(6);
+	dw_  = mi.base.mu(6);
 
 	double const t = (int) 3 * mi.base.solidLineThickness();
 

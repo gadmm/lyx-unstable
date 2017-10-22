@@ -220,7 +220,7 @@ void InsetMathFrac::metrics(MetricsInfo & mi, Dimension & dim) const
 		if (latexkeys const * slash = slash_symbol()) {
 			Dimension dimslash;
 			mathedSymbolDim(mi.base, dimslash, slash);
-			dim.wid += dimslash.wid - mathed_mu(mi.base.font, 3.0);
+			dim.wid += dimslash.wid - mi.base.mu(3);
 			dim.asc = max(dim.asc, dimslash.asc);
 			dim.des = max(dim.des, dimslash.des);
 		}
@@ -256,7 +256,7 @@ void InsetMathFrac::metrics(MetricsInfo & mi, Dimension & dim) const
 		cell(1).metrics(mi, dim1);
 		dim.wid = max(dim0.wid, dim1.wid);
 		if (kind_ != ATOP)
-			dim.wid += mathed_mu(mi.base.font, 4);
+			dim.wid += mi.base.mu(4);
 		dim.asc = dim0.height() + dy/2 + dy;
 		int const t = (int) mi.base.solidLineThickness();
 		dim.des = max(0, dim1.height() + dy/2 - dy + t);
@@ -306,11 +306,11 @@ void InsetMathFrac::draw(PainterInfo & pi, int x, int y) const
 		// reference LaTeX code from nicefrac.sty:
 		//    \mkern-2mu/\mkern-1mu
 		if (latexkeys const * slash = slash_symbol()) {
-			int mkern = mathed_mu(pi.base.font, 2.0);
+			int mkern = pi.base.mu(2);
 			mathedSymbolDraw(pi, xx + 1 + dim0.wid - mkern, y, slash);
 			Dimension dimslash;
 			mathedSymbolDim(pi.base, dimslash, slash);
-			xx += dimslash.wid - mathed_mu(pi.base.font, 3.0);
+			xx += dimslash.wid - pi.base.mu(3);
 		}
 		cell(1).draw(pi, xx + 1 + dim0.wid, y);
 	}

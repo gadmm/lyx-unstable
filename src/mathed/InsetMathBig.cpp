@@ -96,7 +96,7 @@ void InsetMathBig::metrics(MetricsInfo & mi, Dimension & dim) const
 	double const h = theFontMetrics(mi.base.font).ascent('I');
 	double const height = h * (1 + 2 * increase());
 	int const axis = axis_height(mi.base);
-	dim.wid = max(6, mathed_mu(mi.base.font, 6.0));
+	dim.wid = max(6, mi.base.mu(6));
 	dim.asc = int(height/2 + axis);
 	dim.des = int(height/2 - axis);
 	mathed_deco_metrics(mi.base, dim);

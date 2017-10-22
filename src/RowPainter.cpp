@@ -152,7 +152,7 @@ void RowPainter::paintForeignMark(Row::Element const & e) const
 	double const y = yo_ + pi_.base.solidLineOffset()
 		+ desc + pi_.base.solidLineThickness() / 2;
 	pi_.pain.lineDouble(x_, y, x_ + e.full_width(), y, Color_language,
-	                    Painter::line_solid, pi_.base.solidLineThickness());
+	                    pi_.base.solidLineThickness());
 }
 
 
@@ -207,8 +207,7 @@ void RowPainter::paintMisspelledMark(Row::Element const & e) const
 			swap(x1, x2);
 
 		pi_.pain.lineDouble(x_ + x1, y, x_ + x2, y,
-		                    Color_error,
-		                    Painter::line_onoffdash, thickness);
+		                    Color_error, thickness, Painter::line_onoffdash);
 		pos = range.last + 1;
 	}
 }

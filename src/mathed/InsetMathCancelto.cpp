@@ -85,10 +85,10 @@ void InsetMathCancelto::draw(PainterInfo & pi, int x, int y) const
 
 	double const t = pi.base.solidLineThickness();
 	// the main line
-	pi.pain.lineDouble(x3, y3, x1, y1, origcol, pi.pain.line_solid, t);
+	pi.pain.lineDouble(x3, y3, x1, y1, origcol, t);
 	// the arrow bars
-	pi.pain.lineDouble(x3, y3, x2 + 2, y3, origcol, pi.pain.line_solid, t);
-	pi.pain.lineDouble(x3, y3, x3 - 2, y2 - 2, origcol, pi.pain.line_solid, t);
+	pi.pain.lineDouble(x3, y3, x2 + 2, y3, origcol, t);
+	pi.pain.lineDouble(x3, y3, x3 - 2, y2 - 2, origcol, t);
 }
 
 

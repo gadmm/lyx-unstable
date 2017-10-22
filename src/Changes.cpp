@@ -541,7 +541,7 @@ void Change::paintCue(PainterInfo & pi, double const x1, double const y,
 	double const y_bar = deleted() ? y - fm.maxAscent() / 3
 		: y + 2 * pi.base.solidLineOffset() + pi.base.solidLineThickness();
 	pi.pain.lineDouble(x1, y_bar, x2, y_bar, color(),
-	                   Painter::line_solid, pi.base.solidLineThickness());
+	                   pi.base.solidLineThickness(), Painter::line_solid);
 }
 
 
@@ -562,13 +562,11 @@ void Change::paintCue(PainterInfo & pi, double const x1, double const y1,
 		return;
 	case INSERTED:
 		pi.pain.lineDouble(x1, y2, x2, y2,
-		             color(), Painter::line_solid,
-		             pi.base.solidLineThickness());
+		                   color(), pi.base.solidLineThickness());
 		return;
 	case DELETED:
 		pi.pain.lineDouble(x1, y2, x2, y1,
-		             color(), Painter::line_solid,
-		             pi.base.solidLineThickness());
+		                   color(), pi.base.solidLineThickness());
 		return;
 	}
 }

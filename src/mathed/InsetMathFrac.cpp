@@ -356,7 +356,7 @@ void InsetMathFrac::draw(PainterInfo & pi, int x, int y) const
 		// horizontal line
 		if (kind_ != ATOP)
 			pi.pain.lineDouble(x, y - dy, x + dim.wid, y - dy,
-			                   pi.base.font.color(), pi.pain.line_solid, t);
+			                   pi.base.font.color(), t);
 	}
 	} //switch (kind_)
 }

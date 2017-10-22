@@ -44,8 +44,8 @@ public:
 	void line(int x1, int y1, int x2, int y2, Color, line_style ls = line_solid,
 	          int lw = thin_line) override;
 	void lineDouble(double x1, double y1, double x2, double y2, Color,
-	                line_style ls = line_solid,
-	                double line_width = thin_line) override;
+	                double line_width = thin_line,
+	                line_style ls = line_solid) override;
 
 	/**
 	 * lines -  draw a set of lines
@@ -57,10 +57,10 @@ public:
 	           fill_style = fill_none, line_style = line_solid,
 	           int line_width = thin_line) override;
 	void linesDouble(double const * xp, double const * yp, int np, Color,
-	                 fill_style = fill_none, line_style = line_solid,
-	                 double line_width = thin_line) override;
-	void linesDouble(std::vector<QPointF> points, Color col, fill_style fs,
-	                 line_style ls, double lw);
+	                 double line_width = thin_line, fill_style = fill_none,
+	                 line_style = line_solid) override;
+	void linesDouble(std::vector<QPointF> points, Color col, double lw,
+	                 fill_style fs, line_style ls);
 
 
 	/**

@@ -148,8 +148,7 @@ void InsetMathSpace::draw(PainterInfo & pi, int x, int y) const
 
 	Color const col = space_info[space_].custom ?
 		Color_special : (isNegative() ? Color_latex : Color_math);
-	pi.pain.linesDouble(xp, yp, 4, col,
-	                    pi.pain.fill_none, pi.pain.line_solid, t);
+	pi.pain.linesDouble(xp, yp, 4, col, t);
 }
 
 

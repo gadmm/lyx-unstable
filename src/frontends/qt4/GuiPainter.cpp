@@ -176,22 +176,22 @@ void GuiPainter::point(int x, int y, Color col)
 
 
 void GuiPainter::lineDouble(double x1, double y1, double x2, double y2,
-                            Color col, line_style ls, double lw)
+                            Color col, double lw, line_style ls)
 {
 	vector<QPointF> points = {{x1, y1}, {x2, y2}};
-	linesDouble(move(points), col, fill_none, ls, lw);
+	linesDouble(move(points), col, lw, fill_none, ls);
 }
 
 
 void GuiPainter::line(int x1, int y1, int x2, int y2,
                       Color col, line_style ls, int lw)
 {
-	lineDouble(x1, y1, x2, y2, col, ls, lw);
+	lineDouble(x1, y1, x2, y2, col, lw, ls);
 }
 
 
-void GuiPainter::linesDouble(vector<QPointF> points, Color col, fill_style fs,
-                             line_style ls, double lw)
+void GuiPainter::linesDouble(vector<QPointF> points, Color col, double lw,
+                             fill_style fs, line_style ls)
 {
 	//offset for aligning the line on grid and avoid unnecessary blur
 	double const align = lw/2 - (int) lw/2;
@@ -216,12 +216,12 @@ void GuiPainter::linesDouble(vector<QPointF> points, Color col, fill_style fs,
 
 
 void GuiPainter::linesDouble(double const * xp, double const * yp, int np,
-                             Color col, fill_style fs, line_style ls, double lw)
+                             Color col, double lw, fill_style fs, line_style ls)
 {
 	vector<QPointF> points(np);
 	for (int i = 0; i < np; ++i)
 		points[i] = {xp[i], yp[i]};
-	linesDouble(move(points), col, fs, ls, lw);
+	linesDouble(move(points), col, lw, fs, ls);
 }
 
 
@@ -231,7 +231,7 @@ void GuiPainter::lines(int const * xp, int const * yp, int np,
 	vector<QPointF> points(np);
 	for (int i = 0; i < np; ++i)
 		points[i] = {(double)xp[i], (double)yp[i]};
-	linesDouble(move(points), col, fs, ls, lw);
+	linesDouble(move(points), col, lw, fs, ls);
 }
 
 

@@ -79,9 +79,9 @@ public:
 	/// draw a line from point to point
 	virtual void line(int x1, int y1, int x2, int y2, Color,
 	                  line_style = line_solid, int line_width = thin_line) = 0;
-	virtual void lineDouble(double x1, double y1, double x2, double y2, Color,
-	                        line_style = line_solid,
-	                        double line_width = thin_line) = 0;
+	virtual void lineDouble(double x1, double y1, double x2, double y2, Color col,
+	                        double line_width = thin_line,
+	                        line_style ls = line_solid) = 0;
 
 	/**
 	 * lines -  draw a set of lines
@@ -92,9 +92,9 @@ public:
 	virtual void lines(int const * xp, int const * yp, int np, Color,
 	                   fill_style = fill_none, line_style = line_solid,
 	                   int line_width = thin_line) = 0;
-	virtual void linesDouble(double const * xp, double const * yp, int np, Color,
-	                         fill_style = fill_none, line_style = line_solid,
-	                         double line_width = thin_line) = 0;
+	virtual void linesDouble(double const * xp, double const * yp, int np,
+	                         Color col, double line_width = thin_line,
+	                         fill_style fs = fill_none, line_style ls = line_solid) = 0;
 
 	/**
 	 * path -  draw a path with bezier curves

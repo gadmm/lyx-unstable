@@ -647,9 +647,8 @@ void mathed_draw_deco(PainterInfo & pi, double x, double y, double w, double h,
 			else
 				mt.transform(xx, yy);
 			mt.transform(x2, y2);
-			pi.pain.lineDouble(x + xx, y + yy,
-			                   x + x2, y + y2,
-			                   pi.base.font.color(), Painter::line_solid, t);
+			pi.pain.lineDouble(x + xx, y + yy, x + x2, y + y2,
+			                   pi.base.font.color(), t);
 		} else {
 			double xp[32];
 			double yp[32];
@@ -666,8 +665,7 @@ void mathed_draw_deco(PainterInfo & pi, double x, double y, double w, double h,
 				yp[j] = y + yy;
 				//  lyxerr << "P[" << j ' ' << xx << ' ' << yy << ' ' << x << ' ' << y << ']';
 			}
-			pi.pain.linesDouble(xp, yp, n, pi.base.font.color(),
-			                    Painter::fill_none, Painter::line_solid, t);
+			pi.pain.linesDouble(xp, yp, n, pi.base.font.color(), t);
 		}
 	}
 }

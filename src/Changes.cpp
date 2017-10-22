@@ -566,10 +566,8 @@ void Change::paintCue(PainterInfo & pi, double const x1, double const y1,
 		             pi.base.solidLineThickness());
 		return;
 	case DELETED:
-		// FIXME: we cannot use antialias since we keep drawing on the same
-		// background with the current painting mechanism.
 		pi.pain.line(int(x1), int(y2), int(x2), int(y1),
-		             color(), Painter::line_solid_aliased,
+		             color(), Painter::line_solid,
 		             pi.base.solidLineThickness());
 		return;
 	}

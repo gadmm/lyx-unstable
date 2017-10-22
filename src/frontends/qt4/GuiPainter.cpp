@@ -81,7 +81,6 @@ void GuiPainter::setQPainterPen(QColor const & col,
 
 	switch (ls) {
 	case line_solid:
-	case line_solid_aliased:
 		pen.setStyle(Qt::SolidLine); break;
 	case line_onoffdash:
 		pen.setStyle(Qt::DotLine); break;
@@ -183,7 +182,7 @@ void GuiPainter::line(int x1, int y1, int x2, int y2,
 {
 	setQPainterPen(computeColor(col), ls, lw);
 	bool const do_antialiasing = renderHints() & TextAntialiasing
-		&& x1 != x2 && y1 != y2 && ls != line_solid_aliased;
+		&& x1 != x2 && y1 != y2;
 	setRenderHint(Antialiasing, do_antialiasing);
 	drawLine(x1, y1, x2, y2);
 	setRenderHint(Antialiasing, false);
@@ -202,7 +201,7 @@ void GuiPainter::lines(int const * xp, int const * yp, int np,
 	if (np > points.size())
 		points.resize(2 * np);
 
-	// Note: the proper way to not get blurry vertical and horizontal lines is
+	// TODO: the proper way to not get blurry vertical and horizontal lines is
 	// to add 0.5 to all coordinates.
 	bool antialias = false;
 	for (int i = 0; i < np; ++i) {
@@ -214,8 +213,7 @@ void GuiPainter::lines(int const * xp, int const * yp, int np,
 	QColor const color = computeColor(col);
 	setQPainterPen(color, ls, lw);
 	bool const text_is_antialiased = renderHints() & TextAntialiasing;
-	setRenderHint(Antialiasing,
-	              antialias && text_is_antialiased && ls != line_solid_aliased);
+	setRenderHint(Antialiasing, antialias && text_is_antialiased);
 	if (fs == fill_none) {
 		drawPolyline(points.data(), np);
 	} else {
@@ -253,7 +251,7 @@ void GuiPainter::path(int const * xp, int const * yp,
 	QColor const color = computeColor(col);
 	setQPainterPen(color, ls, lw);
 	bool const text_is_antialiased = renderHints() & TextAntialiasing;
-	setRenderHint(Antialiasing, text_is_antialiased && ls != line_solid_aliased);
+	setRenderHint(Antialiasing, text_is_antialiased);
 	drawPath(bpath);
 	if (fs != fill_none)
 		fillPath(bpath, QBrush(color));

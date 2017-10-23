@@ -612,8 +612,8 @@ void GuiPainter::underline(FontInfo const & f, int x, int y, int width,
 	FontMetrics const & fm = theFontMetrics(f);
 	int const pos = fm.underlinePos();
 
-	line(x, y + pos, x + width, y + pos,
-	     f.realColor(), ls, fm.lineWidth());
+	lineDouble(x, y + pos, x + width, y + pos, f.realColor(), fm.lineWidth(),
+	           ls);
 }
 
 
@@ -622,8 +622,8 @@ void GuiPainter::strikeoutLine(FontInfo const & f, int x, int y, int width)
 	FontMetrics const & fm = theFontMetrics(f);
 	int const pos = fm.strikeoutPos();
 
-	line(x, y - pos, x + width, y - pos,
-	     f.realColor(), line_solid, fm.lineWidth());
+	lineDouble(x, y - pos, x + width, y - pos, f.realColor(), fm.lineWidth(),
+	           line_solid);
 }
 
 
@@ -644,13 +644,13 @@ void GuiPainter::crossoutLines(FontInfo const & f, int x, int y, int width)
 void GuiPainter::doubleUnderline(FontInfo const & f, int x, int y, int width)
 {
 	FontMetrics const & fm = theFontMetrics(f);
-	int const pos1 = fm.underlinePos() + fm.lineWidth();
+	int const pos1 = fm.underlinePos() + fm.lineWidth() + 1;
 	int const pos2 = fm.underlinePos() - fm.lineWidth() + 1;
 
-	line(x, y + pos1, x + width, y + pos1,
-		 f.realColor(), line_solid, fm.lineWidth());
-	line(x, y + pos2, x + width, y + pos2,
-		 f.realColor(), line_solid, fm.lineWidth());
+	lineDouble(x, y + pos1, x + width, y + pos1, f.realColor(),
+	            fm.lineWidth(), line_solid);
+	lineDouble(x, y + pos2, x + width, y + pos2, f.realColor(),
+	            fm.lineWidth(), line_solid);
 }
 
 
@@ -665,7 +665,8 @@ void GuiPainter::dashedUnderline(FontInfo const & f, int x, int y, int width)
 		height += below;
 
 	for (int n = 0; n != height; ++n)
-		line(x, y + below + n, x + width, y + below + n, f.realColor(), line_onoffdash);
+		lineDouble(x, y + below + n, x + width, y + below + n, f.realColor(),
+		           fm.lineWidth(), line_onoffdash);
 }
 
 
@@ -675,8 +676,7 @@ void GuiPainter::wavyHorizontalLine(int x, int y, int width, ColorCode col)
 	int const step = 2;
 	int const xend = x + width;
 	int height = 1;
-	//FIXME: I am not sure if Antialiasing gives the best effect.
-	//setRenderHint(Antialiasing, true);
+	setRenderHint(Antialiasing, true);
 	while (x < xend) {
 		height = - height;
 		drawLine(x, y - height, x + step, y + height);
@@ -684,7 +684,7 @@ void GuiPainter::wavyHorizontalLine(int x, int y, int width, ColorCode col)
 		drawLine(x, y + height, x + step/2, y + height);
 		x += step/2;
 	}
-	//setRenderHint(Antialiasing, false);
+	setRenderHint(Antialiasing, false);
 }
 
 } // namespace frontend

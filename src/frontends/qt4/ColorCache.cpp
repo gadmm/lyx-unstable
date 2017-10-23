@@ -117,8 +117,8 @@ QColor ColorCache::getPlain(Color const & color, bool syscolors) const
 	if (color.mergeColor != Color_ignore) {
 		// FIXME: This would ideally be done in the Color class, but
 		// that means that we'd have to use the Qt code in the core.
-		QColor base_color = get(color.baseColor, syscolors).toRgb();
-		QColor merge_color = get(color.mergeColor, syscolors).toRgb();
+		QColor base_color = getPlain(color.baseColor, syscolors).toRgb();
+		QColor merge_color = getPlain(color.mergeColor, syscolors).toRgb();
 		return QColor(
 			(base_color.red() + merge_color.red()) / 2,
 			(base_color.green() + merge_color.green()) / 2,

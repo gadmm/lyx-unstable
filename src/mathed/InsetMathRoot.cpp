@@ -53,43 +53,46 @@ void InsetMathRoot::metrics(MetricsInfo & mi, Dimension & dim) const
 		dim0 += fontDim;
 	}
 
-	Dimension dim1;
-	cell(1).metrics(mi, dim1);
+	cell(1).metrics(mi, dim);
 	// make sure that the dim is high enough for any character
 	Dimension fontDim;
 	math_font_max_dim(mi.base.font, fontDim.asc, fontDim.des);
-	dim1 += fontDim;
+	dim += fontDim;
 
-	dim.asc = max(dim0.ascent()  + 5, dim1.ascent()) + 1;
-	dim.des = max(dim0.descent() - 5, dim1.descent());
-	dim.wid = dim0.width() + dim1.width() + 4;
+	dim.asc += (int) 3 * mi.base.solidLineThickness();
+	dim.asc = max(dim.asc, dim0.asc + dim0.des + (dim.asc - dim.des)/2);
+	dim.wid += max(mi.base.mu(6), dim0.width() + mi.base.mu(2));
 }
 
 
 void InsetMathRoot::draw(PainterInfo & pi, int x, int y) const
 {
 	Changer dummy = pi.base.changeEnsureMath();
+	double const t = pi.base.solidLineThickness();
+	// decoration width
+	double const dw = pi.base.mu(6);
+	Dimension const dim0 = cell(0).dimension(*pi.base.bv);
+	Dimension const dim1 = cell(1).dimension(*pi.base.bv);
 	Dimension const dim = dimension(*pi.base.bv);
-	int const a = dim.ascent();
-	int const d = dim.descent();
-	Dimension const & dim0 = cell(0).dimension(*pi.base.bv);
-	int const w = dim0.width();
+	// ascent without cell(0)
+	double const a = dim1.ascent() + 3 * t;
+	double const d = dim.descent();
+	// middle y
+	double const ym = (int) round(y + (d - a)/2);
 	// the "exponent"
 	{
 		Changer script = pi.base.font.changeStyle(LM_ST_SCRIPTSCRIPT);
-		cell(0).draw(pi, x, y + (d - a)/2 - dim0.descent());
+		cell(0).draw(pi, x, ym - dim0.descent());
 	}
 	// the "base"
-	cell(1).draw(pi, x + w + 4, y);
-	int xp[4];
-	int yp[4];
-	pi.pain.line(x + dim.width(), y - a + 1,
-				x + w + 4, y - a + 1, pi.base.font.color());
-	xp[0] = x + w + 4;         yp[0] = y - a + 1;
-	xp[1] = x + w;             yp[1] = y + d;
-	xp[2] = x + w - 2;         yp[2] = y + (d - a)/2 + 2;
-	xp[3] = x + w - 5;         yp[3] = y + (d - a)/2 + 4;
-	pi.pain.lines(xp, yp, 4, pi.base.font.color());
+	double const x0 = x + max(dw, (double) dim0.width() + pi.base.mu(2));
+	cell(1).draw(pi, (int) x0 + 2 * t, y);
+	// coords of the end of the decoration
+	double const x1 = x + dim.width() - t/2;
+	double const y1 = round(y - a + t/2);
+	double const xp[5] = {x1, x0, x0 - dw/3, x0 - dw*2/3, x0 - dw};
+	double const yp[5] = {y1, y1, y + d,     ym + t,      ym + 2*t};
+	pi.pain.linesDouble(xp, yp, 5, pi.base.font.color(), t);
 }
 
 

@@ -90,6 +90,12 @@ int MetricsBase::mu(double len) const
 }
 
 
+int MetricsBase::em(double len) const
+{
+	return Length(len, Length::EM).inPixels(*this);
+}
+
+
 /////////////////////////////////////////////////////////////////////////
 //
 // MetricsInfo

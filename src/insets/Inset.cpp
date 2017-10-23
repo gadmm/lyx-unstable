@@ -512,21 +512,6 @@ void Inset::cursorPos(BufferView const & /*bv*/, CursorSlice const &,
 }
 
 
-void Inset::metricsMarkers(Dimension & dim, int framesize) const
-{
-	dim.wid += 2 * framesize;
-	dim.des += framesize;
-}
-
-
-void Inset::metricsMarkers2(Dimension & dim, int framesize) const
-{
-	dim.wid += 2 * framesize;
-	dim.asc += framesize;
-	dim.des += framesize;
-}
-
-
 void Inset::drawBackground(PainterInfo & pi, int x, int y) const
 {
 	if (pi.full_repaint && backgroundColor(pi) == Color_none)
@@ -539,33 +524,46 @@ void Inset::drawBackground(PainterInfo & pi, int x, int y) const
 
 void Inset::drawMarkers(PainterInfo & pi, int x, int y) const
 {
-	ColorCode pen_color = mouseHovered(pi.base.bv) || editing(pi.base.bv)?
-		Color_mathframe : Color_mathcorners;
-
-	Dimension const dim = dimension(*pi.base.bv);
-
-	int const t = x + dim.width() - 1;
-	int const d = y + dim.descent();
-	pi.pain.line(x, d - 3, x, d, pen_color);
-	pi.pain.line(t, d - 3, t, d, pen_color);
-	pi.pain.line(x, d, x + 3, d, pen_color);
-	pi.pain.line(t - 3, d, t, d, pen_color);
+	drawMarkers2(pi, x, y, false);
+	//MathRow::drawMarkers(pi, x, y, );
 }
 
 
-void Inset::drawMarkers2(PainterInfo & pi, int x, int y) const
+void Inset::drawMarkers2(PainterInfo & pi, int x, int y, bool upper) const
 {
 	ColorCode pen_color = mouseHovered(pi.base.bv) || editing(pi.base.bv)?
 		Color_mathframe : Color_mathcorners;
+	double const t = max(pi.base.solidLineThickness()/2, 1.);
+	double const l = round(max(pi.base.mu(2), 3));
 
-	drawMarkers(pi, x, y);
 	Dimension const dim = dimension(*pi.base.bv);
-	int const t = x + dim.width() - 1;
-	int const a = y - dim.ascent();
-	pi.pain.line(x, a + 3, x, a, pen_color);
-	pi.pain.line(t, a + 3, t, a, pen_color);
-	pi.pain.line(x, a, x + 3, a, pen_color);
-	pi.pain.line(t - 3, a, t, a, pen_color);
+
+	double const x0 = round(x + t/2 - 1);
+	double const x1 = round(x + dim.width() - t/2);
+	double const y0 = y + dim.descent();
+	{
+		double const xp[3] = {x0,     x0, x0 + l};
+		double const yp[3] = {y0 - l, y0, y0};
+		pi.pain.linesDouble(xp, yp, 3, pen_color, t);
+	}
+	{
+		double const xp[3] = {x1 - l, x1, x1};
+		double const yp[3] = {y0,     y0, y0 - l};
+		pi.pain.linesDouble(xp, yp, 3, pen_color, t);
+	}
+	if (!upper)
+		return;
+	double const y1 = y - dim.ascent();
+	{
+		double const xp[3] = {x0,     x0, x0 + l};
+		double const yp[3] = {y1 + l, y1, y1};
+		pi.pain.linesDouble(xp, yp, 3, pen_color, t);
+	}
+	{
+		double const xp[3] = {x1 - l, x1, x1};
+		double const yp[3] = {y1,     y1, y1 + l};
+		pi.pain.linesDouble(xp, yp, 3, pen_color, t);
+	}
 }
 
 

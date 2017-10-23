@@ -86,6 +86,7 @@ TODO
 #include "support/Systemcall.h"
 
 #include <algorithm>
+#include <cmath>
 #include <sstream>
 #include <tuple>
 

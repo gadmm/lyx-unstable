@@ -19,12 +19,13 @@
 
 #include "support/convert.h"
 #include "support/lassert.h"
-#include "support/lyxlib.h"
 
 #define DISABLE_PMPROF
 #include "support/pmprof.h"
 
 #include <QByteArray>
+
+#include <cmath>
 
 using namespace std;
 using namespace lyx::support;

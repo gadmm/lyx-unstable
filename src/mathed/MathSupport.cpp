@@ -31,7 +31,6 @@
 #include "support/debug.h"
 #include "support/docstream.h"
 #include "support/lassert.h"
-#include "support/lyxlib.h"
 
 #include <map>
 #include <algorithm>

@@ -23,6 +23,7 @@
 
 #include "frontends/Painter.h"
 
+#include <cmath>
 
 using namespace std;
 

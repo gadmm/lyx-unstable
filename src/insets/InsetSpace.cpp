@@ -39,6 +39,8 @@
 #include "frontends/FontMetrics.h"
 #include "frontends/Painter.h"
 
+#include <cmath>
+
 using namespace std;
 
 namespace lyx {

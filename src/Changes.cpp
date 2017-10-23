@@ -35,6 +35,7 @@
 #include "frontends/FontMetrics.h"
 #include "frontends/Painter.h"
 
+#include <cmath>
 #include <ostream>
 
 using namespace std;

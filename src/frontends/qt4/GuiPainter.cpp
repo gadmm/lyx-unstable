@@ -25,9 +25,9 @@
 
 #include "support/debug.h"
 #include "support/lassert.h"
-#include "support/lyxlib.h"
 
 #include <algorithm>
+#include <cmath>
 
 #include <QPixmapCache>
 #include <QTextLayout>

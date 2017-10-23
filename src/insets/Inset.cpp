@@ -42,6 +42,7 @@
 #include "support/gettext.h"
 #include "support/lassert.h"
 
+#include <cmath>
 #include <map>
 
 using namespace std;

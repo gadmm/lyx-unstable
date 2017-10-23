@@ -16,13 +16,13 @@
 
 #include "support/convert.h"
 #include "support/debug.h"
-#include "support/lyxlib.h"
 #include "support/qstring_helpers.h"
 
 #include "support/lassert.h"
 
 #include <QString>
 
+#include <cmath>
 #include <cstdio>
 #include <cstring>
 #include <algorithm>

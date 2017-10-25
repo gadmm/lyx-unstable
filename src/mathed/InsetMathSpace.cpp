@@ -30,6 +30,8 @@
 
 #include "support/lassert.h"
 
+#include <cmath>
+
 using namespace std;
 
 namespace lyx {
@@ -139,9 +141,9 @@ void InsetMathSpace::draw(PainterInfo & pi, int x, int y) const
 	double t = pi.base.solidLineThickness();
 	Dimension const dim = dimension(*pi.base.bv);
 
-	double const x1 = x + t/2;
+	double const x1 = round(x + t/2);
 	double const y1 = y;
-	double const x3 = x + dim.wid - t/2 - 1;
+	double const x3 = round(x + dim.wid - t);
 	double const y3 = y - dim.asc;
 	double xp[4] = {x1, x1, x3, x3};
 	double yp[4] = {y3, y1, y1, y3};

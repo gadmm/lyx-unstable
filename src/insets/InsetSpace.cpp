@@ -253,7 +253,6 @@ void InsetSpace::metrics(MetricsInfo & mi, Dimension & dim) const
 			dim.wid = mi.base.em(0.1);
 			break;
 	}
-	dim.wid += (int) mi.base.solidLineThickness();
 }
 
 

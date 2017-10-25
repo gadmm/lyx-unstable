@@ -98,9 +98,9 @@ void InsetMathDelim::metrics(MetricsInfo & mi, Dimension & dim) const
 	int const h0 = axis_height(mi.base);
 	int a0 = max(dim0.asc, t.asc)   - h0;
 	int d0 = max(dim0.des, t.des)  + h0;
-	dw_ = dim0.height() / 5;
-	dw_ = max(dw_, mi.base.mu(3));
-	dw_ = min(dw_, mi.base.mu(5));
+	dw_ = dim0.height() / 8;
+	dw_ = max(dw_, mi.base.mu(5));
+	dw_ = min(dw_, mi.base.mu(10));
 	dw_ = max(dw_, 4);
 	dim.wid = dim0.width() + 2 * dw_ + 2;
 	dim.asc = max(a0, d0) + h0;
@@ -115,12 +115,13 @@ void InsetMathDelim::draw(PainterInfo & pi, int x, int y) const
 	Changer dummy = pi.base.changeEnsureMath();
 	Dimension const dim = dimension(*pi.base.bv);
 	double const t = mathed_deco_thickness(pi.base);
-	double const b = y - dim.asc + t/2;
+	double const h0 = axis_height(pi.base) / 2.;
+	double const b = y - dim.asc - h0/2 + t/2;
 	cell(0).draw(pi, x + dw_ + 1 + (int) t, y);
 	mathed_draw_deco(pi, x, b,
-	                 dw_ - t/2, dim.height() - t, left_);
+	                 dw_ - t/2, dim.height() - t + h0, left_);
 	mathed_draw_deco(pi, x + dim.width() - t/2 - dw_, b,
-	                 dw_ - t/2, dim.height() - t, right_);
+	                 dw_ - t/2, dim.height() - t + h0, right_);
 }
 
 

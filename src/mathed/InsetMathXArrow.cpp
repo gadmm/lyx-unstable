@@ -72,7 +72,7 @@ void InsetMathXArrow::draw(PainterInfo & pi, int x, int y) const
 	Dimension const & dim1 = cell(1).dimension(*pi.base.bv);
 	cell(1).draw(pi, x + dim.width()/2 - dim1.width()/2,
 	             y + 1 + dim1.asc - dy / 2 + (int) t);
-	mathed_draw_deco(pi, x, y - (3 * dy) / 2, dim.wid - 2, dy, name_);
+	mathed_draw_deco(pi, x, y - (3 * dy) / 2, dim.wid - t, dy, name_);
 }
 
 

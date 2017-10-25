@@ -108,11 +108,30 @@ void InsetMathDecoration::metrics(MetricsInfo & mi, Dimension & dim) const
 	Changer dummy = mi.base.changeEnsureMath(currentMode());
 
 	cell(0).metrics(mi, dim);
-
-	dh_  = mi.base.mu(6);
+	if (key_->name == "vec" ||
+	    key_->name == "tilde" ||
+	    key_->name == "hat" ||
+	    key_->name == "grave" ||
+	    key_->name == "check" ||
+	    key_->name == "breve" ||
+	    key_->name == "acute" ||
+	    key_->name == "widetilde" ||
+	    key_->name == "widehat" ||
+	    key_->name == "utilde" ||
+	    key_->name == "udertilde")
+		dh_  = mi.base.mu(3);
+	else
+		dh_  = mi.base.mu(6);
 	dw_  = mi.base.mu(6);
 
-	double const t = (int) 3 * mi.base.solidLineThickness();
+	double const t = (key_->name == "overline" ||
+	                  key_->name == "underline" ||
+	                  key_->name == "bar" ||
+	                  key_->name == "dot" ||
+	                  key_->name == "ddot" ||
+	                  key_->name == "dddot" ||
+	                  key_->name == "ddddot") ?
+		0 : (int) 3 * mi.base.solidLineThickness();
 
 	if (upper()) {
 		dy_ = -dim.asc - dh_ - t;
@@ -121,21 +140,41 @@ void InsetMathDecoration::metrics(MetricsInfo & mi, Dimension & dim) const
 		dy_ = dim.des + t;
 		dim.des += dh_ + 2 + t;
 	}
+
+	int min_width = 0;
+	if (key_->name == "overbrace" ||
+	    key_->name == "underbrace")
+		min_width = 36;
+	else if (key_->name == "overleftarrow" ||
+	         key_->name == "overrightarrow" ||
+	         key_->name == "overleftrightarrow" ||
+	         key_->name == "underleftarrow" ||
+	         key_->name == "underrightarrow" ||
+	         key_->name == "underleftrightarrow")
+		min_width = 18;
+	else if (key_->name == "widehat" ||
+	         key_->name == "widetilde" ||
+	         key_->name == "undertilde" ||
+	         key_->name == "utilde")
+		min_width = 9;
+	dim.wid = max(dim.wid, mi.base.mu(min_width));
 }
 
 
 void InsetMathDecoration::draw(PainterInfo & pi, int x, int y) const
 {
 	Changer dummy = pi.base.changeEnsureMath(currentMode());
-
-	cell(0).draw(pi, x, y);
-	Dimension const & dim0 = cell(0).dimension(*pi.base.bv);
+	Dimension dim = dimension(*pi.base.bv);
+	Dimension dim0 = cell(0).dimension(*pi.base.bv);
 	double const t = mathed_deco_thickness(pi.base);
+	double const x0 = x + (dim.wid - dim0.wid) / 2.0 - t/2;
+	cell(0).draw(pi, (int) x0, y);
 	if (wide())
-		mathed_draw_deco(pi, x + 1, y + dy_, dim0.wid - t, dh_, key_->name);
+		mathed_draw_deco(pi, x, y + dy_,
+		                 dim.wid - t, dh_, key_->name);
 	else
-		mathed_draw_deco(pi, x + 1 + (dim0.wid - dw_) / 2,
-		                 y + dy_, dw_, dh_, key_->name);
+		mathed_draw_deco(pi, x + (dim.wid - dw_) / 2, y + dy_,
+		                 dw_, dh_, key_->name);
 }
 
 

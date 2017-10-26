@@ -32,6 +32,7 @@
 #include "support/docstream.h"
 #include "support/lassert.h"
 
+#include <cmath>
 #include <map>
 #include <algorithm>
 
@@ -628,13 +629,13 @@ int mathed_string_width(FontInfo const & font, docstring const & s)
 }
 
 
-double mathed_deco_thickness(MetricsBase & mb)
+double mathed_deco_thickness(MetricsBase const & mb)
 {
 	return 3 * max(mb.solidLineThickness() - 1, 0.);
 }
 
 
-void mathed_deco_metrics(MetricsBase & mb, Dimension & dim,
+void mathed_deco_metrics(MetricsBase const & mb, Dimension & dim,
                          int num_w, int num_h)
 {
 	double const t = mathed_deco_thickness(mb);
@@ -645,8 +646,8 @@ void mathed_deco_metrics(MetricsBase & mb, Dimension & dim,
 }
 
 
-void mathed_draw_deco(PainterInfo & pi, double x, double y, double w, double h,
-                      docstring const & name)
+void mathed_draw_deco(PainterInfo const & pi, double x, double y,
+                      double w, double h, docstring const & name)
 {
 	double const t = pi.base.solidLineThickness();
 	w += mathed_deco_thickness(pi.base);
@@ -726,6 +727,19 @@ void mathed_draw_deco(PainterInfo & pi, double x, double y, double w, double h,
 			pi.pain.linesDouble(xp, yp, n, pi.base.font.color(), t);
 		}
 	}
+}
+
+
+void mathed_draw_marker(PainterInfo const & pi, int x, int y, int w, int h,
+                        ColorCode col)
+{
+	double const t = max(pi.base.solidLineThickness()/2, 1.);
+	double const l = max(pi.base.mu(2), 3);
+	double const x0 = round((w > 0) ? x - t/2 : x + t/2 - 1);
+	double const y0 = round((h > 0) ? y - t/2 - 1 : y + t/2);
+	double const xp[3] = {x0,     x0, x0 + w * l};
+	double const yp[3] = {y0 + h * l, y0, y0};
+	pi.pain.linesDouble(xp, yp, 3, col, t);
 }
 
 

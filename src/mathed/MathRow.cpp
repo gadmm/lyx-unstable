@@ -124,19 +124,15 @@ void drawMarkers(PainterInfo const & pi, MathRow::Element const & e,
 
 	// Lower corners in all cases
 	int const d = y + dim.descent();
-	pi.pain.line(l, d - 3, l, d, pen_color);
-	pi.pain.line(r, d - 3, r, d, pen_color);
-	pi.pain.line(l, d, l + 3, d, pen_color);
-	pi.pain.line(r - 3, d, r, d, pen_color);
+	mathed_draw_marker(pi, l, d,  1, -1, pen_color);
+	mathed_draw_marker(pi, r, d, -1, -1, pen_color);
 
 	// Upper corners
 	if (e.marker == InsetMath::BOX_MARKER
 	    || e.marker == InsetMath::MARKER2) {
 		int const a = y - dim.ascent();
-		pi.pain.line(l, a + 3, l, a, pen_color);
-		pi.pain.line(r, a + 3, r, a, pen_color);
-		pi.pain.line(l, a, l + 3, a, pen_color);
-		pi.pain.line(r - 3, a, r, a, pen_color);
+		mathed_draw_marker(pi, l, a,  1, 1, pen_color);
+		mathed_draw_marker(pi, r, a, -1, 1, pen_color);
 	}
 }
 
@@ -322,11 +318,11 @@ void MathRow::draw(PainterInfo & pi, int x, int const y) const
 			Dimension const d = coords.insets().dim(e.inset);
 			Dimension d2 = d;
 			d2.wid -= e.before + e.after;
+			drawMarkers(pi, e, x, y);
 			coords.insets().add(e.inset, d2);
 			e.inset->draw(pi, x + e.before, y);
 			coords.insets().add(e.inset, x, y);
 			coords.insets().add(e.inset, d);
-			drawMarkers(pi, e, x, y);
 			x += d.wid;
 			break;
 		}

@@ -42,6 +42,8 @@
 #include "support/gettext.h"
 #include "support/lassert.h"
 
+#include "mathed/MathSupport.h"
+
 #include <cmath>
 #include <map>
 
@@ -534,37 +536,16 @@ void Inset::drawMarkers2(PainterInfo & pi, int x, int y, bool upper) const
 {
 	ColorCode pen_color = mouseHovered(pi.base.bv) || editing(pi.base.bv)?
 		Color_mathframe : Color_mathcorners;
-	double const t = max(pi.base.solidLineThickness()/2, 1.);
-	double const l = round(max(pi.base.mu(2), 3));
-
 	Dimension const dim = dimension(*pi.base.bv);
-
-	double const x0 = round(x + t/2 - 1);
-	double const x1 = round(x + dim.width() - t/2);
-	double const y0 = y + dim.descent();
-	{
-		double const xp[3] = {x0,     x0, x0 + l};
-		double const yp[3] = {y0 - l, y0, y0};
-		pi.pain.linesDouble(xp, yp, 3, pen_color, t);
-	}
-	{
-		double const xp[3] = {x1 - l, x1, x1};
-		double const yp[3] = {y0,     y0, y0 - l};
-		pi.pain.linesDouble(xp, yp, 3, pen_color, t);
-	}
+	int const x1 = x + dim.wid;
+	int const y0 = y + dim.des;
+	mathed_draw_marker(pi, x,  y0,  1, -1, pen_color);
+	mathed_draw_marker(pi, x1, y0, -1, -1, pen_color);
 	if (!upper)
 		return;
-	double const y1 = y - dim.ascent();
-	{
-		double const xp[3] = {x0,     x0, x0 + l};
-		double const yp[3] = {y1 + l, y1, y1};
-		pi.pain.linesDouble(xp, yp, 3, pen_color, t);
-	}
-	{
-		double const xp[3] = {x1 - l, x1, x1};
-		double const yp[3] = {y1,     y1, y1 + l};
-		pi.pain.linesDouble(xp, yp, 3, pen_color, t);
-	}
+	int const y1 = y - dim.asc;
+	mathed_draw_marker(pi, x,  y1,  1, 1, pen_color);
+	mathed_draw_marker(pi, x1, y1, -1, 1, pen_color);
 }
 
 

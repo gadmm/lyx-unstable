@@ -16,6 +16,8 @@
 #include "MathParser_flags.h"
 #include "support/strfwd.h"
 
+#include "ColorCode.h"
+
 namespace lyx {
 
 class MetricsBase;
@@ -45,15 +47,18 @@ int mathed_char_width(FontInfo const &, char_type c);
 int mathed_char_kerning(FontInfo const &, char_type c);
 
 // thickness added to decorations because of the zoom value
-double mathed_deco_thickness(MetricsBase & mb);
+double mathed_deco_thickness(MetricsBase const & mb);
 
 // add the thickness of the decorations. num_w and num_h are a multiplier
 // in case there are several decorations, horizontally or vertically
-void mathed_deco_metrics(MetricsBase & mb, Dimension & dim,
+void mathed_deco_metrics(MetricsBase const & mb, Dimension & dim,
                          int num_w = 1, int num_h = 1);
 
-void mathed_draw_deco(PainterInfo & pi, double x, double y, double w, double h,
-                      docstring const & name);
+void mathed_draw_deco(PainterInfo const & pi, double x, double y, double w,
+                      double h, docstring const & name);
+
+void mathed_draw_marker(PainterInfo const & pi, int x, int y, int w, int h,
+                        ColorCode col);
 
 void mathed_string_dim(FontInfo const & font,
 		       docstring const & s,

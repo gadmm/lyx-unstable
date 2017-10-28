@@ -629,12 +629,14 @@ int mathed_string_width(FontInfo const & font, docstring const & s)
 }
 
 
+// TODO remove
 double mathed_deco_thickness(MetricsBase const & mb)
 {
 	return 3 * max(mb.solidLineThickness() - 1, 0.);
 }
 
 
+// TODO remove
 void mathed_deco_metrics(MetricsBase const & mb, Dimension & dim,
                          int num_w, int num_h)
 {

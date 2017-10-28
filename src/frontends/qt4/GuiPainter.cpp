@@ -193,6 +193,8 @@ void GuiPainter::line(int x1, int y1, int x2, int y2,
 void GuiPainter::linesDouble(vector<QPointF> points, Color col, double lw,
                              fill_style fs, line_style ls)
 {
+	if (points.empty())
+		return;
 	//offset for aligning the line on grid and avoid unnecessary blur
 	double const align = lw/2 - (int) lw/2;
 	for (QPointF & p : points) {
@@ -202,6 +204,12 @@ void GuiPainter::linesDouble(vector<QPointF> points, Color col, double lw,
 	QColor const color = computeColor(col);
 	setQPainterPen(color, ls, lw);
 	setRenderHint(Antialiasing, true);
+	// make sure dashed lines are aligned
+	if (ls == line_onoffdash) {
+		QPen p = pen();
+		p.setDashOffset((points[0].x() + points[0].y()) / lw);
+		setPen(p);
+	}
 	if (fs == fill_none) {
 		drawPolyline(points.data(), points.size());
 	} else {

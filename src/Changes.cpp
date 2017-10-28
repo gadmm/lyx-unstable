@@ -540,8 +540,7 @@ void Change::paintCue(PainterInfo & pi, double const x1, double const y,
 	// Calculate 1/3 height of font
 	FontMetrics const & fm = theFontMetrics(font);
 	double const y_bar = round(deleted() ? y - fm.maxAscent() / 3
-	                           : y + 2 * pi.base.solidLineOffset()
-	                           + pi.base.solidLineThickness());
+	                           : y + 2 + 1.5 * pi.base.solidLineThickness());
 	pi.pain.lineDouble(x1, y_bar, x2, y_bar, color(),
 	                   pi.base.solidLineThickness(), Painter::line_solid);
 }

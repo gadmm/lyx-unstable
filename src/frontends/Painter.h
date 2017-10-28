@@ -77,8 +77,10 @@ public:
 	virtual ~Painter() {}
 
 	/// draw a line from point to point
+public:
 	virtual void line(int x1, int y1, int x2, int y2, Color,
 	                  line_style = line_solid, int line_width = thin_line) = 0;
+public:
 	virtual void lineDouble(double x1, double y1, double x2, double y2, Color col,
 	                        double line_width = thin_line,
 	                        line_style ls = line_solid) = 0;

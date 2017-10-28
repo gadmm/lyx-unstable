@@ -38,14 +38,9 @@ namespace lyx {
 
 MetricsBase::MetricsBase(BufferView * b, FontInfo f, int w)
 	: bv(b), font(move(f)), fontname("mathnormal"),
-	  textwidth(w), macro_nesting(0)
-{
-	if (!b)
-		return;
-	solid_line_thickness_ = b->inPixelsDouble(Length(0.5, Length::PT));
-	solid_line_offset_ = 1 + solid_line_thickness_ / 2;
-	dotted_line_thickness_ = b->inPixelsDouble(Length(0.8, Length::PT));
-}
+	  textwidth(w), macro_nesting(0),
+	  solid_line_thickness_(b ? b->inPixelsDouble(Length(0.5, Length::PT)) : 1)
+{}
 
 
 double MetricsBase::thinLineThickness() const

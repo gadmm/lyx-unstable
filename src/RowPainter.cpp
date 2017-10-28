@@ -10,7 +10,6 @@
  */
 
 #include <config.h>
-#include <algorithm>
 
 #include "RowPainter.h"
 
@@ -44,6 +43,8 @@
 #include "support/lassert.h"
 #include <boost/crc.hpp>
 
+#include <algorithm>
+#include <cmath>
 #include <stdlib.h>
 
 using namespace std;
@@ -149,8 +150,7 @@ void RowPainter::paintForeignMark(Row::Element const & e) const
 		return;
 
 	double const desc = e.inset ? e.dim.descent() : 0;
-	double const y = yo_ + pi_.base.solidLineOffset()
-		+ desc + pi_.base.solidLineThickness() / 2;
+	double const y = yo_ + desc + pi_.base.solidLineThickness() + 1;
 	pi_.pain.lineDouble(x_, y, x_ + e.full_width(), y, Color_language,
 	                    pi_.base.solidLineThickness());
 }
@@ -162,10 +162,9 @@ void RowPainter::paintMisspelledMark(Row::Element const & e) const
 	// to avoid drawing at the same vertical offset
 	FontMetrics const & fm = theFontMetrics(e.font);
 	int const thickness = max(fm.lineWidth(), 2);
-	double const y = yo_ + pi_.base.solidLineOffset()
-		+ pi_.base.solidLineThickness()
-		+ (e.change.changed() ? pi_.base.solidLineThickness() + 1 : 0)
-		+ 1 + thickness / 2;
+	double const y = yo_
+		+ (e.change.changed() ? 3 : 1.5) * pi_.base.solidLineThickness()
+		+ 2 + thickness / 2;
 
 	//FIXME: this could be computed only once, it is probably not costly.
 	// check for cursor position
@@ -361,18 +360,16 @@ void RowPainter::paintAppendixStart(int y) const
 
 void RowPainter::paintTooLargeMarks(bool const left, bool const right) const
 {
+	double const t = 2 * pi_.base.solidLineThickness();
+	int const dx = pi_.base.solidLineThickness();
 	if (left)
-		pi_.pain.line(pi_.base.dottedLineThickness(), yo_ - row_.ascent(),
-					  pi_.base.dottedLineThickness(), yo_ + row_.descent(),
-					  Color_scroll, Painter::line_onoffdash,
-		              pi_.base.dottedLineThickness());
+		pi_.pain.lineDouble(dx, yo_ - row_.ascent(), dx, yo_ + row_.descent(),
+		                    Color_scroll, t, Painter::line_onoffdash);
 	if (right) {
-		int const wwidth =
-			pi_.base.bv->workWidth() - pi_.base.dottedLineThickness();
-		pi_.pain.line(wwidth, yo_ - row_.ascent(),
-					  wwidth, yo_ + row_.descent(),
-					  Color_scroll, Painter::line_onoffdash,
-		              pi_.base.dottedLineThickness());
+		int const wwidth = pi_.base.bv->workWidth() - dx - 1;
+		pi_.pain.lineDouble(wwidth, yo_ - row_.ascent(),
+		                    wwidth, yo_ + row_.descent(),
+		                    Color_scroll, t, Painter::line_onoffdash);
 	}
 }
 

@@ -525,17 +525,12 @@ void Inset::drawBackground(PainterInfo & pi, int x, int y) const
 }
 
 
-void Inset::drawMarkers(PainterInfo & pi, int x, int y) const
+void Inset::drawMarkers(PainterInfo & pi, int x, int y,
+                        ColorCode col_on, ColorCode col_off,
+                        bool upper) const
 {
-	drawMarkers2(pi, x, y, false);
-	//MathRow::drawMarkers(pi, x, y, );
-}
-
-
-void Inset::drawMarkers2(PainterInfo & pi, int x, int y, bool upper) const
-{
-	ColorCode pen_color = mouseHovered(pi.base.bv) || editing(pi.base.bv)?
-		Color_mathframe : Color_mathcorners;
+	ColorCode pen_color = (mouseHovered(pi.base.bv) || editing(pi.base.bv)) ?
+		col_on : col_off;
 	Dimension const dim = dimension(*pi.base.bv);
 	int const x1 = x + dim.wid;
 	int const y0 = y + dim.des;

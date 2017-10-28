@@ -649,12 +649,12 @@ void mathed_deco_metrics(MetricsBase const & mb, Dimension & dim,
 void mathed_draw_deco(PainterInfo const & pi, double x, double y,
                       double w, double h, docstring const & name)
 {
-	double const t = pi.base.solidLineThickness();
 	w += mathed_deco_thickness(pi.base);
 	h += mathed_deco_thickness(pi.base);
 	if (name == ".") {
-		pi.pain.lineDouble(x + w/2, y, x + w/2, y + h,
-		                   Color_cursor, max(t/2, 1.), Painter::line_onoffdash);
+		pi.pain.lineDouble(x + w/2, y, x + w/2, y + h, Color_cursor,
+		                   pi.base.thinLineThickness(),
+		                   Painter::line_onoffdash);
 		return;
 	}
 
@@ -669,7 +669,7 @@ void mathed_draw_deco(PainterInfo const & pi, double x, double y,
 	int const r = mds->angle;
 	double const * d = mds->data;
 
-	if (h > 70 && (name == "(" || name == ")"))
+	if (h/w > 5 && (name == "(" || name == ")"))
 		d = parenthHigh;
 
 	Matrix mt(r, (int)w, (int)h);
@@ -688,6 +688,7 @@ void mathed_draw_deco(PainterInfo const & pi, double x, double y,
 		else
 			x += sign * (w - h);
 	};
+	double const t = pi.base.solidLineThickness();
 	for (int i = 0; d[i]; ) {
 		int code = int(d[i++]);
 		if (code & 1) {  // code == 1 || code == 3 || code == 5
@@ -713,7 +714,6 @@ void mathed_draw_deco(PainterInfo const & pi, double x, double y,
 			for (int j = 0; j < n; ++j) {
 				double xx = d[i++];
 				double yy = d[i++];
-//	     lyxerr << ' ' << xx << ' ' << yy << ' ';
 				if (code == 4 || code == 6)
 					sqmt.transform(xx, yy);
 				else
@@ -722,7 +722,6 @@ void mathed_draw_deco(PainterInfo const & pi, double x, double y,
 					move_square(xx, yy);
 				xp[j] = x + xx;
 				yp[j] = y + yy;
-				//  lyxerr << "P[" << j ' ' << xx << ' ' << yy << ' ' << x << ' ' << y << ']';
 			}
 			pi.pain.linesDouble(xp, yp, n, pi.base.font.color(), t);
 		}
@@ -733,7 +732,7 @@ void mathed_draw_deco(PainterInfo const & pi, double x, double y,
 void mathed_draw_marker(PainterInfo const & pi, int x, int y, int w, int h,
                         ColorCode col)
 {
-	double const t = max(pi.base.solidLineThickness()/2, 1.);
+	double const t = pi.base.thinLineThickness();
 	double const l = max(pi.base.mu(2), 3);
 	double const x0 = round((w > 0) ? x - t/2 : x + t/2 - 1);
 	double const y0 = round((h > 0) ? y - t/2 - 1 : y + t/2);

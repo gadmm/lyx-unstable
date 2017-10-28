@@ -42,9 +42,16 @@ MetricsBase::MetricsBase(BufferView * b, FontInfo f, int w)
 {
 	if (!b)
 		return;
-	solid_line_thickness_ = b->inPixelsDouble(Length(0.4, Length::PT));
+	solid_line_thickness_ = b->inPixelsDouble(Length(0.5, Length::PT));
 	solid_line_offset_ = 1 + solid_line_thickness_ / 2;
 	dotted_line_thickness_ = b->inPixelsDouble(Length(0.8, Length::PT));
+}
+
+
+double MetricsBase::thinLineThickness() const
+{
+	double const t = 0.55 * solid_line_thickness_;
+	return (t < 1) ? min(1., solid_line_thickness_) : t;
 }
 
 

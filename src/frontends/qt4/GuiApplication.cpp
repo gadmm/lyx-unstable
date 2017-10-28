@@ -397,7 +397,10 @@ ImgMap sorted_img_map[] = {
 	{ "varSigma", "varsigma2" },
 	{ "varTheta", "vartheta2" },
 	{ "varUpsilon", "varupsilon2" },
-	{ "varXi", "varxi2" }
+	{ "varXi", "varxi2" },
+	{ "xLeftarrow", "xleftarrow2" },
+	{ "xLeftrightarrow", "xleftrightarrow2" },
+	{ "xRightarrow", "xrightarrow2" }
 };
 
 

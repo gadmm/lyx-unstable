@@ -511,13 +511,16 @@ ToolbarSet
 		Item "xleftarrow" "math-insert \xleftarrow"
 		Item "xrightarrow" "math-insert \xrightarrow"
 		Item "xleftrightarrow" "math-insert \xleftrightarrow"
-		Item "xmapsto" "math-insert \xmapsto"
-		Item "xhookleftarrow" "math-insert \xhookleftarrow"
-		Item "xhookrightarrow" "math-insert \xhookrightarrow"
+		Item "xLeftarrow" "math-insert \xLeftarrow"
+		Item "xRightarrow" "math-insert \xRightarrow"
+		Item "xLeftrightarrow" "math-insert \xLeftrightarrow"
 		Item "xleftharpoonup" "math-insert \xleftharpoonup"
 		Item "xrightharpoonup" "math-insert \xrightharpoonup"
 		Item "xleftharpoondown" "math-insert \xleftharpoondown"
 		Item "xrightharpoondown" "math-insert \xrightharpoondown"
+		Item "xhookleftarrow" "math-insert \xhookleftarrow"
+		Item "xhookrightarrow" "math-insert \xhookrightarrow"
+		Item "xmapsto" "math-insert \xmapsto"
 #		Item "arrowvert" "math-insert \arrowvert" # not really an arrow
 #		Item "Arrowvert" "math-insert \Arrowvert" # not really an arrow
 	End

@@ -309,22 +309,27 @@ void RowPainter::paintDepthBar() const
 		next_depth = pars_[pit2].getDepth();
 	}
 
+	double const t0 = pi_.base.thinLineThickness();
+	double const t1 = pi_.base.solidLineThickness();
+	double const w = max(3., round(3 * t0 + 0.45));
 	for (depth_type i = 1; i <= depth; ++i) {
-		int const w = nestMargin() / 5;
-		int x = int(xo_) + w * i;
-		// only consider the changebar space if we're drawing outermost text
-		if (text_.isMainText())
-			x += changebarMargin();
+		double const x = round(xo_ + w * i +
+		                       // only consider the changebar space if we're
+		                       // drawing outermost text
+		                       (text_.isMainText() ? changebarMargin() : 0));
 
-		int const starty = yo_ - row_.ascent();
-		int const h =  row_.height() - 1 - (i - next_depth - 1) * 3;
+		double const starty = yo_ - row_.ascent();
+		double const h = row_.height() - 1 -
+			(i > next_depth ? (i - next_depth - 1) * w : 0);
 
-		pi_.pain.line(x, starty, x, starty + h, Color_depthbar);
-
+		pi_.pain.lineDouble(x, starty, x, starty + h,
+		                    Color_depthbar, t0);
 		if (i > prev_depth)
-			pi_.pain.fillRectangle(x, starty, w, 2, Color_depthbar);
+			pi_.pain.lineDouble(x + t0, starty, x + w, starty,
+			                    Color_depthbar, t1);
 		if (i > next_depth)
-			pi_.pain.fillRectangle(x, starty + h, w, 2, Color_depthbar);
+			pi_.pain.lineDouble(x + t0, starty + h, x + w, starty + h,
+			                    Color_depthbar, t1);
 	}
 }
 

@@ -278,8 +278,11 @@ void RowPainter::paintAppendix() const
 	if (par_.params().startOfAppendix())
 		y += 2 * defaultRowHeight();
 
-	pi_.pain.line(1, y, 1, yo_ + row_.height(), Color_appendix);
-	pi_.pain.line(tm_.width() - 2, y, tm_.width() - 2, yo_ + row_.height(), Color_appendix);
+	double const t = pi_.base.solidLineThickness();
+	pi_.pain.lineDouble(1, y, 1, yo_ + row_.height(), Color_appendix, t);
+	pi_.pain.lineDouble(tm_.width() - 2, y,
+	                    tm_.width() - 2, yo_ + row_.height(),
+	                    Color_appendix, t);
 }
 
 
@@ -339,13 +342,15 @@ void RowPainter::paintAppendixStart(int y) const
 	docstring const label = _("Appendix");
 	theFontMetrics(pb_font).rectText(label, w, a, d);
 
-	int const text_start = int(xo_ + (tm_.width() - w) / 2);
+	double const t = pi_.base.solidLineThickness();
+	double const text_start = xo_ + (tm_.width() - w) / 2;
 	int const text_end = text_start + w;
 
 	pi_.pain.rectText(text_start, y + d, label, pb_font, Color_none, Color_none);
 
-	pi_.pain.line(int(xo_ + 1), y, text_start, y, Color_appendix);
-	pi_.pain.line(text_end, y, int(xo_ + tm_.width() - 2), y, Color_appendix);
+	pi_.pain.lineDouble(xo_ + t, y, text_start - t, y, Color_appendix, t);
+	pi_.pain.lineDouble(text_end + t, y,
+	                    xo_ + tm_.width() - t, y, Color_appendix, t);
 }
 
 

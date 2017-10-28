@@ -299,17 +299,18 @@ void InsetSpecialChar::draw(PainterInfo & pi, int x, int y) const
 			theFontMetrics(font);
 
 		// A triangle the width and height of an 'x'
-		int w = fm.width(char_type('x'));
-		int ox = fm.width(char_type(' ')) + x;
-		int h = fm.ascent(char_type('x'));
-		int xp[4], yp[4];
+		double w = fm.width(char_type('x'));
+		double ox = fm.width(char_type(' ')) + x;
+		double h = fm.ascent(char_type('x'));
+		double xp[4], yp[4];
 
 		xp[0] = ox;     yp[0] = y;
 		xp[1] = ox;     yp[1] = y - h;
 		xp[2] = ox + w; yp[2] = y - h/2;
 		xp[3] = ox;     yp[3] = y;
 
-		pi.pain.lines(xp, yp, 4, Color_special);
+		pi.pain.linesDouble(xp, yp, 4, Color_special,
+		                    pi.base.solidLineThickness());
 		break;
 	}
 	case SLASH:

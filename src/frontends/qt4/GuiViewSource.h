@@ -19,6 +19,8 @@
 #include "Buffer.h"
 #include "DockView.h"
 
+#include "support/unique_ptr.h"
+
 #include <QDockWidget>
 #include <QString>
 #include <QTimer>
@@ -36,7 +38,7 @@ namespace frontend {
 
 class GuiViewSource;
 class LaTeXHighlighter;
-
+class ScrollRetarder;
 
 class ViewSourceWidget : public QWidget, public Ui::ViewSourceUi
 {
@@ -132,10 +134,6 @@ private Q_SLOTS:
 	/// update content
 	void realUpdateView();
 	//
-	void scrollingStarted();
-	//
-	void scrollingFinished();
-	//
 	void timerFinished();
 
 private:
@@ -143,10 +141,8 @@ private:
 	ViewSourceWidget * widget_;
 	///
 	QTimer * update_timer_;
-	/// are we scrolling?
-	bool scrolling_ = false;
-	/// do we need to update after scrolling?
-	bool update_after_scrolling_ = false;
+	/// perform updates only when not scrolling
+	std::unique_ptr<ScrollRetarder> update_retarder_;
 };
 
 } // namespace frontend

@@ -382,7 +382,8 @@ GuiViewSource::GuiViewSource(GuiView & parent,
 		Qt::DockWidgetArea area, Qt::WindowFlags flags)
 	: DockView(parent, "view-source", qt_("Code Preview"), area, flags),
 	  widget_(new ViewSourceWidget(this)),
-	  update_timer_(new QTimer(this))
+	  update_timer_(new QTimer(this)),
+	  update_retarder_(parent.makeScrollRetarder([this](){ realUpdateView(); }))
 {
 	setWidget(widget_);
 
@@ -390,10 +391,6 @@ GuiViewSource::GuiViewSource(GuiView & parent,
 	update_timer_->setSingleShot(true);
 	connect(update_timer_, &QTimer::timeout,
 	        this, &GuiViewSource::timerFinished);
-	connect(&parent, &GuiView::scrollingStarted,
-	        this, &GuiViewSource::scrollingStarted);
-	connect(&parent, &GuiView::scrollingFinished,
-	        this, &GuiViewSource::scrollingFinished);
 
 	connect(widget_, &ViewSourceWidget::needUpdate,
 	        this, &GuiViewSource::scheduleUpdateNow);
@@ -461,27 +458,9 @@ void GuiViewSource::restoreSession()
 }
 
 
-void GuiViewSource::scrollingStarted()
-{
-	scrolling_ = true;
-	update_after_scrolling_ = false;
-}
-
-
-void GuiViewSource::scrollingFinished()
-{
-	scrolling_ = false;
-	if (update_after_scrolling_)
-		realUpdateView();
-	update_after_scrolling_ = false;
-}
-
-
 void GuiViewSource::timerFinished()
 {
-	update_after_scrolling_ = scrolling_;
-	if (!scrolling_)
-		realUpdateView();
+	update_retarder_->activate();
 }
 
 

@@ -17,6 +17,7 @@
 
 #include "frontends/Delegates.h"
 
+#include "support/unique_ptr.h"
 #include "support/strfwd.h"
 
 #include <QMainWindow>
@@ -47,6 +48,7 @@ class Dialog;
 class LayoutBox;
 class GuiToolbar;
 class GuiWorkArea;
+class ScrollRetarder;
 class TabWorkArea;
 class TocModels;
 class ToolbarInfo;
@@ -147,6 +149,7 @@ public:
 
 	/// updates the possible layouts selectable
 	void updateLayoutList();
+	/// Update toolbars. This is delayed until scrolling is finished.
 	void updateToolbars();
 
 	///
@@ -211,6 +214,12 @@ public:
 
 	/// Current ratio between physical pixels and device-independent pixels
 	double pixelRatio() const;
+
+	/// Creates a new object that calls callback when activate()d, as soon as
+	/// scrolling is at rest. The returned object can call callback as long as
+	/// it lives, so it should be owned by the callee.
+	std::unique_ptr<ScrollRetarder>
+	makeScrollRetarder(std::function<void()> callback) const;
 
 Q_SIGNALS:
 	void closing(int);
@@ -293,6 +302,9 @@ private:
 
 	///
 	bool goToFileRow(std::string const & argument);
+
+	/// called by update_toolbars_retarder_
+	void doUpdateToolbars();
 
 	///
 	class GuiViewPrivate;
@@ -485,6 +497,9 @@ private:
 
 	// developer mode
 	bool devel_mode_;
+
+	//
+	unique_ptr<ScrollRetarder> const update_toolbars_retarder_;
 };
 
 
@@ -497,6 +512,42 @@ public:
 public Q_SLOTS:
 	void showMenu(QPoint const &) { exec(QCursor::pos()); }
 };
+
+
+class ScrollRetarder : public QObject
+{
+	Q_OBJECT
+public:
+	ScrollRetarder(std::function<void()> callback) : callback_(move(callback))
+	{};
+
+	void activate()
+	{
+		if (scrolling_)
+			active_ = true;
+		else
+			callback_();
+	}
+
+Q_SIGNALS:
+	void doNow();
+
+public Q_SLOTS:
+	void scrollingStarted() { scrolling_ = true; }
+
+	void scrollingFinished() {
+		scrolling_ = false;
+		if (active_)
+			callback_();
+		active_ = false;
+	}
+
+private:
+	bool scrolling_ = false;
+	bool active_ = false;
+	std::function<void()> const callback_;
+};
+
 
 } // namespace frontend
 } // namespace lyx

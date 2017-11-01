@@ -525,22 +525,28 @@ void Inset::drawBackground(PainterInfo & pi, int x, int y) const
 }
 
 
-void Inset::drawMarkers(PainterInfo & pi, int x, int y,
-                        ColorCode col_on, ColorCode col_off,
-                        bool upper) const
+void Inset::drawMarkers(PainterInfo & pi, int x0, int y0, int x1, int y1,
+                        Color col_on, Color col_off, bool upper) const
 {
-	ColorCode pen_color = (mouseHovered(pi.base.bv) || editing(pi.base.bv)) ?
+	Color pen_color = (mouseHovered(pi.base.bv) || editing(pi.base.bv)) ?
 		col_on : col_off;
-	Dimension const dim = dimension(*pi.base.bv);
-	int const x1 = x + dim.wid;
-	int const y0 = y + dim.des;
-	mathed_draw_marker(pi, x,  y0,  1, -1, pen_color);
+	mathed_draw_marker(pi, x0,  y0,  1, -1, pen_color);
 	mathed_draw_marker(pi, x1, y0, -1, -1, pen_color);
 	if (!upper)
 		return;
-	int const y1 = y - dim.asc;
-	mathed_draw_marker(pi, x,  y1,  1, 1, pen_color);
+	mathed_draw_marker(pi, x0,  y1,  1, 1, pen_color);
 	mathed_draw_marker(pi, x1, y1, -1, 1, pen_color);
+}
+
+
+void Inset::drawMarkers(PainterInfo & pi, int x, int y,
+                        Color col_on, Color col_off, bool upper) const
+{
+	Dimension const dim = dimension(*pi.base.bv);
+	int const x1 = x + dim.wid;
+	int const y0 = y + dim.des;
+	int const y1 = y - dim.asc;
+	drawMarkers(pi, x, y0, x1, y1, col_on, col_off, upper);
 }
 
 

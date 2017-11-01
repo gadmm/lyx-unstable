@@ -732,7 +732,7 @@ void mathed_draw_deco(PainterInfo const & pi, double x, double y,
 
 
 void mathed_draw_marker(PainterInfo const & pi, int x, int y, int w, int h,
-                        ColorCode col)
+                        Color col)
 {
 	double const t = pi.base.thinLineThickness();
 	double const l = max(pi.base.mu(2), 3);

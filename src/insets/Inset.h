@@ -211,9 +211,13 @@ public:
 
 	/// draw two angular markers
 	/// upper: whether to draw all four markers or only the two lower ones.
+	/// x0, y0, x1, y1: coordinates of bottom-left and top-right corners
+	void drawMarkers(PainterInfo & pi, int x0, int y0, int x1, int y1,
+	                 Color col_on, Color col_off, bool upper = false) const;
+	/// x, y: coordinates of the inset. Draws at the edges of the inset.
 	void drawMarkers(PainterInfo & pi, int x, int y,
-	                 ColorCode col_on = Color_mathframe,
-	                 ColorCode col_off = Color_mathcorners,
+	                 Color col_on = Color_mathframe,
+	                 Color col_off = Color_mathcorners,
 	                 bool upper = false) const;
 	/// draw inset decoration if necessary.
 	/// This can use \c drawMarkers() for example.

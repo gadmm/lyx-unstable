@@ -16,7 +16,7 @@
 #include "MathParser_flags.h"
 #include "support/strfwd.h"
 
-#include "ColorCode.h"
+#include "Color.h"
 
 namespace lyx {
 
@@ -58,7 +58,7 @@ void mathed_draw_deco(PainterInfo const & pi, double x, double y, double w,
                       double h, docstring const & name);
 
 void mathed_draw_marker(PainterInfo const & pi, int x, int y, int w, int h,
-                        ColorCode col);
+                        Color col);
 
 void mathed_string_dim(FontInfo const & font,
 		       docstring const & s,

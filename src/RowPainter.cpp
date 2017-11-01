@@ -492,18 +492,19 @@ void RowPainter::paintLast() const
 	if (change.changed()) {
 		FontMetrics const & fm =
 			theFontMetrics(pi_.base.bv->buffer().params().getFont());
-		int const length = fm.maxAscent() / 2;
+		double const length = round(fm.maxAscent() / 2);
+		double const t = 2 * pi_.base.solidLineThickness();
 		Color col = change.color();
 
-		pi_.pain.line(int(x_) + 1, yo_ + 2, int(x_) + 1, yo_ + 2 - length, col,
-			   Painter::line_solid, 3);
+		pi_.pain.lineDouble(int(x_) + 1, yo_ + 2, int(x_) + 1, yo_ + 2 - length,
+		                    col, t);
 
 		if (change.deleted()) {
-			pi_.pain.line(int(x_) + 1 - length, yo_ + 2, int(x_) + 1 + length,
-				yo_ + 2, col, Painter::line_solid, 3);
+			pi_.pain.lineDouble(int(x_) + 1 - length, yo_ + 2, int(x_) + 1 + length,
+				yo_ + 2, col, t);
 		} else {
-			pi_.pain.line(int(x_) + 1 - length, yo_ + 2, int(x_) + 1,
-				yo_ + 2, col, Painter::line_solid, 3);
+			pi_.pain.lineDouble(int(x_) + 1 - length, yo_ + 2, int(x_) + 1,
+				yo_ + 2, col, t);
 		}
 	}
 

@@ -890,26 +890,26 @@ void BufferView::scrollToCursor(DocIterator const & dit, bool const recenter)
 		if (recenter)
 			scroll(ypos - height_/2);
 
-		// We try to visualize the whole row, if the row height is larger than
-		// the screen height, we scroll to a heuristic value of height_ / 4.
-		// FIXME: This heuristic value should be replaced by a recursive search
-		// for a row in the inset that can be visualized completely.
 		else if (row_dim.height() > height_) {
+			// We try to visualize the whole row, if the row height is larger than
+			// the screen height, we scroll to a heuristic value of height_ / 4.
+			// FIXME: This heuristic value should be replaced by a recursive search
+			// for a row in the inset that can be visualized completely.
 			if (ypos < defaultRowHeight())
 				scroll(ypos - height_ / 4);
 			else if (ypos > height_ - defaultRowHeight())
 				scroll(ypos - 3 * height_ / 4);
 		}
 
-		// If the top part of the row falls of the screen, we scroll
-		// up to align the top of the row with the top of the screen.
 		else if (ypos - row_dim.ascent() < 0 && ypos < height_) {
+			// If the top part of the row falls of the screen, we scroll
+			// up to align the top of the row with the top of the screen.
 			int ynew = row_dim.ascent();
 			scrollUp(ynew - ypos);
 		}
 
-		// If the bottom of the row falls of the screen, we scroll down.
 		else if (ypos + row_dim.descent() > height_ && ypos > 0) {
+			// If the bottom of the row falls of the screen, we scroll down.
 			int ynew = height_ - row_dim.descent();
 			scrollDown(ypos - ynew);
 		}
@@ -919,7 +919,6 @@ void BufferView::scrollToCursor(DocIterator const & dit, bool const recenter)
 	}
 
 	// metrics for the paragraph are not known
-
 	bool const upwards = bot_pit < d->anchor_pit_;
 
 	// fix inline completion position
@@ -939,7 +938,7 @@ void BufferView::scrollToCursor(DocIterator const & dit, bool const recenter)
 	else
 		scroll_value = height_ / 4;
 
-	int const fake_travel = (upwards ? -2 : 2) * height_;
+	int const fake_travel = (upwards ? -1 : 1) * fakeTravel();
 	d->anchor_ypos_ = scroll_value + fake_travel;
 	updateMetrics();
 	d->wa_.scrollTo(fake_travel);
@@ -2661,13 +2660,16 @@ void BufferView::updateMetrics()
 		<< " anchor pit = " << d->anchor_pit_
 		<< " anchor ypos = " << d->anchor_ypos_);
 
+	// We make sure to redo the metrics up to the paragraph at cursor if not too
+	// far away.
+	int const cur_pit = d->cursor_.bottom().pit();
+
 	// Redo paragraphs above anchor if necessary.
 	int y1 = d->anchor_ypos_ - anchor_pm.ascent();
 	// We are now just above the anchor paragraph.
 	pit_type pit1 = d->anchor_pit_ - 1;
-	for (; pit1 >= 0 && y1 >= 0; --pit1) {
-		tm.redoParagraph(pit1);
-		ParagraphMetrics & pm = tm.par_metrics_[pit1];
+	for (; pit1 >= 0 && y1 >= ((pit1 >= cur_pit) ? -fakeTravel() : 0); --pit1) {
+		ParagraphMetrics & pm = tm.parMetrics(pit1, clear_metrics);
 		y1 -= pm.descent();
 		// Save the paragraph position in the cache.
 		pm.setPosition(y1);
@@ -2679,9 +2681,9 @@ void BufferView::updateMetrics()
 	int y2 = d->anchor_ypos_ + anchor_pm.descent();
 	// We are now just below the anchor paragraph.
 	pit_type pit2 = d->anchor_pit_ + 1;
-	for (; pit2 < npit && y2 <= height_; ++pit2) {
-		tm.redoParagraph(pit2);
-		ParagraphMetrics & pm = tm.par_metrics_[pit2];
+	for (; pit2 < npit &&
+		     y2 <= height_ + ((pit2 <= cur_pit) ? fakeTravel() : 0); ++pit2) {
+		ParagraphMetrics & pm = tm.parMetrics(pit2, clear_metrics);
 		y2 += pm.ascent();
 		// Save the paragraph position in the cache.
 		pm.setPosition(y2);
@@ -2694,8 +2696,8 @@ void BufferView::updateMetrics()
 		<< " anchor ypos = " << d->anchor_ypos_
 		<< " y1 = " << y1
 		<< " y2 = " << y2
-		<< " pit1 = " << pit1
-		<< " pit2 = " << pit2);
+		<< " pit1 = " << pit1 + 1
+		<< " pit2 = " << pit2 - 1);
 
 	d->update_strategy_ = FullScreenUpdate;
 

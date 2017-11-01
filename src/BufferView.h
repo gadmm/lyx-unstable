@@ -394,6 +394,8 @@ private:
 
 	///
 	void updateDocumentClass(DocumentClassConstPtr olddc);
+	/// Length of animated scrolling when centering on a cursor far away.
+	int fakeTravel() const { return 2 * height_; }
 	///
 	int width_;
 	///

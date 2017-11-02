@@ -2973,7 +2973,12 @@ namespace {
 
 bool sliceInRow(CursorSlice const & cs, Text const * text, Row const & row)
 {
-	return !cs.empty() && cs.text() == text && cs.pit() == row.pit()
+	return !cs.empty()
+		/// FIXME: cs.inset_ may be dangling (regression at e7fdce0b). We
+		///disable the test for now. Let us cross fingers and hope that the
+		///resulting heuristic is good enough.
+		//&& cs.text() == text
+		&& cs.pit() == row.pit()
 		&& row.pos() <= cs.pos() && cs.pos() <= row.endpos();
 }
 

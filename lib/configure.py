@@ -9,7 +9,7 @@
 # Full author contact details are available in file CREDITS.
 
 from __future__ import print_function
-import glob, logging, os, re, shutil, subprocess, sys, stat
+import glob, logging, os, errno, re, shutil, subprocess, sys, stat
 
 # set up logging
 logging.basicConfig(level = logging.DEBUG,
@@ -52,8 +52,13 @@ def removeFiles(filenames):
         try:
             os.remove(file)
             logger.debug('Removing file %s' % file)
-        except:
-            logger.debug('Failed to remove file %s' % file)
+        except OSError as e:
+            if e.errno == errno.ENOENT: # no such file or directory
+                logger.debug('No need to remove file %s (it does not exists)' % file)
+            elif e.errno == errno.EISDIR: # is a directory
+                logger.debug('Failed to remove file %s (it is a directory)' % file)
+            else:
+                logger.debug('Failed to remove file %s' % file)
             pass
 
 
@@ -592,6 +597,10 @@ def checkModule(module):
       return False
 
 
+texteditors = ['xemacs', 'gvim', 'kedit', 'kwrite', 'kate',
+               'nedit', 'gedit', 'geany', 'leafpad', 'mousepad',
+               'xed', 'notepad', 'WinEdt', 'WinShell', 'PSPad']
+
 def checkFormatEntries(dtl_tools):
     ''' Check all formats (\Format entries) '''
     checkViewerEditor('a Tgif viewer and editor', ['tgif'],
@@ -636,9 +645,7 @@ def checkFormatEntries(dtl_tools):
         ['gimp-remote', 'gimp'], rc_entry = [imageformats])
     addToRC(imageformats % ((iv, ie)*10))
     #
-    checkViewerEditor('a text editor',
-        ['xemacs', 'gvim', 'kedit', 'kwrite', 'kate',
-         'nedit', 'gedit', 'geany', 'leafpad', 'mousepad', 'xed', 'notepad'],
+    checkViewerEditor('a text editor', texteditors,
         rc_entry = [r'''\Format asciichess asc    "Plain text (chess output)"  "" ""	"%%"	""	""
 \Format docbook    sgml    DocBook                B  ""	"%%"	"document,menu=export"	""
 \Format docbook-xml xml   "DocBook (XML)"         "" ""	"%%"	"document,menu=export"	"application/docbook+xml"
@@ -651,7 +658,6 @@ def checkFormatEntries(dtl_tools):
 \Format r          R      "R/S code"              "" "" "%%"	"document,menu=export"	""
 \Format knitr      Rnw    "Rnw (knitr)"           "" "" "%%"	"document,menu=export"	""
 \Format knitr-ja   Rnw    "Rnw (knitr, Japanese)" "" "" "%%"	"document,menu=export"	""
-\Format lilypond   ly     "LilyPond music"        "" ""	"%%"	"vector"	"text/x-lilypond"
 \Format lilypond-book    lytex "LilyPond book (LaTeX)"   "" ""	"%%"	"document,menu=export"	""
 \Format lilypond-book-ja lytex "LilyPond book (pLaTeX)"   "" ""	"%%"	"document,menu=export"	""
 \Format latex      tex    "LaTeX (plain)"         L  ""	"%%"	"document,menu=export"	"text/x-tex"
@@ -665,6 +671,10 @@ def checkFormatEntries(dtl_tools):
 \Format text4      txt    "Plain text (catdvi)"   "" ""	"%%"	"document"	""
 \Format textparagraph txt "Plain Text, Join Lines" "" ""	"%%"	"document"	""
 \Format beamer.info pdf.info   "Info (Beamer)"         "" ""   "%%"    "document,menu=export"	""''' ])
+   #Lilypond files have special editors, but fall back to plain text editors
+    checkViewerEditor('a lilypond editor',
+        ['frescobaldi'] + texteditors,
+        rc_entry = [r'''\Format lilypond   ly     "LilyPond music"        "" ""	"%%"	"vector"	"text/x-lilypond"''' ])
    #Spreadsheets using ssconvert from gnumeric
     checkViewer('gnumeric spreadsheet software', ['gnumeric'],
       rc_entry = [r'''\Format gnumeric gnumeric "Gnumeric spreadsheet" "" ""    "%%"   "document"	"application/x-gnumeric"
@@ -678,10 +688,8 @@ def checkFormatEntries(dtl_tools):
  #
     checkEditor('a BibTeX editor', ['jabref', 'JabRef',
         'pybliographic', 'bibdesk', 'gbib', 'kbib',
-        'kbibtex', 'sixpack', 'bibedit', 'tkbibtex'
-        'xemacs', 'gvim', 'kedit', 'kwrite', 'kate',
-        'jedit', 'TeXnicCenter', 'WinEdt', 'WinShell', 'PSPad',
-        'nedit', 'gedit', 'notepad', 'geany', 'leafpad', 'mousepad'],
+        'kbibtex', 'sixpack', 'bibedit', 'tkbibtex', 'TeXnicCenter'] +
+        texteditors,
         rc_entry = [r'''\Format bibtex bib    "BibTeX"         "" ""	"%%"	""	"text/x-bibtex"''' ])
     #
     #checkProg('a Postscript interpreter', ['gs'],
@@ -1006,16 +1014,18 @@ def checkConverterEntries():
 \converter tgif       png        "tgif -print -color -png -o $$d $$i"	""
 \converter tgif       pdf6       "tgif -print -color -pdf -stdout $$i > $$o"	""'''])
     #
-    checkProg('a WMF -> EPS converter', ['metafile2eps $$i $$o', 'wmf2eps -o $$o $$i', inkscape_name + ' --file=$$p$$i --export-area-drawing --without-gui --export-eps=$$p$$o'],
+    checkProg('a WMF -> EPS converter', ['metafile2eps $$i $$o', 'wmf2eps -o $$o $$i', inkscape_name + ' --file=%s$$i --export-area-drawing --without-gui --export-eps=%s$$o'
+               % (inkscape_fileprefix, inkscape_fileprefix)],
         rc_entry = [ r'\converter wmf        eps        "%%"	""'])
     #
-    checkProg('an EMF -> EPS converter', ['metafile2eps $$i $$o', 'wmf2eps -o $$o $$i', inkscape_name + ' --file=$$p$$i --export-area-drawing --without-gui --export-eps=$$p$$o'],
+    checkProg('an EMF -> EPS converter', ['metafile2eps $$i $$o', inkscape_name + ' --file=%s$$i --export-area-drawing --without-gui --export-eps=%s$$o'
+               % (inkscape_fileprefix, inkscape_fileprefix)],
         rc_entry = [ r'\converter emf        eps        "%%"	""'])
     #
-    checkProg('a WMF -> PDF converter', [inkscape_name + ' --file=$$p$$i --export-area-drawing --without-gui --export-pdf=$$p$$o'],
+    checkProg('a WMF -> PDF converter', [inkscape_name + ' --file=%s$$i --export-area-drawing --without-gui --export-pdf=%s$$o' % (inkscape_fileprefix, inkscape_fileprefix)],
         rc_entry = [ r'\converter wmf        pdf6        "%%"	""'])
     #
-    checkProg('an EMF -> PDF converter', [inkscape_name + ' --file=$$p$$i --export-area-drawing --without-gui --export-pdf=$$p$$o'],
+    checkProg('an EMF -> PDF converter', [inkscape_name + ' --file=%s$$i --export-area-drawing --without-gui --export-pdf=%s$$o' % (inkscape_fileprefix, inkscape_fileprefix)],
         rc_entry = [ r'\converter emf        pdf6        "%%"	""'])
     # Only define a converter to pdf6 for graphics
     checkProg('an EPS -> PDF converter', ['epstopdf'],
@@ -1061,17 +1071,20 @@ def checkConverterEntries():
         rc_entry = [ r'\converter svg        svgz       "%%"	""'])
     # Only define a converter to pdf6 for graphics
     # Prefer rsvg-convert over inkscape since it is faster (see http://www.lyx.org/trac/ticket/9891)
-    checkProg('a SVG -> PDF converter', ['rsvg-convert -f pdf -o $$o $$i', inkscape_name + ' --file=$$p$$i --export-area-drawing --without-gui --export-pdf=$$p$$o'],
+    checkProg('a SVG -> PDF converter', ['rsvg-convert -f pdf -o $$o $$i', inkscape_name + ' --file=%s$$i --export-area-drawing --without-gui --export-pdf=%s$$o'
+               % (inkscape_fileprefix, inkscape_fileprefix)],
         rc_entry = [ r'''\converter svg        pdf6       "%%"    ""
 \converter svgz       pdf6       "%%"    ""'''],
         path = ['', inkscape_path])
     #
-    checkProg('a SVG -> EPS converter', ['rsvg-convert -f ps -o $$o $$i', inkscape_name + ' --file=$$p$$i --export-area-drawing --without-gui --export-eps=$$p$$o'],
+    checkProg('a SVG -> EPS converter', ['rsvg-convert -f ps -o $$o $$i', inkscape_name + ' --file=%s$$i --export-area-drawing --without-gui --export-eps=%s$$o'
+               % (inkscape_fileprefix, inkscape_fileprefix)],
         rc_entry = [ r'''\converter svg        eps        "%%"    ""
 \converter svgz       eps        "%%"    ""'''],
         path = ['', inkscape_path])
     #
-    checkProg('a SVG -> PNG converter', ['rsvg-convert -f png -o $$o $$i', inkscape_name + ' --without-gui --file=$$i --export-png=$$o'],
+    checkProg('a SVG -> PNG converter', ['rsvg-convert -f png -o $$o $$i', inkscape_name + ' --without-gui --file=%s$$i --export-png=%s$$o'
+               % (inkscape_fileprefix, inkscape_fileprefix)],
         rc_entry = [ r'''\converter svg        png        "%%"    "",
 \converter svgz       png        "%%"    ""'''],
         path = ['', inkscape_path])
@@ -1842,6 +1855,11 @@ Format %i
     java = checkProg('a java interpreter', ['java'])[1]
     perl = checkProg('a perl interpreter', ['perl'])[1]
     (inkscape_path, inkscape_name) = os.path.split(checkInkscape())
+    # On MacOSX, Inkscape requires full path file arguments. This
+    # is not needed on Linux and Win and even breaks the latter.
+    inkscape_fileprefix = ""
+    if sys.platform == 'darwin':
+        inkscape_fileprefix = "$$p"
     checkFormatEntries(dtl_tools)
     checkConverterEntries()
     (chk_docbook, bool_docbook, docbook_cmd) = checkDocBook()

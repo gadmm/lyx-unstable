@@ -16,6 +16,15 @@ Format 65
 Style "In Preamble"
 	CopyStyle Standard
 	Category FrontMatter
+	Margin           Static
+	LabelType        Static
+	LabelSep         xx
+	LabelString      "In Preamble:"
+	LeftMargin       "In Preamble:"
+	LabelFont
+		Family         Roman
+		Color          latex
+	EndFont
 	InPreamble 1
 	ForceLocal -1
 End
@@ -23,6 +32,15 @@ End
 Style "In Title"
 	CopyStyle Standard
 	Category FrontMatter
+	Margin           Static
+	LabelType        Static
+	LabelSep         xx
+	LabelString      "In Title:"
+	LeftMargin       "In Title:"
+	LabelFont
+		Family         Roman
+		Color          latex
+	EndFont
 	InTitle 1
 	ForceLocal -1
 End

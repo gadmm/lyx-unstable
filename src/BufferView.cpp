@@ -2684,7 +2684,7 @@ void BufferView::updateMetrics(Update::flags & update_flags)
 	// We are now just above the anchor paragraph.
 	pit_type pit1 = d->anchor_pit_ - 1;
 	for (; pit1 >= 0 && y1 >= ((pit1 >= cur_pit) ? -fakeTravel() : 0); --pit1) {
-		ParagraphMetrics & pm = tm.parMetrics(pit1, clear_metrics);
+		ParagraphMetrics & pm = tm.parMetrics(pit1, true);
 		y1 -= pm.descent();
 		// Save the paragraph position in the cache.
 		pm.setPosition(y1);
@@ -2698,7 +2698,7 @@ void BufferView::updateMetrics(Update::flags & update_flags)
 	pit_type pit2 = d->anchor_pit_ + 1;
 	for (; pit2 < npit &&
 		     y2 <= height_ + ((pit2 <= cur_pit) ? fakeTravel() : 0); ++pit2) {
-		ParagraphMetrics & pm = tm.parMetrics(pit2, clear_metrics);
+		ParagraphMetrics & pm = tm.parMetrics(pit2, true);
 		y2 += pm.ascent();
 		// Save the paragraph position in the cache.
 		pm.setPosition(y2);

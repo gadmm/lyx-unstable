@@ -538,7 +538,7 @@ void BufferView::processUpdateFlags(Update::flags flags)
 	updateHoveredInset();
 
 	// Trigger a redraw.
-	buffer_.changed(false);
+	d->wa_.scheduleRedraw(false);
 }
 
 

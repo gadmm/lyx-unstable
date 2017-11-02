@@ -1455,8 +1455,19 @@ dist_imagesmath_DATA = \
 	images/math/xcancel.svgz \
 	images/math/xi.svgz \
 	images/math/xi2.svgz \
+	images/math/xhookleftarrow.svgz \
+	images/math/xhookrightarrow.svgz \
 	images/math/xleftarrow.svgz \
+	images/math/xleftarrow2.svgz \
+	images/math/xleftharpoondown.svgz \
+	images/math/xleftharpoonup.svgz \
+	images/math/xleftrightarrow.svgz \
+	images/math/xleftrightarrow2.svgz \
+	images/math/xmapsto.svgz \
 	images/math/xrightarrow.svgz \
+	images/math/xrightarrow2.svgz \
+	images/math/xrightharpoondown.svgz \
+	images/math/xrightharpoonup.svgz \
 	images/math/Ydown.svgz \
 	images/math/yen.svgz \
 	images/math/Yleft.svgz \

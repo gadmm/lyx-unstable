@@ -210,13 +210,15 @@ public:
 	virtual bool showInsetDialog(BufferView *) const;
 
 	/// draw two angular markers
-	void drawMarkers(PainterInfo & pi, int x, int y) const;
-	/// draw four angular markers
-	void drawMarkers2(PainterInfo & pi, int x, int y) const;
-	/// add space for markers
-	void metricsMarkers(Dimension & dim, int framesize = 1) const;
-	/// add space for markers
-	void metricsMarkers2(Dimension & dim, int framesize = 1) const;
+	/// upper: whether to draw all four markers or only the two lower ones.
+	/// x0, y0, x1, y1: coordinates of bottom-left and top-right corners
+	void drawMarkers(PainterInfo & pi, int x0, int y0, int x1, int y1,
+	                 Color col_on, Color col_off, bool upper = false) const;
+	/// x, y: coordinates of the inset. Draws at the edges of the inset.
+	void drawMarkers(PainterInfo & pi, int x, int y,
+	                 Color col_on = Color_mathframe,
+	                 Color col_off = Color_mathcorners,
+	                 bool upper = false) const;
 	/// draw inset decoration if necessary.
 	/// This can use \c drawMarkers() for example.
 	virtual void drawDecoration(PainterInfo &, int, int) const {}
@@ -301,7 +303,7 @@ public:
 		{ return false; }
 	/// return true if this inset is hovered (under mouse)
 	/// This is by now only used by mathed to draw corners
-	/// (Inset::drawMarkers() and Inset::drawMarkers2()).
+	/// (Inset::drawMarkers()).
 	/// Other insets do not have to redefine this function to
 	/// return the correct status of mouseHovered.
 	virtual bool mouseHovered(BufferView const *) const { return false; }

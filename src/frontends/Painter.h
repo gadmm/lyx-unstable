@@ -56,8 +56,6 @@ public:
 	/// possible line styles
 	enum line_style {
 		line_solid, //< solid line
-		line_solid_aliased, //< solid line, no anti-aliasing (used as a
-		                    // workaround to painting issues)
 		line_onoffdash //< dashes with spaces
 	};
 
@@ -79,8 +77,13 @@ public:
 	virtual ~Painter() {}
 
 	/// draw a line from point to point
+public:
 	virtual void line(int x1, int y1, int x2, int y2, Color,
-		line_style = line_solid, int line_width = thin_line) = 0;
+	                  line_style = line_solid, int line_width = thin_line) = 0;
+public:
+	virtual void lineDouble(double x1, double y1, double x2, double y2, Color col,
+	                        double line_width = thin_line,
+	                        line_style ls = line_solid) = 0;
 
 	/**
 	 * lines -  draw a set of lines
@@ -89,8 +92,11 @@ public:
 	 * @param np size of the points array
 	 */
 	virtual void lines(int const * xp, int const * yp, int np, Color,
-		fill_style = fill_none, line_style = line_solid,
-		int line_width = thin_line) = 0;
+	                   fill_style = fill_none, line_style = line_solid,
+	                   int line_width = thin_line) = 0;
+	virtual void linesDouble(double const * xp, double const * yp, int np,
+	                         Color col, double line_width = thin_line,
+	                         fill_style fs = fill_none, line_style ls = line_solid) = 0;
 
 	/**
 	 * path -  draw a path with bezier curves

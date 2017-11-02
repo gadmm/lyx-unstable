@@ -95,17 +95,18 @@ void InsetMathDelim::metrics(MetricsInfo & mi, Dimension & dim) const
 	Dimension dim0;
 	cell(0).metrics(mi, dim0);
 	Dimension t = theFontMetrics(mi.base.font).dimension('I');
-	int h0 = (t.asc + t.des) / 2;
-	int a0 = max(dim0.asc, t.asc)   - h0;
-	int d0 = max(dim0.des, t.des)  + h0;
-	dw_ = dim0.height() / 5;
-	if (dw_ > 8)
-		dw_ = 8;
-	if (dw_ < 4)
-		dw_ = 4;
-	dim.wid = dim0.width() + 2 * dw_;
+	int const h0 = axis_height(mi.base);
+	int a0 = max(dim0.asc, t.asc) - h0;
+	int d0 = max(dim0.des, t.des) + h0;
+	dw_ = dim0.height() / 8;
+	dw_ = max(dw_, mi.base.mu(4));
+	dw_ = min(dw_, mi.base.mu(10));
+	dw_ = max(dw_, 4);
+	dim.wid = dim0.width() + 2 * dw_ + 2;
 	dim.asc = max(a0, d0) + h0;
 	dim.des = max(a0, d0) - h0;
+	// no vertical increase: the height of ((())) remains constant
+	mathed_deco_metrics(mi.base, dim, 1, 0);
 }
 
 
@@ -113,11 +114,15 @@ void InsetMathDelim::draw(PainterInfo & pi, int x, int y) const
 {
 	Changer dummy = pi.base.changeEnsureMath();
 	Dimension const dim = dimension(*pi.base.bv);
-	int const b = y - dim.asc;
-	cell(0).draw(pi, x + dw_, y);
-	mathed_draw_deco(pi, x, b, dw_, dim.height(), left_);
-	mathed_draw_deco(pi, x + dim.width() - dw_,
-		b, dw_, dim.height(), right_);
+	double const t = pi.base.solidLineThickness();
+	double const dt = mathed_deco_thickness(pi.base);
+	double const h0 = axis_height(pi.base) / 2.;
+	double const b = y - dim.asc - h0/2;
+	cell(0).draw(pi, x + dw_ + 1 + (int) dt, y);
+	mathed_draw_deco(pi, x, b,
+	                 dw_ - dt/2, dim.height() - t - dt + h0, left_);
+	mathed_draw_deco(pi, x + dim.width() - dt/2 - dw_, b,
+	                 dw_ - dt/2, dim.height() - t - dt + h0, right_);
 }
 
 

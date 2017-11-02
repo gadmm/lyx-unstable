@@ -88,19 +88,24 @@ void InsetMathAMSArray::metrics(MetricsInfo & mi, Dimension & dim) const
 	Changer dummy2 = mi.base.changeEnsureMath();
 	Changer dummy = mi.base.changeArray();
 	InsetMathGrid::metrics(mi, dim);
+	mathed_deco_metrics(mi.base, dim);
 }
 
 
 void InsetMathAMSArray::draw(PainterInfo & pi, int x, int y) const
 {
 	Changer dummy2 = pi.base.changeEnsureMath();
+	{
+		Changer dummy = pi.base.changeArray();
+		InsetMathGrid::draw(pi, x, y);
+	}
 	Dimension const dim = dimension(*pi.base.bv);
 	int const yy = y - dim.ascent();
-	// Drawing the deco after changeStyle does not work
-	mathed_draw_deco(pi, x + 1, yy, 5, dim.height(), from_ascii(name_left()));
-	mathed_draw_deco(pi, x + dim.width() - 8, yy, 5, dim.height(), from_ascii(name_right()));
-	Changer dummy = pi.base.changeArray();
-	InsetMathGrid::draw(pi, x, y);
+	double const t = mathed_deco_thickness(pi.base);
+	mathed_draw_deco(pi, x + 1 - t/2, yy,
+	                 5, dim.height(), from_ascii(name_left()));
+	mathed_draw_deco(pi, x + dim.width() - t/2 - 8, yy,
+	                 5, dim.height(), from_ascii(name_right()));
 }
 
 

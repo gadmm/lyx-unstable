@@ -659,7 +659,7 @@ void InsetMathHull::draw(PainterInfo & pi, int x, int y) const
 	}
 
 	InsetMathGrid::draw(pi, xmath + 1, y);
-	drawMarkers2(pi, x, y);
+	drawMarkers(pi, x, y, Color_mathframe, Color_mathcorners, true);
 
 	if (numberedType()) {
 		Changer dummy = pi.base.changeFontSet("mathrm");

@@ -86,6 +86,7 @@
 #include "support/types.h"
 
 #include <cerrno>
+#include <cmath>
 #include <fstream>
 #include <functional>
 #include <iterator>
@@ -380,10 +381,16 @@ int BufferView::leftMargin() const
 }
 
 
-int BufferView::inPixels(Length const & len) const
+double BufferView::inPixelsDouble(Length const & len) const
 {
 	Font const font = buffer().params().getFont();
-	return len.inPixels(workWidth(), theFontMetrics(font).em());
+	return len.inPixelsDouble(workWidth(), theFontMetrics(font).em());
+}
+
+
+int BufferView::inPixels(Length const & len) const
+{
+	return (int) round(inPixelsDouble(len));
 }
 
 

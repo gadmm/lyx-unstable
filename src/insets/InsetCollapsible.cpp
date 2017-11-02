@@ -310,20 +310,14 @@ void InsetCollapsible::draw(PainterInfo & pi, int x, int y) const
 		                                    : Color_foreground;
 		const int xx1 = x + TEXT_TO_INSET_OFFSET - 1;
 		const int xx2 = x + textdim.wid - TEXT_TO_INSET_OFFSET + 1;
-		pi.pain.line(xx1, y + desc - 4,
-		             xx1, y + desc, colour);
-		if (status_ == Open)
-			pi.pain.line(xx1, y + desc,
-			             xx2, y + desc, colour);
-		else {
-			// Make status_ value visible:
-			pi.pain.line(xx1, y + desc,
-			             xx1 + 4, y + desc, colour);
-			pi.pain.line(xx2 - 4, y + desc,
-			             xx2, y + desc, colour);
+		int const y1 = y - textdim.asc + 3;
+		drawMarkers(pi, xx1, y + desc, xx2, y1,
+		            colour, colour, bv.cursor().isInside(this));
+		if (status_ == Open) {
+			double const t = pi.base.thinLineThickness();
+			double const y0 = y + desc + round(t/2);
+			pi.pain.lineDouble(xx1, y0, xx2, y0, colour, t);
 		}
-		pi.pain.line(x + textdim.wid - 3, y + desc, x + textdim.wid - 3,
-		             y + desc - 4, colour);
 
 		// the label below the text. Can be toggled.
 		if (g == SubLabel) {
@@ -343,15 +337,6 @@ void InsetCollapsible::draw(PainterInfo & pi, int x, int y) const
 			                 buttonLabel(bv), font, col, Color_none);
 		}
 
-		int const y1 = y - textdim.asc + 3;
-		// a visual cue when the cursor is inside the inset
-		Cursor const & cur = bv.cursor();
-		if (cur.isInside(this)) {
-			pi.pain.line(xx1, y1 + 4, xx1, y1, colour);
-			pi.pain.line(xx1 + 4, y1, xx1, y1, colour);
-			pi.pain.line(xx2, y1 + 4, xx2, y1, colour);
-			pi.pain.line(xx2 - 4, y1, xx2, y1, colour);
-		}
 		// Strike through the inset if deleted and not already handled by
 		// RowPainter.
 		if (pi.change_.deleted() && canPaintChange(bv))

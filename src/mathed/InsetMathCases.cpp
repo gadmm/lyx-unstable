@@ -47,6 +47,7 @@ void InsetMathCases::metrics(MetricsInfo & mi, Dimension & dim) const
 {
 	Changer dummy = mi.base.changeEnsureMath();
 	InsetMathGrid::metrics(mi, dim);
+	mathed_deco_metrics(mi.base, dim);
 }
 
 
@@ -55,7 +56,8 @@ void InsetMathCases::draw(PainterInfo & pi, int x, int y) const
 	Changer dummy = pi.base.changeEnsureMath();
 	Dimension const dim = dimension(*pi.base.bv);
 	mathed_draw_deco(pi, x + 1, y - dim.ascent(), 6, dim.height(), from_ascii("{"));
-	InsetMathGrid::draw(pi, x, y);
+	int const t = (int) mathed_deco_thickness(pi.base);
+	InsetMathGrid::draw(pi, x + t, y);
 }
 
 

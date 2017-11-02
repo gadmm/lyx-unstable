@@ -286,11 +286,7 @@ GuiWorkArea::GuiWorkArea(Buffer & buffer, GuiView & gv)
 
 double GuiWorkArea::pixelRatio() const
 {
-#if QT_VERSION >= 0x050000
-	return qt_scale_factor * devicePixelRatio();
-#else
-	return 1.0;
-#endif
+	return theGuiApp()->pixelRatio();
 }
 
 

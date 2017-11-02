@@ -25,9 +25,9 @@
 
 #include "support/debug.h"
 #include "support/lassert.h"
-#include "support/lyxlib.h"
 
 #include <algorithm>
+#include <cmath>
 
 #include <QPixmapCache>
 #include <QTextLayout>
@@ -66,8 +66,8 @@ GuiPainter::~GuiPainter()
 }
 
 
-void GuiPainter::setQPainterPen(QColor const & col,
-	Painter::line_style ls, int lw)
+void GuiPainter::setQPainterPen(QColor const & col, Painter::line_style ls,
+                                double lw)
 {
 	if (col == current_color_ && ls == current_ls_ && lw == current_lw_)
 		return;
@@ -81,13 +81,12 @@ void GuiPainter::setQPainterPen(QColor const & col,
 
 	switch (ls) {
 	case line_solid:
-	case line_solid_aliased:
 		pen.setStyle(Qt::SolidLine); break;
 	case line_onoffdash:
 		pen.setStyle(Qt::DotLine); break;
 	}
 
-	pen.setWidth(lw);
+	pen.setWidthF(lw);
 
 	setPen(pen);
 }
@@ -176,56 +175,71 @@ void GuiPainter::point(int x, int y, Color col)
 }
 
 
-void GuiPainter::line(int x1, int y1, int x2, int y2,
-	Color col,
-	line_style ls,
-	int lw)
+void GuiPainter::lineDouble(double x1, double y1, double x2, double y2,
+                            Color col, double lw, line_style ls)
 {
-	setQPainterPen(computeColor(col), ls, lw);
-	bool const do_antialiasing = renderHints() & TextAntialiasing
-		&& x1 != x2 && y1 != y2 && ls != line_solid_aliased;
-	setRenderHint(Antialiasing, do_antialiasing);
-	drawLine(x1, y1, x2, y2);
-	setRenderHint(Antialiasing, false);
+	vector<QPointF> points = {{x1, y1}, {x2, y2}};
+	linesDouble(move(points), col, lw, fill_none, ls);
 }
 
 
-void GuiPainter::lines(int const * xp, int const * yp, int np,
-	Color col,
-	fill_style fs,
-	line_style ls,
-	int lw)
+void GuiPainter::line(int x1, int y1, int x2, int y2,
+                      Color col, line_style ls, int lw)
 {
-	// double the size if needed
-	// FIXME THREAD
-	static QVector<QPoint> points(32);
-	if (np > points.size())
-		points.resize(2 * np);
+	lineDouble(x1, y1, x2, y2, col, lw, ls);
+}
 
-	// Note: the proper way to not get blurry vertical and horizontal lines is
-	// to add 0.5 to all coordinates.
-	bool antialias = false;
-	for (int i = 0; i < np; ++i) {
-		points[i].setX(xp[i]);
-		points[i].setY(yp[i]);
-		if (i != 0)
-			antialias |= xp[i-1] != xp[i] && yp[i-1] != yp[i];
+
+void GuiPainter::linesDouble(vector<QPointF> points, Color col, double lw,
+                             fill_style fs, line_style ls)
+{
+	if (points.empty())
+		return;
+	//offset for aligning the line on grid and avoid unnecessary blur
+	double const align = lw/2 - (int) lw/2;
+	for (QPointF & p : points) {
+		p.rx() += align;
+		p.ry() += align;
 	}
 	QColor const color = computeColor(col);
 	setQPainterPen(color, ls, lw);
-	bool const text_is_antialiased = renderHints() & TextAntialiasing;
-	setRenderHint(Antialiasing,
-	              antialias && text_is_antialiased && ls != line_solid_aliased);
+	setRenderHint(Antialiasing, true);
+	// make sure dashed lines are aligned
+	if (ls == line_onoffdash) {
+		QPen p = pen();
+		p.setDashOffset((points[0].x() + points[0].y()) / lw);
+		setPen(p);
+	}
 	if (fs == fill_none) {
-		drawPolyline(points.data(), np);
+		drawPolyline(points.data(), points.size());
 	} else {
 		QBrush const oldbrush = brush();
 		setBrush(QBrush(color));
-		drawPolygon(points.data(), np, fs == fill_oddeven ?
+		drawPolygon(points.data(), points.size(), fs == fill_oddeven ?
 		            Qt::OddEvenFill : Qt::WindingFill);
 		setBrush(oldbrush);
 	}
 	setRenderHint(Antialiasing, false);
+}
+
+
+void GuiPainter::linesDouble(double const * xp, double const * yp, int np,
+                             Color col, double lw, fill_style fs, line_style ls)
+{
+	vector<QPointF> points(np);
+	for (int i = 0; i < np; ++i)
+		points[i] = {xp[i], yp[i]};
+	linesDouble(move(points), col, lw, fs, ls);
+}
+
+
+void GuiPainter::lines(int const * xp, int const * yp, int np,
+                       Color col, fill_style fs, line_style ls, int lw)
+{
+	vector<QPointF> points(np);
+	for (int i = 0; i < np; ++i)
+		points[i] = {(double)xp[i], (double)yp[i]};
+	linesDouble(move(points), col, lw, fs, ls);
 }
 
 
@@ -253,7 +267,7 @@ void GuiPainter::path(int const * xp, int const * yp,
 	QColor const color = computeColor(col);
 	setQPainterPen(color, ls, lw);
 	bool const text_is_antialiased = renderHints() & TextAntialiasing;
-	setRenderHint(Antialiasing, text_is_antialiased && ls != line_solid_aliased);
+	setRenderHint(Antialiasing, text_is_antialiased);
 	drawPath(bpath);
 	if (fs != fill_none)
 		fillPath(bpath, QBrush(color));
@@ -606,8 +620,8 @@ void GuiPainter::underline(FontInfo const & f, int x, int y, int width,
 	FontMetrics const & fm = theFontMetrics(f);
 	int const pos = fm.underlinePos();
 
-	line(x, y + pos, x + width, y + pos,
-	     f.realColor(), ls, fm.lineWidth());
+	lineDouble(x, y + pos, x + width, y + pos, f.realColor(), fm.lineWidth(),
+	           ls);
 }
 
 
@@ -616,8 +630,8 @@ void GuiPainter::strikeoutLine(FontInfo const & f, int x, int y, int width)
 	FontMetrics const & fm = theFontMetrics(f);
 	int const pos = fm.strikeoutPos();
 
-	line(x, y - pos, x + width, y - pos,
-	     f.realColor(), line_solid, fm.lineWidth());
+	lineDouble(x, y - pos, x + width, y - pos, f.realColor(), fm.lineWidth(),
+	           line_solid);
 }
 
 
@@ -630,21 +644,21 @@ void GuiPainter::crossoutLines(FontInfo const & f, int x, int y, int width)
     //  \def\xout{\bgroup \markoverwith{\hbox to.35em{\hss/\hss}}\ULon}
 	// Let's mimick it somewhat.
 	double offset = max(0.35 * theFontMetrics(tmpf).em(), 1);
-	for (int i = 0 ; i < iround(width / offset) ; ++i)
-		text(x + iround(i * offset), y, '/', tmpf);
+	for (int i = 0 ; i < (int) round(width / offset) ; ++i)
+		text(x + (int) round(i * offset), y, '/', tmpf);
 }
 
 
 void GuiPainter::doubleUnderline(FontInfo const & f, int x, int y, int width)
 {
 	FontMetrics const & fm = theFontMetrics(f);
-	int const pos1 = fm.underlinePos() + fm.lineWidth();
+	int const pos1 = fm.underlinePos() + fm.lineWidth() + 1;
 	int const pos2 = fm.underlinePos() - fm.lineWidth() + 1;
 
-	line(x, y + pos1, x + width, y + pos1,
-		 f.realColor(), line_solid, fm.lineWidth());
-	line(x, y + pos2, x + width, y + pos2,
-		 f.realColor(), line_solid, fm.lineWidth());
+	lineDouble(x, y + pos1, x + width, y + pos1, f.realColor(),
+	            fm.lineWidth(), line_solid);
+	lineDouble(x, y + pos2, x + width, y + pos2, f.realColor(),
+	            fm.lineWidth(), line_solid);
 }
 
 
@@ -659,7 +673,8 @@ void GuiPainter::dashedUnderline(FontInfo const & f, int x, int y, int width)
 		height += below;
 
 	for (int n = 0; n != height; ++n)
-		line(x, y + below + n, x + width, y + below + n, f.realColor(), line_onoffdash);
+		lineDouble(x, y + below + n, x + width, y + below + n, f.realColor(),
+		           fm.lineWidth(), line_onoffdash);
 }
 
 
@@ -669,8 +684,7 @@ void GuiPainter::wavyHorizontalLine(int x, int y, int width, ColorCode col)
 	int const step = 2;
 	int const xend = x + width;
 	int height = 1;
-	//FIXME: I am not sure if Antialiasing gives the best effect.
-	//setRenderHint(Antialiasing, true);
+	setRenderHint(Antialiasing, true);
 	while (x < xend) {
 		height = - height;
 		drawLine(x, y - height, x + step, y + height);
@@ -678,7 +692,7 @@ void GuiPainter::wavyHorizontalLine(int x, int y, int width, ColorCode col)
 		drawLine(x, y + height, x + step/2, y + height);
 		x += step/2;
 	}
-	//setRenderHint(Antialiasing, false);
+	setRenderHint(Antialiasing, false);
 }
 
 } // namespace frontend

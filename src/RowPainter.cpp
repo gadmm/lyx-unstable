@@ -10,7 +10,6 @@
  */
 
 #include <config.h>
-#include <algorithm>
 
 #include "RowPainter.h"
 
@@ -44,6 +43,8 @@
 #include "support/lassert.h"
 #include <boost/crc.hpp>
 
+#include <algorithm>
+#include <cmath>
 #include <stdlib.h>
 
 using namespace std;
@@ -148,11 +149,10 @@ void RowPainter::paintForeignMark(Row::Element const & e) const
 	if (lang == pi_.base.bv->buffer().params().language)
 		return;
 
-	int const desc = e.inset ? e.dim.descent() : 0;
-	int const y = yo_ + pi_.base.solidLineOffset()
-		+ desc + pi_.base.solidLineThickness() / 2;
-	pi_.pain.line(int(x_), y, int(x_ + e.full_width()), y, Color_language,
-	              Painter::line_solid, pi_.base.solidLineThickness());
+	double const desc = e.inset ? e.dim.descent() : 0;
+	double const y = yo_ + desc + pi_.base.solidLineThickness() + 1;
+	pi_.pain.lineDouble(x_, y, x_ + e.full_width(), y, Color_language,
+	                    pi_.base.solidLineThickness());
 }
 
 
@@ -162,9 +162,9 @@ void RowPainter::paintMisspelledMark(Row::Element const & e) const
 	// to avoid drawing at the same vertical offset
 	FontMetrics const & fm = theFontMetrics(e.font);
 	int const thickness = max(fm.lineWidth(), 2);
-	int const y = yo_ + pi_.base.solidLineOffset() + pi_.base.solidLineThickness()
-		+ (e.change.changed() ? pi_.base.solidLineThickness() + 1 : 0)
-		+ 1 + thickness / 2;
+	double const y = yo_
+		+ (e.change.changed() ? 3 : 1.5) * pi_.base.solidLineThickness()
+		+ 2 + thickness / 2;
 
 	//FIXME: this could be computed only once, it is probably not costly.
 	// check for cursor position
@@ -205,9 +205,8 @@ void RowPainter::paintMisspelledMark(Row::Element const & e) const
 		if (x1 > x2)
 			swap(x1, x2);
 
-		pi_.pain.line(int(x_ + x1), y, int(x_ + x2), y,
-		              Color_error,
-		              Painter::line_onoffdash, thickness);
+		pi_.pain.lineDouble(x_ + x1, y, x_ + x2, y,
+		                    Color_error, thickness, Painter::line_onoffdash);
 		pos = range.last + 1;
 	}
 }
@@ -278,8 +277,11 @@ void RowPainter::paintAppendix() const
 	if (par_.params().startOfAppendix())
 		y += 2 * defaultRowHeight();
 
-	pi_.pain.line(1, y, 1, yo_ + row_.height(), Color_appendix);
-	pi_.pain.line(tm_.width() - 2, y, tm_.width() - 2, yo_ + row_.height(), Color_appendix);
+	double const t = pi_.base.solidLineThickness();
+	pi_.pain.lineDouble(1, y, 1, yo_ + row_.height(), Color_appendix, t);
+	pi_.pain.lineDouble(tm_.width() - 2, y,
+	                    tm_.width() - 2, yo_ + row_.height(),
+	                    Color_appendix, t);
 }
 
 
@@ -306,22 +308,27 @@ void RowPainter::paintDepthBar() const
 		next_depth = pars_[pit2].getDepth();
 	}
 
+	double const t0 = pi_.base.thinLineThickness();
+	double const t1 = pi_.base.solidLineThickness();
+	double const w = max(3., round(3 * t0 + 0.45));
 	for (depth_type i = 1; i <= depth; ++i) {
-		int const w = nestMargin() / 5;
-		int x = int(xo_) + w * i;
-		// only consider the changebar space if we're drawing outermost text
-		if (text_.isMainText())
-			x += changebarMargin();
+		double const x = round(xo_ + w * i +
+		                       // only consider the changebar space if we're
+		                       // drawing outermost text
+		                       (text_.isMainText() ? changebarMargin() : 0));
 
-		int const starty = yo_ - row_.ascent();
-		int const h =  row_.height() - 1 - (i - next_depth - 1) * 3;
+		double const starty = yo_ - row_.ascent();
+		double const h = row_.height() - 1 -
+			(i > next_depth ? (i - next_depth - 1) * w : 0);
 
-		pi_.pain.line(x, starty, x, starty + h, Color_depthbar);
-
+		pi_.pain.lineDouble(x, starty, x, starty + h,
+		                    Color_depthbar, t0);
 		if (i > prev_depth)
-			pi_.pain.fillRectangle(x, starty, w, 2, Color_depthbar);
+			pi_.pain.lineDouble(x + t0, starty, x + w, starty,
+			                    Color_depthbar, t1);
 		if (i > next_depth)
-			pi_.pain.fillRectangle(x, starty + h, w, 2, Color_depthbar);
+			pi_.pain.lineDouble(x + t0, starty + h, x + w, starty + h,
+			                    Color_depthbar, t1);
 	}
 }
 
@@ -339,30 +346,30 @@ void RowPainter::paintAppendixStart(int y) const
 	docstring const label = _("Appendix");
 	theFontMetrics(pb_font).rectText(label, w, a, d);
 
-	int const text_start = int(xo_ + (tm_.width() - w) / 2);
+	double const t = pi_.base.solidLineThickness();
+	double const text_start = xo_ + (tm_.width() - w) / 2;
 	int const text_end = text_start + w;
 
 	pi_.pain.rectText(text_start, y + d, label, pb_font, Color_none, Color_none);
 
-	pi_.pain.line(int(xo_ + 1), y, text_start, y, Color_appendix);
-	pi_.pain.line(text_end, y, int(xo_ + tm_.width() - 2), y, Color_appendix);
+	pi_.pain.lineDouble(xo_ + t, y, text_start - t, y, Color_appendix, t);
+	pi_.pain.lineDouble(text_end + t, y,
+	                    xo_ + tm_.width() - t, y, Color_appendix, t);
 }
 
 
 void RowPainter::paintTooLargeMarks(bool const left, bool const right) const
 {
+	double const t = 2 * pi_.base.solidLineThickness();
+	int const dx = pi_.base.solidLineThickness();
 	if (left)
-		pi_.pain.line(pi_.base.dottedLineThickness(), yo_ - row_.ascent(),
-					  pi_.base.dottedLineThickness(), yo_ + row_.descent(),
-					  Color_scroll, Painter::line_onoffdash,
-		              pi_.base.dottedLineThickness());
+		pi_.pain.lineDouble(dx, yo_ - row_.ascent(), dx, yo_ + row_.descent(),
+		                    Color_scroll, t, Painter::line_onoffdash);
 	if (right) {
-		int const wwidth =
-			pi_.base.bv->workWidth() - pi_.base.dottedLineThickness();
-		pi_.pain.line(wwidth, yo_ - row_.ascent(),
-					  wwidth, yo_ + row_.descent(),
-					  Color_scroll, Painter::line_onoffdash,
-		              pi_.base.dottedLineThickness());
+		int const wwidth = pi_.base.bv->workWidth() - dx - 1;
+		pi_.pain.lineDouble(wwidth, yo_ - row_.ascent(),
+		                    wwidth, yo_ + row_.descent(),
+		                    Color_scroll, t, Painter::line_onoffdash);
 	}
 }
 
@@ -485,18 +492,19 @@ void RowPainter::paintLast() const
 	if (change.changed()) {
 		FontMetrics const & fm =
 			theFontMetrics(pi_.base.bv->buffer().params().getFont());
-		int const length = fm.maxAscent() / 2;
+		double const length = round(fm.maxAscent() / 2);
+		double const t = 2 * pi_.base.solidLineThickness();
 		Color col = change.color();
 
-		pi_.pain.line(int(x_) + 1, yo_ + 2, int(x_) + 1, yo_ + 2 - length, col,
-			   Painter::line_solid, 3);
+		pi_.pain.lineDouble(int(x_) + 1, yo_ + 2, int(x_) + 1, yo_ + 2 - length,
+		                    col, t);
 
 		if (change.deleted()) {
-			pi_.pain.line(int(x_) + 1 - length, yo_ + 2, int(x_) + 1 + length,
-				yo_ + 2, col, Painter::line_solid, 3);
+			pi_.pain.lineDouble(int(x_) + 1 - length, yo_ + 2, int(x_) + 1 + length,
+				yo_ + 2, col, t);
 		} else {
-			pi_.pain.line(int(x_) + 1 - length, yo_ + 2, int(x_) + 1,
-				yo_ + 2, col, Painter::line_solid, 3);
+			pi_.pain.lineDouble(int(x_) + 1 - length, yo_ + 2, int(x_) + 1,
+				yo_ + 2, col, t);
 		}
 	}
 

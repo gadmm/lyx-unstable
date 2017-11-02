@@ -4,6 +4,7 @@
  * Licence details can be found in the file COPYING.
  *
  * \author Georg Baum
+ * \author Guillaume Munch
  *
  * Full author contact details are available in file CREDITS.
  */
@@ -14,6 +15,7 @@
 
 #include "LaTeXFeatures.h"
 #include "MathStream.h"
+#include "MathSupport.h"
 
 #include "MetricsInfo.h"
 
@@ -21,6 +23,8 @@
 
 #include <algorithm>
 #include <ostream>
+
+#include <cmath>
 
 namespace lyx {
 
@@ -40,212 +44,56 @@ void InsetMathPhantom::metrics(MetricsInfo & mi, Dimension & dim) const
 {
 	Changer dummy = mi.base.changeEnsureMath();
 	cell(0).metrics(mi, dim);
+	int const arrow_size = mi.base.mu(3);
+	dim.wid = std::max(dim.wid, arrow_size);
+	if (kind_ != smashb)
+		dim.asc = std::max(dim.asc, arrow_size);
 }
 
 
 void InsetMathPhantom::draw(PainterInfo & pi, int x, int y) const
 {
 	Changer dummy = pi.base.changeEnsureMath();
-	static int const arrow_size = 4;
+	int const arrow_size = pi.base.mu(1.5) * 2; //even number for grid alignment
+	double const t = pi.base.solidLineThickness();
+	double const dt = mathed_deco_thickness(pi.base);
 
 	// We first draw the text and then an arrow
-	ColorCode const origcol = pi.base.font.color();
-	if (visibleContents())
-		pi.base.font.setColor(Color_special);
-	cell(0).draw(pi, x, y);
-	if (visibleContents())
-		pi.base.font.setColor(origcol);
+	{
+		Changer dummy0 = visibleContents()
+			? pi.base.font.changeColor(Color_special)
+			: Changer();
+		cell(0).draw(pi, x, y);
+	}
 	Dimension const dim = dimension(*pi.base.bv);
 
-	if (kind_ == phantom || kind_ == vphantom) {
-		// y1---------
-		//           / \.
-		// y2-----  / | \.
-		//            |
-		//            |
-		// y3-----  \ | /
-		//           \ /
-		// y4---------
-		//          | | |
-		//         /  |  \.
-		//        x1  x2 x3
-
-		int const x2 = x + dim.wid / 2;
-		int const x1 = x2 - arrow_size;
-		int const x3 = x2 + arrow_size;
-
-		int const y1 = y - dim.asc;
-		int const y2 = y1 + arrow_size;
-		int const y4 = y + dim.des;
-		int const y3 = y4 - arrow_size;
-
-		// top arrow
-		pi.pain.line(x2, y1, x1, y2, Color_added_space);
-		pi.pain.line(x2, y1, x3, y2, Color_added_space);
-
-		// bottom arrow
-		pi.pain.line(x2, y4, x1, y3, Color_added_space);
-		pi.pain.line(x2, y4, x3, y3, Color_added_space);
-
-		// joining line
-		pi.pain.line(x2, y1, x2, y4, Color_added_space);
+	Changer dummy0 = pi.base.font.changeColor(Color_added_space);
+	double const xv = round(x + (dim.wid - arrow_size) / 2. - 0.5);
+	double const yv = y - dim.asc;
+	double const w = arrow_size - dt;
+	if (kind_ == phantom || kind_ == vphantom)
+		mathed_draw_deco(pi, xv, yv, w, dim.height() - dt,
+		                 from_ascii("updownarrow"));
+	double const yh = round(y - (dim.asc - dim.des + arrow_size) / 2. - 0.5);
+	double const w2 = (dim.wid - t) / 2;
+	if (kind_ == phantom || kind_ == hphantom ||
+	    kind_ == mathllap || kind_ == mathrlap)
+		mathed_draw_deco(pi, x, yh, dim.wid - dt - 1, w,
+		                 from_ascii(kind_ == mathllap ? "xrightarrow" :
+		                            kind_ == mathrlap ? "xleftarrow" :
+		                            "xleftrightarrow"));
+	if (kind_ == mathclap) {
+		mathed_draw_deco(pi, x, yh, w2 - dt, w,
+		                 from_ascii("xrightarrow"));
+		mathed_draw_deco(pi, x + w2 + t, yh, w2 - dt, w,
+		                 from_ascii("xleftarrow"));
 	}
-
-	if (kind_ == phantom || kind_ == hphantom) {
-		// y1----  /            \.
-		//        /              \.
-		// y2--- <---------------->
-		//        \              /
-		// y3----  \            /
-		//       |  |          |  |
-		//      x1 x2         x3 x4
-
-		int const x1 = x;
-		int const x2 = x + arrow_size;
-		int const x4 = x + dim.wid;
-		int const x3 = x4 - arrow_size;
-
-		int const y2 = y + (dim.des - dim.asc) / 2;
-		int const y1 = y2 - arrow_size;
-		int const y3 = y2 + arrow_size;
-
-		// left arrow
-		pi.pain.line(x1, y2, x2, y3, Color_added_space);
-		pi.pain.line(x1, y2, x2, y1, Color_added_space);
-
-		// right arrow
-		pi.pain.line(x4, y2, x3, y3, Color_added_space);
-		pi.pain.line(x4, y2, x3, y1, Color_added_space);
-
-		// joining line
-		pi.pain.line(x1, y2, x4, y2, Color_added_space);
-	}
-
-	else if (kind_ == mathclap) {
-		// y1----      \     /
-		//              \   /
-		// y2--- -------->-<--------
-		//              /   \.
-		// y3----      /     \.
-		//       |    |   |   |    |
-		//      x1   x2  x3  x4   x5
-
-		int const x1 = x;
-		int const x5 = x + dim.wid;
-		int const x3 = x + dim.wid / 2;
-		int const x2 = std::max(x1, x3 - arrow_size);
-		int const x4 = std::min(x5, x3 + arrow_size);
-
-		int const y2 = y + (dim.des - dim.asc) / 2;
-		int const y1 = y2 - arrow_size;
-		int const y3 = y2 + arrow_size;
-
-		// left arrow
-		pi.pain.line(x2, y3, x3, y2, Color_added_space);
-		pi.pain.line(x2, y1, x3, y2, Color_added_space);
-
-		// right arrow
-		pi.pain.line(x4, y3, x3, y2, Color_added_space);
-		pi.pain.line(x4, y1, x3, y2, Color_added_space);
-
-		// joining line
-		pi.pain.line(x1, y2, x5, y2, Color_added_space);
-	}
-
-	else if (kind_ == mathllap) {
-		// y1----                \.
-		//                        \.
-		// y2--- ------------------>
-		//                        /
-		// y3----                /
-		//       |              |  |
-		//      x1             x2 x3
-
-		int const x1 = x;
-		int const x3 = x + dim.wid;
-		int const x2 = std::max(x1, x3 - arrow_size);
-
-		int const y2 = y + (dim.des - dim.asc) / 2;
-		int const y1 = y2 - arrow_size;
-		int const y3 = y2 + arrow_size;
-
-		// right arrow
-		pi.pain.line(x3, y2, x2, y3, Color_added_space);
-		pi.pain.line(x3, y2, x2, y1, Color_added_space);
-
-		// joining line
-		pi.pain.line(x1, y2, x3, y2, Color_added_space);
-	}
-
-	else if (kind_ == mathrlap) {
-		// y1----  /
-		//        /
-		// y2--- <------------------
-		//        \.
-		// y3----  \.
-		//       |  |              |
-		//      x1 x2             x3
-
-		int const x1 = x;
-		int const x3 = x + dim.wid;
-		int const x2 = std::min(x3, x + arrow_size);
-
-		int const y2 = y + (dim.des - dim.asc) / 2;
-		int const y1 = y2 - arrow_size;
-		int const y3 = y2 + arrow_size;
-
-		// left arrow
-		pi.pain.line(x1, y2, x2, y3, Color_added_space);
-		pi.pain.line(x1, y2, x2, y1, Color_added_space);
-
-		// joining line
-		pi.pain.line(x1, y2, x3, y2, Color_added_space);
-	}
-
-	else if (kind_ == smash || kind_ == smasht || kind_ == smashb) {
-		// y1---------
-		//            |
-		// y2-----  \ | /
-		//           \ /
-		// y3-------- |
-		//           / \.
-		// y4-----  / | \.
-		//            |
-		// y5---------
-		//          | | |
-		//         /  |  \.
-		//        x1  x2 x3
-
-		int const x2 = x + dim.wid / 2;
-		int const x1 = x2 - arrow_size;
-		int const x3 = x2 + arrow_size;
-
-		int const y1 = y - dim.asc;
-		int const y5 = y + dim.des;
-		int const y3 = y;
-		int const y2 = std::max(y1, y3 - arrow_size);
-		int const y4 = std::min(y5, y3 + arrow_size);
-
-		// top arrow
-		if (kind_ != smashb) {
-			pi.pain.line(x1, y2, x2, y3, Color_added_space);
-			pi.pain.line(x3, y2, x2, y3, Color_added_space);
-		}
-
-		// bottom arrow
-		if (kind_ != smasht) {
-			pi.pain.line(x1, y4, x2, y3, Color_added_space);
-			pi.pain.line(x3, y4, x2, y3, Color_added_space);
-		}
-
-		// joining line
-		if (kind_ == smasht)
-			pi.pain.line(x2, y1, x2, y3, Color_added_space);
-		else if (kind_ == smashb)
-			pi.pain.line(x2, y3, x2, y5, Color_added_space);
-		else
-			pi.pain.line(x2, y1, x2, y5, Color_added_space);
-	}
+	if (kind_ == smash || kind_ == smasht)
+		mathed_draw_deco(pi, xv, yv, w, dim.asc - dt,
+		                 from_ascii("downarrow"));
+	if (kind_ == smash || kind_ == smashb)
+		mathed_draw_deco(pi, xv, y - 1, w, std::max(w, dim.des - dt + t),
+		                 from_ascii("uparrow"));
 }
 
 

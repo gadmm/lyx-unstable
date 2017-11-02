@@ -96,7 +96,8 @@ public:
 	 *	only be approximated. It is better if possible to use
 	 *	FontMetrics::em() to get this value.
 	 */
-	int inPixels(int text_width, int em_width = 0) const;
+	int inPixels(int text_width, double em_width = 0) const;
+	double inPixelsDouble(int text_width, double em_width = 0) const;
 
 	/** return the on-screen size of this length
 	 *
@@ -104,6 +105,8 @@ public:
 	 *  width and the EM value of the current font.
 	 */
 	int inPixels(MetricsBase const &) const;
+	double inPixelsDouble(MetricsBase const &) const;
+
 	/// return the value in Big Postscript points.
 	/// Caution: Inaccurate for em, ex, mu and percent units.
 	int inBP() const;

@@ -16,13 +16,13 @@
 
 #include "support/convert.h"
 #include "support/debug.h"
-#include "support/lyxlib.h"
 #include "support/qstring_helpers.h"
 
 #include "support/lassert.h"
 
 #include <QString>
 
+#include <cmath>
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
@@ -1420,7 +1420,7 @@ std::string formatFPNumber(double x)
 	// Prevent outputs of 23.4200000000000017 but output small numbers
 	// with at least 6 significant digits.
 	double const logarithm = log10(fabs(x));
-	os << std::setprecision(max(6 - iround(logarithm), 0)) << x;
+	os << std::setprecision(max(6 - (int) round(logarithm), 0)) << x;
 	string result = os.str();
 	if (result.find('.') != string::npos) {
 		result = rtrim(result, "0");

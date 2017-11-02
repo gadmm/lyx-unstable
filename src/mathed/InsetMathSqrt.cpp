@@ -22,6 +22,8 @@
 
 #include "frontends/Painter.h"
 
+#include <cmath>
+
 
 namespace lyx {
 
@@ -45,26 +47,27 @@ void InsetMathSqrt::metrics(MetricsInfo & mi, Dimension & dim) const
 	math_font_max_dim(mi.base.font, fontDim.asc, fontDim.des);
 	dim += fontDim;
 	// Some room for the decoration
-	dim.asc += 1;
-	dim.wid += 7;
+	dim.asc += (int) 3 * mi.base.solidLineThickness();
+	dim.wid += mi.base.mu(4);
 }
 
 
 void InsetMathSqrt::draw(PainterInfo & pi, int x, int y) const
 {
 	Changer dummy = pi.base.changeEnsureMath();
-	cell(0).draw(pi, x + 9, y);
+	double const t = pi.base.solidLineThickness();
+	double const deco_w = pi.base.mu(4);
+	cell(0).draw(pi, x + (int) (deco_w + 2 * t), y);
 	Dimension const dim = dimension(*pi.base.bv);
-	int const a = dim.ascent();
-	int const d = dim.descent();
-	int xp[3];
-	int yp[3];
-	pi.pain.line(x + dim.width(), y - a + 1,
-		x + 7, y - a + 1, pi.base.font.color());
-	xp[0] = x + 7;            yp[0] = y - a + 1;
-	xp[1] = x + 4;            yp[1] = y + d - 1;
-	xp[2] = x;                yp[2] = y + (d - a)/2;
-	pi.pain.lines(xp, yp, 3, pi.base.font.color());
+	double const a = dim.ascent();
+	double const d = dim.descent();
+	// coords of the end of the decoration
+	double const x0 = x + dim.width() - t/2;
+	double const y0 = round(y - a + t/2);
+	// shape of the decoration
+	double const xp[4] = {x0, x + deco_w, x + deco_w * 4/7, x + t/2};
+	double const yp[4] = {y0, y0,         y + d,            y + (d - a)/2};
+	pi.pain.linesDouble(xp, yp, 4, pi.base.font.color(), t);
 }
 
 

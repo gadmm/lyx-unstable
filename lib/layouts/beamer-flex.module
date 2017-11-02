@@ -1,0 +1,14 @@
+#\DeclareLyXModule{Beamer (flex)}
+#DescriptionBegin
+# Adds flex insets to replace the following styles: Frame, PlainFrame,
+# FragileFrame, Columns, ColumnsTopAligned, ColumnsCenterAligned,
+# Block, AlertBlock, ExampleBlock. This module can be used to convert
+# a lyx document from the Beamer layout to the Beamer-flex layout
+# (which must be done by hand).
+#DescriptionEnd
+#
+# Author: Guillaume Munch <gm@lyx.org>
+
+Format 60
+
+Input beamer-flex.inc

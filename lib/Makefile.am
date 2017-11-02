@@ -302,7 +302,7 @@ dist_examples_DATA = \
 	examples/addressExample.adr \
 	examples/amsart-test.lyx \
 	examples/amsbook-test.lyx \
-	examples/beamer.lyx \
+	examples/beamer-flex.lyx \
 	examples/beamer-article.lyx \
 	examples/beamer-g4.jpg \
 	examples/beamer-g4-mask.jpg \
@@ -2123,6 +2123,9 @@ dist_layouts_DATA =\
 	layouts/article.layout \
 	layouts/article-beamer.layout \
 	layouts/beamer.layout \
+	layouts/beamer-flex.inc \
+	layouts/beamer-flex.layout \
+	layouts/beamer-flex.module \
 	layouts/beamerposter.layout \
 	layouts/bicaption.module \
 	layouts/book.layout \

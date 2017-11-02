@@ -1,0 +1,23 @@
+#% Do not delete the line below; configure depends on this
+#  \DeclareLaTeXClass[beamer,amssymb.sty,hyperref.sty,pgf.sty,xcolor.sty,xxcolor.sty]{Beamer (flex insets)}
+#  \DeclareCategory{Presentations}
+# Author: Guillaume Munch <gm@lyx.org>
+# Modifies beamer.layout by Till Tantau, Jürgen Spitzmüller, Uwe Stöhr, Richard Heck, Martin Vermeer and probably others.
+# To convert a file from beamer.layout, see beamer-flex.module. 
+
+
+Format 60
+
+Input beamer.layout
+
+NoStyle Frame
+NoStyle PlainFrame
+NoStyle FragileFrame
+NoStyle Columns
+NoStyle ColumnsCenterAligned
+NoStyle ColumnsTopAligned
+NoStyle Block
+NoStyle ExampleBlock
+NoStyle AlertBlock
+
+Input beamer-flex.inc

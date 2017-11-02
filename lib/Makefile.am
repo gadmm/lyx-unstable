@@ -2171,6 +2171,9 @@ dist_layouts_DATA =\
 	layouts/docbook.layout \
 	layouts/doublecol-new.layout \
 	layouts/dtk.layout \
+	layouts/easychair.inc \
+	layouts/easychair.layout \
+	layouts/easychair-thesis.layout \
 	layouts/ectaart.layout \
 	layouts/egs.layout \
 	layouts/elsart.layout \
@@ -2393,6 +2396,7 @@ dist_templates_DATA = \
 	templates/de_beamer-conference-ornate-20min.lyx \
 	templates/dinbrief.lyx \
 	templates/DocBook_article.lyx \
+	templates/easychair-article.lyx \
 	templates/ectaart.lyx \
 	templates/elsarticle.lyx \
 	templates/EPS-cropped.lyx \

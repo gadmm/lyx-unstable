@@ -2945,7 +2945,7 @@ void BufferView::setCurrentRowSlice(CursorSlice const & rowSlice)
 
 namespace {
 
-bool sliceInRow(CursorSlice const & cs, Text const * text, Row const & row)
+bool sliceInRow(CursorSlice const & cs, Text const *, Row const & row)
 {
 	return !cs.empty()
 		/// FIXME: cs.inset_ may be dangling (regression at e7fdce0b). We

@@ -98,6 +98,8 @@ private:
 	bool isSelected(const QModelIndex &);
 	/// update the display of BibTeX information
 	void updateInfo(BiblioInfo const & bi, QModelIndex const &);
+	/// format and insert text into the info QTextEdit
+	void setInfoHtml(docstring const & html);
 	/// enable/disable buttons
 	void setButtons();
 	/// fill the fields combo

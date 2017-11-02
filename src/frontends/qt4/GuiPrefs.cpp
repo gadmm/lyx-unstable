@@ -1238,6 +1238,8 @@ PrefColors::PrefColors(GuiPreferences * form)
 		this, SIGNAL(changed()));
 	connect(syscolorsCB, SIGNAL(toggled(bool)),
 		this, SLOT(changeSysColor()));
+	connect(invertcolorsCB, SIGNAL(toggled(bool)),
+		this, SIGNAL(changed()));
 }
 
 
@@ -1249,6 +1251,7 @@ void PrefColors::applyRC(LyXRC & rc) const
 		if (curcolors_[i] != newcolors_[i])
 			form_->setColor(lcolors_[i], newcolors_[i]);
 	rc.use_system_colors = syscolorsCB->isChecked();
+	rc.invert_colors = invertcolorsCB->isChecked();
 
 	if (oldrc.use_system_colors != rc.use_system_colors)
 		guiApp->colorCache().clear();
@@ -1265,6 +1268,7 @@ void PrefColors::updateRC(LyXRC const & rc)
 		newcolors_[i] = curcolors_[i] = color.name();
 	}
 	syscolorsCB->setChecked(rc.use_system_colors);
+	invertcolorsCB->setChecked(rc.invert_colors);
 	changeLyxObjectsSelection();
 }
 

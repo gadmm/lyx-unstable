@@ -1243,6 +1243,11 @@ void GuiWorkArea::Private::paintPreeditText(GuiPainter & pain)
 
 void GuiWorkArea::paintEvent(QPaintEvent * ev)
 {
+	// When Debug::PAINTING is set, produce a flicker
+	guiApp->colorCache().invert_debug = lyxerr.debugging(Debug::PAINTING)
+		? !guiApp->colorCache().invert_debug
+		: false;
+
 	// LYXERR(Debug::PAINTING, "paintEvent begin: x: " << rc.x()
 	//	<< " y: " << rc.y() << " w: " << rc.width() << " h: " << rc.height());
 

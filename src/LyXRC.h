@@ -99,6 +99,7 @@ public:
 		RC_INDEX_ALTERNATIVES,
 		RC_INDEX_COMMAND,
 		RC_INPUT,
+		RC_INVERT_COLORS,
 		RC_JBIBTEX_ALTERNATIVES,
 		RC_JBIBTEX_COMMAND,
 		RC_JINDEX_COMMAND,
@@ -527,6 +528,8 @@ public:
 	int cursor_width;
 	/// One of: yes, no, ask
 	std::string close_buffer_with_last_view;
+	/// whether to invert colors
+	bool invert_colors;
 };
 
 

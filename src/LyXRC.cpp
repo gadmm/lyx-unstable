@@ -125,6 +125,7 @@ LexerKeyword lyxrcTags[] = {
 	{ "\\index_alternatives", LyXRC::RC_INDEX_ALTERNATIVES },
 	{ "\\index_command", LyXRC::RC_INDEX_COMMAND },
 	{ "\\input", LyXRC::RC_INPUT },
+	{ "\\invert_colors", LyXRC::RC_INVERT_COLORS },
 	{ "\\jbibtex_alternatives", LyXRC::RC_JBIBTEX_ALTERNATIVES },
 	{ "\\jbibtex_command", LyXRC::RC_JBIBTEX_COMMAND },
 	{ "\\jindex_command", LyXRC::RC_JINDEX_COMMAND },
@@ -362,6 +363,7 @@ void LyXRC::setDefaults()
 	cursor_width = 1;
 	close_buffer_with_last_view = "yes";
 	mouse_middlebutton_paste = true;
+	invert_colors = false;
 }
 
 
@@ -1224,6 +1226,10 @@ LyXRC::ReturnValues LyXRC::read(Lexer & lexrc, bool check_format)
 
 		case RC_MOUSE_MIDDLEBUTTON_PASTE:
 			lexrc >> mouse_middlebutton_paste;
+			break;
+
+		case RC_INVERT_COLORS:
+			lexrc >> invert_colors;
 			break;
 
 		case RC_LAST:
@@ -2169,6 +2175,15 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		if (tag != RC_LAST)
 			break;
 		// fall through
+	case RC_INVERT_COLORS:
+		if (ignore_system_lyxrc ||
+		    invert_colors != system_lyxrc.invert_colors) {
+			os << "\\invert_colors "
+			   << invert_colors << '\n';
+		}
+		if (tag != RC_LAST)
+			break;
+		// fall through
 	case RC_COMPLETION_INLINE_DELAY:
 		if (ignore_system_lyxrc ||
 		    completion_inline_delay != system_lyxrc.completion_inline_delay) {
@@ -3041,6 +3056,7 @@ void actOnUpdatedPrefs(LyXRC const & lyxrc_orig, LyXRC const & lyxrc_new)
 	case LyXRC::RC_DEFAULT_LENGTH_UNIT:
 	case LyXRC::RC_SCROLL_WHEEL_ZOOM:
 	case LyXRC::RC_CURSOR_WIDTH:
+	case LyXRC::RC_INVERT_COLORS:
 		break;
 	}
 }
@@ -3425,6 +3441,10 @@ string const LyXRC::getDescription(LyXRCTags tag)
 
 	case RC_USE_USE_SYSTEM_COLORS:
 		str = _("Enable use the system colors for some things like main window background and selection.");
+		break;
+
+	case RC_INVERT_COLORS:
+		str = _("Invert colors in the buffer view.");
 		break;
 
 	case RC_USE_TOOLTIP:

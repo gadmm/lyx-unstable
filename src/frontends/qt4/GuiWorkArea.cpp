@@ -12,7 +12,7 @@
 #include <config.h>
 
 #include "GuiWorkArea.h"
-#include "GuiWorkArea_Private.h"
+#include "GuiWorkArea_PrivateAnimated.h"
 
 #include "ColorCache.h"
 #include "FontLoader.h"
@@ -66,6 +66,7 @@
 #include <QMainWindow>
 #include <QMimeData>
 #include <QMenu>
+#include <QMenuBar>
 #include <QPainter>
 #include <QPalette>
 #include <QScrollBar>
@@ -74,7 +75,6 @@
 #include <QTimer>
 #include <QToolButton>
 #include <QToolTip>
-#include <QMenuBar>
 
 #include <cmath>
 #include <iostream>
@@ -268,13 +268,13 @@ GuiWorkArea::Private::~Private()
 
 
 GuiWorkArea::GuiWorkArea(QWidget * /* w */)
-: d(new Private(this))
+	: d(new PrivateAnimated(this))
 {
 }
 
 
 GuiWorkArea::GuiWorkArea(Buffer & buffer, GuiView & gv)
-: d(new Private(this))
+	: GuiWorkArea(0)
 {
 	new CompressorProxy(this); // not a leak
 	setGuiView(gv);
@@ -349,14 +349,20 @@ void GuiWorkArea::Private::updateCursorShape()
 
 void GuiWorkArea::setGuiView(GuiView & gv)
 {
-	d->lyx_view_ = &gv;
+	d->setGuiView(&gv);
+}
+
+
+void GuiWorkArea::Private::setGuiView(GuiView * gv)
+{
+	lyx_view_ = gv;
 }
 
 
 void GuiWorkArea::setBuffer(Buffer & buffer)
 {
 	delete d->buffer_view_;
-	d->buffer_view_ = new BufferView(buffer);
+	d->buffer_view_ = new BufferView(buffer, *this);
 	buffer.workAreaManager().add(this);
 
 	// HACK: Prevents an additional redraw when the scrollbar pops up
@@ -453,7 +459,7 @@ void GuiWorkArea::toggleCaret()
 }
 
 
-void GuiWorkArea::scheduleRedraw(bool update_metrics)
+void GuiWorkArea::scheduleRedraw(bool update_metrics, int offset)
 {
 	if (!isVisible())
 		// No need to redraw in this case.
@@ -474,7 +480,10 @@ void GuiWorkArea::scheduleRedraw(bool update_metrics)
 	d->updateCaretGeometry();
 
 	LYXERR(Debug::WORKAREA, "WorkArea::redraw screen");
-	viewport()->update();
+	if (offset < INT_MAX)
+		viewport()->scroll(0, -offset);
+	else
+		viewport()->update();
 
 	/// FIXME: is this still true now that paintEvent does the actual painting?
 	/// \warning: scrollbar updating *must* be done after the BufferView is drawn
@@ -669,18 +678,35 @@ void GuiWorkArea::Private::updateScrollbar()
 }
 
 
+void GuiWorkArea::stopScrolling(bool emit)
+{
+	d->stopScrolling(emit);
+}
+
+
 void GuiWorkArea::scrollTo(int value)
 {
-	stopBlinkingCaret();
-	d->buffer_view_->scrollDocView(value, true);
+	d->scrollTo(value);
+}
 
+
+void GuiWorkArea::Private::scrollTo(int value)
+{
+	p->stopBlinkingCaret();
+	buffer_view_->scrollDocView(value);
+	scrollFinish();
+}
+
+
+void GuiWorkArea::Private::scrollFinish()
+{
 	if (lyxrc.cursor_follows_scrollbar) {
-		d->buffer_view_->setCursorFromScrollbar();
+		buffer_view_->setCursorFromScrollbar();
 		// FIXME: let GuiView take care of those.
-		d->lyx_view_->updateLayoutList();
+		lyx_view_->updateLayoutList();
 	}
-	// Show the caret immediately after any operation.
-	startBlinkingCaret();
+	// Show the cursor immediately after any operation.
+	p->startBlinkingCaret();
 	// FIXME QT5
 #ifdef Q_WS_X11
 	QApplication::syncX();
@@ -832,8 +858,10 @@ void GuiWorkArea::mousePressEvent(QMouseEvent * e)
 
 void GuiWorkArea::mouseReleaseEvent(QMouseEvent * e)
 {
-	if (d->synthetic_mouse_event_.timeout.running())
+	if (d->synthetic_mouse_event_.timeout.running()) {
 		d->synthetic_mouse_event_.timeout.stop();
+		d->stopScrolling();
+	}
 
 	FuncRequest const cmd(LFUN_MOUSE_RELEASE, e->x(), e->y(),
 			q_button_state(e->button()), q_key_state(e->modifiers()));
@@ -950,6 +978,9 @@ void GuiWorkArea::generateSyntheticMouseEvent()
 	bool const up = e_y < 0;
 	bool const down = e_y > wh;
 
+	if (!up && !down)
+		d->stopScrolling();
+
 	// Set things off to generate the _next_ 'pseudo' event.
 	int step = 50;
 	if (d->synthetic_mouse_event_.restart_timeout) {
@@ -968,6 +999,8 @@ void GuiWorkArea::generateSyntheticMouseEvent()
 		d->synthetic_mouse_event_.timeout.setTimeout(time);
 		d->synthetic_mouse_event_.timeout.start();
 	}
+	step = max(step, -wh);
+	step = min(step, wh);
 
 	// Can we scroll further ?
 	int const value = verticalScrollBar()->value();
@@ -978,12 +1011,7 @@ void GuiWorkArea::generateSyntheticMouseEvent()
 	}
 
 	// Scroll
-	if (step <= 2 * wh) {
-		d->buffer_view_->scroll(up ? -step : step);
-		d->buffer_view_->updateMetrics();
-	} else {
-		d->buffer_view_->scrollDocView(value + (up ? -step : step), false);
-	}
+	d->scrollTo(up ? -step : step);
 
 	// In which paragraph do we have to set the cursor ?
 	Cursor & cur = d->buffer_view_->cursor();

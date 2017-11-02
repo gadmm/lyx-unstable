@@ -508,7 +508,10 @@ QSet<Buffer const *> GuiView::GuiViewPrivate::busyBuffers;
 
 GuiView::GuiView(int id)
 	: d(*new GuiViewPrivate(this)), id_(id), closing_(false), busy_(0),
-	  command_execute_(false), minibuffer_focus_(false), devel_mode_(false)
+	  command_execute_(false), minibuffer_focus_(false), devel_mode_(false),
+	  update_toolbars_retarder_(makeScrollRetarder([this](){
+				  doUpdateToolbars();
+			  }))
 {
 	connect(this, SIGNAL(bufferViewChanged()),
 	        this, SLOT(onBufferViewChanged()));
@@ -1592,7 +1595,25 @@ void GuiView::updateLayoutList()
 }
 
 
+unique_ptr<ScrollRetarder>
+GuiView::makeScrollRetarder(function<void()> callback) const
+{
+	auto r = make_unique<ScrollRetarder>(std::move(callback));
+	connect(this, &GuiView::scrollingStarted,
+	        r.get(), &ScrollRetarder::scrollingStarted);
+	connect(this, &GuiView::scrollingFinished,
+	        r.get(), &ScrollRetarder::scrollingFinished);
+	return r;
+}
+
+
 void GuiView::updateToolbars()
+{
+	update_toolbars_retarder_->activate();
+}
+
+
+void GuiView::doUpdateToolbars()
 {
 	ToolbarMap::iterator end = d.toolbars_.end();
 	if (d.current_work_area_) {

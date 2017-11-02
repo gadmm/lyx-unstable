@@ -2441,6 +2441,7 @@ void Buffer::reloadBibInfoCache() const
 		return;
 	}
 
+	// FIXME: perf issues while undo/redo
 	checkIfBibInfoCacheIsValid();
 	if (d->bibinfo_cache_valid_)
 		return;

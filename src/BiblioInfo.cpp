@@ -769,6 +769,8 @@ all of that together. We do that to deal with the way separators work, from what
 I can tell, but it still feels like a hack. Fixing this would require quite a
 bit of work, however.
 */
+// FIXME: perf issues when doing undo/redo because it is called for every
+// citation inset in the document
 docstring BibTeXInfo::expandFormat(docstring const & format,
 		BibTeXInfoList const xrefs, int & counter, Buffer const & buf,
 		CiteItem const & ci, bool next, bool second) const

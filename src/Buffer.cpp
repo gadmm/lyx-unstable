@@ -4926,13 +4926,14 @@ void Buffer::Impl::setLabel(ParIterator & it, UpdateType utype) const
 			break;
 		}
 
-		// Increase the master counter?
-		if (layout.stepmastercounter && needEnumCounterReset(it))
-			counters.stepMaster(enumcounter, utype);
-
-		// Maybe we have to reset the enumeration counter.
-		if (!layout.resumecounter && needEnumCounterReset(it))
-			counters.reset(enumcounter);
+		if (needEnumCounterReset(it)) {
+			// Increase the master counter?
+			if (layout.stepmastercounter)
+				counters.stepMaster(enumcounter, utype);
+			// Maybe we have to reset the enumeration counter.
+			if (!layout.resumecounter)
+				counters.reset(enumcounter);
+		}
 		counters.step(enumcounter, utype);
 
 		string const & lang = par.getParLanguage(bp)->code();
@@ -5011,7 +5012,7 @@ void Buffer::updateBuffer(ParIterator & parit, UpdateType utype) const
 			 * non-const. This would however be costly in
 			 * terms of code duplication.
 			 */
-			const_cast<Buffer *>(this)->undo().recordUndo(CursorData(parit));
+			CursorData(parit).recordUndo();
 			parit->params().depth(maxdepth);
 		}
 		maxdepth = parit->getMaxDepthAfter();

@@ -444,6 +444,7 @@ dist_images_DATA1X = \
 	images/closetab.svgz \
 	images/tab-group-close.svgz \
 	images/copy.svgz \
+	images/custom-insets.svgz \
 	images/cut.svgz \
 	images/depth-decrement.svgz \
 	images/depth-increment.svgz \

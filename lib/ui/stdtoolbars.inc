@@ -126,6 +126,7 @@ ToolbarSet
 		Item "Insert index entry" "index-insert"
 		Item "Insert nomenclature entry" "nomencl-insert"
 		Separator
+		Insets
 		Item "Insert footnote" "footnote-insert"
 		Item "Insert margin note" "marginalnote-insert"
 		Item "Insert LyX note" "note-insert"

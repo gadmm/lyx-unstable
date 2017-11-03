@@ -10,20 +10,22 @@ For Ubuntu this is distributed as part of LyX unstable on the PPA:
 
 # What is LyX?
 
-LyX is a document processor that encourages an approach to writing based on the
-structure of your documents, not their appearance. It is released under a Free
-Software / Open Source license.
+LyX is a document processor and equation editor that encourages an approach to
+writing based on the structure of your documents, rather than their
+appearance. It is released under a Free Software / Open Source license.
 
-LyX is for people that write and want their writing to look great, right out of
+LyX is for people who write and want their writing to look great, right out of
 the box. No more endless tinkering with formatting details, “finger painting”
-font attributes or futzing around with page boundaries. You just write. In the
-background, Prof. Knuth's legendary TeX typesetting engine makes you look good.
+font attributes or futzing around with page boundaries. You just write. LyX will
+help your document mature from the early scribbles, to a draft full of notes and
+change-tracked revisions, and to a final camera-ready version.
 
-On screen, LyX looks like any word processor; its printed output — or richly
-cross-referenced PDF, just as readily produced — looks like nothing else. Gone
-are the days of industrially bland .docs, all looking similarly not-quite-right,
-yet coming out unpredictably different on different printer drivers. Gone are
-the crashes “eating” your dissertation the evening before going to press.
+In the background, Prof. Knuth's legendary TeX typesetting engine makes you look
+good. LyX's output—or richly cross-referenced PDF, just as readily
+produced—looks like nothing else. Gone are the days of industrially bland .docs,
+all looking similarly not-quite-right, yet coming out unpredictably different on
+different printer drivers. Gone are the crashes “eating” your dissertation the
+evening before going to press.
 
 LyX is stable and fully featured. It is a multi-platform, fully
 internationalized application running natively on Unix/Linux and the Macintosh
@@ -45,6 +47,7 @@ For a complete list of changes try
 
 * Smooth scrolling.
 * Option to invert colors (i.e. dark color theme). (#8325)
+* Improve the drawing of many math insets.
 * Better display for High-dpi screens: lines and drawings are now proportional to
   the zoom level.
 * Better display for Low-dpi screens: lines and drawings are now antialiased.
@@ -62,7 +65,6 @@ For a complete list of changes try
 * Instant preview now works in child documents. (#9868)
 * Fix hard-to-read label color in math.
 * Fix a missing repaint of the cursor.
-* Fix vertical and horizontal spacings for decorations (\hat, \overbrace...).
 * Fix the toolbar button "math-insert \sideset".
 
 ## Minor enhancements
@@ -73,4 +75,3 @@ For a complete list of changes try
 * Performance improvements for scrolling.
 * Add \x*arrows in Math Arrows toolbar menu.
 * This file readable from the About menu.
-

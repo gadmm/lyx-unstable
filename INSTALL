@@ -6,7 +6,7 @@ Quick compilation guide
 
 These four steps will compile, test and install LyX:
 
-	0) Linux users beware: You need qt4 and qt4-devel packages
+	0) Linux users beware: You need qt5 and qt5-devel packages
 	   of the same version to compile LyX.
 
 	   In general, it is also recommended to have pkg-config
@@ -15,7 +15,7 @@ These four steps will compile, test and install LyX:
 
 	1) ./configure configures LyX according to your system. You
 	   may have to set --with-qt-dir=<path-to-your-qt-installation>
-	   (for example, "--with-qt-dir=/usr/share/qt4/") if the
+	   (for example, "--with-qt-dir=/usr/share/qt5/") if the
 	   environment variable QTDIR is not set and pkg-config is not
 	   available.
 
@@ -48,18 +48,16 @@ Requirements
 ------------
 
 First of all, you will need a recent C++ compiler, where recent means
-that the compilers are close to C++11 standard conforming like gcc (at
-least 4.6) or clang.
+that the compilers are C++11 standard conforming like gcc (at least
+4.8.1) or clang.
 
 LyX makes great use of the C++ Standard Template Library (STL).
 This means that gcc users will have to install the relevant libstdc++
 library to be able to compile this version of LyX.
 
 For full LyX usability we suggest to use Qt 5.6 and higher, or at the
-very least Qt 5.4. For compilation you need to compile against at least
-Qt 4.8 which has been widely tested, and for Windows we advise at least
-Qt 4.8.4. The only special point to make is that you must ensure that
-both LyX and the Qt libraries are compiled with the same C++ compiler.
+very least Qt 5.4. The only special point to make is that you must ensure
+that both LyX and the Qt libraries are compiled with the same C++ compiler.
 
 To build LyX with spell checking capabilities included you have to
 install at least one of the development packages of the spell checker

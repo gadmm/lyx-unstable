@@ -220,7 +220,7 @@ void InsetMathFrac::metrics(MetricsInfo & mi, Dimension & dim) const
 		if (latexkeys const * slash = slash_symbol()) {
 			Dimension dimslash;
 			mathedSymbolDim(mi.base, dimslash, slash);
-			dim.wid += dimslash.wid - mathed_mu(mi.base.font, 3.0);
+			dim.wid += dimslash.wid - mi.base.mu(3);
 			dim.asc = max(dim.asc, dimslash.asc);
 			dim.des = max(dim.des, dimslash.des);
 		}
@@ -254,9 +254,11 @@ void InsetMathFrac::metrics(MetricsInfo & mi, Dimension & dim) const
 		Changer dummy2 = mi.base.changeEnsureMath();
 		cell(0).metrics(mi, dim0);
 		cell(1).metrics(mi, dim1);
-		dim.wid = max(dim0.wid, dim1.wid) + 2;
+		dim.wid = max(dim0.wid, dim1.wid);
+		if (kind_ != ATOP)
+			dim.wid += mi.base.mu(4);
 		dim.asc = dim0.height() + dy/2 + dy;
-		int const t = mi.base.solidLineThickness();
+		int const t = (int) mi.base.solidLineThickness();
 		dim.des = max(0, dim1.height() + dy/2 - dy + t);
 	}
 	} //switch (kind_)
@@ -304,11 +306,11 @@ void InsetMathFrac::draw(PainterInfo & pi, int x, int y) const
 		// reference LaTeX code from nicefrac.sty:
 		//    \mkern-2mu/\mkern-1mu
 		if (latexkeys const * slash = slash_symbol()) {
-			int mkern = mathed_mu(pi.base.font, 2.0);
+			int mkern = pi.base.mu(2);
 			mathedSymbolDraw(pi, xx + 1 + dim0.wid - mkern, y, slash);
 			Dimension dimslash;
 			mathedSymbolDim(pi.base, dimslash, slash);
-			xx += dimslash.wid - mathed_mu(pi.base.font, 3.0);
+			xx += dimslash.wid - pi.base.mu(3);
 		}
 		cell(1).draw(pi, xx + 1 + dim0.wid, y);
 	}
@@ -342,7 +344,7 @@ void InsetMathFrac::draw(PainterInfo & pi, int x, int y) const
 			(kind_ == CFRACRIGHT) ? x + dim.wid - dim0.wid - 2 :
 			// center
 			                        m - dim0.wid / 2;
-		int const t = pi.base.solidLineThickness();
+		double const t = pi.base.solidLineThickness();
 		// take dy/2 for the spacing around the horizontal line. This is
 		// arbitrary. In LaTeX it is more complicated to ensure that displayed
 		// fractions line up next to each other.
@@ -350,11 +352,11 @@ void InsetMathFrac::draw(PainterInfo & pi, int x, int y) const
 		// rules 15a-e.
 		cell(0).draw(pi, xx, y - dim0.des - dy/2 - dy);
 		// center
-		cell(1).draw(pi, m - dim1.wid / 2, y + dim1.asc + dy/2 - dy + t);
+		cell(1).draw(pi, m - dim1.wid / 2, y + dim1.asc + dy/2 - dy + (int)t);
 		// horizontal line
 		if (kind_ != ATOP)
-			pi.pain.line(x, y - dy, x + dim.wid, y - dy,
-			             pi.base.font.color(), pi.pain.line_solid, t);
+			pi.pain.lineDouble(x, y - dy, x + dim.wid, y - dy,
+			                   pi.base.font.color(), t);
 	}
 	} //switch (kind_)
 }
@@ -657,6 +659,7 @@ void InsetMathBinom::metrics(MetricsInfo & mi, Dimension & dim) const
 	dim.asc = dim0.height() + 1 + dy/2 + dy;
 	dim.des = max(0, dim1.height() + 1 + dy/2 - dy);
 	dim.wid = max(dim0.wid, dim1.wid) + 2 * dw(dim.height()) + 4;
+	mathed_deco_metrics(mi.base, dim, 2, 1);
 }
 
 
@@ -673,6 +676,8 @@ void InsetMathBinom::draw(PainterInfo & pi, int x, int y) const
 	docstring const ket = kind_ == BRACE ? from_ascii("}") :
 		kind_ == BRACK ? from_ascii("]") : from_ascii(")");
 
+	double const t = mathed_deco_thickness(pi.base);
+
 	int m = x + dim.width() / 2;
 	{
 		Changer dummy =
@@ -685,10 +690,10 @@ void InsetMathBinom::draw(PainterInfo & pi, int x, int y) const
 		cell(1).draw(pi, m - dim1.wid / 2, y + dim1.asc + dy/2 - dy);
 	}
 	// draw the brackets and the marker
-	mathed_draw_deco(pi, x, y - dim.ascent(), dw(dim.height()),
-		dim.height(), bra);
-	mathed_draw_deco(pi, x + dim.width() - dw(dim.height()),
-		y - dim.ascent(), dw(dim.height()), dim.height(), ket);
+	mathed_draw_deco(pi, x + t/2, y - dim.ascent(),
+	                 dw(dim.height()) - t/2, dim.height() - t, bra);
+	mathed_draw_deco(pi, x + dim.width() - dw(dim.height()) - t, y - dim.ascent(),
+	                 dw(dim.height()) - t/2, dim.height() - t, ket);
 }
 
 

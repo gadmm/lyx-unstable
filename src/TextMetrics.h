@@ -97,8 +97,6 @@ public:
 	/// \retval true if a full screen redraw is needed.
 	/// \retval false if a single paragraph redraw is enough.
 	bool redoParagraph(pit_type const pit);
-	/// Clear cache of paragraph metrics
-	void clear() { par_metrics_.clear(); }
 	/// Is cache of paragraph metrics empty ?
 	bool empty() const { return par_metrics_.empty(); }
 

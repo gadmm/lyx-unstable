@@ -149,25 +149,6 @@ int ViewSourceWidget::updateDelay() const
 }
 
 
-void GuiViewSource::scheduleUpdate()
-{
-	update_timer_->start(widget_->updateDelay());
-}
-
-
-void GuiViewSource::scheduleUpdateNow()
-{
-	update_timer_->start(0);
-}
-
-
-void GuiViewSource::realUpdateView()
-{
-	widget_->updateView(bufferview());
-	updateTitle();
-}
-
-
 void ViewSourceWidget::updateView(BufferView const * bv)
 {
 	if (!bv) {
@@ -401,16 +382,18 @@ GuiViewSource::GuiViewSource(GuiView & parent,
 		Qt::DockWidgetArea area, Qt::WindowFlags flags)
 	: DockView(parent, "view-source", qt_("Code Preview"), area, flags),
 	  widget_(new ViewSourceWidget(this)),
-	  update_timer_(new QTimer(this))
+	  update_timer_(new QTimer(this)),
+	  update_retarder_(parent.makeScrollRetarder([this](){ realUpdateView(); }))
 {
 	setWidget(widget_);
 
 	// setting the update timer
 	update_timer_->setSingleShot(true);
-	connect(update_timer_, SIGNAL(timeout()),
-	        this, SLOT(realUpdateView()));
+	connect(update_timer_, &QTimer::timeout,
+	        this, &GuiViewSource::timerFinished);
 
-	connect(widget_, SIGNAL(needUpdate()), this, SLOT(scheduleUpdateNow()));
+	connect(widget_, &ViewSourceWidget::needUpdate,
+	        this, &GuiViewSource::scheduleUpdateNow);
 }
 
 
@@ -472,6 +455,31 @@ void GuiViewSource::restoreSession()
 {
 	DockView::restoreSession();
 	widget_->restoreSession(sessionKey());
+}
+
+
+void GuiViewSource::timerFinished()
+{
+	update_retarder_->activate();
+}
+
+
+void GuiViewSource::scheduleUpdate()
+{
+	update_timer_->start(widget_->updateDelay());
+}
+
+
+void GuiViewSource::scheduleUpdateNow()
+{
+	update_timer_->start(0);
+}
+
+
+void GuiViewSource::realUpdateView()
+{
+	widget_->updateView(bufferview());
+	updateTitle();
 }
 
 

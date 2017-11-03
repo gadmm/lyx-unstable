@@ -96,6 +96,8 @@ GuiCitation::GuiCitation(GuiView & lv)
 {
 	setupUi(this);
 
+	infoML->setMinimumHeight((7 * QFontMetrics(infoML->font()).lineSpacing())/2);
+
 	// The filter bar
 	filter_ = new FancyLineEdit(this);
 	filter_->setButtonPixmap(FancyLineEdit::Right, getPixmap("images/", "editclear", "svgz,png"));
@@ -121,6 +123,9 @@ GuiCitation::GuiCitation(GuiView & lv)
 	searchOpts->addAction(casesense_);
 	searchOpts->addAction(instant_);
 	searchOptionsPB->setMenu(searchOpts);
+
+	//initialize info box
+	setInfoHtml(docstring());
 
 	connect(citationStyleCO, SIGNAL(activated(int)),
 		this, SLOT(on_citationStyleCO_currentIndexChanged(int)));
@@ -459,18 +464,25 @@ void GuiCitation::setButtons()
 
 void GuiCitation::updateInfo(BiblioInfo const & bi, QModelIndex const & idx)
 {
-	if (!idx.isValid() || bi.empty()) {
-		infoML->document()->clear();
-		infoML->setToolTip(qt_("Displays a sketchy preview if a citation is selected above"));
-		return;
-	}
-
-	infoML->setToolTip(qt_("Sketchy preview of the selected citation"));
 	CiteItem ci;
-	ci.richtext = true;
-	QString const keytxt = toqstr(
-		bi.getInfo(qstring_to_ucs4(idx.data().toString()), documentBuffer(), ci));
-	infoML->document()->setHtml(keytxt);
+	docstring const html = (!idx.isValid() || bi.empty()) ? docstring()
+		: bi.getInfo(qstring_to_ucs4(idx.data().toString()),
+		             documentBuffer(),
+		             ci);
+	infoML->setToolTip(qt_("Sketchy preview of the selected citation"));
+	setInfoHtml(html);
+}
+
+
+void GuiCitation::setInfoHtml(docstring const & html)
+{
+	//set preview in window colors to denote read-only
+	QString body("<body style=\"color:%1; background-color:%2\">"
+	                 "<p>%3</p>"
+	             "</body>");
+	body = body.arg(QPalette().windowText().color().name());
+	body = body.arg(QPalette().window().color().name());
+	infoML->document()->setHtml(body.arg(toqstr(html)));
 }
 
 

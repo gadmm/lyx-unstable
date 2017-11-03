@@ -135,9 +135,7 @@ Format 4
 #  -: "Control-Command-C"            # Copy the formatting settings of the selected item and store on the Clipboard
 #  +: "Option-Command-D"             # Show or hide the Dock
 #  -: "Command-Control D"            # Display the definition of the selected word in the Dictionary application
-\bind "C-d"                          "buffer-view dvi"	# 'd' for dvi
-\bind "C-M-d"                        "command-alternatives master-buffer-view dvi; buffer.view dvi"
-\bind "C-S-D"                        "buffer-update dvi"	# 'd' for dvi
+\bind "M-r"                          "forward-search"
 #  -: "Command-E"                    # Use the selection for a find
 \bind "C-e"                          "font-emph"
 #  +: "Command-F"                    # Open a Find window
@@ -165,6 +163,8 @@ Format 4
 \bind "C-S-N"                        "buffer-new-template"
 #  +: "Command-O"                    # Display a dialog for choosing a document to open in the frontmost application
 \bind "C-o"                          "file-open"
+#  +: "Command-P"                    # Insert a citation
+\bind "C-p"                          "citation-insert"
 #  -: "Shift-Command-P"              # Display a dialog for specifying printing parameters (Page Setup)
 \bind "C-S-P"                        "font-typewriter" # 'P' for Program
 #  +: "Command-Q"                    # Quit the frontmost application
@@ -254,7 +254,6 @@ Format 4
 \bind "C-S-T"                        "buffer-update pdf" # (pdflatex; was "ps")
 \bind "C-S-R"                        "buffer-update"
 \bind "C-M-S-T"                      "command-alternatives master-buffer-update pdf; buffer-update pdf"
-\bind "C-M-S-D"                      "command-alternatives master-buffer-update dvi; buffer-update dvi"
 
 \bind "C-S-E"                        "changes-track" # it's what MS Word uses
 \bind "~S-M-quotedbl"                "quote-insert inner"

@@ -39,6 +39,8 @@
 #include "frontends/FontMetrics.h"
 #include "frontends/Painter.h"
 
+#include <cmath>
+
 using namespace std;
 
 namespace lyx {
@@ -193,38 +195,24 @@ bool InsetSpace::getStatus(Cursor & cur, FuncRequest const & cmd,
 }
 
 
-namespace {
-int const arrow_size = 8;
-}
-
-
 void InsetSpace::metrics(MetricsInfo & mi, Dimension & dim) const
 {
-	if (isHfill()) {
-		// The width for hfills is calculated externally in
-		// TextMetrics::computeRowMetrics. The value of 5 is the
-		// minimal value when the hfill is not active.
-		dim = Dimension(5, 10, 10);
-		return;
-	}
-
 	frontend::FontMetrics const & fm = theFontMetrics(mi.base.font);
 	dim.asc = fm.maxAscent();
 	dim.des = fm.maxDescent();
-	int const em = fm.em();
 
 	switch (params_.kind) {
 		case InsetSpaceParams::THIN:
 		case InsetSpaceParams::NEGTHIN:
-			dim.wid = em / 6;
+			dim.wid = mi.base.mu(3);
 			break;
 		case InsetSpaceParams::MEDIUM:
 		case InsetSpaceParams::NEGMEDIUM:
-			dim.wid = em / 4;
+			dim.wid = mi.base.mu(4);
 			break;
 		case InsetSpaceParams::THICK:
 		case InsetSpaceParams::NEGTHICK:
-			dim.wid = em / 2;
+			dim.wid = mi.base.mu(5);
 			break;
 		case InsetSpaceParams::PROTECTED:
 		case InsetSpaceParams::VISIBLE:
@@ -232,20 +220,22 @@ void InsetSpace::metrics(MetricsInfo & mi, Dimension & dim) const
 			dim.wid = fm.width(char_type(' '));
 			break;
 		case InsetSpaceParams::QUAD:
-			dim.wid = em;
+			dim.wid = mi.base.em(1);
 			break;
 		case InsetSpaceParams::QQUAD:
-			dim.wid = 2 * em;
+			dim.wid = mi.base.em(2);
 			break;
 		case InsetSpaceParams::ENSPACE:
 		case InsetSpaceParams::ENSKIP:
-			dim.wid = int(0.5 * em);
+			dim.wid = mi.base.em(0.5);
 			break;
 		case InsetSpaceParams::CUSTOM:
 		case InsetSpaceParams::CUSTOM_PROTECTED: {
 			int const w =
 				params_.length.len().inPixels(mi.base);
-			int const minw = (w < 0) ? 3 * arrow_size : 4;
+			int const minw = (w < 0)
+				? 3 * mi.base.em(0.4) // arrow_size
+				: 0;
 			dim.wid = max(minw, abs(w));
 			break;
 		}
@@ -257,7 +247,10 @@ void InsetSpace::metrics(MetricsInfo & mi, Dimension & dim) const
 		case InsetSpaceParams::RIGHTARROWFILL:
 		case InsetSpaceParams::UPBRACEFILL:
 		case InsetSpaceParams::DOWNBRACEFILL:
-			// shut up compiler
+			// The width for hfills is calculated externally in
+			// TextMetrics::computeRowMetrics. The value of 0.2 is the
+			// minimal value when the hfill is not active.
+			dim.wid = mi.base.em(0.1);
 			break;
 	}
 }
@@ -266,18 +259,17 @@ void InsetSpace::metrics(MetricsInfo & mi, Dimension & dim) const
 void InsetSpace::draw(PainterInfo & pi, int x, int y) const
 {
 	Dimension const dim = dimension(*pi.base.bv);
+	double const t = pi.base.solidLineThickness();
 
 	if (isHfill() || params_.length.len().value() < 0) {
 		int const asc = theFontMetrics(pi.base.font).ascent('M');
 		int const desc = theFontMetrics(pi.base.font).descent('M');
-		// Pixel height divisible by 2 for prettier fill graphics:
-		int const oddheight = (asc ^ desc) & 1;
-		int const x0 = x + 1;
-		int const x1 = x + dim.wid - 2;
-		int const y0 = y + desc - 1;
-		int const y1 = y - asc + oddheight - 1;
-		int const y2 = (y0 + y1) / 2;
-		int xoffset = (y0 - y1) / 2;
+		double const x0 = round(x + t/2);
+		double const x1 = round(x + dim.wid - t);
+		double const y0 = round(y + desc - t/2);
+		double const y1 = round(y - asc - t/2);
+		double const y2 = round((y0 + y1) / 2);
+		double xoffset = (y0 - y1) / 2;
 
 		// Two tests for very narrow insets
 		if (xoffset > x1 - x0
@@ -289,86 +281,77 @@ void InsetSpace::draw(PainterInfo & pi, int x, int y) const
 			 || params_.kind == InsetSpaceParams::DOWNBRACEFILL))
 				xoffset = (x1 - x0) / 6;
 
-		int const x2 = x0 + xoffset;
-		int const x3 = x1 - xoffset;
-		int const xm = (x0 + x1) / 2;
-		int const xml = xm - xoffset;
-		int const xmr = xm + xoffset;
+		double const x2 = round(x0 + xoffset);
+		double const x3 = round(x1 - xoffset);
+		double const xm = round((x0 + x1) / 2);
+		double const xml = round(xm - xoffset);
+		double const xmr = round(xm + xoffset);
 
-		if (params_.kind == InsetSpaceParams::HFILL) {
-			pi.pain.line(x0, y1, x0, y0, Color_added_space);
-			pi.pain.line(x0, y2, x1, y2, Color_added_space,
-				frontend::Painter::line_onoffdash);
-			pi.pain.line(x1, y1, x1, y0, Color_added_space);
-		} else if (params_.kind == InsetSpaceParams::HFILL_PROTECTED) {
-			pi.pain.line(x0, y1, x0, y0, Color_latex);
-			pi.pain.line(x0, y2, x1, y2, Color_latex,
-				frontend::Painter::line_onoffdash);
-			pi.pain.line(x1, y1, x1, y0, Color_latex);
-		} else if (params_.kind == InsetSpaceParams::DOTFILL) {
-			pi.pain.line(x0, y1, x0, y0, Color_special);
-			pi.pain.line(x0, y0, x1, y0, Color_special,
-				frontend::Painter::line_onoffdash);
-			pi.pain.line(x1, y1, x1, y0, Color_special);
-		} else if (params_.kind == InsetSpaceParams::HRULEFILL) {
-			pi.pain.line(x0, y1, x0, y0, Color_special);
-			pi.pain.line(x0, y0, x1, y0, Color_special);
-			pi.pain.line(x1, y1, x1, y0, Color_special);
-		} else if (params_.kind == InsetSpaceParams::LEFTARROWFILL) {
-			pi.pain.line(x2, y1 + 1 , x0 + 1, y2, Color_special);
-			pi.pain.line(x0 + 1, y2 + 1 , x2, y0, Color_special);
-			pi.pain.line(x0, y2 , x1, y2, Color_special);
+		auto draw_bars = [&](Color col, bool dash) {
+			auto ls = dash ? frontend::Painter::line_onoffdash :
+			    frontend::Painter::line_solid;
+			pi.pain.lineDouble(x0, y1, x0, y0, col, t);
+			pi.pain.lineDouble(x0, y2, x1, y2, col, t, ls);
+			pi.pain.lineDouble(x1, y1, x1, y0, col, t);
+		};
+		if (params_.kind == InsetSpaceParams::HFILL)
+			draw_bars(Color_added_space, true);
+		else if (params_.kind == InsetSpaceParams::HFILL_PROTECTED)
+			draw_bars(Color_latex, true);
+		else if (params_.kind == InsetSpaceParams::DOTFILL)
+			draw_bars(Color_special, true);
+		else if (params_.kind == InsetSpaceParams::HRULEFILL)
+			draw_bars(Color_special, false);
+		else if (params_.kind == InsetSpaceParams::LEFTARROWFILL) {
+			pi.pain.lineDouble(x2, y1, x0, y2, Color_special, t);
+			pi.pain.lineDouble(x0, y2, x2, y0, Color_special, t);
+			pi.pain.lineDouble(x0, y2, x1, y2, Color_special, t);
 		} else if (params_.kind == InsetSpaceParams::RIGHTARROWFILL) {
-			pi.pain.line(x3 + 1, y1 + 1 , x1, y2, Color_special);
-			pi.pain.line(x1, y2 + 1 , x3 + 1, y0, Color_special);
-			pi.pain.line(x0, y2 , x1, y2, Color_special);
+			pi.pain.lineDouble(x3, y1, x1, y2, Color_special, t);
+			pi.pain.lineDouble(x1, y2, x3, y0, Color_special, t);
+			pi.pain.lineDouble(x0, y2, x1, y2, Color_special, t);
 		} else if (params_.kind == InsetSpaceParams::UPBRACEFILL) {
-			pi.pain.line(x0 + 1, y1 + 1 , x2, y2, Color_special);
-			pi.pain.line(x2, y2 , xml, y2, Color_special);
-			pi.pain.line(xml + 1, y2 + 1 , xm, y0, Color_special);
-			pi.pain.line(xm + 1, y0 , xmr, y2 + 1, Color_special);
-			pi.pain.line(xmr, y2 , x3, y2, Color_special);
-			pi.pain.line(x3 + 1, y2 , x1, y1 + 1, Color_special);
+			double const xp[7] = {x0, x2, xml, xm, xmr, x3, x1};
+			double const yp[7] = {y1, y2, y2,  y0, y2,  y2, y1};
+			pi.pain.linesDouble(xp, yp, 7, Color_special, t);
 		} else if (params_.kind == InsetSpaceParams::DOWNBRACEFILL) {
-			pi.pain.line(x0 + 1, y0 , x2, y2 + 1, Color_special);
-			pi.pain.line(x2, y2 , xml, y2, Color_special);
-			pi.pain.line(xml + 1, y2 , xm, y1 + 1, Color_special);
-			pi.pain.line(xm + 1, y1 + 1 , xmr, y2, Color_special);
-			pi.pain.line(xmr, y2 , x3, y2, Color_special);
-			pi.pain.line(x3 + 1, y2 + 1 , x1, y0, Color_special);
-		} else if (params_.kind == InsetSpaceParams::CUSTOM) {
-			pi.pain.line(x0, y1 + 1 , x2 + 1, y2, Color_special);
-			pi.pain.line(x2 + 1, y2 + 1 , x0, y0, Color_special);
-			pi.pain.line(x1 + 1, y1 + 1 , x3, y2, Color_special);
-			pi.pain.line(x3, y2 + 1 , x1 + 1, y0, Color_special);
-			pi.pain.line(x2, y2 , x3, y2, Color_special);
-		} else if (params_.kind == InsetSpaceParams::CUSTOM_PROTECTED) {
-			pi.pain.line(x0, y1 + 1 , x2 + 1, y2, Color_latex);
-			pi.pain.line(x2 + 1, y2 + 1 , x0, y0, Color_latex);
-			pi.pain.line(x1 + 1, y1 + 1 , x3, y2, Color_latex);
-			pi.pain.line(x3, y2 + 1 , x1 + 1, y0, Color_latex);
-			pi.pain.line(x2, y2 , x3, y2, Color_latex);
+			double const xp[7] = {x0, x2, xml, xm, xmr, x3, x1};
+			double const yp[7] = {y0, y2, y2,  y1, y2,  y2, y0};
+			pi.pain.linesDouble(xp, yp, 7, Color_special, t);
+		} else if (params_.kind == InsetSpaceParams::CUSTOM
+		           || params_.kind == InsetSpaceParams::CUSTOM_PROTECTED) {
+			Color col = params_.kind == InsetSpaceParams::CUSTOM_PROTECTED ?
+				Color_latex : Color_special;
+			double const xl[3] = {x0, x2, x0};
+			double const yl[3] = {y1, y2, y0};
+			pi.pain.linesDouble(xl, yl, 3, col, t);
+			double const xr[3] = {x1, x3, x1};
+			double const yr[3] = {y1, y2, y0};
+			pi.pain.linesDouble(xr, yr, 3, col, t);
+			pi.pain.lineDouble(x2, y2 , x3, y2, col, t);
 		}
 		return;
 	}
 
-	int const w = dim.wid;
-	int const h = theFontMetrics(pi.base.font).ascent('x');
-	int xp[4], yp[4];
+	double const x0 = round(x + t/2);
+	double const x1 = round(x + dim.wid - t);
+	double const h = theFontMetrics(pi.base.font).ascent('x');
+	double const h4 = round(max(h / 4, 1.) - 1.5 * t);
+	double xp[4], yp[4];
 
-	xp[0] = x;
-	yp[0] = y - max(h / 4, 1);
+	xp[0] = x0;
+	yp[0] = y - h4;
 	if (params_.kind == InsetSpaceParams::NORMAL ||
 	    params_.kind == InsetSpaceParams::PROTECTED ||
 	    params_.kind == InsetSpaceParams::VISIBLE) {
-		xp[1] = x;     yp[1] = y;
-		xp[2] = x + w; yp[2] = y;
+		xp[1] = x0; yp[1] = y;
+		xp[2] = x1; yp[2] = y;
 	} else {
-		xp[1] = x;     yp[1] = y + max(h / 4, 1);
-		xp[2] = x + w; yp[2] = y + max(h / 4, 1);
+		xp[1] = x0; yp[1] = y + h4;
+		xp[2] = x1; yp[2] = y + h4;
 	}
-	xp[3] = x + w;
-	yp[3] = y - max(h / 4, 1);
+	xp[3] = x1;
+	yp[3] = y - h4;
 
 	Color col = Color_special;
 	if (params_.kind == InsetSpaceParams::PROTECTED ||
@@ -379,9 +362,9 @@ void InsetSpace::draw(PainterInfo & pi, int x, int y) const
 	    params_.kind == InsetSpaceParams::CUSTOM_PROTECTED)
 		col = Color_latex;
 	else if (params_.kind == InsetSpaceParams::VISIBLE)
-		col =  Color_foreground;
+		col = Color_foreground;
 
-	pi.pain.lines(xp, yp, 4, col);
+	pi.pain.linesDouble(xp, yp, 4, col, t);
 }
 
 

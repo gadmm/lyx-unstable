@@ -39,8 +39,7 @@ class MacroContext;
 class MetricsBase {
 public:
 	///
-	MetricsBase(BufferView * bv = 0, FontInfo font = FontInfo(),
-	            int textwidth = 0);
+	MetricsBase(BufferView * bv, FontInfo font = FontInfo(), int textwidth = 0);
 
 	/// the current view
 	BufferView * bv;
@@ -64,15 +63,15 @@ public:
 	// Temporarily change the style to (script)script style
 	Changer changeScript();
 	///
-	int solidLineThickness() const { return solid_line_thickness_; }
+	double solidLineThickness() const { return solid_line_thickness_; }
 	///
-	int solidLineOffset() const { return solid_line_offset_; }
-	///
-	int dottedLineThickness() const { return dotted_line_thickness_; }
+	double thinLineThickness() const;
+	/// length of len mu in pixels
+	int mu(double len) const;
+	/// length of len em in pixels
+	int em(double len) const;
 private:
-	int solid_line_thickness_;
-	int solid_line_offset_;
-	int dotted_line_thickness_;
+	double solid_line_thickness_ = 1;
 };
 
 

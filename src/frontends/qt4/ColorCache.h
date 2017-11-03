@@ -36,6 +36,9 @@ public:
 	/// get the given color
 	QColor get(Color const & color, bool use_system_colors) const;
 
+	/// get the given color (non-inverted)
+	QColor getPlain(Color const & color, bool use_system_colors) const;
+
 	/// is this color replaced when LyXRC::use_system_color is true?
 	bool isSystem(ColorCode color) const;
 
@@ -45,6 +48,8 @@ public:
 	/// clear all colors
 	void clear() { initialized_ = false; }
 
+	/// switched when Debug::PAINTING is set to produce a flicker
+	bool invert_debug = false;
 private:
 	///
 	void init();
@@ -57,7 +62,7 @@ private:
 };
 
 ///
-QColor const rgb2qcolor(RGBColor const &);
+QColor rgb2qcolor(RGBColor const &);
 
 } // namespace lyx
 

@@ -126,6 +126,7 @@ ToolbarSet
 		Item "Insert index entry" "index-insert"
 		Item "Insert nomenclature entry" "nomencl-insert"
 		Separator
+		Insets
 		Item "Insert footnote" "footnote-insert"
 		Item "Insert margin note" "marginalnote-insert"
 		Item "Insert LyX note" "note-insert"
@@ -508,7 +509,19 @@ ToolbarSet
 		Item "hookrightarrow" "math-insert \hookrightarrow"
 		Item "swarrow" "math-insert \swarrow"
 		Item "searrow" "math-insert \searrow"
-		Item "rightleftharpoons" "math-insert \rightleftharpoons"
+		Item "xleftarrow" "math-insert \xleftarrow"
+		Item "xrightarrow" "math-insert \xrightarrow"
+		Item "xleftrightarrow" "math-insert \xleftrightarrow"
+		Item "xLeftarrow" "math-insert \xLeftarrow"
+		Item "xRightarrow" "math-insert \xRightarrow"
+		Item "xLeftrightarrow" "math-insert \xLeftrightarrow"
+		Item "xleftharpoonup" "math-insert \xleftharpoonup"
+		Item "xrightharpoonup" "math-insert \xrightharpoonup"
+		Item "xleftharpoondown" "math-insert \xleftharpoondown"
+		Item "xrightharpoondown" "math-insert \xrightharpoondown"
+		Item "xhookleftarrow" "math-insert \xhookleftarrow"
+		Item "xhookrightarrow" "math-insert \xhookrightarrow"
+		Item "xmapsto" "math-insert \xmapsto"
 #		Item "arrowvert" "math-insert \arrowvert" # not really an arrow
 #		Item "Arrowvert" "math-insert \Arrowvert" # not really an arrow
 	End
@@ -964,8 +977,6 @@ ToolbarSet
 		Item "Longmapsto" "math-insert \Longmapsto"
 		Item "longmapsfrom" "math-insert \longmapsfrom"
 		Item "Longmapsfrom" "math-insert \Longmapsfrom"
-		Item "xleftarrow" "math-insert \xleftarrow"
-		Item "xrightarrow" "math-insert \xrightarrow"
 #		Item "mapstochar" "math-insert \mapstochar"
 #		Item "Mapstochar" "math-insert \Mapstochar"
 #		Item "mapsfromchar" "math-insert \mapsfromchar"

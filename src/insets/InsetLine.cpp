@@ -124,14 +124,14 @@ void InsetLine::metrics(MetricsInfo & mi, Dimension & dim) const
 	dim.wid = max(minw, abs(dim.wid));
 
 	Length height = Length(to_ascii(getParam("height")));
-	height_ = height.inPixels(mi.base);
+	height_ = height.inPixelsDouble(mi.base);
 
 	// get the length of the parameters in pixels
 	Length offset = Length(to_ascii(getParam("offset")));
-	offset_ = offset.inPixels(mi.base);
+	offset_ = offset.inPixelsDouble(mi.base);
 
-	dim.asc = max(fm.maxAscent(), offset_ + height_);
-	dim.des = max(fm.maxDescent(), - offset_);
+	dim.asc = max(fm.maxAscent(), int(round(offset_ + height_)));
+	dim.des = max(fm.maxDescent(), int(round(-offset_)));
 }
 
 
@@ -145,11 +145,11 @@ void InsetLine::draw(PainterInfo & pi, int x, int y) const
 	// the offset is a vertical one
 	// the horizontal dimension must be corrected with the heigth because
 	// of left and right border of the painted line for big heigth.
-	pi.pain.line(x + height_/2 + 1,
-		     y - offset_ - height_/2,
-		     x + dim.wid - height_/2 - 2,
-		     y - offset_ - height_/2,
-		     Line_color, Painter::line_solid, height_);
+	pi.pain.lineDouble(round(x + height_/2 + 1),
+	                   round(y - offset_ - height_/2),
+	                   round(x + dim.wid - height_/2 - 2),
+	                   round(y - offset_ - height_/2),
+	                   Line_color, height_);
 }
 
 

@@ -16,6 +16,7 @@
 #include "ui_WorkAreaUi.h"
 
 #include "frontends/WorkArea.h"
+#include "frontends/KeySymbol.h"
 
 #include <QAbstractScrollArea>
 #include <QTabBar>
@@ -63,7 +64,7 @@ public:
 	///
 	BufferView const & bufferView() const;
 	///
-	void scheduleRedraw(bool update_metrics);
+	void scheduleRedraw(bool update_metrics, int offset = INT_MAX) override;
 
 	/// return true if the key is part of a shortcut
 	bool queryKeySym(KeySymbol const & key, KeyModifier mod) const;
@@ -84,7 +85,16 @@ public:
 	/// Current ratio between physical pixels and device-independent pixels
 	double pixelRatio() const;
 
+	/// Stop scrolling animation
+	void stopScrolling(bool emit) override;
+
 public Q_SLOTS:
+	/// Scroll the BufferView.
+	/**
+	  * This is a slot for the valueChanged() signal of the vertical scrollbar.
+	  * \p value value of the scrollbar.
+	*/
+	void scrollTo(int value) override;
 	///
 	void stopBlinkingCaret();
 	///
@@ -97,14 +107,10 @@ Q_SIGNALS:
 	void busy(bool);
 	///
 	void bufferViewChanged();
+	/// send key event to CompressorProxy
+	void compressKeySym(KeySymbol sym, KeyModifier mod, bool isAutoRepeat);
 
 private Q_SLOTS:
-	/// Scroll the BufferView.
-	/**
-	  * This is a slot for the valueChanged() signal of the vertical scrollbar.
-	  * \p value value of the scrollbar.
-	*/
-	void scrollTo(int value);
 	/// timer to limit triple clicks
 	void doubleClickTimeout();
 	/// toggle the caret's visibility
@@ -153,8 +159,26 @@ private:
 
 	friend class GuiCompleter;
 	struct Private;
+	struct PrivateAnimated;
 	Private * const d;
 }; // GuiWorkArea
+
+
+/// CompressorProxy adapted from Kuba Ober https://stackoverflow.com/a/21006207
+class CompressorProxy : public QObject
+{
+    Q_OBJECT
+	bool emitCheck(bool isAutoRepeat);
+	bool flag_;
+	// input: event to compress
+	Q_SLOT void slot(KeySymbol sym, KeyModifier mod, bool isAutoRepeat);
+	// output: compressed event
+    Q_SIGNAL void signal(KeySymbol sym, KeyModifier mod);
+public:
+    // No default constructor, since the proxy must be a child of the
+    // target object.
+	explicit CompressorProxy(GuiWorkArea * wa);
+};
 
 
 class EmbeddedWorkArea : public GuiWorkArea
@@ -254,33 +278,6 @@ private:
 	///
 	QToolButton * closeBufferButton;
 }; // TabWorkArea
-
-
-class DragTabBar : public QTabBar
-{
-	Q_OBJECT
-public:
-	///
-	DragTabBar(QWidget * parent = 0);
-
-protected:
-	///
-	void mousePressEvent(QMouseEvent * event);
-	///
-	void mouseMoveEvent(QMouseEvent * event);
-	///
-	void dragEnterEvent(QDragEnterEvent * event);
-	///
-	void dropEvent(QDropEvent * event);
-
-private:
-	///
-	QPoint dragStartPos_;
-
-Q_SIGNALS:
-	///
-	void tabMoveRequested(int fromIndex, int toIndex);
-};
 
 
 class GuiWorkAreaContainer : public QWidget, public Ui::WorkAreaUi

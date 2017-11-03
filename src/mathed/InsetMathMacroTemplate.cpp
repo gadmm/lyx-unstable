@@ -67,10 +67,11 @@ public:
 	InsetLabelBox(Buffer * buf, docstring label, InsetMathMacroTemplate const & parent,
 		      bool frame = false);
 	///
-	void metrics(MetricsInfo & mi, Dimension & dim) const;
+	void metrics(MetricsInfo & mi, Dimension & dim) const override;
 	///
-	void draw(PainterInfo &, int x, int y) const;
-
+	void draw(PainterInfo &, int x, int y) const override;
+	///
+	marker_type marker(BufferView const *) const override { return NO_MARKER; }
 protected:
 	///
 	InsetMathMacroTemplate const & parent_;
@@ -188,9 +189,6 @@ public:
 	///
 	InsetDisplayLabelBox(Buffer * buf, MathAtom const & atom, docstring label,
 			InsetMathMacroTemplate const & parent);
-
-	///
-	marker_type marker(BufferView const *) const;
 	///
 	void metrics(MetricsInfo & mi, Dimension & dim) const;
 	///
@@ -214,16 +212,6 @@ InsetDisplayLabelBox::InsetDisplayLabelBox(Buffer * buf, MathAtom const & atom,
 Inset * InsetDisplayLabelBox::clone() const
 {
 	return new InsetDisplayLabelBox(*this);
-}
-
-
-InsetMath::marker_type InsetDisplayLabelBox::marker(BufferView const * bv) const
-{
-	if (parent_.editing(bv)
-	    || !parent_.cell(parent_.displayIdx()).empty())
-		return MARKER;
-	else
-		return NO_MARKER;
 }
 
 
@@ -255,6 +243,8 @@ public:
 	void metrics(MetricsInfo & mi, Dimension & dim) const;
 	///
 	void draw(PainterInfo &, int x, int y) const;
+	///
+	//marker_type marker(BufferView const *) const { return NO_MARKER; }
 
 private:
 	///

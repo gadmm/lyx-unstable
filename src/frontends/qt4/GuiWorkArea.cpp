@@ -12,7 +12,7 @@
 #include <config.h>
 
 #include "GuiWorkArea.h"
-#include "GuiWorkArea_Private.h"
+#include "GuiWorkArea_PrivateAnimated.h"
 
 #include "ColorCache.h"
 #include "FontLoader.h"
@@ -66,6 +66,7 @@
 #include <QMainWindow>
 #include <QMimeData>
 #include <QMenu>
+#include <QMenuBar>
 #include <QPainter>
 #include <QPalette>
 #include <QScrollBar>
@@ -74,7 +75,6 @@
 #include <QTimer>
 #include <QToolButton>
 #include <QToolTip>
-#include <QMenuBar>
 
 #include <cmath>
 #include <iostream>
@@ -268,14 +268,15 @@ GuiWorkArea::Private::~Private()
 
 
 GuiWorkArea::GuiWorkArea(QWidget * /* w */)
-: d(new Private(this))
+	: d(new PrivateAnimated(this))
 {
 }
 
 
 GuiWorkArea::GuiWorkArea(Buffer & buffer, GuiView & gv)
-: d(new Private(this))
+	: GuiWorkArea(0)
 {
+	new CompressorProxy(this); // not a leak
 	setGuiView(gv);
 	buffer.params().display_pixel_ratio = theGuiApp()->pixelRatio();
 	setBuffer(buffer);
@@ -285,11 +286,7 @@ GuiWorkArea::GuiWorkArea(Buffer & buffer, GuiView & gv)
 
 double GuiWorkArea::pixelRatio() const
 {
-#if QT_VERSION >= 0x050000
-	return qt_scale_factor * devicePixelRatio();
-#else
-	return 1.0;
-#endif
+	return theGuiApp()->pixelRatio();
 }
 
 
@@ -348,14 +345,20 @@ void GuiWorkArea::Private::updateCursorShape()
 
 void GuiWorkArea::setGuiView(GuiView & gv)
 {
-	d->lyx_view_ = &gv;
+	d->setGuiView(&gv);
+}
+
+
+void GuiWorkArea::Private::setGuiView(GuiView * gv)
+{
+	lyx_view_ = gv;
 }
 
 
 void GuiWorkArea::setBuffer(Buffer & buffer)
 {
 	delete d->buffer_view_;
-	d->buffer_view_ = new BufferView(buffer);
+	d->buffer_view_ = new BufferView(buffer, *this);
 	buffer.workAreaManager().add(this);
 
 	// HACK: Prevents an additional redraw when the scrollbar pops up
@@ -452,7 +455,7 @@ void GuiWorkArea::toggleCaret()
 }
 
 
-void GuiWorkArea::scheduleRedraw(bool update_metrics)
+void GuiWorkArea::scheduleRedraw(bool update_metrics, int offset)
 {
 	if (!isVisible())
 		// No need to redraw in this case.
@@ -473,7 +476,10 @@ void GuiWorkArea::scheduleRedraw(bool update_metrics)
 	d->updateCaretGeometry();
 
 	LYXERR(Debug::WORKAREA, "WorkArea::redraw screen");
-	viewport()->update();
+	if (offset < INT_MAX)
+		viewport()->scroll(0, -offset);
+	else
+		viewport()->update();
 
 	/// FIXME: is this still true now that paintEvent does the actual painting?
 	/// \warning: scrollbar updating *must* be done after the BufferView is drawn
@@ -668,18 +674,35 @@ void GuiWorkArea::Private::updateScrollbar()
 }
 
 
+void GuiWorkArea::stopScrolling(bool emit)
+{
+	d->stopScrolling(emit);
+}
+
+
 void GuiWorkArea::scrollTo(int value)
 {
-	stopBlinkingCaret();
-	d->buffer_view_->scrollDocView(value, true);
+	d->scrollTo(value);
+}
 
+
+void GuiWorkArea::Private::scrollTo(int value)
+{
+	p->stopBlinkingCaret();
+	buffer_view_->scrollDocView(value);
+	scrollFinish();
+}
+
+
+void GuiWorkArea::Private::scrollFinish()
+{
 	if (lyxrc.cursor_follows_scrollbar) {
-		d->buffer_view_->setCursorFromScrollbar();
+		buffer_view_->setCursorFromScrollbar();
 		// FIXME: let GuiView take care of those.
-		d->lyx_view_->updateLayoutList();
+		lyx_view_->updateLayoutList();
 	}
-	// Show the caret immediately after any operation.
-	startBlinkingCaret();
+	// Show the cursor immediately after any operation.
+	p->startBlinkingCaret();
 	// FIXME QT5
 #ifdef Q_WS_X11
 	QApplication::syncX();
@@ -831,8 +854,10 @@ void GuiWorkArea::mousePressEvent(QMouseEvent * e)
 
 void GuiWorkArea::mouseReleaseEvent(QMouseEvent * e)
 {
-	if (d->synthetic_mouse_event_.timeout.running())
+	if (d->synthetic_mouse_event_.timeout.running()) {
 		d->synthetic_mouse_event_.timeout.stop();
+		d->stopScrolling();
+	}
 
 	FuncRequest const cmd(LFUN_MOUSE_RELEASE, e->x(), e->y(),
 			q_button_state(e->button()), q_key_state(e->modifiers()));
@@ -949,6 +974,9 @@ void GuiWorkArea::generateSyntheticMouseEvent()
 	bool const up = e_y < 0;
 	bool const down = e_y > wh;
 
+	if (!up && !down)
+		d->stopScrolling();
+
 	// Set things off to generate the _next_ 'pseudo' event.
 	int step = 50;
 	if (d->synthetic_mouse_event_.restart_timeout) {
@@ -967,6 +995,8 @@ void GuiWorkArea::generateSyntheticMouseEvent()
 		d->synthetic_mouse_event_.timeout.setTimeout(time);
 		d->synthetic_mouse_event_.timeout.start();
 	}
+	step = max(step, -wh);
+	step = min(step, wh);
 
 	// Can we scroll further ?
 	int const value = verticalScrollBar()->value();
@@ -977,12 +1007,7 @@ void GuiWorkArea::generateSyntheticMouseEvent()
 	}
 
 	// Scroll
-	if (step <= 2 * wh) {
-		d->buffer_view_->scroll(up ? -step : step);
-		d->buffer_view_->updateMetrics();
-	} else {
-		d->buffer_view_->scrollDocView(value + (up ? -step : step), false);
-	}
+	d->scrollTo(up ? -step : step);
 
 	// In which paragraph do we have to set the cursor ?
 	Cursor & cur = d->buffer_view_->cursor();
@@ -1032,6 +1057,37 @@ void GuiWorkArea::generateSyntheticMouseEvent()
 }
 
 
+// CompressorProxy adapted from Kuba Ober https://stackoverflow.com/a/21006207
+CompressorProxy::CompressorProxy(GuiWorkArea * wa) : QObject(wa)
+{
+	qRegisterMetaType<KeySymbol>("KeySymbol");
+	qRegisterMetaType<KeyModifier>("KeyModifier");
+	connect(wa, &GuiWorkArea::compressKeySym, this, &CompressorProxy::slot,
+	        Qt::QueuedConnection);
+	connect(this, &CompressorProxy::signal, wa, &GuiWorkArea::processKeySym);
+}
+
+
+bool CompressorProxy::emitCheck(bool isAutoRepeat)
+{
+	flag_ = true;
+	if (isAutoRepeat)
+		QCoreApplication::sendPostedEvents(this, QEvent::MetaCall); // recurse
+	bool result = flag_;
+	flag_ = false;
+	return result;
+}
+
+
+void CompressorProxy::slot(KeySymbol sym, KeyModifier mod, bool isAutoRepeat)
+{
+	if (emitCheck(isAutoRepeat))
+		Q_EMIT signal(sym, mod);
+	else
+		LYXERR(Debug::KEY, "system is busy: autoRepeat key event ignored");
+}
+
+
 void GuiWorkArea::keyPressEvent(QKeyEvent * ev)
 {
 	// this is also called for ShortcutOverride events. In this case, one must
@@ -1039,13 +1095,16 @@ void GuiWorkArea::keyPressEvent(QKeyEvent * ev)
 	bool const act = (ev->type() != QEvent::ShortcutOverride);
 
 	// Do not process here some keys if dialog_mode_ is set
-	if (d->dialog_mode_
+	bool const for_dialog_mode = d->dialog_mode_
 		&& (ev->modifiers() == Qt::NoModifier
 		    || ev->modifiers() == Qt::ShiftModifier)
 		&& (ev->key() == Qt::Key_Escape
 		    || ev->key() == Qt::Key_Enter
-		    || ev->key() == Qt::Key_Return)
-	    ) {
+		    || ev->key() == Qt::Key_Return);
+	// also do not use autoRepeat to input shortcuts
+	bool const autoRepeat = ev->isAutoRepeat();
+
+	if (for_dialog_mode || (!act && autoRepeat)) {
 		ev->ignore();
 		return;
 	}
@@ -1062,51 +1121,31 @@ void GuiWorkArea::keyPressEvent(QKeyEvent * ev)
 		}
 	}
 
-	// do nothing if there are other events
-	// (the auto repeated events come too fast)
-	// it looks like this is only needed on X11
-#if defined(Q_WS_X11) || defined(QPA_XCB)
-	// FIXME: this is a weird way to implement event compression. Also, this is
-	// broken with IBus.
-	if (act && qApp->hasPendingEvents() && ev->isAutoRepeat()) {
-		switch (ev->key()) {
-		case Qt::Key_PageDown:
-		case Qt::Key_PageUp:
-		case Qt::Key_Left:
-		case Qt::Key_Right:
-		case Qt::Key_Up:
-		case Qt::Key_Down:
-			LYXERR(Debug::KEY, "system is busy: scroll key event ignored");
-			ev->ignore();
-			return;
-		}
-	}
-#endif
-
 	KeyModifier const m = q_key_state(ev->modifiers());
 
-	std::string str;
-	if (m & ShiftModifier)
-		str += "Shift-";
-	if (m & ControlModifier)
-		str += "Control-";
-	if (m & AltModifier)
-		str += "Alt-";
-	if (m & MetaModifier)
-		str += "Meta-";
-
-	if (act)
+	if (act && lyxerr.debugging(Debug::KEY)) {
+		std::string str;
+		if (m & ShiftModifier)
+			str += "Shift-";
+		if (m & ControlModifier)
+			str += "Control-";
+		if (m & AltModifier)
+			str += "Alt-";
+		if (m & MetaModifier)
+			str += "Meta-";
 		LYXERR(Debug::KEY, " count: " << ev->count() << " text: " << ev->text()
 		       << " isAutoRepeat: " << ev->isAutoRepeat() << " key: " << ev->key()
 		       << " keyState: " << str);
+	}
 
 	KeySymbol sym;
 	setKeySymbol(&sym, ev);
 	if (sym.isOK()) {
 		if (act) {
-			processKeySym(sym, m);
+			Q_EMIT compressKeySym(sym, m, autoRepeat);
 			ev->accept();
 		} else
+			// here, !autoRepeat, as determined at the beginning
 			ev->setAccepted(queryKeySym(sym, m));
 	} else {
 		ev->ignore();
@@ -1228,6 +1267,11 @@ void GuiWorkArea::Private::paintPreeditText(GuiPainter & pain)
 
 void GuiWorkArea::paintEvent(QPaintEvent * ev)
 {
+	// When Debug::PAINTING is set, produce a flicker
+	guiApp->colorCache().invert_debug = lyxerr.debugging(Debug::PAINTING)
+		? !guiApp->colorCache().invert_debug
+		: false;
+
 	// LYXERR(Debug::PAINTING, "paintEvent begin: x: " << rc.x()
 	//	<< " y: " << rc.y() << " w: " << rc.width() << " h: " << rc.height());
 
@@ -1499,19 +1543,19 @@ TabWorkArea::TabWorkArea(QWidget * parent)
 		this, SLOT(closeCurrentBuffer()));
 	setCornerWidget(closeBufferButton, Qt::TopRightCorner);
 
-	// setup drag'n'drop
-	QTabBar* tb = new DragTabBar;
-	connect(tb, SIGNAL(tabMoveRequested(int, int)),
-		this, SLOT(moveTab(int, int)));
+	// set TabBar behaviour
+	QTabBar * tb = tabBar();
+	tb->setTabsClosable(!lyxrc.single_close_tab_button);
+	tb->setSelectionBehaviorOnRemove(QTabBar::SelectPreviousTab);
 	tb->setElideMode(Qt::ElideNone);
-	setTabBar(tb);
-
+	// allow dragging tabs
+	tb->setMovable(true);
 	// make us responsible for the context menu of the tabbar
 	tb->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(tb, SIGNAL(customContextMenuRequested(const QPoint &)),
-		this, SLOT(showContextMenu(const QPoint &)));
+	        this, SLOT(showContextMenu(const QPoint &)));
 	connect(tb, SIGNAL(tabCloseRequested(int)),
-		this, SLOT(closeTab(int)));
+	        this, SLOT(closeTab(int)));
 
 	setUsesScrollButtons(true);
 }
@@ -2026,7 +2070,7 @@ void TabWorkArea::updateTabTexts()
 void TabWorkArea::showContextMenu(const QPoint & pos)
 {
 	// which tab?
-	clicked_tab_ = static_cast<DragTabBar *>(tabBar())->tabAt(pos);
+	clicked_tab_ = tabBar()->tabAt(pos);
 	if (clicked_tab_ == -1)
 		return;
 
@@ -2052,84 +2096,6 @@ void TabWorkArea::moveTab(int fromIndex, int toIndex)
 	removeTab(fromIndex);
 	insertTab(toIndex, w, icon, text);
 	setCurrentIndex(toIndex);
-}
-
-
-DragTabBar::DragTabBar(QWidget* parent)
-	: QTabBar(parent)
-{
-	setAcceptDrops(true);
-	setTabsClosable(!lyxrc.single_close_tab_button);
-}
-
-
-void DragTabBar::mousePressEvent(QMouseEvent * event)
-{
-	if (event->button() == Qt::LeftButton)
-		dragStartPos_ = event->pos();
-	QTabBar::mousePressEvent(event);
-}
-
-
-void DragTabBar::mouseMoveEvent(QMouseEvent * event)
-{
-	// If the left button isn't pressed anymore then return
-	if (!(event->buttons() & Qt::LeftButton))
-		return;
-
-	// If the distance is too small then return
-	if ((event->pos() - dragStartPos_).manhattanLength()
-	    < QApplication::startDragDistance())
-		return;
-
-	// did we hit something after all?
-	int tab = tabAt(dragStartPos_);
-	if (tab == -1)
-		return;
-
-	// simulate button release to remove highlight from button
-	int i = currentIndex();
-	QMouseEvent me(QEvent::MouseButtonRelease, dragStartPos_,
-		event->button(), event->buttons(), 0);
-	QTabBar::mouseReleaseEvent(&me);
-	setCurrentIndex(i);
-
-	// initiate Drag
-	QDrag * drag = new QDrag(this);
-	QMimeData * mimeData = new QMimeData;
-	// a crude way to distinguish tab-reodering drops from other ones
-	mimeData->setData("action", "tab-reordering") ;
-	drag->setMimeData(mimeData);
-
-	// get tab pixmap as cursor
-	QRect r = tabRect(tab);
-	QPixmap pixmap(r.size());
-	render(&pixmap, - r.topLeft());
-	drag->setPixmap(pixmap);
-	drag->exec();
-}
-
-
-void DragTabBar::dragEnterEvent(QDragEnterEvent * event)
-{
-	// Only accept if it's an tab-reordering request
-	QMimeData const * m = event->mimeData();
-	QStringList formats = m->formats();
-	if (formats.contains("action")
-	    && m->data("action") == "tab-reordering")
-		event->acceptProposedAction();
-}
-
-
-void DragTabBar::dropEvent(QDropEvent * event)
-{
-	int fromIndex = tabAt(dragStartPos_);
-	int toIndex = tabAt(event->pos());
-
-	// Tell interested objects that
-	if (fromIndex != toIndex)
-		tabMoveRequested(fromIndex, toIndex);
-	event->acceptProposedAction();
 }
 
 

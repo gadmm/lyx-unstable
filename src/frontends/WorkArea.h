@@ -16,6 +16,8 @@
 
 #include "frontends/KeyModifier.h"
 
+#include <climits>
+
 namespace lyx {
 
 class BufferView;
@@ -35,7 +37,7 @@ public:
 	virtual ~WorkArea() {}
 
 	/// Update metrics if needed and schedule a paint event
-	virtual void scheduleRedraw(bool update_metrics) = 0;
+	virtual void scheduleRedraw(bool update_metrics, int offset = INT_MAX) = 0;
 
 	/// close this work area.
 	/// Slot for Buffer::closing signal.
@@ -43,6 +45,13 @@ public:
 
 	/// Update window titles of all users.
 	virtual void updateWindowTitle() = 0;
+
+	/// Stop scrolling animation (if any)
+	virtual void stopScrolling(bool emit) = 0;
+
+	/// scroll by a certain value (current position is 0 so the destination is
+	/// the offset)
+	virtual void scrollTo(int value) = 0;
 };
 
 } // namespace frontend

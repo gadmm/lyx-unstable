@@ -1,0 +1,14 @@
+#% Do not delete the line below; configure depends on this
+#  \DeclareLaTeXClass[easychair,xcolor.sty,geometry.sty,footmisc.sty,hyperref.sty,graphicx.sty,listings.sty,latexsym.sty,amsthm.sty,empheq.sty,keyval.sty,lastpage.sty,fancyhdr.sty,environ.sty,report]{EasyChair thesis}
+#  \DeclareCategory{Reports}
+# EasyChair document class with thesis option, based on the standard report
+# class.
+# Author : Guillaume Munch-Maccagnoni <gm@lyx.org>
+
+Format 65
+Input report.layout
+Input easychair.inc
+
+ClassOptions
+    Other               thesis,a4paper
+End

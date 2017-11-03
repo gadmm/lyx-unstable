@@ -302,7 +302,7 @@ dist_examples_DATA = \
 	examples/addressExample.adr \
 	examples/amsart-test.lyx \
 	examples/amsbook-test.lyx \
-	examples/beamer.lyx \
+	examples/beamer-flex.lyx \
 	examples/beamer-article.lyx \
 	examples/beamer-g4.jpg \
 	examples/beamer-g4-mask.jpg \
@@ -444,6 +444,7 @@ dist_images_DATA1X = \
 	images/closetab.svgz \
 	images/tab-group-close.svgz \
 	images/copy.svgz \
+	images/custom-insets.svgz \
 	images/cut.svgz \
 	images/depth-decrement.svgz \
 	images/depth-increment.svgz \
@@ -1454,8 +1455,19 @@ dist_imagesmath_DATA = \
 	images/math/xcancel.svgz \
 	images/math/xi.svgz \
 	images/math/xi2.svgz \
+	images/math/xhookleftarrow.svgz \
+	images/math/xhookrightarrow.svgz \
 	images/math/xleftarrow.svgz \
+	images/math/xleftarrow2.svgz \
+	images/math/xleftharpoondown.svgz \
+	images/math/xleftharpoonup.svgz \
+	images/math/xleftrightarrow.svgz \
+	images/math/xleftrightarrow2.svgz \
+	images/math/xmapsto.svgz \
 	images/math/xrightarrow.svgz \
+	images/math/xrightarrow2.svgz \
+	images/math/xrightharpoondown.svgz \
+	images/math/xrightharpoonup.svgz \
 	images/math/Ydown.svgz \
 	images/math/yen.svgz \
 	images/math/Yleft.svgz \
@@ -2123,6 +2135,9 @@ dist_layouts_DATA =\
 	layouts/article.layout \
 	layouts/article-beamer.layout \
 	layouts/beamer.layout \
+	layouts/beamer-flex.inc \
+	layouts/beamer-flex.layout \
+	layouts/beamer-flex.module \
 	layouts/beamerposter.layout \
 	layouts/bicaption.module \
 	layouts/book.layout \
@@ -2156,6 +2171,9 @@ dist_layouts_DATA =\
 	layouts/docbook.layout \
 	layouts/doublecol-new.layout \
 	layouts/dtk.layout \
+	layouts/easychair.inc \
+	layouts/easychair.layout \
+	layouts/easychair-thesis.layout \
 	layouts/ectaart.layout \
 	layouts/egs.layout \
 	layouts/elsart.layout \
@@ -2377,6 +2395,7 @@ dist_templates_DATA = \
 	templates/de_beamer-conference-ornate-20min.lyx \
 	templates/dinbrief.lyx \
 	templates/DocBook_article.lyx \
+	templates/easychair-article.lyx \
 	templates/ectaart.lyx \
 	templates/elsarticle.lyx \
 	templates/EPS-cropped.lyx \

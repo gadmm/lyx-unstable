@@ -15,9 +15,11 @@
 #include "ColorCache.h"
 #include "ColorSet.h"
 
+#include <cmath>
+
 namespace lyx {
 
-namespace{
+namespace {
 
 QPalette::ColorRole role(ColorCode col)
 {
@@ -54,6 +56,21 @@ QPalette::ColorRole role(ColorCode col)
 	}
 }
 
+
+QColor invert(QColor col)
+{
+	static std::vector<int> gamma = [](){
+		std::vector<int> gamma(256);
+		double const gamma_val = 2.4;
+		for (int i = 0; i <= 255; ++i)
+			gamma[i] = std::round(255 * std::pow(double(255 - i)/255,
+			                                     1/gamma_val));
+		return gamma;
+	}();
+	return {gamma[col.red()], gamma[col.green()], gamma[col.blue()]};
+}
+
+
 } // namespace
 
 
@@ -74,8 +91,14 @@ QColor ColorCache::get(Color const & color) const
 }
 
 
-/// get the given color
 QColor ColorCache::get(Color const & color, bool syscolors) const
+{
+	QColor const col = getPlain(color, syscolors);
+	return (lyxrc.invert_colors != invert_debug) ? invert(col) : col;
+}
+
+
+QColor ColorCache::getPlain(Color const & color, bool syscolors) const
 {
 	if (!initialized_)
 		const_cast<ColorCache *>(this)->init();
@@ -94,8 +117,8 @@ QColor ColorCache::get(Color const & color, bool syscolors) const
 	if (color.mergeColor != Color_ignore) {
 		// FIXME: This would ideally be done in the Color class, but
 		// that means that we'd have to use the Qt code in the core.
-		QColor base_color = get(color.baseColor, syscolors).toRgb();
-		QColor merge_color = get(color.mergeColor, syscolors).toRgb();
+		QColor base_color = getPlain(color.baseColor, syscolors).toRgb();
+		QColor merge_color = getPlain(color.mergeColor, syscolors).toRgb();
 		return QColor(
 			(base_color.red() + merge_color.red()) / 2,
 			(base_color.green() + merge_color.green()) / 2,
@@ -117,7 +140,7 @@ bool ColorCache::isSystem(ColorCode const color) const
 }
 
 
-QColor const rgb2qcolor(RGBColor const & rgb)
+QColor rgb2qcolor(RGBColor const & rgb)
 {
 	return QColor(rgb.r, rgb.g, rgb.b);
 }

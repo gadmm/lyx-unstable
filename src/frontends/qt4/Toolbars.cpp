@@ -74,7 +74,8 @@ ToolbarInfo & ToolbarInfo::read(Lexer & lex)
 		TO_EXPORTFORMATS,
 		TO_IMPORTFORMATS,
 		TO_UPDATEFORMATS,
-		TO_VIEWFORMATS
+		TO_VIEWFORMATS,
+		TO_INSETS
 	};
 
 	struct LexerKeyword toolTags[] = {
@@ -82,6 +83,7 @@ ToolbarInfo & ToolbarInfo::read(Lexer & lex)
 		{ "exportformats", TO_EXPORTFORMATS },
 		{ "iconpalette", TO_ICONPALETTE },
 		{ "importformats", TO_IMPORTFORMATS },
+		{ "insets", TO_INSETS },
 		{ "item", TO_COMMAND },
 		{ "layouts", TO_LAYOUTS },
 		{ "minibuffer", TO_MINIBUFFER },
@@ -177,6 +179,12 @@ ToolbarInfo & ToolbarInfo::read(Lexer & lex)
 			add(ToolbarItem(ToolbarItem::LAYOUTS,
 				FuncRequest(FuncCode(ToolbarItem::LAYOUTS))));
 			break;
+
+		case TO_INSETS: {
+			add(ToolbarItem(ToolbarItem::INSETS, "custom-insets",
+			                from_ascii("Add Custom Inset")));
+			break;
+        }
 
 		case TO_TABLEINSERT:
 			if (lex.next(true)) {

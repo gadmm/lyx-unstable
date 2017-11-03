@@ -28,6 +28,7 @@ namespace support { class FileName; }
 
 namespace frontend { class Painter; }
 namespace frontend { class GuiBufferViewDelegate; }
+namespace frontend { class WorkArea; }
 
 class Buffer;
 class Change;
@@ -89,7 +90,7 @@ struct ScrollbarParameters
 class BufferView {
 public:
 	///
-	explicit BufferView(Buffer & buffer);
+	BufferView(Buffer & buffer, frontend::WorkArea & wa);
 	///
 	~BufferView();
 
@@ -113,6 +114,7 @@ public:
 	 *  document font.
 	 */
 	int inPixels(Length const & len) const;
+	double inPixelsDouble(Length const & len) const;
 
 	/// \return true if the BufferView is at the top of the document.
 	bool isTopScreen() const;
@@ -193,13 +195,13 @@ public:
 	/// This method will automatically scroll and update the BufferView
 	/// (metrics+drawing) if needed.
 	/// \param recenter Whether the cursor should be centered on screen
-	void showCursor(DocIterator const & dit, bool recenter,
-		bool update);
+	void showCursor(DocIterator const & dit, bool recenter);
 	/// Scroll to the cursor.
+	/// This is synonymous to showCursor()
 	void scrollToCursor();
 	/// Scroll to the cursor.
-	/// \param recenter Whether the cursor should be centered on screen
-	bool scrollToCursor(DocIterator const & dit, bool recenter);
+	/// This is synonymous to showCursor(dit, recenter)
+	void scrollToCursor(DocIterator const & dit, bool recenter);
 	/// scroll down document by the given number of pixels.
 	int scrollDown(int pixels);
 	/// scroll up document by the given number of pixels.
@@ -207,7 +209,7 @@ public:
 	/// scroll document by the given number of pixels.
 	int scroll(int pixels);
 	/// Scroll the view by a number of pixels.
-	void scrollDocView(int pixels, bool update);
+	void scrollDocView(int pixels);
 	/// Set the cursor position based on the scrollbar one.
 	void setCursorFromScrollbar();
 
@@ -396,6 +398,8 @@ private:
 
 	///
 	void updateDocumentClass(DocumentClassConstPtr olddc);
+	/// Length of animated scrolling when centering on a cursor far away.
+	int fakeTravel() const { return 2 * height_; }
 	///
 	int width_;
 	///

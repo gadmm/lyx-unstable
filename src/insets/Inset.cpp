@@ -42,6 +42,9 @@
 #include "support/gettext.h"
 #include "support/lassert.h"
 
+#include "mathed/MathSupport.h"
+
+#include <cmath>
 #include <map>
 
 using namespace std;
@@ -512,21 +515,6 @@ void Inset::cursorPos(BufferView const & /*bv*/, CursorSlice const &,
 }
 
 
-void Inset::metricsMarkers(Dimension & dim, int framesize) const
-{
-	dim.wid += 2 * framesize;
-	dim.des += framesize;
-}
-
-
-void Inset::metricsMarkers2(Dimension & dim, int framesize) const
-{
-	dim.wid += 2 * framesize;
-	dim.asc += framesize;
-	dim.des += framesize;
-}
-
-
 void Inset::drawBackground(PainterInfo & pi, int x, int y) const
 {
 	if (pi.full_repaint && backgroundColor(pi) == Color_none)
@@ -537,35 +525,28 @@ void Inset::drawBackground(PainterInfo & pi, int x, int y) const
 }
 
 
-void Inset::drawMarkers(PainterInfo & pi, int x, int y) const
+void Inset::drawMarkers(PainterInfo & pi, int x0, int y0, int x1, int y1,
+                        Color col_on, Color col_off, bool upper) const
 {
-	ColorCode pen_color = mouseHovered(pi.base.bv) || editing(pi.base.bv)?
-		Color_mathframe : Color_mathcorners;
-
-	Dimension const dim = dimension(*pi.base.bv);
-
-	int const t = x + dim.width() - 1;
-	int const d = y + dim.descent();
-	pi.pain.line(x, d - 3, x, d, pen_color);
-	pi.pain.line(t, d - 3, t, d, pen_color);
-	pi.pain.line(x, d, x + 3, d, pen_color);
-	pi.pain.line(t - 3, d, t, d, pen_color);
+	Color pen_color = (mouseHovered(pi.base.bv) || editing(pi.base.bv)) ?
+		col_on : col_off;
+	mathed_draw_marker(pi, x0,  y0,  1, -1, pen_color);
+	mathed_draw_marker(pi, x1, y0, -1, -1, pen_color);
+	if (!upper)
+		return;
+	mathed_draw_marker(pi, x0,  y1,  1, 1, pen_color);
+	mathed_draw_marker(pi, x1, y1, -1, 1, pen_color);
 }
 
 
-void Inset::drawMarkers2(PainterInfo & pi, int x, int y) const
+void Inset::drawMarkers(PainterInfo & pi, int x, int y,
+                        Color col_on, Color col_off, bool upper) const
 {
-	ColorCode pen_color = mouseHovered(pi.base.bv) || editing(pi.base.bv)?
-		Color_mathframe : Color_mathcorners;
-
-	drawMarkers(pi, x, y);
 	Dimension const dim = dimension(*pi.base.bv);
-	int const t = x + dim.width() - 1;
-	int const a = y - dim.ascent();
-	pi.pain.line(x, a + 3, x, a, pen_color);
-	pi.pain.line(t, a + 3, t, a, pen_color);
-	pi.pain.line(x, a, x + 3, a, pen_color);
-	pi.pain.line(t - 3, a, t, a, pen_color);
+	int const x1 = x + dim.wid;
+	int const y0 = y + dim.des;
+	int const y1 = y - dim.asc;
+	drawMarkers(pi, x, y0, x1, y1, col_on, col_off, upper);
 }
 
 

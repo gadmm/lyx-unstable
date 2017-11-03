@@ -194,10 +194,8 @@ int InsetMathRef::docbook(odocstream & os, OutputParams const & runparams) const
 
 void InsetMathRef::updateBuffer(ParIterator const & it, UpdateType /*utype*/)
 {
-	if (!buffer_) {
-		LYXERR0("InsetMathRef::updateBuffer: no buffer_!");
+	if (!buffer_)
 		return;
-	}
 	// register this inset into the buffer reference cache.
 	buffer().addReference(getTarget(), this, it);
 }

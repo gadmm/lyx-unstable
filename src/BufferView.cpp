@@ -73,6 +73,7 @@
 #include "frontends/NullPainter.h"
 #include "frontends/Painter.h"
 #include "frontends/Selection.h"
+#include "frontends/WorkArea.h"
 
 #include "support/convert.h"
 #include "support/debug.h"
@@ -85,6 +86,7 @@
 #include "support/types.h"
 
 #include <cerrno>
+#include <cmath>
 #include <fstream>
 #include <functional>
 #include <iterator>
@@ -228,7 +230,8 @@ enum ScreenUpdateStrategy {
 
 struct BufferView::Private
 {
-	Private(BufferView & bv) : update_strategy_(FullScreenUpdate),
+	Private(BufferView & bv, frontend::WorkArea & wa)
+		: update_strategy_(FullScreenUpdate),
 		update_flags_(Update::Force),
 		wh_(0), cursor_(bv),
 		anchor_pit_(0), anchor_ypos_(0),
@@ -236,7 +239,8 @@ struct BufferView::Private
 		last_inset_(0), clickable_inset_(false),
 		mouse_position_cache_(),
 		bookmark_edit_position_(-1), gui_(0),
-		horiz_scroll_offset_(0), repaint_caret_row_(false)
+		  horiz_scroll_offset_(0), repaint_caret_row_(false),
+		  wa_(wa)
 	{
 		xsel_cache_.set = false;
 	}
@@ -321,12 +325,14 @@ struct BufferView::Private
 	CursorSlice caret_slice_;
 	/// indicates whether the caret slice needs to be repainted in this draw() run.
 	bool repaint_caret_row_;
+	///
+	frontend::WorkArea & wa_;
 };
 
 
-BufferView::BufferView(Buffer & buf)
+BufferView::BufferView(Buffer & buf, frontend::WorkArea & wa)
 	: width_(0), height_(0), full_screen_(false), buffer_(buf),
-      d(new Private(*this))
+	  d(new Private(*this, wa))
 {
 	d->xsel_cache_.set = false;
 	d->intl_.initKeyMapper(lyxrc.use_kbmap);
@@ -378,10 +384,16 @@ int BufferView::leftMargin() const
 }
 
 
-int BufferView::inPixels(Length const & len) const
+double BufferView::inPixelsDouble(Length const & len) const
 {
 	Font const font = buffer().params().getFont();
-	return len.inPixels(workWidth(), theFontMetrics(font).em());
+	return len.inPixelsDouble(workWidth(), theFontMetrics(font).em());
+}
+
+
+int BufferView::inPixels(Length const & len) const
+{
+	return (int) round(inPixelsDouble(len));
 }
 
 
@@ -526,7 +538,7 @@ void BufferView::processUpdateFlags(Update::flags flags)
 	updateHoveredInset();
 
 	// Trigger a redraw.
-	buffer_.changed(false);
+	d->wa_.scheduleRedraw(false);
 }
 
 
@@ -628,8 +640,7 @@ string BufferView::contextMenu(int x, int y) const
 }
 
 
-
-void BufferView::scrollDocView(int const value, bool update)
+void BufferView::scrollDocView(int value)
 {
 	// The scrollbar values are relative to the top of the screen, therefore the
 	// offset is equal to the target value.
@@ -638,51 +649,12 @@ void BufferView::scrollDocView(int const value, bool update)
 	if (value == 0)
 		return;
 
-	// If the offset is less than 2 screen height, prefer to scroll instead.
-	if (abs(value) <= 2 * height_) {
-		d->anchor_ypos_ -= value;
-		processUpdateFlags(Update::Force);
-		return;
-	}
-
-	// cut off at the top
-	if (value <= d->scrollbarParameters_.min) {
-		DocIterator dit = doc_iterator_begin(&buffer_);
-		showCursor(dit, false, update);
-		LYXERR(Debug::SCROLLING, "scroll to top");
-		return;
-	}
-
-	// cut off at the bottom
-	if (value >= d->scrollbarParameters_.max) {
-		DocIterator dit = doc_iterator_end(&buffer_);
-		dit.backwardPos();
-		showCursor(dit, false, update);
-		LYXERR(Debug::SCROLLING, "scroll to bottom");
-		return;
-	}
-
-	// find paragraph at target position
-	int par_pos = d->scrollbarParameters_.min;
-	pit_type i = 0;
-	for (; i != int(d->par_height_.size()); ++i) {
-		par_pos += d->par_height_[i];
-		if (par_pos >= value)
-			break;
-	}
-
-	if (par_pos < value) {
-		// It seems we didn't find the correct pit so stay on the safe side and
-		// scroll to bottom.
-		LYXERR0("scrolling position not found!");
-		scrollDocView(d->scrollbarParameters_.max, update);
-		return;
-	}
-
-	DocIterator dit = doc_iterator_begin(&buffer_);
-	dit.pit() = i;
-	LYXERR(Debug::SCROLLING, "value = " << value << " -> scroll to pit " << i);
-	showCursor(dit, false, update);
+	value = max(d->scrollbarParameters_.min, value);
+	value = min(d->scrollbarParameters_.max, value);
+	d->anchor_ypos_ -= value;
+	d->wa_.scheduleRedraw(true, value);
+	updateHoveredInset();
+	return;
 }
 
 
@@ -867,37 +839,36 @@ int BufferView::workWidth() const
 
 void BufferView::recenter()
 {
-	showCursor(d->cursor_, true, true);
+	scrollToCursor(d->cursor_, true);
 }
 
 
 void BufferView::showCursor()
 {
-	showCursor(d->cursor_, false, true);
+	scrollToCursor(d->cursor_, false);
 }
 
 
-void BufferView::showCursor(DocIterator const & dit,
-	bool recenter, bool update)
+void BufferView::showCursor(DocIterator const & dit, bool recenter)
 {
-	if (scrollToCursor(dit, recenter) && update)
-		processUpdateFlags(Update::Force);
+	scrollToCursor(dit, recenter);
 }
 
 
 void BufferView::scrollToCursor()
 {
-	if (scrollToCursor(d->cursor_, false))
-		processUpdateFlags(Update::Force);
+	showCursor();
 }
 
 
-bool BufferView::scrollToCursor(DocIterator const & dit, bool const recenter)
+void BufferView::scrollToCursor(DocIterator const & dit, bool const recenter)
 {
 	// We are not properly started yet, delay until resizing is
 	// done.
 	if (height_ == 0)
-		return false;
+		return;
+
+	d->wa_.stopScrolling(false);
 
 	LYXERR(Debug::SCROLLING, "recentering!");
 
@@ -921,69 +892,66 @@ bool BufferView::scrollToCursor(DocIterator const & dit, bool const recenter)
 	if (tm.contains(bot_pit)) {
 		ParagraphMetrics const & pm = tm.parMetrics(bot_pit);
 		LBUFERR(!pm.rows().empty());
-		// FIXME: smooth scrolling doesn't work in mathed.
 		CursorSlice const & cs = dit.innerTextSlice();
 		int offset = coordOffset(dit).y_;
 		int ypos = pm.position() + offset;
 		Dimension const & row_dim =
 			pm.getRow(cs.pos(), dit.boundary()).dimension();
-		int scrolled = 0;
 		if (recenter)
-			scrolled = scroll(ypos - height_/2);
+			scroll(ypos - height_/2);
 
-		// We try to visualize the whole row, if the row height is larger than
-		// the screen height, we scroll to a heuristic value of height_ / 4.
-		// FIXME: This heuristic value should be replaced by a recursive search
-		// for a row in the inset that can be visualized completely.
 		else if (row_dim.height() > height_) {
+			// We try to visualize the whole row, if the row height is larger than
+			// the screen height, we scroll to a heuristic value of height_ / 4.
+			// FIXME: This heuristic value should be replaced by a recursive search
+			// for a row in the inset that can be visualized completely.
 			if (ypos < defaultRowHeight())
-				scrolled = scroll(ypos - height_ / 4);
+				scroll(ypos - height_ / 4);
 			else if (ypos > height_ - defaultRowHeight())
-				scrolled = scroll(ypos - 3 * height_ / 4);
+				scroll(ypos - 3 * height_ / 4);
 		}
 
-		// If the top part of the row falls of the screen, we scroll
-		// up to align the top of the row with the top of the screen.
 		else if (ypos - row_dim.ascent() < 0 && ypos < height_) {
+			// If the top part of the row falls of the screen, we scroll
+			// up to align the top of the row with the top of the screen.
 			int ynew = row_dim.ascent();
-			scrolled = scrollUp(ynew - ypos);
+			scrollUp(ynew - ypos);
 		}
 
-		// If the bottom of the row falls of the screen, we scroll down.
 		else if (ypos + row_dim.descent() > height_ && ypos > 0) {
+			// If the bottom of the row falls of the screen, we scroll down.
 			int ynew = height_ - row_dim.descent();
-			scrolled = scrollDown(ypos - ynew);
+			scrollDown(ypos - ynew);
 		}
 
 		// else, nothing to do, the cursor is already visible so we just return.
-		return scrolled != 0;
+		return;
 	}
+
+	// metrics for the paragraph are not known
+	bool const upwards = bot_pit < d->anchor_pit_;
 
 	// fix inline completion position
 	if (d->inlineCompletionPos_.fixIfBroken())
 		d->inlineCompletionPos_ = DocIterator();
 
 	tm.redoParagraph(bot_pit);
-	ParagraphMetrics const & pm = tm.parMetrics(bot_pit);
 	int offset = coordOffset(dit).y_;
 
 	d->anchor_pit_ = bot_pit;
-	CursorSlice const & cs = dit.innerTextSlice();
-	Dimension const & row_dim =
-		pm.getRow(cs.pos(), dit.boundary()).dimension();
 
+	int scroll_value;
 	if (recenter)
-		d->anchor_ypos_ = height_/2;
-	else if (d->anchor_pit_ == 0)
-		d->anchor_ypos_ = offset + pm.ascent();
-	else if (d->anchor_pit_ == max_pit)
-		d->anchor_ypos_ = height_ - offset - row_dim.descent();
-	else if (offset > height_)
-		d->anchor_ypos_ = height_ - offset - defaultRowHeight();
+		scroll_value = height_ / 2;
+	else if (offset > height_ / 2)
+		scroll_value = height_ / 4 - offset;
 	else
-		d->anchor_ypos_ = defaultRowHeight() * 2;
+		scroll_value = height_ / 4;
 
-	return true;
+	int const fake_travel = (upwards ? -1 : 1) * fakeTravel();
+	d->anchor_ypos_ = scroll_value + fake_travel;
+	updateMetrics();
+	d->wa_.scrollTo(fake_travel);
 }
 
 
@@ -2095,9 +2063,7 @@ void BufferView::clearSelection()
 	// not the more current external selection.
 	cap::clearSelection();
 	d->xsel_cache_.set = false;
-	// The buffer did not really change, but this causes the
-	// redraw we need because we cleared the selection above.
-	buffer_.changed(false);
+	d->wa_.scheduleRedraw(false);
 }
 
 
@@ -2181,7 +2147,7 @@ void BufferView::updateHoveredInset() const
 
 		// This event (moving without mouse click) is not passed further.
 		// This should be changed if it is further utilized.
-		buffer_.changed(false);
+		d->wa_.scheduleRedraw(false);
 	}
 }
 
@@ -2317,7 +2283,7 @@ int BufferView::scrollDown(int offset)
 			break;
 		tm.newParMetricsDown();
 	}
-	d->anchor_ypos_ -= offset;
+	d->wa_.scrollTo(offset);
 	return -offset;
 }
 
@@ -2340,7 +2306,7 @@ int BufferView::scrollUp(int offset)
 			break;
 		tm.newParMetricsUp();
 	}
-	d->anchor_ypos_ += offset;
+	d->wa_.scrollTo(-offset);
 	return offset;
 }
 
@@ -2709,13 +2675,16 @@ void BufferView::updateMetrics(Update::flags & update_flags)
 		<< " anchor pit = " << d->anchor_pit_
 		<< " anchor ypos = " << d->anchor_ypos_);
 
+	// We make sure to redo the metrics up to the paragraph at cursor if not too
+	// far away.
+	int const cur_pit = d->cursor_.bottom().pit();
+
 	// Redo paragraphs above anchor if necessary.
 	int y1 = d->anchor_ypos_ - anchor_pm.ascent();
 	// We are now just above the anchor paragraph.
 	pit_type pit1 = d->anchor_pit_ - 1;
-	for (; pit1 >= 0 && y1 >= 0; --pit1) {
-		tm.redoParagraph(pit1);
-		ParagraphMetrics & pm = tm.par_metrics_[pit1];
+	for (; pit1 >= 0 && y1 >= ((pit1 >= cur_pit) ? -fakeTravel() : 0); --pit1) {
+		ParagraphMetrics & pm = tm.parMetrics(pit1, true);
 		y1 -= pm.descent();
 		// Save the paragraph position in the cache.
 		pm.setPosition(y1);
@@ -2727,9 +2696,9 @@ void BufferView::updateMetrics(Update::flags & update_flags)
 	int y2 = d->anchor_ypos_ + anchor_pm.descent();
 	// We are now just below the anchor paragraph.
 	pit_type pit2 = d->anchor_pit_ + 1;
-	for (; pit2 < npit && y2 <= height_; ++pit2) {
-		tm.redoParagraph(pit2);
-		ParagraphMetrics & pm = tm.par_metrics_[pit2];
+	for (; pit2 < npit &&
+		     y2 <= height_ + ((pit2 <= cur_pit) ? fakeTravel() : 0); ++pit2) {
+		ParagraphMetrics & pm = tm.parMetrics(pit2, true);
 		y2 += pm.ascent();
 		// Save the paragraph position in the cache.
 		pm.setPosition(y2);
@@ -2742,8 +2711,8 @@ void BufferView::updateMetrics(Update::flags & update_flags)
 		<< " anchor ypos = " << d->anchor_ypos_
 		<< " y1 = " << y1
 		<< " y2 = " << y2
-		<< " pit1 = " << pit1
-		<< " pit2 = " << pit2);
+		<< " pit1 = " << pit1 + 1
+		<< " pit2 = " << pit2 - 1);
 
 	// metrics is done, full drawing is necessary now
 	update_flags = (update_flags & ~Update::Force) | Update::ForceDraw;
@@ -2976,9 +2945,14 @@ void BufferView::setCurrentRowSlice(CursorSlice const & rowSlice)
 
 namespace {
 
-bool sliceInRow(CursorSlice const & cs, Text const * text, Row const & row)
+bool sliceInRow(CursorSlice const & cs, Text const *, Row const & row)
 {
-	return !cs.empty() && cs.text() == text && cs.pit() == row.pit()
+	return !cs.empty()
+		/// FIXME: cs.inset_ may be dangling (regression at e7fdce0b). We
+		///disable the test for now. Let us cross fingers and hope that the
+		///resulting heuristic is good enough.
+		//&& cs.text() == text
+		&& cs.pit() == row.pit()
 		&& row.pos() <= cs.pos() && cs.pos() <= row.endpos();
 }
 

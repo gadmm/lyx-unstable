@@ -31,8 +31,8 @@
 #include "support/debug.h"
 #include "support/docstream.h"
 #include "support/lassert.h"
-#include "support/lyxlib.h"
 
+#include <cmath>
 #include <map>
 #include <algorithm>
 
@@ -79,11 +79,16 @@ void Matrix::transform(double & x, double & y)
 
 namespace {
 
+// TODO: Use opentype math fonts. Harfbuzz provides everything needed to replace
+// the following with assemblies of glyphs from math opentype fonts (see
+// <http://www.lyx.org/trac/ticket/9014>). This is more work obviously.
+
 /*
  * Internal struct of a drawing: code n x1 y1 ... xn yn, where code is:
  * 0 = end, 1 = line, 2 = polyline, 3 = square line, 4 = square polyline
+ * 6 = square polyline (moved to the other end)
+ * 5 = square line (second point is in the second square)
  */
-
 
 double const parenthHigh[] = {
 	2, 13,
@@ -121,68 +126,72 @@ double const brace[] = {
 
 
 double const mapsto[] = {
-	2, 3,
-	0.75, 0.015, 0.95, 0.5, 0.75, 0.985,
-	1, 0.015, 0.475, 0.945, 0.475,
-	1, 0.015, 0.015, 0.015, 0.985,
+	4, 7,
+	0.0150, 0.7500, 0.2000, 0.6000, 0.3500, 0.3500,
+	0.5000, 0.0500, 0.6500, 0.3500, 0.8000, 0.6000,
+	0.9850, 0.7500,
+	5,
+	0.5000, 0.1500, 0.5000, 0.8500,
+	6, 2,
+	0.0150, 0.8500, 0.9850, 0.8500,
 	0
 };
 
 
 double const lhook[] = {
-	2, 3,
-	0.25, 0.015, 0.05, 0.5, 0.25, 0.985,
-	1, 0.015, 0.475, 0.7, 0.475,
-	2, 5,
-	0.7, 0.015, 0.825, 0.15, 0.985, 0.25,
-	0.825, 0.35, 0.7, 0.475,
+	4, 7,
+	0.0150, 0.7500, 0.2000, 0.6000, 0.3500, 0.3500,
+	0.5000, 0.0500, 0.6500, 0.3500, 0.8000, 0.6000,
+	0.9850, 0.7500,
+	5,
+	0.5000, 0.1500, 0.5000, 0.6075,
+	6, 7,
+	0.5000, 0.6075,
+	0.5100, 0.6764,
+	0.5800, 0.7875,
+	0.7425, 0.8500,
+	0.9050, 0.7875,
+	0.9750, 0.6764,
+	0.9850, 0.6075,
 	0
 };
 
 
 double const rhook[] = {
-	2, 3,
-	0.75, 0.015, 0.95, 0.5, 0.75, 0.985,
-	1, 0.3, 0.475, 0.985, 0.475,
-	2, 5,
-	0.3, 0.015, 0.175, 0.15, 0.05, 0.25,
-	0.175, 0.35, 0.3, 0.475,
-	0
-};
-
-
-double const LRArrow[] = {
-	2, 3,
-	0.25, 0.015, 0.05, 0.5, 0.25, 0.985,
-	2, 3,
-	0.75, 0.015, 0.95, 0.5, 0.75, 0.985,
-	1, 0.2, 0.8, 0.8, 0.8,
-	1, 0.2, 0.2, 0.8, 0.2,
-	0
-};
-
-
-double const LArrow[] = {
-	2, 3,
-	0.25, 0.015, 0.05, 0.5, 0.25, 0.985,
-	1, 0.2, 0.8, 0.985, 0.8,
-	1, 0.2, 0.2, 0.985, 0.2,
+	4, 7,
+	0.0150, 0.7500, 0.2000, 0.6000, 0.3500, 0.3500,
+	0.5000, 0.0500, 0.6500, 0.3500, 0.8000, 0.6000,
+	0.9850, 0.7500,
+	5,
+	0.5000, 0.1500, 0.5000, 0.6075,
+	6, 7,
+	0.5000, 0.6075,
+	0.4900, 0.6764,
+	0.4200, 0.7875,
+	0.2575, 0.8500,
+	0.0950, 0.7875,
+	0.0250, 0.6764,
+	0.0150, 0.6075,
 	0
 };
 
 
 double const lharpoondown[] = {
-	2, 2,
-	0.015, 0.5, 0.25, 0.985,
-	1, 0.02, 0.475, 0.985, 0.475,
+	4, 4,
+	0.0150, 0.7500, 0.2000, 0.6000, 0.3500, 0.3500,
+	0.5000, 0.0500,
+	5,
+	0.5000, 0.1500, 0.5000, 0.9500,
 	0
 };
 
 
 double const lharpoonup[] = {
-	2, 2,
-	0.25, 0.015, 0.015, 0.5,
-	1, 0.02, 0.525, 0.985, 0.525,
+	4, 4,
+	0.5000, 0.0500, 0.6500, 0.3500, 0.8000, 0.6000,
+	0.9850, 0.7500,
+	5,
+	0.5000, 0.1500, 0.5000, 0.9500,
 	0
 };
 
@@ -211,58 +220,87 @@ double const rlharpoons[] = {
 
 double const arrow[] = {
 	4, 7,
+	0.0150, 0.9500, 0.2000, 0.8000, 0.3500, 0.5500,
+	0.5000, 0.2500, 0.6500, 0.5500, 0.8000, 0.8000,
+	0.9850, 0.9500,
+	5, 0.5000, 0.3500, 0.5000, 0.6500,
+	0
+};
+
+
+double const vec[] = {
+	4, 7,
 	0.0150, 0.7500, 0.2000, 0.6000, 0.3500, 0.3500,
 	0.5000, 0.0500, 0.6500, 0.3500, 0.8000, 0.6000,
-	0.9500, 0.7500,
-	3, 0.5000, 0.1500, 0.5000, 0.9500,
+	0.9850, 0.7500,
+	5, 0.5000, 0.1500, 0.5000, 0.9500,
 	0
 };
 
 
 double const Arrow[] = {
 	4, 7,
+	0.0000, 0.9500, 0.1900, 0.8000, 0.3450, 0.5500,
+	0.5000, 0.2500, 0.6550, 0.5500, 0.8100, 0.8000,
+	1.0000, 0.9500,
+	5, 0.2750, 0.7000, 0.2750, 0.6500,
+	5, 0.7250, 0.7000, 0.7250, 0.6500,
+	0
+};
+
+
+double const Vec[] = {
+	4, 7,
 	0.0150, 0.7500, 0.2000, 0.6000, 0.3500, 0.3500,
 	0.5000, 0.0500, 0.6500, 0.3500, 0.8000, 0.6000,
-	0.9500, 0.7500,
-	3, 0.3500, 0.5000, 0.3500, 0.9500,
-	3, 0.6500, 0.5000, 0.6500, 0.9500,
+	0.9850, 0.7500,
+	5, 0.2750, 0.5000, 0.2750, 0.9500,
+	5, 0.7250, 0.5000, 0.7250, 0.9500,
 	0
 };
 
 
 double const udarrow[] = {
-	2, 3,
-	0.015, 0.25,  0.5, 0.05, 0.95, 0.25,
-	2, 3,
-	0.015, 0.75,  0.5, 0.95, 0.95, 0.75,
-	1, 0.5, 0.1,  0.5, 0.9,
+	4, 7,
+	0.0150, 0.7500, 0.2000, 0.6000, 0.3500, 0.3500,
+	0.5000, 0.0500, 0.6500, 0.3500, 0.8000, 0.6000,
+	0.9850, 0.7500,
+	6, 7,
+	0.0150, 0.2500, 0.2000, 0.4000, 0.3500, 0.6500,
+	0.5000, 0.9500, 0.6500, 0.6500, 0.8000, 0.4000,
+	0.9850, 0.2500,
+	5, 0.5000, 0.0500, 0.5000, 0.8500,
 	0
 };
 
 
 double const Udarrow[] = {
-	2, 3,
-	0.015, 0.25,  0.5, 0.05, 0.95, 0.25,
-	2, 3,
-	0.015, 0.75,  0.5, 0.95, 0.95, 0.75,
-	1, 0.35, 0.2, 0.35, 0.8,
-	1, 0.65, 0.2, 0.65, 0.8,
+	4, 7,
+	0.0000, 0.7500, 0.1900, 0.6000, 0.3450, 0.3500,
+	0.5000, 0.0500, 0.6550, 0.3500, 0.8100, 0.6000,
+	1.0000, 0.7500,
+	6, 7,
+	0.0000, 0.2500, 0.1900, 0.4000, 0.3450, 0.6500,
+	0.5000, 0.9500, 0.6550, 0.6500, 0.8100, 0.4000,
+	1.0000, 0.2500,
+	5, 0.2750, 0.5000, 0.2750, 0.5000,
+	5, 0.7250, 0.5000, 0.7250, 0.5000,
 	0
 };
 
 
 double const brack[] = {
 	2, 4,
-	0.95, 0.05,  0.05, 0.05,  0.05, 0.95,  0.95, 0.95,
+	0.99, 0.01,  0.3, 0.01,  0.3, 0.99,  0.99, 0.99,
 	0
 };
 
 
 double const dbrack[] = {
 	2, 4,
-	0.95, 0.05,  0.05, 0.05,  0.05, 0.95,  0.95, 0.95,
+	0.99, 0.01,  0.01, 0.01,  0.01, 0.99,  0.99, 0.99,
 	2, 2,
-	0.50, 0.05,  0.50, 0.95,
+	0.50, 0.01,  0.50, 0.99,
 	0
 };
 
@@ -340,8 +378,16 @@ double const hlinesmall[] = {
 
 
 double const ring[] = {
-	2, 5,
-	0.5, 0.8,  0.8, 0.5,  0.5, 0.2,  0.2, 0.5,  0.5, 0.8,
+	2, 9,
+	0.5,  0.8,
+	0.71, 0.71,
+	0.8,  0.5,
+	0.71, 0.29,
+	0.5,  0.2,
+	0.29, 0.29,
+	0.2,  0.5,
+	0.29, 0.71,
+	0.5,  0.8,
 	0
 };
 
@@ -353,8 +399,8 @@ double const vert[] = {
 
 
 double const  Vert[] = {
-	1, 0.3, 0.05,  0.3, 0.95,
-	1, 0.7, 0.05,  0.7, 0.95,
+	1, 0.2, 0.05,  0.2, 0.95,
+	1, 0.8, 0.05,  0.8, 0.95,
 	0
 };
 
@@ -389,21 +435,21 @@ named_deco_struct deco_table[] = {
 	{"overleftarrow",       arrow,        1 },
 	{"overrightarrow",      arrow,        3 },
 	{"overleftrightarrow",  udarrow,      1 },
-	{"xhookleftarrow",      lhook,        0 },
-	{"xhookrightarrow",     rhook,        0 },
-	{"xleftarrow",          arrow,        1 },
-	{"xLeftarrow",          LArrow,       0 },
-	{"xleftharpoondown",    lharpoondown, 0 },
-	{"xleftharpoonup",      lharpoonup,   0 },
-	{"xleftrightharpoons",  lrharpoons,   0 },
+	{"xhookleftarrow",      lhook,        1 },
+	{"xhookrightarrow",     rhook,        3 },
+	{"xleftarrow",          vec,          1 },
+	{"xLeftarrow",          Vec,          1 },
+	{"xleftharpoondown",    lharpoondown, 1 },
+	{"xleftharpoonup",      lharpoonup,   1 },
+	{"xleftrightharpoons",  lrharpoons,   0 },//FIXME
 	{"xleftrightarrow",     udarrow,      1 },
-	{"xLeftrightarrow",     LRArrow,      0 },
-	{"xmapsto",             mapsto,       0 },
-	{"xrightarrow",         arrow,        3 },
-	{"xRightarrow",         LArrow,       2 },
-	{"xrightharpoondown",   lharpoonup,   2 },
-	{"xrightharpoonup",     lharpoondown, 2 },
-	{"xrightleftharpoons",  rlharpoons,   0 },
+	{"xLeftrightarrow",     Udarrow,      1 },
+	{"xmapsto",             mapsto,       3 },
+	{"xrightarrow",         vec,          3 },
+	{"xRightarrow",         Vec,          3 },
+	{"xrightharpoondown",   lharpoonup,   3 },
+	{"xrightharpoonup",     lharpoondown, 3 },
+	{"xrightleftharpoons",  rlharpoons,   0 },//FIXME
 	{"underleftarrow",      arrow,        1 },
 	{"underrightarrow",     arrow,        3 },
 	{"underleftrightarrow", udarrow,      1 },
@@ -460,7 +506,7 @@ named_deco_struct deco_table[] = {
 	{"dot",            hlinesmall, 0 },
 	{"check",          angle,      1 },
 	{"breve",          parenth,    1 },
-	{"vec",            arrow,      3 },
+	{"vec",            vec,        3 },
 	{"mathring",       ring,       0 },
 
 	// Dots
@@ -583,12 +629,34 @@ int mathed_string_width(FontInfo const & font, docstring const & s)
 }
 
 
-void mathed_draw_deco(PainterInfo & pi, int x, int y, int w, int h,
-	docstring const & name)
+// TODO remove
+double mathed_deco_thickness(MetricsBase const & mb)
 {
+	return 3 * max(mb.solidLineThickness() - 1, 0.);
+}
+
+
+// TODO remove
+void mathed_deco_metrics(MetricsBase const & mb, Dimension & dim,
+                         int num_w, int num_h)
+{
+	double const t = mathed_deco_thickness(mb);
+	dim.wid += (int) num_w * t;
+	int const dh = (int) num_h * t;
+	dim.des += dh/2;
+	dim.asc += dh - dh/2;
+}
+
+
+void mathed_draw_deco(PainterInfo const & pi, double x, double y,
+                      double w, double h, docstring const & name)
+{
+	w += mathed_deco_thickness(pi.base);
+	h += mathed_deco_thickness(pi.base);
 	if (name == ".") {
-		pi.pain.line(x + w/2, y, x + w/2, y + h,
-			  Color_cursor, Painter::line_onoffdash);
+		pi.pain.lineDouble(x + w/2, y, x + w/2, y + h, Color_cursor,
+		                   pi.base.thinLineThickness(),
+		                   Painter::line_onoffdash);
 		return;
 	}
 
@@ -599,14 +667,14 @@ void mathed_draw_deco(PainterInfo & pi, int x, int y, int w, int h,
 		return;
 	}
 
-	int const n = (w < h) ? w : h;
+	int const n = std::min(w, h);
 	int const r = mds->angle;
 	double const * d = mds->data;
 
-	if (h > 70 && (name == "(" || name == ")"))
+	if (h/w > 5 && (name == "(" || name == ")"))
 		d = parenthHigh;
 
-	Matrix mt(r, w, h);
+	Matrix mt(r, (int)w, (int)h);
 	Matrix sqmt(r, n, n);
 
 	if (r > 0 && r < 3)
@@ -615,41 +683,64 @@ void mathed_draw_deco(PainterInfo & pi, int x, int y, int w, int h,
 	if (r >= 2)
 		x += w;
 
+	auto move_square = [r,h,w](double & x, double & y) {
+		int const sign = (r <= 1) ? 1 : -1;
+		if (w < h)
+			y += sign * (h - w);
+		else
+			x += sign * (w - h);
+	};
+	double const t = pi.base.solidLineThickness();
 	for (int i = 0; d[i]; ) {
 		int code = int(d[i++]);
-		if (code & 1) {  // code == 1 || code == 3
+		if (code & 1) {  // code == 1 || code == 3 || code == 5
 			double xx = d[i++];
 			double yy = d[i++];
 			double x2 = d[i++];
 			double y2 = d[i++];
-			if (code == 3)
+			if (code == 3 || code == 5)
 				sqmt.transform(xx, yy);
 			else
 				mt.transform(xx, yy);
-			mt.transform(x2, y2);
-			pi.pain.line(
-				int(x + xx + 0.5), int(y + yy + 0.5),
-				int(x + x2 + 0.5), int(y + y2 + 0.5),
-				pi.base.font.color());
+			if (code == 5) {
+				sqmt.transform(x2, y2);
+				move_square(x2, y2);
+			} else
+				mt.transform(x2, y2);
+			pi.pain.lineDouble(x + xx, y + yy, x + x2, y + y2,
+			                   pi.base.font.color(), t);
 		} else {
-			int xp[32];
-			int yp[32];
+			double xp[32];
+			double yp[32];
 			int const n = int(d[i++]);
 			for (int j = 0; j < n; ++j) {
 				double xx = d[i++];
 				double yy = d[i++];
-//	     lyxerr << ' ' << xx << ' ' << yy << ' ';
-				if (code == 4)
+				if (code == 4 || code == 6)
 					sqmt.transform(xx, yy);
 				else
 					mt.transform(xx, yy);
-				xp[j] = int(x + xx + 0.5);
-				yp[j] = int(y + yy + 0.5);
-				//  lyxerr << "P[" << j ' ' << xx << ' ' << yy << ' ' << x << ' ' << y << ']';
+				if (code == 6)
+					move_square(xx, yy);
+				xp[j] = x + xx;
+				yp[j] = y + yy;
 			}
-			pi.pain.lines(xp, yp, n, pi.base.font.color());
+			pi.pain.linesDouble(xp, yp, n, pi.base.font.color(), t);
 		}
 	}
+}
+
+
+void mathed_draw_marker(PainterInfo const & pi, int x, int y, int w, int h,
+                        Color col)
+{
+	double const t = pi.base.thinLineThickness();
+	double const l = max(pi.base.mu(2), 3);
+	double const x0 = round((w > 0) ? x - t/2 : x + t/2 - 1);
+	double const y0 = round((h > 0) ? y - t/2 - 1 : y + t/2);
+	double const xp[3] = {x0,     x0, x0 + w * l};
+	double const yp[3] = {y0 + h * l, y0, y0};
+	pi.pain.linesDouble(xp, yp, 3, col, t);
 }
 
 

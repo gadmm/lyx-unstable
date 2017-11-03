@@ -59,8 +59,8 @@ private:
 	/// These value are independent of the BufferView size and thus
 	/// can be shared between views.
 	//@{
-	mutable int height_;
-	mutable int offset_;
+	mutable double height_;
+	mutable double offset_;
 	//@}
 };
 

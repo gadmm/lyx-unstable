@@ -62,6 +62,8 @@ For a complete list of changes try
 * Instant preview now works in child documents. (#9868)
 * Fix hard-to-read label color in math.
 * Fix a missing repaint of the cursor.
+* Fix vertical and horizontal spacings for decorations (\hat, \overbrace...).
+* Fix the toolbar button "math-insert \sideset".
 
 ## Minor enhancements
 
@@ -70,7 +72,5 @@ For a complete list of changes try
 * Minor improvement to the citation GUI.
 * Performance improvements for scrolling.
 * Add \x*arrows in Math Arrows toolbar menu.
-* Fix vertical and horizontal spacings for decorations (\hat, \overbrace...).
-* Fix the toolbar button "math-insert \sideset".
 * This file readable from the About menu.
 

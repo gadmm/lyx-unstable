@@ -36,6 +36,8 @@
 #include "support/lstrings.h"
 #include "support/RefChanger.h"
 
+#include <cmath>
+
 using namespace std;
 
 

@@ -7,8 +7,15 @@ LyX stable file format. See the documentation at
 master branch (2.4dev). When LyX 2.3 releases, unstable will be reset to the LyX
 2.3 format.
 
-This branch contains bug fixes and new features on top of LyX master (2.4),
-detailed at the end of this file.
+- Current LyX format: 508. LyX unstable also reads files with a more recent
+  format thanks to the up-to-date `lyx2lyx` conversion script.
+- Current local layout format: 60. LyX unstable will accept to read and write
+  local layouts with a more recent format but such files will not be readable by
+  LyX 2.2.
+
+This branch contains bug fixes and new features on top of LyX master (2.4dev),
+detailed at the end of this file. We try to catch and fix showstopping bugs from
+master before merging into unstable, but we cannot guarantee it.
 
 Please report bugs at <https://github.com/gadmm/lyx-unstable/issues>.
 

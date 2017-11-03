@@ -36,6 +36,7 @@
 #include "support/gettext.h"
 #include "support/lstrings.h"
 
+#include <cmath>
 #include <cstdlib>
 
 using namespace std;

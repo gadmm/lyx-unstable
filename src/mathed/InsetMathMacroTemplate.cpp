@@ -243,8 +243,6 @@ public:
 	void metrics(MetricsInfo & mi, Dimension & dim) const;
 	///
 	void draw(PainterInfo &, int x, int y) const;
-	///
-	//marker_type marker(BufferView const *) const { return NO_MARKER; }
 
 private:
 	///

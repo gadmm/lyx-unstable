@@ -60,11 +60,12 @@ void InsetMathKern::draw(PainterInfo &, int, int) const
 void InsetMathKern::write(WriteStream & os) const
 {
 	if (wid_.empty())
-		os << "\\kern" << ' ';
+		os << "\\kern";
 	else if (wid_.unit() == Length::MU)
-		os << "\\mkern" << from_utf8(wid_.asLatexString()) << ' ';
+		os << "\\mkern" << from_utf8(wid_.asLatexString());
 	else
-		os << "\\kern" << from_utf8(wid_.asLatexString()) << ' ';
+		os << "\\kern" << from_utf8(wid_.asLatexString());
+	os.pendingSpace(true);
 }
 
 

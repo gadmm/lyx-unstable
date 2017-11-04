@@ -80,6 +80,7 @@ For a complete list of changes try
 * Fix hard-to-read label color in math.
 * Fix a missing repaint of the cursor.
 * Fix the toolbar button "math-insert \sideset".
+* Fix spurious space in output of \mkern.
 
 ## Minor enhancements
 

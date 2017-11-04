@@ -47,8 +47,12 @@ and modern Windows platforms.
 
 # Bug fixes and new features
 
-For a complete list of changes try
-<https://github.com/gadmm/lyx-unstable/compare/master...staging>.
+LyX unstable contains bug fixes and new features from LyX master
+* <https://wiki.lyx.org/LyX/NewInLyX23>
+* <https://wiki.lyx.org/LyX/NewInLyX24>
+
+In addition it contains the changes below. For a complete list of these changes
+try <https://github.com/gadmm/lyx-unstable/compare/master...staging>.
 
 ## Important bug fixes
 

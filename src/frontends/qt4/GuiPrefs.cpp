@@ -3444,7 +3444,7 @@ GuiPreferences::GuiPreferences(GuiView & lv)
 
 	QDialog::setModal(false);
 
-	connect(savePB, SIGNAL(clicked()), this, SLOT(slotOK()));
+	connect(okPB, SIGNAL(clicked()), this, SLOT(slotOK()));
 	connect(applyPB, SIGNAL(clicked()), this, SLOT(slotApply()));
 	connect(closePB, SIGNAL(clicked()), this, SLOT(slotClose()));
 	connect(restorePB, SIGNAL(clicked()), this, SLOT(slotRestore()));
@@ -3488,8 +3488,8 @@ GuiPreferences::GuiPreferences(GuiView & lv)
 	prefsPS->updateGeometry();
 #endif
 
-	bc().setPolicy(ButtonPolicy::PreferencesPolicy);
-	bc().setOK(savePB);
+	bc().setPolicy(ButtonPolicy::NoRepeatedApplyPolicy);
+	bc().setOK(okPB);
 	bc().setApply(applyPB);
 	bc().setCancel(closePB);
 	bc().setRestore(restorePB);
@@ -3594,15 +3594,13 @@ void GuiPreferences::dispatchParams()
 		update_screen_font_ = false;
 	}
 
-        if (update_previews_) {
+	if (update_previews_) {
 		// resets flag in case second apply in same dialog
 		theBufferList().updatePreviews();
 		update_previews_ = false;
 	}
 
-	// The Save button has been pressed
-	if (isClosing())
-		dispatch(FuncRequest(LFUN_PREFERENCES_SAVE));
+	dispatch(FuncRequest(LFUN_PREFERENCES_SAVE));
 }
 
 

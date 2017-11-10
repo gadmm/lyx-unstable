@@ -65,9 +65,9 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="savePB" >
+      <widget class="QPushButton" name="okPB" >
        <property name="text" >
-        <string>&amp;Save</string>
+        <string>&amp;OK</string>
        </property>
        <property name="autoDefault" >
         <bool>false</bool>
@@ -112,7 +112,7 @@
  <tabstops>
   <tabstop>prefsPS</tabstop>
   <tabstop>restorePB</tabstop>
-  <tabstop>savePB</tabstop>
+  <tabstop>okPB</tabstop>
   <tabstop>applyPB</tabstop>
   <tabstop>closePB</tabstop>
  </tabstops>

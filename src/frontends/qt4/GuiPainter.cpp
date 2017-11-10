@@ -83,6 +83,7 @@ void GuiPainter::setQPainterPen(QColor const & col, Painter::line_style ls,
 	case line_solid:
 		pen.setStyle(Qt::SolidLine); break;
 	case line_onoffdash:
+	case line_onoffdash_absolute:
 		pen.setStyle(Qt::DotLine); break;
 	}
 
@@ -204,8 +205,8 @@ void GuiPainter::linesDouble(vector<QPointF> points, Color col, double lw,
 	QColor const color = computeColor(col);
 	setQPainterPen(color, ls, lw);
 	setRenderHint(Antialiasing, true);
-	// make sure dashed lines are aligned
-	if (ls == line_onoffdash) {
+	// offset-align absolute dashed lines
+	if (ls == line_onoffdash_absolute) {
 		QPen p = pen();
 		p.setDashOffset((points[0].x() + points[0].y()) / lw);
 		setPen(p);

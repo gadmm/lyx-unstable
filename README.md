@@ -30,9 +30,10 @@ appearance. It is released under a Free Software / Open Source license.
 
 LyX is for people who write and want their writing to look great, right out of
 the box. No more endless tinkering with formatting details, “finger painting”
-font attributes or futzing around with page boundaries. You just write. LyX will
-help your article, thesis or book mature from the early scribbles, to a draft
-full of notes and change-tracked revisions, to a final camera-ready version.
+font attributes or futzing around with page boundaries. You just write. LyX's
+semantic approach helps your article, thesis or book mature from the early
+scribbles, to a draft full of notes and change-tracked revisions, to a final
+camera-ready version.
 
 In the background, Prof. Knuth's legendary TeX typesetting engine makes you look
 good. LyX's output—or richly cross-referenced PDF, just as readily
@@ -85,6 +86,7 @@ try <https://github.com/gadmm/lyx-unstable/compare/master...staging>.
 * Fix a missing repaint of the cursor.
 * Fix the toolbar button "math-insert \sideset".
 * Fix spurious space in output of \mkern.
+* The "apply" button now correctly saves preferences. (#10016)
 
 ## Minor enhancements
 

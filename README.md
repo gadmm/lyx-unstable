@@ -68,6 +68,7 @@ For a complete list of changes try
 * Fix a missing repaint of the cursor.
 * Fix the toolbar button "math-insert \sideset".
 * Fix spurious space in output of \mkern.
+* The "apply" button now correctly saves preferences. (#10016)
 
 ## Minor enhancements
 

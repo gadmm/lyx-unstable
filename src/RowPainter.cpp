@@ -364,12 +364,12 @@ void RowPainter::paintTooLargeMarks(bool const left, bool const right) const
 	int const dx = pi_.base.solidLineThickness();
 	if (left)
 		pi_.pain.lineDouble(dx, yo_ - row_.ascent(), dx, yo_ + row_.descent(),
-		                    Color_scroll, t, Painter::line_onoffdash);
+		                    Color_scroll, t, Painter::line_onoffdash_absolute);
 	if (right) {
 		int const wwidth = pi_.base.bv->workWidth() - dx - 1;
 		pi_.pain.lineDouble(wwidth, yo_ - row_.ascent(),
 		                    wwidth, yo_ + row_.descent(),
-		                    Color_scroll, t, Painter::line_onoffdash);
+		                    Color_scroll, t, Painter::line_onoffdash_absolute);
 	}
 }
 

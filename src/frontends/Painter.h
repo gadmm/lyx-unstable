@@ -56,7 +56,9 @@ public:
 	/// possible line styles
 	enum line_style {
 		line_solid, //< solid line
-		line_onoffdash //< dashes with spaces
+		line_onoffdash, //< dashes with spaces
+		line_onoffdash_absolute //< dashes with spaces, with offset set
+								//according to the absolute screen coordinates
 	};
 
 	/// possible fill styles

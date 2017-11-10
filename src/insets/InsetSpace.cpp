@@ -248,9 +248,9 @@ void InsetSpace::metrics(MetricsInfo & mi, Dimension & dim) const
 		case InsetSpaceParams::UPBRACEFILL:
 		case InsetSpaceParams::DOWNBRACEFILL:
 			// The width for hfills is calculated externally in
-			// TextMetrics::computeRowMetrics. The value of 0.2 is the
-			// minimal value when the hfill is not active.
-			dim.wid = mi.base.em(0.1);
+			// TextMetrics::computeRowMetrics. This is the width when the hfill
+			// is not active.
+			dim.wid = 5 * mi.base.solidLineThickness();
 			break;
 	}
 }
@@ -265,7 +265,7 @@ void InsetSpace::draw(PainterInfo & pi, int x, int y) const
 		int const asc = theFontMetrics(pi.base.font).ascent('M');
 		int const desc = theFontMetrics(pi.base.font).descent('M');
 		double const x0 = round(x + t/2);
-		double const x1 = round(x + dim.wid - t);
+		double const x1 = round(x + dim.wid - 1.5 * t);
 		double const y0 = round(y + desc - t/2);
 		double const y1 = round(y - asc - t/2);
 		double const y2 = round((y0 + y1) / 2);

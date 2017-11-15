@@ -197,7 +197,7 @@ public:
 	/// Write document to stream. Returns \c false if unsuccessful.
 	bool write(std::ostream &) const;
 	/// Write file. Returns \c false if unsuccessful.
-	bool writeFile(support::FileName const &) const;
+	bool writeFile(support::FileName const &, bool emergency = false) const;
 
 	/// \name Functions involved in reading files/strings.
 	//@{

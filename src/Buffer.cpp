@@ -1519,7 +1519,7 @@ bool Buffer::save() const
 }
 
 
-bool Buffer::writeFile(FileName const & fname) const
+bool Buffer::writeFile(FileName const & fname, bool const emergency) const
 {
 	if (d->read_only && fname == d->filename)
 		return false;
@@ -1527,8 +1527,12 @@ bool Buffer::writeFile(FileName const & fname) const
 	bool retval = false;
 
 	docstring const str = bformat(_("Saving document %1$s..."),
-		makeDisplayPath(fname.absFileName()));
-	message(str);
+	                              makeDisplayPath(fname.absFileName()));
+	// This is in the emergency hot path, and we have a trace showing that
+	// message can crash at this point under some circumstance. We take a
+	// precautionary measure.
+	if (!emergency)
+		message(str);
 
 	string const encoded_fname = fname.toSafeFilesystemEncoding(os::CREATE);
 
@@ -1541,7 +1545,8 @@ bool Buffer::writeFile(FileName const & fname) const
 	}
 
 	if (!retval) {
-		message(str + _(" could not write file!"));
+		if (!emergency)
+			message(str + _(" could not write file!"));
 		return false;
 	}
 
@@ -1549,7 +1554,8 @@ bool Buffer::writeFile(FileName const & fname) const
 	// removeAutosaveFile();
 
 	saveCheckSum();
-	message(str + _(" done."));
+	if (!emergency)
+		message(str + _(" done."));
 
 	return true;
 }
@@ -1572,7 +1578,7 @@ docstring Buffer::emergencyWrite()
 		string s = absFileName();
 		s += ".emergency";
 		LYXERR0("  " << s);
-		if (writeFile(FileName(s))) {
+		if (writeFile(FileName(s), true)) {
 			markClean();
 			user_message += "  " + bformat(_("Saved to %1$s. Phew.\n"), from_utf8(s));
 			return user_message;
@@ -1585,7 +1591,7 @@ docstring Buffer::emergencyWrite()
 	string s = addName(Package::get_home_dir().absFileName(), absFileName());
 	s += ".emergency";
 	lyxerr << ' ' << s << endl;
-	if (writeFile(FileName(s))) {
+	if (writeFile(FileName(s), true)) {
 		markClean();
 		user_message += "  " + bformat(_("Saved to %1$s. Phew.\n"), from_utf8(s));
 		return user_message;
@@ -1599,7 +1605,7 @@ docstring Buffer::emergencyWrite()
 	s = addName(package().temp_dir().absFileName(), absFileName());
 	s += ".emergency";
 	lyxerr << ' ' << s << endl;
-	if (writeFile(FileName(s))) {
+	if (writeFile(FileName(s), true)) {
 		markClean();
 		user_message += "  " + bformat(_("Saved to %1$s. Phew.\n"), from_utf8(s));
 		return user_message;

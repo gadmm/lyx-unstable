@@ -1778,14 +1778,14 @@ bool Parser::parse1(InsetMathGrid & grid, unsigned flags,
 			docstring s;
 			int num_tokens = 0;
 			while (true) {
-				Token const & t = getToken();
-				++num_tokens;
 				if (!good()) {
 					s.clear();
 					while (num_tokens--)
 						putback();
 					break;
 				}
+				Token const & t = getToken();
+				++num_tokens;
 				s += t.character();
 				if (isValidLength(to_utf8(s)))
 					break;

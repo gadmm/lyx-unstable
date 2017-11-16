@@ -1,7 +1,7 @@
-/*
+ï»¿/*
 LyX Installer Language File
 Language: Basque
-Author: Iñaki Larrañaga Murgoitio
+Author: IÃ±aki LarraÃ±aga Murgoitio
 */
 
 !insertmacro LANGFILE_EXT "Basque"
@@ -21,17 +21,19 @@ ${LangFileString} TEXT_FINISH_WEBSITE "Bisitatu lyx.org azken berriak, aholkuak 
 
 #${LangFileString} FileTypeTitle "LyX-dokumentua"
 
-${LangFileString} SecInstJabRefTitle "JabRef"
+#${LangFileString} SecInstJabRefTitle "JabRef"
 #${LangFileString} SecAllUsersTitle "Instalatu erabiltzaile guztientzako?"
 ${LangFileString} SecFileAssocTitle "Fitxategiaren esleipenak"
 ${LangFileString} SecDesktopTitle "Mahaigaineko ikonoa"
 
 ${LangFileString} SecCoreDescription "LyX fitxategiak."
-${LangFileString} SecInstJabRefDescription "Bibliografiako erreferentzien kudeatzailea eta BibTeX fitxategien editorea."
+#${LangFileString} SecInstJabRefDescription "Bibliografiako erreferentzien kudeatzailea eta BibTeX fitxategien editorea."
 #${LangFileString} SecAllUsersDescription "Instalatu LyX erabiltzaile guztientzako, edo soilik uneko erabiltzailearentzako."
 ${LangFileString} SecFileAssocDescription ".lyx luzapeneko fitxategiak LyX-ekin irekiko dira automatikoki."
 ${LangFileString} SecDesktopDescription "LyX ikonoa mahaigainean."
+${LangFileString} SecDictionaries "Hiztegia"
 ${LangFileString} SecDictionariesDescription "Zuzentzaile ortografikoen hiztegiak deskarga eta instala daitezke."
+${LangFileString} SecThesaurus "Thesaurus"
 ${LangFileString} SecThesaurusDescription "Thesaurus hiztegiak deskarga eta instala daitezke."
 
 ${LangFileString} EnterLaTeXHeader1 'LaTeX-banaketa'
@@ -62,11 +64,11 @@ ${LangFileString} LatexError1 'Ezin izan da LaTeX banaketarik aurkitu!$\r$\n\
 ${LangFileString} HunspellFailed 'Huts egin du  $\"$R3$\" hizkuntzaren hiztegia deskargatzean.'
 ${LangFileString} ThesaurusFailed 'Huts egin du  $\"$R3$\" hizkuntzaren thesaurusa deskargatzean.'
 
-${LangFileString} JabRefInfo 'Orain $\"JabRef$\" programaren instalatzailea abiaraziko da.$\r$\n\
-				JabRef instalatzailearen aukera lehenetsi guztiak erabil ditzakezu.'
-${LangFileString} JabRefError '$\"JabRef$\" programa ezin izan da instalatu.$\r$\n\
-				Hala ere, instalatzaileak jarraitu egingo du.$\r$\n\
-				Saiatu JabRef beranduago instalatzen.'
+#${LangFileString} JabRefInfo 'Orain $\"JabRef$\" programaren instalatzailea abiaraziko da.$\r$\n\
+#				JabRef instalatzailearen aukera lehenetsi guztiak erabil ditzakezu.'
+#${LangFileString} JabRefError '$\"JabRef$\" programa ezin izan da instalatu.$\r$\n\
+#				Hala ere, instalatzaileak jarraitu egingo du.$\r$\n\
+#				Saiatu JabRef beranduago instalatzen.'
 
 #${LangFileString} LatexConfigInfo "LyX-en hurrengo konfigurazioak denbora piskat beharko du."
 
@@ -108,9 +110,8 @@ ${LangFileString} UnReallyRemoveLabel "Ziur zaude LyX eta bere osagai guztiak ke
 ${LangFileString} UnLyXPreferencesTitle 'LyX-eko erabiltzailearen hobespenak'
 
 ${LangFileString} SecUnMiKTeXDescription "LaTeX-en MiKTeX banaketa desinstalatzen du."
-${LangFileString} SecUnJabRefDescription "Bibliografiaren JabRef kudeatzailea desinstalatzen du."
+#${LangFileString} SecUnJabRefDescription "Bibliografiaren JabRef kudeatzailea desinstalatzen du."
 ${LangFileString} SecUnPreferencesDescription 'LyX-en konfigurazioa ezabatzen du$\r$\n\
 						($\"$AppPre\erabiltzailea\$AppSuff\${APP_DIR_USERDATA}$\"$\r$\n\
 						zuretzako edo erabiltzaile guztientzako (administratzailea bazara).'
 ${LangFileString} SecUnProgramFilesDescription "Desinstalatu LyX eta bere osagai guztiak."
-

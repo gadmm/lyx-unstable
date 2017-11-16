@@ -1601,10 +1601,8 @@ void BufferView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 		InsetBibtex * inset = getInsetByCode<InsetBibtex>(tmpcur,
 						BIBTEX_CODE);
 		if (inset) {
-			if (inset->addDatabase(cmd.argument())) {
-				buffer_.invalidateBibfileCache();
+			if (inset->addDatabase(cmd.argument()))
 				dr.forceBufferUpdate();
-			}
 		}
 		break;
 	}
@@ -1615,10 +1613,8 @@ void BufferView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 		InsetBibtex * inset = getInsetByCode<InsetBibtex>(tmpcur,
 						BIBTEX_CODE);
 		if (inset) {
-			if (inset->delDatabase(cmd.argument())) {
-				buffer_.invalidateBibfileCache();
+			if (inset->delDatabase(cmd.argument()))
 				dr.forceBufferUpdate();
-			}
 		}
 		break;
 	}

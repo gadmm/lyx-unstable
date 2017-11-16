@@ -1,7 +1,7 @@
-/*
+﻿/*
 
 NSIS Script - LyX 2.3 Installer for Windows
-Authors: Joost Verburg, Angus Leeming, Uwe St�hr
+Authors: Joost Verburg, Angus Leeming, Uwe Stöhr
 Compatible with NSIS 3.0
 
 */
@@ -10,8 +10,11 @@ Compatible with NSIS 3.0
 # was not corrupted by the download.
 CRCCheck force
 #
-# Make the installer as small as possible.
+# Make the installer as small as possible
 SetCompressor /SOLID lzma
+
+# make it a Unicode installer
+Unicode true
 
 !ifndef SETUPTYPE
  !define SETUPTYPE BUNDLE

@@ -87,6 +87,7 @@ try <https://github.com/gadmm/lyx-unstable/compare/master...staging>.
 * Fix the toolbar button "math-insert \sideset".
 * Fix spurious space in output of \mkern.
 * The "apply" button now correctly saves preferences. (#10016)
+* Precautionary measure against a potential data loss during emergency save.
 
 ## Minor enhancements
 

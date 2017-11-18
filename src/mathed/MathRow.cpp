@@ -92,7 +92,7 @@ void afterMetricsMarkers(MetricsInfo const & , MathRow::Element & e,
 
 
 void drawMarkers(PainterInfo const & pi, MathRow::Element const & e,
-                 int const x, int const y)
+                 int const x, int const y, bool const after)
 {
 	if (e.marker == InsetMath::NO_MARKER)
 		return;
@@ -100,6 +100,11 @@ void drawMarkers(PainterInfo const & pi, MathRow::Element const & e,
 	// The color
 	bool const highlight = e.inset->mouseHovered(pi.base.bv)
 	                       || e.inset->editing(pi.base.bv);
+
+	// draw non-highlighted markers before the inset is drawn, highlighted after
+	if (highlight != after)
+		return;
+
 	ColorCode const pen_color = highlight ? Color_mathframe : Color_mathcorners;
 
 	CoordCache const & coords = pi.base.bv->coordCache();
@@ -318,9 +323,12 @@ void MathRow::draw(PainterInfo & pi, int x, int const y) const
 			Dimension const d = coords.insets().dim(e.inset);
 			Dimension d2 = d;
 			d2.wid -= e.before + e.after;
-			drawMarkers(pi, e, x, y);
+			// draw markers such that inactive corners are behind and active
+			// corners in front.
+			drawMarkers(pi, e, x, y, false);
 			coords.insets().add(e.inset, d2);
 			e.inset->draw(pi, x + e.before, y);
+			drawMarkers(pi, e, x, y, true);
 			coords.insets().add(e.inset, x, y);
 			coords.insets().add(e.inset, d);
 			x += d.wid;
@@ -333,7 +341,9 @@ void MathRow::draw(PainterInfo & pi, int x, int const y) const
 			}
 			if (e.inset) {
 				coords.insets().add(e.inset, x, y);
-				drawMarkers(pi, e, x, y);
+				drawMarkers(pi, e, x, y, false);
+				// we need the good x and y so we cannot do this after
+				drawMarkers(pi, e, x, y, true);
 				e.inset->beforeDraw(pi);
 			}
 			x += e.before + e.after;

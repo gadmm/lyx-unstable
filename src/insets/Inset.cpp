@@ -530,6 +530,8 @@ void Inset::drawMarkers(PainterInfo & pi, int x0, int y0, int x1, int y1,
 {
 	Color pen_color = (mouseHovered(pi.base.bv) || editing(pi.base.bv)) ?
 		col_on : col_off;
+	if (pen_color == Color_none)
+		return;
 	mathed_draw_marker(pi, x0,  y0,  1, -1, pen_color);
 	mathed_draw_marker(pi, x1, y0, -1, -1, pen_color);
 	if (!upper)

@@ -221,6 +221,8 @@ public:
 
 	/// are we some 'extension' (i.e. deeper nested) of the given iterator
 	bool hasPart(DocIterator const & it) const;
+	///
+	bool isInside(Inset const *) const;
 
 	/// output
 	friend std::ostream &

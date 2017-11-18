@@ -43,6 +43,7 @@ For a complete list of changes try
   repeated key presses with iBus (Ubuntu in particular). (#9362, #9790, #10516)
 * Crash with segfault when exiting or dissolving math insets.
 * Scrolling issues with keyboard across large insets.
+* Fix flicker due to changing metrics while selecting with the mouse (#8951)
 
 ## New features
 

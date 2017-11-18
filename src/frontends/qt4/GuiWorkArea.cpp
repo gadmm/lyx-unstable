@@ -533,8 +533,8 @@ void GuiWorkArea::Private::dispatch(FuncRequest const & cmd)
 	bool const notJustMovingTheMouse =
 		cmd.action() != LFUN_MOUSE_MOTION || cmd.button() != mouse_button::none;
 
-	// In order to avoid bad surprise in the middle of an operation, we better stop
-	// the blinking caret.
+	// In order to avoid bad surprise in the middle of an operation, we better
+	// stop the blinking caret.
 	if (notJustMovingTheMouse)
 		p->stopBlinkingCaret();
 
@@ -542,7 +542,7 @@ void GuiWorkArea::Private::dispatch(FuncRequest const & cmd)
 
 	// Skip these when selecting
 	// FIXME: let GuiView take care of those.
-	if (cmd.action() != LFUN_MOUSE_MOTION) {
+	if (notJustMovingTheMouse && !buffer_view_->mouseSelecting()) {
 		completer_->updateVisibility(false, false);
 		lyx_view_->updateDialogs();
 		lyx_view_->updateStatusBar();

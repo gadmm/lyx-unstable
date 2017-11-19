@@ -50,8 +50,8 @@ For a complete list of changes try
 * Smooth scrolling.
 * Option to invert colors (i.e. dark color theme). (#8325)
 * Improve the drawing of many math insets.
-* Better display for High-dpi screens: lines and drawings are now proportional to
-  the zoom level.
+* Better display for High-dpi screens: lines and drawings are now proportional
+  to the zoom level.
 * Better display for Low-dpi screens: lines and drawings are now antialiased.
 * Beamer-flex: Layout and examples for beamer that uses flex insets instead of
   environments for frames and similar insets. (Also available from
@@ -60,10 +60,13 @@ For a complete list of changes try
   <https://github.com/gadmm/easychair-lyx>.)
 * Custom insets are now available from the toolbar.
 * Improved default parameters and shortcuts.
+* Open hyperlinks in application from the contextual menu in a secure way.
+  (#9906)
 
 ## Minor bug fixes
 
-* Fix LyX's amnesia of last cursor positions when there are too many files (#10310)
+* Fix LyX's amnesia of last cursor positions when there are too many files.
+  (#10310)
 * Instant preview now works in child documents. (#9868)
 * Fix hard-to-read label color in math.
 * Fix a missing repaint of the cursor.

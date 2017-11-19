@@ -666,6 +666,8 @@ Menuset
 #
 	Menu "context-hyperlink"
 		Item "Settings...|S" "inset-settings"
+		Separator
+		Item "Open Target...|O" "inset-edit"
 	End
 
 #

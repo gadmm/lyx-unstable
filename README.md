@@ -43,11 +43,12 @@ For a complete list of changes try
   repeated key presses with iBus (Ubuntu in particular). (#9362, #9790, #10516)
 * Crash with segfault when exiting or dissolving math insets.
 * Scrolling issues with keyboard across large insets.
-* Fix flicker due to changing metrics while selecting with the mouse (#8951)
+* Fix flicker due to changing metrics while selecting with the mouse. (#8951)
 
 ## New features
 
 * Smooth scrolling.
+* Performance improvements for scrolling, especially large insets.
 * Option to invert colors (i.e. dark color theme). (#8325)
 * Improve the drawing of many math insets.
 * Better display for High-dpi screens: lines and drawings are now proportional
@@ -80,6 +81,5 @@ For a complete list of changes try
 * Module InStar: Add on-screen labels for InTitle and InPreamble environments.
 * Moving tabs is now visible (#10733).
 * Minor improvement to the citation GUI.
-* Performance improvements for scrolling.
 * Add \x*arrows in Math Arrows toolbar menu.
 * This file readable from the About menu.

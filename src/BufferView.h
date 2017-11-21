@@ -286,8 +286,9 @@ public:
 	/// selects the item at cursor if its paragraph is empty.
 	bool selectIfEmpty(DocIterator & cur);
 
-	/// update the internal \c ViewMetricsInfo.
-	void updateMetrics();
+	/// update the internal \c ViewMetricsInfo.  scroll: whether to optimize for
+	/// scrolling and to avoid redoing paragraphs
+	void updateMetrics(bool scroll = false);
 
 	// this is the "nodraw" drawing stage: only set the positions of the
 	// insets in metrics cache.
@@ -359,6 +360,8 @@ public:
 	bool clickableInset() const;
 	///
 	void makeDocumentClass();
+	/// Are we currently performing a selection with the mouse?
+	bool mouseSelecting() const;
 
 private:
 	/// noncopyable
@@ -370,8 +373,9 @@ private:
 	/// Update current paragraph metrics.
 	/// \return true if no further update is needed.
 	bool singleParUpdate();
-	/// do the work for the public updateMetrics()
-	void updateMetrics(Update::flags & update_flags);
+	/// do the work for the public updateMetrics().  scroll: whether to optimize
+	/// for scrolling and to avoid redoing paragraphs
+	void updateMetrics(Update::flags & update_flags, bool scroll = false);
 
 	// Set the row on which the cursor lives.
 	void setCurrentRowSlice(CursorSlice const & rowSlice);

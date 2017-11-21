@@ -102,7 +102,6 @@ bool InsetHyperlink::getStatus(Cursor & cur, FuncRequest const & cmd,
 {
 	switch (cmd.action()) {
 	case LFUN_INSET_EDIT:
-		flag.setEnabled(getParam("type").empty() || getParam("type") == "file:");
 		return true;
 
 	default:
@@ -113,11 +112,15 @@ bool InsetHyperlink::getStatus(Cursor & cur, FuncRequest const & cmd,
 
 void InsetHyperlink::viewTarget() const
 {
-	if (getParam("type") == "file:") {
-		FileName url = makeAbsPath(to_utf8(getParam("target")), buffer().filePath());
-		string const format = theFormats().getFormatFromFile(url);
-		theFormats().view(buffer(), url, format);
-	}
+	docstring url;
+	if (getParam("type") == "file:")
+		url = from_ascii("file://"
+		                 + makeAbsPath(to_utf8(getParam("target")),
+		                               buffer().filePath()).absFileName());
+	else
+		// type is "mailto:" or empty
+		url = getParam("type") + getParam("target");
+	frontend::Alert::openUrl(url, buffer());
 }
 
 

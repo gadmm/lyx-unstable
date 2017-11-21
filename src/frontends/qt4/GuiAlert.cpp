@@ -12,28 +12,32 @@
 
 #include <config.h>
 
-#include "alert.h"
 #include "InGuiThread.h"
+#include "qt_helpers.h"
 
+#include "frontends/alert.h"
 #include "frontends/Application.h"
 
-#include "qt_helpers.h"
+#include "Format.h"
 #include "LyX.h" // for lyx::use_gui
 
 #include "support/gettext.h"
 #include "support/debug.h"
 #include "support/docstring.h"
+#include "support/FileName.h"
 #include "support/lstrings.h"
 #include "support/lassert.h"
 #include "support/ProgressInterface.h"
 
 #include <QApplication>
 #include <QCheckBox>
+#include <QDesktopServices>
 #include <QMessageBox>
 #include <QLineEdit>
 #include <QInputDialog>
 #include <QPushButton>
 #include <QSettings>
+#include <QUrl>
 
 #include <iomanip>
 #include <iostream>
@@ -346,6 +350,56 @@ bool askForText(docstring & response, docstring const & msg,
 	return doAskForText(
 #endif
 				response, msg, dflt);
+}
+
+
+bool openUrl(docstring const & url, Buffer const & buf)
+{
+	docstring const html =
+		from_ascii("<p>%1$s</p><blockquote><p><tt>%2$s</tt></p></blockquote>");
+	QUrl const qurl = QUrl::fromUserInput(toqstr(url));
+	if (!qurl.isValid() || qurl.isRelative()) {
+		LYXERR(Debug::GUI, "QUrl parse error: " << fromqstr(qurl.errorString()));
+		warning(_("Invalid URL"),
+		        bformat(html, _("Unable to open invalid URL:"), url));
+	} else if (qurl.isLocalFile()) {
+		FileName const filename(fromqstr(qurl.toLocalFile()));
+		docstring const disp_filename = from_utf8(filename.absFileName());
+		if (filename.empty() || !filename.exists()) {
+			warning(_("Invalid file"),
+			        bformat(html, _("Unable to open invalid file:"),
+			                disp_filename));
+			return false;
+		}
+		string const format = theFormats().getFormatFromFile(filename);
+		if (format.empty()) {
+			warning(_("Unsupported format"),
+			        bformat(html, _("Unable to find a valid format for file:"),
+			                disp_filename));
+			return false;
+		}
+		int const ret =
+			Alert::prompt(_("Open file?"),
+			              bformat(html, _("Would you like to open the file:"),
+			                      disp_filename)
+			              +	bformat(html, _("of the following detected format:"),
+			                        from_utf8(format)),
+			              0, 1, _("&Open"), _("&Cancel"));
+		if (ret == 0)
+			return theFormats().view(buf, filename, format);
+	} else {
+		// the URL is ACE-encoded for security; e.g. www.xn--ly-8bc.org
+		docstring const disp_url =
+			qstring_to_ucs4(qurl.toDisplayString(QUrl::EncodeUnicode));
+		int const ret =
+			Alert::prompt(_("Open URL?"),
+			              bformat(html, _("Would you like to open the URL:"),
+			                      disp_url),
+			              0, 1, _("&Open"), _("&Cancel"));
+		if (ret == 0)
+			return QDesktopServices::openUrl(qurl);
+	}
+	return false;
 }
 
 } // namespace Alert

@@ -463,11 +463,12 @@ void GuiWorkArea::scheduleRedraw(bool update_metrics, int offset)
 
 	// No need to do anything if this is the current view. The BufferView
 	// metrics are already up to date.
-	if (update_metrics || d->lyx_view_ != guiApp->currentView()
+	if (update_metrics || offset < INT_MAX
+	    || d->lyx_view_ != guiApp->currentView()
 		|| d->lyx_view_->currentWorkArea() != this) {
 		// FIXME: it would be nice to optimize for the off-screen case.
 		d->buffer_view_->cursor().fixIfBroken();
-		d->buffer_view_->updateMetrics();
+		d->buffer_view_->updateMetrics(!update_metrics && offset < INT_MAX);
 		d->buffer_view_->cursor().fixIfBroken();
 	}
 
@@ -533,8 +534,8 @@ void GuiWorkArea::Private::dispatch(FuncRequest const & cmd)
 	bool const notJustMovingTheMouse =
 		cmd.action() != LFUN_MOUSE_MOTION || cmd.button() != mouse_button::none;
 
-	// In order to avoid bad surprise in the middle of an operation, we better stop
-	// the blinking caret.
+	// In order to avoid bad surprise in the middle of an operation, we better
+	// stop the blinking caret.
 	if (notJustMovingTheMouse)
 		p->stopBlinkingCaret();
 
@@ -542,7 +543,7 @@ void GuiWorkArea::Private::dispatch(FuncRequest const & cmd)
 
 	// Skip these when selecting
 	// FIXME: let GuiView take care of those.
-	if (cmd.action() != LFUN_MOUSE_MOTION) {
+	if (notJustMovingTheMouse && !buffer_view_->mouseSelecting()) {
 		completer_->updateVisibility(false, false);
 		lyx_view_->updateDialogs();
 		lyx_view_->updateStatusBar();

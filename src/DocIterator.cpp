@@ -533,6 +533,15 @@ bool DocIterator::hasPart(DocIterator const & it) const
 }
 
 
+bool DocIterator::isInside(Inset const * p) const
+{
+	for (size_t i = 0; i != depth(); ++i)
+		if (&operator[](i).inset() == p)
+			return true;
+	return false;
+}
+
+
 bool DocIterator::allowSpellCheck() const
 {
 	/// spell check is disabled if the iterator position

@@ -530,6 +530,8 @@ void Inset::drawMarkers(PainterInfo & pi, int x0, int y0, int x1, int y1,
 {
 	Color pen_color = (mouseHovered(pi.base.bv) || editing(pi.base.bv)) ?
 		col_on : col_off;
+	if (pen_color == Color_none)
+		return;
 	mathed_draw_marker(pi, x0,  y0,  1, -1, pen_color);
 	mathed_draw_marker(pi, x1, y0, -1, -1, pen_color);
 	if (!upper)
@@ -552,7 +554,12 @@ void Inset::drawMarkers(PainterInfo & pi, int x, int y,
 
 bool Inset::editing(BufferView const * bv) const
 {
-	return bv->cursor().isInside(this);
+	if (bv->mouseSelecting())
+		// Avoid flicker when selecting with the mouse: when so, do not make
+		// decisions about metrics based on the mouse location.
+		return bv->cursor().realAnchor().isInside(this);
+	else
+		return bv->cursor().isInside(this);
 }
 
 

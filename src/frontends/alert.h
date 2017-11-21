@@ -16,6 +16,9 @@
 
 
 namespace lyx {
+
+class Buffer;
+
 namespace frontend {
 namespace Alert {
 
@@ -70,6 +73,14 @@ void information(docstring const & title, docstring const & message);
  */
 bool askForText(docstring & response, docstring const & msg,
 	docstring const & dflt = empty_docstring());
+
+/**
+ * Prompts for opening a URL. If it is a local file, use the Formats class to
+ * prompt to open it using the application configured in LyX. Otherwise we use
+ * Qt's facilities to understand the URL and open the file; the user is prompted
+ * by being shown the URL in ASCII to prevent spoofing.
+ */
+bool openUrl(docstring const & url, Buffer const & buf);
 
 } // namespace Alert
 } // namespace frontend

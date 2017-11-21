@@ -61,14 +61,15 @@ try <https://github.com/gadmm/lyx-unstable/compare/master...staging>.
   repeated key presses with iBus (Ubuntu in particular). (#9362, #9790, #10516)
 * Crash with segfault when exiting or dissolving math insets.
 * Scrolling issues with keyboard across large insets.
+* Fix flicker due to changing metrics while selecting with the mouse (#8951)
 
 ## New features
 
 * Smooth scrolling.
 * Option to invert colors (i.e. dark color theme). (#8325)
 * Improve the drawing of many math insets.
-* Better display for High-dpi screens: lines and drawings are now proportional to
-  the zoom level.
+* Better display for High-dpi screens: lines and drawings are now proportional
+  to the zoom level.
 * Better display for Low-dpi screens: lines and drawings are now antialiased.
 * Beamer-flex: Layout and examples for beamer that uses flex insets instead of
   environments for frames and similar insets. (Also available from
@@ -77,10 +78,13 @@ try <https://github.com/gadmm/lyx-unstable/compare/master...staging>.
   <https://github.com/gadmm/easychair-lyx>.)
 * Custom insets are now available from the toolbar.
 * Improved default parameters and shortcuts.
+* Open hyperlinks in application from the contextual menu in a secure way.
+  (#9906)
 
 ## Minor bug fixes
 
-* Fix LyX's amnesia of last cursor positions when there are too many files (#10310)
+* Fix LyX's amnesia of last cursor positions when there are too many files.
+  (#10310)
 * Instant preview now works in child documents. (#9868)
 * Fix hard-to-read label color in math.
 * Fix a missing repaint of the cursor.

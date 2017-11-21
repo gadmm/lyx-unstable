@@ -327,6 +327,8 @@ struct BufferView::Private
 	bool repaint_caret_row_;
 	///
 	frontend::WorkArea & wa_;
+	///
+	bool mouse_selecting_ = false;
 };
 
 
@@ -652,7 +654,7 @@ void BufferView::scrollDocView(int value)
 	value = max(d->scrollbarParameters_.min, value);
 	value = min(d->scrollbarParameters_.max, value);
 	d->anchor_ypos_ -= value;
-	d->wa_.scheduleRedraw(true, value);
+	d->wa_.scheduleRedraw(false, value);
 	updateHoveredInset();
 	return;
 }
@@ -2158,6 +2160,12 @@ void BufferView::clearLastInset(Inset * inset) const
 }
 
 
+bool BufferView::mouseSelecting() const
+{
+	return d->mouse_selecting_;
+}
+
+
 void BufferView::mouseEventDispatch(FuncRequest const & cmd0)
 {
 	//lyxerr << "[ cmd0 " << cmd0 << "]" << endl;
@@ -2179,6 +2187,9 @@ void BufferView::mouseEventDispatch(FuncRequest const & cmd0)
 
 	d->mouse_position_cache_.x_ = cmd.x();
 	d->mouse_position_cache_.y_ = cmd.y();
+
+	d->mouse_selecting_ =
+		cmd.action() == LFUN_MOUSE_MOTION && cmd.button() == mouse_button::button1;
 
 	if (cmd.action() == LFUN_MOUSE_MOTION && cmd.button() == mouse_button::none) {
 		updateHoveredInset();
@@ -2615,14 +2626,14 @@ bool BufferView::singleParUpdate()
 }
 
 
-void BufferView::updateMetrics()
+void BufferView::updateMetrics(bool const scroll)
 {
-	updateMetrics(d->update_flags_);
+	updateMetrics(d->update_flags_, scroll);
 	d->update_strategy_ = FullScreenUpdate;
 }
 
 
-void BufferView::updateMetrics(Update::flags & update_flags)
+void BufferView::updateMetrics(Update::flags & update_flags, bool const scroll)
 {
 	if (height_ == 0 || width_ == 0)
 		return;
@@ -2630,13 +2641,32 @@ void BufferView::updateMetrics(Update::flags & update_flags)
 	Text & buftext = buffer_.text();
 	pit_type const npit = int(buftext.paragraphs().size());
 
-	// Clear out the position cache in case of full screen redraw,
-	d->coord_cache_.clear();
+	bool clear = !scroll || !textMetrics(&buftext).contains(d->anchor_pit_);
 
-	// Clear out paragraph metrics to avoid having invalid metrics
-	// in the cache from paragraphs not relayouted below
-	// The complete text metrics will be redone.
-	d->text_metrics_.clear();
+	if (d->anchor_pit_ >= npit) {
+		// The anchor pit must have been deleted...
+		d->anchor_pit_ = npit - 1;
+		clear = true;
+	}
+
+	// Clear out or update the position cache in case of full screen redraw, and
+	// clear out or update paragraph metrics to avoid having invalid metrics in
+	// the cache from paragraphs not relayouted below.
+	if (!clear) {
+		// the scroll offset is deduced by comparing the current anchor position
+		// with the target value.
+		int const offset =
+			d->anchor_ypos_ - textMetrics(&buftext).parMetrics(d->anchor_pit_,
+			                                                   false).position();
+		d->coord_cache_.scroll(offset);
+		for (auto & elem : d->text_metrics_) {
+			TextMetrics & tm = elem.second;
+			tm.scroll(offset);
+		}
+	} else {
+		d->coord_cache_.clear();
+		d->text_metrics_.clear();
+	}
 
 	TextMetrics & tm = textMetrics(&buftext);
 
@@ -2644,28 +2674,13 @@ void BufferView::updateMetrics(Update::flags & update_flags)
 	if (d->inlineCompletionPos_.fixIfBroken())
 		d->inlineCompletionPos_ = DocIterator();
 
-	if (d->anchor_pit_ >= npit)
-		// The anchor pit must have been deleted...
-		d->anchor_pit_ = npit - 1;
+	// Rebreak anchor paragraph if empty
+	ParagraphMetrics & anchor_pm = tm.parMetrics(d->anchor_pit_, true);
 
-	// Rebreak anchor paragraph.
-	tm.redoParagraph(d->anchor_pit_);
-	ParagraphMetrics & anchor_pm = tm.par_metrics_[d->anchor_pit_];
-
-	// position anchor
-	if (d->anchor_pit_ == 0) {
-		int scrollRange = d->scrollbarParameters_.max - d->scrollbarParameters_.min;
-
-		// Complete buffer visible? Then it's easy.
-		if (scrollRange == 0)
-			d->anchor_ypos_ = anchor_pm.ascent();
-		else {
-			// avoid empty space above the first row
-			d->anchor_ypos_ = min(d->anchor_ypos_, anchor_pm.ascent());
-		}
+	if (clear) {
+		anchor_pm.setPosition(d->anchor_ypos_);
+		tm.updatePosCache(d->anchor_pit_);
 	}
-	anchor_pm.setPosition(d->anchor_ypos_);
-	tm.updatePosCache(d->anchor_pit_);
 
 	LYXERR(Debug::PAINTING, "metrics: "
 		<< " anchor pit = " << d->anchor_pit_
@@ -2680,11 +2695,14 @@ void BufferView::updateMetrics(Update::flags & update_flags)
 	// We are now just above the anchor paragraph.
 	pit_type pit1 = d->anchor_pit_ - 1;
 	for (; pit1 >= 0 && y1 >= ((pit1 >= cur_pit) ? -fakeTravel() : 0); --pit1) {
+		bool const update_pos = !tm.contains(pit1);
 		ParagraphMetrics & pm = tm.parMetrics(pit1, true);
 		y1 -= pm.descent();
 		// Save the paragraph position in the cache.
-		pm.setPosition(y1);
-		tm.updatePosCache(pit1);
+		if (update_pos) {
+			pm.setPosition(y1);
+			tm.updatePosCache(pit1);
+		}
 		y1 -= pm.ascent();
 	}
 
@@ -2694,11 +2712,14 @@ void BufferView::updateMetrics(Update::flags & update_flags)
 	pit_type pit2 = d->anchor_pit_ + 1;
 	for (; pit2 < npit &&
 		     y2 <= height_ + ((pit2 <= cur_pit) ? fakeTravel() : 0); ++pit2) {
+		bool const update_pos = !tm.contains(pit2);
 		ParagraphMetrics & pm = tm.parMetrics(pit2, true);
 		y2 += pm.ascent();
 		// Save the paragraph position in the cache.
-		pm.setPosition(y2);
-		tm.updatePosCache(pit2);
+		if (update_pos) {
+			pm.setPosition(y2);
+			tm.updatePosCache(pit2);
+		}
 		y2 += pm.descent();
 	}
 
@@ -2714,7 +2735,8 @@ void BufferView::updateMetrics(Update::flags & update_flags)
 	update_flags = (update_flags & ~Update::Force) | Update::ForceDraw;
 
 	// Now update the positions of insets in the cache.
-	updatePosCache();
+	if (clear)
+		updatePosCache();
 
 	if (lyxerr.debugging(Debug::WORKAREA)) {
 		LYXERR(Debug::WORKAREA, "BufferView::updateMetrics");

@@ -65,7 +65,6 @@ dist_commands_DATA = \
 caexamplesdir = $(pkgdatadir)/examples/ca
 dist_caexamples_DATA = \
 	examples/ca/ItemizeBullets.lyx \
-	examples/ca/mathed.lyx \
 	examples/ca/splash.lyx
 
 csexamplesdir = $(pkgdatadir)/examples/cs
@@ -180,7 +179,6 @@ dist_jaexamples_DATA = \
 	examples/ja/Braille.lyx \
 	examples/ja/FeynmanDiagrams.lyx \
 	examples/ja/MultilingualCaptions.lyx \
-	examples/ja/R-S-statements.lyx \
 	examples/ja/beamer.lyx \
 	examples/ja/knitr.lyx \
 	examples/ja/lilypond.lyx \
@@ -351,7 +349,6 @@ dist_examples_DATA = \
 	examples/PDF-form.lyx \
 	examples/powerdot.lyx \
 	examples/recipebook.lyx \
-	examples/R-S-statements.lyx \
 	examples/script_form.lyx \
 	examples/seminar.lyx \
 	examples/serial_letter1.lyx \
@@ -364,7 +361,6 @@ dist_examples_DATA = \
 	examples/splash.lyx \
 	examples/spreadsheet.lyx \
 	examples/sweave.lyx \
-	examples/subequations.lyx \
 	examples/tufte-book.lyx \
 	examples/tufte-handout.lyx \
 	examples/varwidth-floats-side-by-side.lyx \

@@ -2007,6 +2007,17 @@ void TextMetrics::completionPosAndDim(Cursor const & cur, int & x, int & y,
 	//lyxerr << " wordstart=" << wordStart << " bvcur=" << bvcur << " cur=" << cur << std::endl;
 }
 
+
+void TextMetrics::scroll(int offset)
+{
+	origin_.y_ += offset;
+	for (auto & elem : par_metrics_) {
+		ParagraphMetrics & pm = elem.second;
+		pm.setPosition(pm.position() + offset);
+	}
+}
+
+
 int defaultRowHeight()
 {
 	return int(theFontMetrics(sane_font).maxHeight() *  1.2);

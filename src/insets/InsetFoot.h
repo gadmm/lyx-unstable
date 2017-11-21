@@ -36,6 +36,8 @@ private:
 	              size_t max_length = INT_MAX) const;
 	///
 	int docbook(odocstream &, OutputParams const &) const;
+	///
+	void validate(LaTeXFeatures & features) const;
 	/// Update the counters of this inset and of its contents
 	void updateBuffer(ParIterator const &, UpdateType);
 	///
@@ -46,6 +48,8 @@ private:
 	docstring custom_label_;
 	///
 	bool intitle_;
+	///
+	bool infloattable_;
 };
 
 

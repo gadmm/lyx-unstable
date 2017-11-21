@@ -33,6 +33,7 @@
 #include "DispatchResult.h"
 #include "FuncRequest.h"
 #include "FuncStatus.h"
+#include "InsetIterator.h"
 #include "InsetList.h"
 #include "Language.h"
 #include "LaTeXFeatures.h"
@@ -1860,7 +1861,7 @@ int Tabular::getRotateCell(idx_type cell) const
 
 bool Tabular::needRotating() const
 {
-	if (rotate)
+	if (rotate && !is_long_tabular)
 		return true;
 	for (row_type r = 0; r < nrows(); ++r)
 		for (col_type c = 0; c < ncols(); ++c)
@@ -2652,6 +2653,17 @@ void Tabular::TeXRow(otexstream & os, row_type row,
 				tail.setMacrocontextPositionRecursive(dit);
 				tail.latex(os, newrp);
 			}
+		} else if (ltCaption(row)) {
+			// Inside longtable caption rows, we must only output the caption inset
+			// with its content and omit anything outside of that (see #10791)
+			InsetIterator it = inset_iterator_begin(*const_cast<InsetTableCell *>(inset));
+			InsetIterator i_end = inset_iterator_end(*const_cast<InsetTableCell *>(inset));
+			for (; it != i_end; ++it) {
+				if (it->lyxCode() != CAPTION_CODE)
+					continue;
+				it->latex(os, runparams);
+				break;
+			}
 		} else if (!isPartOfMultiRow(row, c)) {
 			if (!runparams.nice)
 				os.texrow().start(par.id(), 0);
@@ -2719,7 +2731,7 @@ void Tabular::latex(otexstream & os, OutputParams const & runparams) const
 	if (!TexRow::isNone(pos))
 		os.texrow().start(pos);
 
-	if (rotate != 0)
+	if (rotate != 0 && !is_long_tabular)
 		os << "\\begin{turn}{" << convert<string>(rotate) << "}\n";
 
 	if (is_long_tabular) {
@@ -2870,7 +2882,7 @@ void Tabular::latex(otexstream & os, OutputParams const & runparams) const
 			os << "\\end{tabular}";
 	}
 
-	if (rotate != 0)
+	if (rotate != 0 && !is_long_tabular)
 		os << breakln << "\\end{turn}";
 
 	if (!TexRow::isNone(pos))
@@ -3424,7 +3436,16 @@ void Tabular::validate(LaTeXFeatures & features) const
 		if (getVAlignment(cell) != LYX_VALIGN_TOP
 		    || !getPWidth(cell).zero())
 			features.require("array");
+		// Tell footnote that we need a savenote
+		// environment in non-long tables or
+		// longtable headers/footers
+		else if (!is_long_tabular && !features.inFloat())
+			features.saveNoteEnv("tabular");
+		else if (!isValidRow(cellRow(cell)))
+			features.saveNoteEnv("longtable");
+
 		cellInset(cell)->validate(features);
+		features.saveNoteEnv(string());
 	}
 }
 

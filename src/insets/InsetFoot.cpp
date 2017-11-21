@@ -17,6 +17,7 @@
 #include "BufferParams.h"
 #include "Counters.h"
 #include "Language.h"
+#include "LaTeXFeatures.h"
 #include "Layout.h"
 #include "OutputParams.h"
 #include "ParIterator.h"
@@ -33,13 +34,17 @@ using namespace std;
 namespace lyx {
 
 InsetFoot::InsetFoot(Buffer * buf)
-	: InsetFootlike(buf), intitle_(false)
+	: InsetFootlike(buf), intitle_(false), infloattable_(false)
 {}
 
 
 docstring InsetFoot::layoutName() const
 {
-	return intitle_ ? from_ascii("Foot:InTitle") : from_ascii("Foot");
+	if (intitle_)
+		return from_ascii("Foot:InTitle");
+	else if (infloattable_)
+		return from_ascii("Foot:InFloatTable");
+	return from_ascii("Foot");
 }
 
 
@@ -53,7 +58,13 @@ void InsetFoot::updateBuffer(ParIterator const & it, UpdateType utype)
 	}
 
 	intitle_ = false;
-	for (size_type sl = 0 ; sl < it.depth() ; ++ sl) {
+	infloattable_ = false;
+	bool intable = false;
+	if (it.innerInsetOfType(TABULAR_CODE) != 0)
+		intable = true;
+	if (it.innerInsetOfType(FLOAT_CODE) != 0)
+		infloattable_ = intable;
+	for (size_type sl = 0 ; sl < it.depth() ; ++sl) {
 		if (it[sl].text() && it[sl].paragraph().layout().intitle) {
 			intitle_ = true;
 			break;
@@ -102,6 +113,20 @@ int InsetFoot::docbook(odocstream & os, OutputParams const & runparams) const
 	os << "</footnote>";
 
 	return i;
+}
+
+
+void InsetFoot::validate(LaTeXFeatures & features) const
+{
+	if (!features.saveNoteEnv().empty()) {
+		features.require("footnote");
+		features.addPreambleSnippet(
+			from_ascii("\\makesavenoteenv{"
+				   + features.saveNoteEnv()
+				   + "}\n"));
+	}
+
+	InsetText::validate(features);
 }
 
 } // namespace lyx

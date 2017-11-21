@@ -463,11 +463,12 @@ void GuiWorkArea::scheduleRedraw(bool update_metrics, int offset)
 
 	// No need to do anything if this is the current view. The BufferView
 	// metrics are already up to date.
-	if (update_metrics || d->lyx_view_ != guiApp->currentView()
+	if (update_metrics || offset < INT_MAX
+	    || d->lyx_view_ != guiApp->currentView()
 		|| d->lyx_view_->currentWorkArea() != this) {
 		// FIXME: it would be nice to optimize for the off-screen case.
 		d->buffer_view_->cursor().fixIfBroken();
-		d->buffer_view_->updateMetrics();
+		d->buffer_view_->updateMetrics(!update_metrics && offset < INT_MAX);
 		d->buffer_view_->cursor().fixIfBroken();
 	}
 

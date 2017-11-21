@@ -39,6 +39,13 @@ void CoordCache::clear()
 }
 
 
+void CoordCache::scroll(int const offset)
+{
+	arrays_.scroll(offset);
+	insets_.scroll(offset);
+}
+
+
 void CoordCache::dump() const
 {
 	if (getInsets().data_.empty()) {

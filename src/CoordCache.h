@@ -57,6 +57,11 @@ struct Geometry {
 		// Optimisation: We avoid to compute the sqrt on purpose.
 		return xx*xx + yy*yy;
 	}
+
+	void scroll(int offset)
+	{
+		pos.y_ += offset;
+	}
 };
 
 
@@ -157,6 +162,12 @@ private:
 			lyxbreaker(thing, hint, data_.size());
 	}
 
+	void scroll(int offset)
+	{
+		for (auto & elem : data_)
+			elem.second.scroll(offset);
+	}
+
 	typedef std::map<T const *, Geometry> cache_type;
 	cache_type data_;
 };
@@ -180,6 +191,7 @@ private:
 class CoordCache {
 public:
 	void clear();
+	void scroll(int offset);
 
 	/// A map from MathData to position on the screen
 	typedef CoordCacheBase<MathData> Arrays;

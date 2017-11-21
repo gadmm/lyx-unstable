@@ -158,6 +158,7 @@ private:
 	// Helper function for the other checkInsetHit method.
 	InsetList::InsetTable * checkInsetHit(pit_type pit, int x, int y);
 
+	void scroll(int offset);
 
 // Temporary public:
 public:

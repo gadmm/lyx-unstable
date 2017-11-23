@@ -92,6 +92,7 @@ LYX_OBJS = \
 	../FloatList.o \
 	../Floating.o \
 	../FontInfo.o \
+	../FuncRequest.o \
 	../graphics/GraphicsParams.o \
 	../insets/ExternalTemplate.o \
 	../insets/ExternalTransforms.o \
@@ -103,6 +104,7 @@ LYX_OBJS = \
 	../Length.o \
 	../lengthcommon.o \
 	../Lexer.o \
+	../LyXAction.o \
 	../ModuleList.o \
 	../Spacing.o \
 	../TextClass.o \

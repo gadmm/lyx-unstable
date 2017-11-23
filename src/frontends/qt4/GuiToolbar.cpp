@@ -300,25 +300,17 @@ void InsetMenuButton::updateTriggered()
 	setDefaultAction(default_action);
 	setEnabled(false);
 
-	for (pair<docstring, InsetLayout> const & p : text_class_->insetLayouts()) {
-		InsetLayout const & il = p.second;
-		if (il.lyxtype() != InsetLayout::CUSTOM || !il.obsoleted_by().empty())
-			continue;
-		docstring const name = p.first;
-		QString const loc_item = toqstr(translateIfPossible(
-				prefixIs(name, from_ascii("Flex:")) ?
-				name.substr(5) : name));
-
-		auto func = make_shared<FuncRequest>(LFUN_FLEX_INSERT,
-			from_ascii("\"") + name + from_ascii("\""), FuncRequest::TOOLBAR);
-		Action * act =
-			new Action(func, icon(), loc_item, loc_item, this);
+	auto addFlex = [&](docstring, docstring guiName, FuncRequest cmd) -> void {
+		cmd.setOrigin(FuncRequest::TOOLBAR);
+		auto func = make_shared<FuncRequest>(std::move(cmd));
+		QString const qstr = toqstr(guiName);
+		Action * act = new Action(func, icon(), qstr, qstr, this);
 		menu()->addAction(act);
-
-		if (!previous_action.isEmpty() && loc_item == previous_action)
+		if (!previous_action.isEmpty() && qstr == previous_action)
 			setDefaultAction(act);
 		setEnabled(true);
-	}
+	};
+	text_class_->iterateFlex(InsetLayout::CUSTOM, addFlex);
 }
 
 

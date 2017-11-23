@@ -16,13 +16,14 @@
 
 #include "TextClass.h"
 
-#include "LayoutFile.h"
 #include "CiteEnginesList.h"
 #include "Color.h"
 #include "Counters.h"
 #include "Floating.h"
 #include "FloatList.h"
+#include "FuncRequest.h"
 #include "Layout.h"
+#include "LayoutFile.h"
 #include "Lexer.h"
 #include "Font.h"
 #include "ModuleList.h"
@@ -1660,6 +1661,26 @@ Layout TextClass::createBasicLayout(docstring const & name, bool unknown) const
 		LATTEST(false);
 	};
 	return *defaultLayout;
+}
+
+
+void TextClass::iterateFlex(InsetLayout::InsetLyXType type,
+                            std::function<void(docstring /* layoutName */,
+                                               docstring /* guiName */,
+                                               FuncRequest /* cmd */)>
+                            const & f) const
+{
+	for (pair<docstring, InsetLayout> const & p : insetLayouts()) {
+		InsetLayout const & il = p.second;
+		if (il.lyxtype() != type || !il.obsoleted_by().empty())
+			continue;
+		docstring layoutName = p.first;
+		// we remove the "Flex:" prefix, if it is present
+		if (prefixIs(layoutName, from_ascii("Flex:")))
+			layoutName = layoutName.substr(5);
+		FuncRequest cmd(LFUN_FLEX_INSERT, Lexer::quoteString(layoutName));
+		f(layoutName, translateIfPossible(layoutName), cmd);
+	}
 }
 
 

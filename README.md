@@ -96,11 +96,12 @@ try <https://github.com/gadmm/lyx-unstable/compare/master...staging>.
 * Fix spurious space in output of \mkern.
 * The "apply" button now correctly saves preferences. (#10016)
 * Precautionary measure against a potential data loss during emergency save.
+* Fix automatically loaded packages with acmart.
 
 ## Minor enhancements
 
 * Module InStar: Add on-screen labels for InTitle and InPreamble environments.
-* Moving tabs is now visible (#10733).
+* Moving tabs is now visible. (#10733)
 * Minor improvement to the citation GUI.
 * Add \x*arrows in Math Arrows toolbar menu.
 * This file readable from the About menu.

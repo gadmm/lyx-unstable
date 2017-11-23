@@ -1197,29 +1197,15 @@ void MenuDefinition::expandFloatInsert(Buffer const * buf)
 }
 
 
-void MenuDefinition::expandFlexInsert(
-		Buffer const * buf, InsetLayout::InsetLyXType type)
+void MenuDefinition::expandFlexInsert(Buffer const * buf,
+                                      InsetLayout::InsetLyXType type)
 {
 	if (!buf)
 		return;
-
-	TextClass::InsetLayouts const & insetLayouts =
-		buf->params().documentClass().insetLayouts();
-	TextClass::InsetLayouts::const_iterator cit = insetLayouts.begin();
-	TextClass::InsetLayouts::const_iterator end = insetLayouts.end();
-	for (; cit != end; ++cit) {
-		if (cit->second.lyxtype() == type) {
-			if (!cit->second.obsoleted_by().empty())
-				continue;
-			docstring label = cit->first;
-			// we remove the "Flex:" prefix, if it is present
-			if (prefixIs(label, from_ascii("Flex:")))
-				label = label.substr(5);
-			addWithStatusCheck(MenuItem(MenuItem::Command,
-				toqstr(translateIfPossible(label)),
-				FuncRequest(LFUN_FLEX_INSERT, Lexer::quoteString(label))));
-		}
-	}
+	auto addFlex = [&](docstring, docstring guiName, FuncRequest cmd) -> void {
+		addWithStatusCheck(MenuItem(MenuItem::Command, toqstr(guiName), move(cmd)));
+	};
+	buf->params().documentClass().iterateFlex(type, addFlex);
 	// FIXME This is a little clunky.
 	if (items_.empty() && type == InsetLayout::CUSTOM && !buf->hasReadonlyFlag())
 		add(MenuItem(MenuItem::Help, qt_("No Custom Insets Defined!")));

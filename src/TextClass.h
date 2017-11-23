@@ -40,6 +40,7 @@ namespace support { class FileName; }
 
 class Counters;
 class FloatList;
+class FuncRequest;
 class Layout;
 class LayoutFile;
 class Lexer;
@@ -142,6 +143,14 @@ public:
 	Layout const & operator[](docstring const & vname) const;
 	/// Inset layouts of this doc class
 	InsetLayouts const & insetLayouts() const { return insetlayoutlist_; }
+	/// Call a function for each flex inset layout of a certain type. Performs
+	/// some string manipulation that I find ad hoc but that needs to be
+	/// centralised somewhere.
+	void iterateFlex(InsetLayout::InsetLyXType type,
+	                 std::function<void(docstring /* layoutName */,
+	                                    docstring /* guiName */,
+	                                    FuncRequest /* cmd */)>
+	                 const & f) const;
 
 	///////////////////////////////////////////////////////////////////
 	// reading routines

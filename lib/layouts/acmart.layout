@@ -1,5 +1,5 @@
 #% Do not delete the line below; configure depends on this
-#  \DeclareLaTeXClass[acmart,cmap.sty,comment.sty,draftwatermark.sty,environ.sty,etoolbox.sty,fancyhdr.sty,manyfoot.sty,microtype.sty,refcount.sty,setspace.sty,textcase.sty,totpages.sty,xkeyval.sty,xstring,zi4.sty]{Association for Computing Machinery (ACM) article}
+#  \DeclareLaTeXClass[acmart]{Association for Computing Machinery (ACM) article}
 #  \DeclareCategory{Articles}
 #
 # Layout for typesetting publications of the Association for Computing Machinery.
@@ -11,45 +11,32 @@
 
 Format 65
 
-Provides amscls 1
-Provides amsmath 1
-Provides amstext 1
-Provides binhex 1
 Provides caption 1
-Provides comment 1
-Provides cm-super 1
+Provides cleveref 1
 Provides cmap 1
-Provides draftwatermark 1
+Provides comment 1
 Provides environ 1
 Provides fancyhdr 1
 Provides float 1
-Provides fontaxes 1
+Provides fontenc 1
 Provides geometry 1
-Provides graphics 1
+Provides graphicx 1
 Provides hyperref 1
-Provides ifluatex 1
-Provides ifxetex 1
+Provides iftex 1
+#Same as zi4
 Provides inconsolata 1
-Provides latex-tools 1
 Provides libertine 1
-Provides makeidx 1
 Provides manyfoot 1
 Provides microtype 1
-Provides mmap 1
-Provides ms 1
-Provides mweights 1
 Provides natbib 1
-Provides nccfoots 1
-Provides newtx 1
-Provides oberdiek 1
-Provides pdftex-def 1
+Provides newtxmath 1
+Provides textcase 1
+Provides textcomp 1
 Provides totpages 1
-Provides trimspaces 1
-Provides setspace 1
-Provides upquote 1
-Provides url 1
 Provides xcolor 1
 Provides xkeyval 1
+Provides xstring 1
+Provides zi4 1
 
 # Input general definitions
 Input stdclass.inc

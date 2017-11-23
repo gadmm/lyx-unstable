@@ -24,6 +24,7 @@
 #include "support/docstring.h"
 #include "support/types.h"
 
+#include <functional>
 #include <list>
 #include <map>
 #include <set>

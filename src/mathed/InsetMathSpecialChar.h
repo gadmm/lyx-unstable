@@ -58,6 +58,8 @@ public:
 	char_type getChar() const { return char_; }
 	///
 	InsetCode lyxCode() const { return MATH_SPECIALCHAR_CODE; }
+	///
+	MathClass mathClass() const;
 
 private:
 	virtual Inset * clone() const;

@@ -13598,6 +13598,41 @@ CJK
 \end_layout
 
 \begin_layout Standard
+La opción
+\family sans
+ Habilitar extensiones micro-tipográficas
+\family default
+ 
+\lang english
+activates extensions such as character protrusion and font expansion via
+\lang spanish
+ el paquete \SpecialChar LaTeX
+ 
+\series bold
+microtype
+\series default
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+, paquetes ! microtype
+\end_layout
+
+\end_inset
+
+.
+ La opción 
+\family sans
+Salir en-guiones y &em-guiones como ligaduras
+\family default
+ 
+\lang english
+outputs en- and em-dashes as ligatures (--, ---) instead of a sigle character.
+\end_layout
+
+\begin_layout Standard
 \begin_inset VSpace bigskip
 \end_inset
 
@@ -28952,6 +28987,26 @@ literal "false"
 \end_inset
 
 , una dirección de correo o un enlace a un archivo.
+ L'opción 
+\family sans
+Literal
+\family default
+ en el diálogo configuratión del hyperenlace 
+\lang english
+allows to input
+\lang spanish
+ código \SpecialChar TeX
+ 
+\lang english
+to the
+\lang spanish
+ 
+\family sans
+Nombre
+\family default
+ 
+\lang english
+field.
 \end_layout
 
 \begin_layout Standard
@@ -29265,6 +29320,42 @@ latexcompanion
 \end_inset
 
 .
+\begin_inset Newline newline
+\end_inset
+
+Si pones una 
+\family sans
+Etiqueta
+\family default
+ para la entrada, 
+\lang english
+references to it will appear with this
+\lang spanish
+ etiqueta en lugar del número 
+\lang english
+of the entry
+\lang spanish
+.
+ L'opción 
+\family sans
+Literal
+\family default
+ en el diálogo configuratión de la entrada bibliográfica 
+\lang english
+allows to input
+\lang spanish
+ código \SpecialChar TeX
+ 
+\lang english
+to the
+\lang spanish
+ 
+\family sans
+Etiqueta
+\family default
+ 
+\lang english
+field.
 \end_layout
 
 \begin_layout Standard
@@ -29303,11 +29394,6 @@ Añadir cita
 \begin_layout Standard
 Las referencias bibliográficas se muestran en la salida con el número de
  entrada entre corchetes.
- Si pones una 
-\family sans
-Etiqueta
-\family default
- para la entrada, esta se verá en lugar del número.
  Aquí vemos dos ejemplos, el primero sin etiqueta, el segundo con la etiqueta
  
 \begin_inset Quotes cld
@@ -30629,13 +30715,19 @@ In the citation dialog you can also set text to appear after a citation
 \end_inset
 
 g.
- page numbers, which will then be formatted according to the style's needs
+\begin_inset space \space{}
+\end_inset
+
+page numbers, which will then be formatted according to the style's needs
  (e.
 \begin_inset space \thinspace{}
 \end_inset
 
 g.
- with or without 
+\begin_inset space \space{}
+\end_inset
+
+with or without 
 \begin_inset Quotes eld
 \end_inset
 
@@ -30643,9 +30735,39 @@ pp.
 \begin_inset Quotes erd
 \end_inset
 
-).
 
 \lang spanish
+).
+ L'opción 
+\family sans
+Literal
+\family default
+ en el diálogo cita 
+\lang english
+allows to input
+\lang spanish
+ código \SpecialChar TeX
+ 
+\lang english
+to the field
+\lang spanish
+s 
+\family sans
+Texto
+\begin_inset space ~
+\end_inset
+
+delante
+\family default
+ y 
+\family sans
+Texto
+\begin_inset space ~
+\end_inset
+
+detrás
+\family default
+.
  Aquí hay un ejemplo en el que el texto 
 \begin_inset Quotes cld
 \end_inset
@@ -30667,7 +30789,7 @@ Echa un vistazo a
 LatexCommand cite
 after "Capítulo 3"
 key "latexcompanion"
-literal "true"
+literal "false"
 
 \end_inset
 
@@ -30753,20 +30875,22 @@ after
 .
  If you double-click on an item's 
 \family sans
-Text
+\lang spanish
+Texto
 \begin_inset space ~
 \end_inset
 
-before
+delante
 \family default
- or 
+ o 
 \family sans
-Text
+Texto
 \begin_inset space ~
 \end_inset
 
-after
+detrás
 \family default
+\lang english
  field, you can add such individual pre- and postnotes.
  In the 
 \family sans
@@ -31753,13 +31877,9 @@ Si quieres cambiar la atribución de una entrada de índice específica, haciend
 \begin_layout Itemize
 Con clic derecho sobre un índice, puedes cambiar su tipo.
  Además, es posible calificar una lista de índice como 
-\begin_inset Quotes cld
-\end_inset
-
+\family sans
 Subíndice
-\begin_inset Quotes crd
-\end_inset
-
+\family default
 .
  En este caso, el encabezado de esta lista descenderá un nivel.
  Por ejemplo, en un documento clase 
@@ -31768,6 +31888,23 @@ book
 \emph default
 , en el que el encabezado estándar de índice se define como capítulo, los
  subíndices se definirán como secciones y así se anidarán en los índices.
+\end_layout
+
+\begin_layout Itemize
+L'opción 
+\family sans
+Literal
+\family default
+ 
+\lang english
+allows to input
+\lang spanish
+ código \SpecialChar TeX
+ 
+\lang english
+to the name
+\lang spanish
+ del índice.
 \end_layout
 
 \begin_layout Section
@@ -31891,8 +32028,58 @@ Nom
 \end_layout
 
 \begin_layout Standard
-Una ventana de nomenclatura contiene dos entradas principales: la primera
- es el propio símbolo y la segunda su descripción.
+
+\lang english
+A nomenclature entry consists of two main entries
+\lang spanish
+.
+ La primera es
+\lang english
+ the term
+\lang spanish
+ o 
+\family sans
+Símbolo
+\family default
+\lang english
+ that you wish to define.
+ The second is the
+\lang spanish
+ 
+\family sans
+Descripción
+\family default
+ 
+\lang english
+of the term
+\lang spanish
+ o símbolo.
+ L'opción 
+\family sans
+Literal
+\family default
+ en el diálogo configuratión de la nomenclatura 
+\lang english
+allows to input
+\lang spanish
+ código \SpecialChar TeX
+ 
+\lang english
+to the field
+\lang spanish
+s 
+\family sans
+Descripción
+\family default
+ y 
+\family sans
+Ordenar
+\begin_inset space ~
+\end_inset
+
+como
+\family default
+.
 \end_layout
 
 \begin_layout Standard
@@ -31904,8 +32091,22 @@ status open
 \series bold
 Nota:
 \series default
- Debes introducir en todos los campos código \SpecialChar LaTeX
- válido.
+ 
+\lang english
+To use 
+\lang spanish
+código \SpecialChar TeX
+
+\lang english
+ for nomenclature entries 
+\lang spanish
+l 'opción 
+\family sans
+Literal
+\family default
+ en el diálogo de la nomenclatura
+\lang english
+ has to be used.
 \end_layout
 
 \end_inset
@@ -37164,7 +37365,7 @@ Esta sección describe cómo usar \SpecialChar LyX
  utilizarlos: 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Arabic,Armenian,Farsi,Hebrew,Japanese,Latvian,Lithuanian,Mongolian,Vietnamese"
+key "Arabic,Armenian,Cyrillic,Farsi,Hebrew,Japanese"
 literal "true"
 
 \end_inset
@@ -48521,10 +48722,10 @@ Unidades
 \noindent
 \align center
 \begin_inset Tabular
-<lyxtabular version="3" rows="20" columns="3">
+<lyxtabular version="3" rows="21" columns="3">
 <features tabularvalignment="middle">
 <column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
+<column alignment="center" valignment="middle" width="50col%">
 <column alignment="center" valignment="top">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
@@ -48561,7 +48762,7 @@ comando \SpecialChar LaTeX
 \begin_inset Text
 
 \begin_layout Plain Layout
-mm
+bp
 \end_layout
 
 \end_inset
@@ -48570,7 +48771,52 @@ mm
 \begin_inset Text
 
 \begin_layout Plain Layout
-milímetro
+punto grande (72
+\begin_inset space \thinspace{}
+\end_inset
+
+bp = 1
+\begin_inset space \thinspace{}
+\end_inset
+
+in)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+cc
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+cicero (1
+\begin_inset space \thinspace{}
+\end_inset
+
+cc = 12
+\begin_inset space \thinspace{}
+\end_inset
+
+dd)
 \end_layout
 
 \end_inset
@@ -48600,183 +48846,6 @@ cm
 
 \begin_layout Plain Layout
 centímetro
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
--
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-in
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-pulgada
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
--
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-pt
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-punto (72.27
-\begin_inset space \thinspace{}
-\end_inset
-
-pt = 1
-\begin_inset space \thinspace{}
-\end_inset
-
-in)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
--
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-pc
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-pica (1
-\begin_inset space \thinspace{}
-\end_inset
-
-pc = 12
-\begin_inset space \thinspace{}
-\end_inset
-
-pt)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
--
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-sp
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-punto a escala (65536
-\begin_inset space \thinspace{}
-\end_inset
-
-sp = 1
-\begin_inset space \thinspace{}
-\end_inset
-
-pt)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
--
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-bp
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-punto grande (72
-\begin_inset space \thinspace{}
-\end_inset
-
-bp = 1
-\begin_inset space \thinspace{}
-\end_inset
-
-in)
 \end_layout
 
 \end_inset
@@ -48837,7 +48906,7 @@ mm)
 \begin_inset Text
 
 \begin_layout Plain Layout
-cc
+em
 \end_layout
 
 \end_inset
@@ -48846,15 +48915,11 @@ cc
 \begin_inset Text
 
 \begin_layout Plain Layout
-cicero (1
-\begin_inset space \thinspace{}
-\end_inset
-
-cc = 12
-\begin_inset space \thinspace{}
-\end_inset
-
-dd)
+anchura de letra 
+\emph on
+M
+\emph default
+ en tipografía actual
 \end_layout
 
 \end_inset
@@ -48864,221 +48929,6 @@ dd)
 
 \begin_layout Plain Layout
 -
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Redimensionar gráficos %
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-% del tamaño original de la imagen
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Anchura de texto %
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-% de anchura de texto
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\backslash
-textwidth
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Anchura de columna %
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-% de anchura de columna
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\backslash
-columnwidth
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Anchura de página %
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-% de anchura de página
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\backslash
-paperwidth
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Anchura de línea %
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-% de anchura de línea
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\backslash
-linewidth
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Altura de texto %
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-% de altura de texto
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\backslash
-textheight
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Altura de página %
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-% de altura de página
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\backslash
-paperheight
 \end_layout
 
 \end_inset
@@ -49122,7 +48972,7 @@ x
 \begin_inset Text
 
 \begin_layout Plain Layout
-em
+in
 \end_layout
 
 \end_inset
@@ -49131,11 +48981,7 @@ em
 \begin_inset Text
 
 \begin_layout Plain Layout
-anchura de letra 
-\emph on
-M
-\emph default
- en tipografía actual
+pulgada
 \end_layout
 
 \end_inset
@@ -49151,7 +48997,36 @@ M
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+mm
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+milímetro
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -49160,7 +49035,7 @@ mu
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -49177,11 +49052,370 @@ em)
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 -
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+pc
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+pica (1
+\begin_inset space \thinspace{}
+\end_inset
+
+pc = 12
+\begin_inset space \thinspace{}
+\end_inset
+
+pt)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+pt
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+punto (72.27
+\begin_inset space \thinspace{}
+\end_inset
+
+pt = 1
+\begin_inset space \thinspace{}
+\end_inset
+
+in)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+sp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+punto a escala (65536
+\begin_inset space \thinspace{}
+\end_inset
+
+sp = 1
+\begin_inset space \thinspace{}
+\end_inset
+
+pt)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Altura de página %
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+% de altura de página
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\backslash
+paperheight
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Altura de texto %
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+% de altura de texto
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\backslash
+textheight
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Anchura de columna %
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+% de anchura de columna
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\backslash
+columnwidth
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Anchura de línea %
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+% de anchura de línea
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\backslash
+linewidth
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Anchura de página %
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+% de anchura de página
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\backslash
+paperwidth
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Anchura de texto %
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+% de anchura de texto
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\backslash
+textwidth
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Interlineado %
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+% de altura entre 
+\lang english
+baselines of two subsequent text lines
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\backslash
+baselineskip
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Redimensionar gráficos %
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+% del tamaño original de la imagen
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -50043,6 +50277,57 @@ http://www.ctan.org/pkg/hyperref
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
+key "microtype"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset href
+LatexCommand href
+name "Documentación"
+target "http://mirrors.ctan.org/macros/latex/contrib/microtype/microtype.pdf"
+literal "false"
+
+\end_inset
+
+ del paquete \SpecialChar LaTeX
+ 
+\series bold
+microtype
+\series default
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+\SpecialChar LaTeX
+, paquetes ! microtype
+\end_layout
+
+\end_inset
+
+:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://mirrors.ctan.org/macros/latex/contrib/microtype/microtype.pdf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
 key "nomencl"
 literal "true"
 
@@ -50402,233 +50687,6 @@ status collapsed
 \begin_layout Plain Layout
 
 http://wiki.lyx.org/Windows/Japanese
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "Latvian"
-literal "true"
-
-\end_inset
-
-
-\begin_inset CommandInset href
-LatexCommand href
-name "Página wiki"
-target "http://wiki.lyx.org/Windows/Latvian"
-literal "false"
-
-\end_inset
-
- cómo configurar \SpecialChar LyX
- para letón:
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-http://wiki.lyx.org/Windows/Latvian
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "Lithuanian"
-literal "true"
-
-\end_inset
-
-
-\begin_inset CommandInset href
-LatexCommand href
-name "Página wiki"
-target "http://wiki.lyx.org/Windows/Lithuanian"
-literal "false"
-
-\end_inset
-
- cómo configurar \SpecialChar LyX
- para lituano:
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-http://wiki.lyx.org/Windows/Lithuanian
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "Mongolian"
-literal "true"
-
-\end_inset
-
-
-\begin_inset CommandInset href
-LatexCommand href
-name "Página wiki"
-target "http://wiki.lyx.org/Windows/Mongolian"
-literal "false"
-
-\end_inset
-
- cómo configurar \SpecialChar LyX
- para mongol:
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-http://wiki.lyx.org/Windows/Mongolian
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "Vietnamese"
-literal "true"
-
-\end_inset
-
-
-\begin_inset CommandInset href
-LatexCommand href
-name "Página wiki"
-target "http://wiki.lyx.org/Windows/Vietnamese"
-literal "false"
-
-\end_inset
-
- cómo configurar \SpecialChar LyX
- para vietnamita:
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-http://wiki.lyx.org/Windows/Vietnamese
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "NewInLyX20"
-literal "true"
-
-\end_inset
-
-
-\begin_inset CommandInset href
-LatexCommand href
-name "Página wiki"
-target "http://wiki.lyx.org/LyX/NewInLyX20"
-literal "false"
-
-\end_inset
-
- sobre características nuevas en 
-\family sans
-\SpecialChar LyX
- 2.0
-\family default
-:
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-http://wiki.lyx.org/LyX/NewInLyX20
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "spanish"
-literal "true"
-
-\end_inset
-
-
-\begin_inset CommandInset href
-LatexCommand href
-name "Página web"
-target "http://www.tex-tipografia.com/spanish.html"
-literal "false"
-
-\end_inset
-
- del estilo 
-\family sans
-spanish 
-\family default
-del paquete 
-\series bold
-babel
-\series default
-:
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-http://www.tex-tipografia.com/spanish.html
 \end_layout
 
 \end_inset

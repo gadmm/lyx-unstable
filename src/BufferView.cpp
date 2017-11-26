@@ -580,9 +580,10 @@ void BufferView::updateScrollbar()
 	}
 
 	int top_pos = first.second->position() - first.second->ascent();
-	int bottom_pos = last.second->position() + last.second->descent();
+	int bottom_pos = last.second->position() + last.second->descent()
+		- (lyxrc.scroll_below_document ? minVisiblePart() : height_);
 	bool first_visible = first.first == 0 && top_pos >= 0;
-	bool last_visible = last.first + 1 == int(parsize) && bottom_pos <= height_;
+	bool last_visible = last.first + 1 == int(parsize) && bottom_pos <= 0;
 	if (first_visible && last_visible) {
 		d->scrollbarParameters_.min = 0;
 		d->scrollbarParameters_.max = 0;
@@ -595,18 +596,6 @@ void BufferView::updateScrollbar()
 	d->scrollbarParameters_.max = bottom_pos;
 	for (size_t i = last.first + 1; i != parsize; ++i)
 		d->scrollbarParameters_.max += d->par_height_[i];
-
-	// The reference is the top position so we remove one page.
-	if (lyxrc.scroll_below_document)
-		d->scrollbarParameters_.max -= minVisiblePart();
-	else
-		d->scrollbarParameters_.max -= d->scrollbarParameters_.page_step;
-
-	// 0 must be inside the range as it denotes the current position
-	if (d->scrollbarParameters_.max < 0)
-		d->scrollbarParameters_.max = 0;
-	if (d->scrollbarParameters_.min > 0)
-		d->scrollbarParameters_.min = 0;
 }
 
 
@@ -646,13 +635,13 @@ void BufferView::scrollDocView(int value)
 {
 	// The scrollbar values are relative to the top of the screen, therefore the
 	// offset is equal to the target value.
+	value = max(d->scrollbarParameters_.min, value);
+	value = min(d->scrollbarParameters_.max, value);
 
 	// No scrolling at all? No need to redraw anything
 	if (value == 0)
 		return;
 
-	value = max(d->scrollbarParameters_.min, value);
-	value = min(d->scrollbarParameters_.max, value);
 	d->anchor_ypos_ -= value;
 	d->wa_.scheduleRedraw(false, value);
 	updateHoveredInset();
@@ -2633,7 +2622,9 @@ void BufferView::updateMetrics(bool const scroll)
 }
 
 
-void BufferView::updateMetrics(Update::flags & update_flags, bool const scroll)
+void BufferView::updateMetrics(Update::flags & update_flags,
+                               bool const scroll,
+                               bool const enforce_boundaries)
 {
 	if (height_ == 0 || width_ == 0)
 		return;
@@ -2687,7 +2678,7 @@ void BufferView::updateMetrics(Update::flags & update_flags, bool const scroll)
 		<< " anchor ypos = " << d->anchor_ypos_);
 
 	// We make sure to redo the metrics up to the paragraph at cursor if not too
-	// far away.
+	// far away (i.e. one fakeTravel() distance).
 	int const cur_pit = d->cursor_.bottom().pit();
 
 	// Redo paragraphs above anchor if necessary.
@@ -2734,9 +2725,33 @@ void BufferView::updateMetrics(Update::flags & update_flags, bool const scroll)
 	// metrics is done, full drawing is necessary now
 	update_flags = (update_flags & ~Update::Force) | Update::ForceDraw;
 
-	// Now update the positions of insets in the cache.
+	// Now update the positions of insets in the cache and the scroll bar.
 	if (clear)
 		updatePosCache();
+	else
+		// we still need an up-to-date scroll bar
+		updateScrollbar();
+
+	if (enforce_boundaries) {
+		ScrollbarParameters const & scrollbar = d->scrollbarParameters_;
+		// Scroll bar is now up-to-date. 0 denotes the current position. Check
+		// and enforce boundaries.
+		auto again = [&]() { updateMetrics(update_flags, true, false); };
+		if (scrollbar.min == 0 && scrollbar.max == 0) {
+			// The document fits on the screen
+			LASSERT(tm.contains(0), return);
+			ParagraphMetrics & pm0 = tm.parMetrics(0, false);
+			// Scroll to the top
+			d->anchor_ypos_ -= pm0.position() - pm0.ascent();
+			again();
+		} else if (scrollbar.min > 0) {
+			d->anchor_ypos_ += scrollbar.min;
+			again();
+		} else if (scrollbar.max < 0) {
+			d->anchor_ypos_ -= scrollbar.max;
+			again();
+		}
+	}
 
 	if (lyxerr.debugging(Debug::WORKAREA)) {
 		LYXERR(Debug::WORKAREA, "BufferView::updateMetrics");
@@ -2971,7 +2986,7 @@ bool sliceInRow(CursorSlice const & cs, Text const *, Row const & row)
 		///resulting heuristic is good enough.
 		//&& cs.text() == text
 		&& cs.pit() == row.pit()
-		&& row.pos() <= cs.pos() && cs.pos() <= row.endpos();
+		&& row.pos() <= cs.pos() && cs.pos() < row.endpos();
 }
 
 }
@@ -3154,9 +3169,12 @@ void BufferView::draw(frontend::Painter & pain, bool paint_caret)
 	}
 
 	// Remember what has just been done for the next draw() step
-	if (paint_caret)
+	if (paint_caret) {
 		d->caret_slice_ = d->cursor_.top();
-	else
+		if (d->cursor_.boundary()
+		    || d->cursor_.top().pos() == d->cursor_.top().lastpos())
+			--d->caret_slice_.pos();
+	} else
 		d->caret_slice_ = CursorSlice();
 }
 

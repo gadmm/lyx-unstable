@@ -77,6 +77,7 @@ For a complete list of changes try
 * The "apply" button now correctly saves preferences. (#10016)
 * Precautionary measure against a potential data loss during emergency save.
 * Fix automatically loaded packages with acmart.
+* Properly enforce scrolling boundaries.
 
 ## Minor enhancements
 

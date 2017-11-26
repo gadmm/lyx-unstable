@@ -158,4 +158,17 @@ void InsetMathSpecialChar::htmlize(HtmlStream & ms) const
 }
 
 
+MathClass InsetMathSpecialChar::mathClass() const
+{
+	switch (char_) {
+	case '{':
+		return MC_OPEN;
+	case '}':
+		return MC_CLOSE;
+	default:
+		return MC_ORD;
+	}
+}
+
+
 } // namespace lyx

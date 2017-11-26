@@ -328,9 +328,9 @@ void MathRow::draw(PainterInfo & pi, int x, int const y) const
 			drawMarkers(pi, e, x, y, false);
 			coords.insets().add(e.inset, d2);
 			e.inset->draw(pi, x + e.before, y);
+			coords.insets().add(e.inset, d);
 			drawMarkers(pi, e, x, y, true);
 			coords.insets().add(e.inset, x, y);
-			coords.insets().add(e.inset, d);
 			x += d.wid;
 			break;
 		}

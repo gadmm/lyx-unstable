@@ -269,6 +269,9 @@ docstring const rsplit(docstring const & a, char_type delim);
 /// problems in latex labels.
 docstring const escape(docstring const & lab);
 
+/// Replaces <, >, &, " with html entities
+docstring htmlEscape(docstring const & str);
+
 /// Group contents of an argument if needed
 docstring const protectArgument(docstring & arg, char const l = '[',
 			  char const r = ']');

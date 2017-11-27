@@ -14,6 +14,7 @@
 #ifndef LATEX_H
 #define LATEX_H
 
+#include "OutputEnums.h"
 #include "OutputParams.h"
 
 #include "support/docstring.h"
@@ -162,7 +163,7 @@ public:
 	      support::FileName const & file,
 	      std::string const & path = empty_string(),
 	      std::string const & lpath = empty_string(),
-	      bool const clean_start = false);
+	      AuxFilesFlags const & to_remove = {});
 
 	/// runs LaTeX several times
 	int run(TeXErrors &);
@@ -217,7 +218,7 @@ private:
 		       OutputParams const &);
 
 	///
-	void removeAuxiliaryFiles() const;
+	void removeAuxiliaryFiles(AuxFilesFlags const & to_remove) const;
 
 	///
 	std::string cmd;

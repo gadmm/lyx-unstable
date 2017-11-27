@@ -2878,10 +2878,8 @@ void GuiDocument::applyView()
 	else
 		bp_.bibtex_command = bibtex_command + " " + bibtex_options;
 
-	if (biblioChanged_) {
+	if (biblioChanged_)
 		buffer().invalidateBibinfoCache();
-		buffer().removeBiblioTempFiles();
-	}
 
 	// Indices
 	indicesModule->apply(bp_);

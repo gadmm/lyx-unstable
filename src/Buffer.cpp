@@ -4623,7 +4623,9 @@ void Buffer::bufferErrors(TeXErrors const & terr, ErrorList & errorList) const
 }
 
 
-void Buffer::updateBuffer(UpdateScope scope, UpdateType utype) const
+void Buffer::updateBuffer(UpdateScope const scope,
+                          UpdateType const utype,
+                          bool const recurse) const
 {
 	LBUFERR(!text().paragraphs().empty());
 
@@ -4696,18 +4698,14 @@ void Buffer::updateBuffer(UpdateScope scope, UpdateType utype) const
 	// if the bibfiles changed, the cache of bibinfo is invalid
 	sort(d->bibfiles_cache_.begin(), d->bibfiles_cache_.end());
 	// the old one should already be sorted
-	if (old_bibfiles != d->bibfiles_cache_) {
-		invalidateBibinfoCache();
-		reloadBibInfoCache();
+	if (recurse && old_bibfiles != d->bibfiles_cache_)
 		// We relied upon the bibinfo cache when recalculating labels. But that
 		// cache was invalid, although we didn't find that out until now. So we
 		// have to do it all again.
 		// That said, the only thing we really need to do is update the citation
-		// labels. Nothing else will have changed. So we could create a new 
+		// labels. Nothing else will have changed. So we could create a new
 		// UpdateType that would signal that fact, if we needed to do so.
-		parit = cbuf.par_iterator_begin();
-		updateBuffer(parit, utype);
-	}
+		return updateBuffer(scope, utype, false);
 	else
 		d->bibinfo_cache_valid_ = true;
 	d->cite_labels_valid_ = true;

@@ -125,6 +125,10 @@ private:
 	RenderButton & button() const { return button_; }
 	/// This should provide the text for the button
 	virtual docstring screenLabel() const = 0;
+	/// How to elide the label: mode & lenth in ems.
+	virtual std::pair<ElideMode, double> elideMode() const {
+		return { ElideNone, 0 };
+	}
 
 	/// \name Static public methods obligated for InsetCommand derived classes
 	//@{

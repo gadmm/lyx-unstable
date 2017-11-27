@@ -14,8 +14,10 @@
 
 #include "RenderBase.h"
 #include "Box.h"
+
 #include "support/docstring.h"
 
+#include "frontends/FontMetrics.h"
 
 namespace lyx {
 
@@ -34,6 +36,7 @@ public:
 
 	/// Provide the text for the button
 	void update(docstring const &, bool editable, bool inherit_font);
+	void elideMode(std::pair<ElideMode, double> mode);
 
 	/// The "sensitive area" box, i.e., the button area
 	Box box() const { return button_box_; }
@@ -49,6 +52,10 @@ private:
 	bool editable_;
 	bool inherit_font_;
 	Box button_box_;
+	// How to elide the label
+	ElideMode elide_mode_ = ElideNone;
+	// Length of the elided label in ems
+	double elide_length_ = 0;
 };
 
 

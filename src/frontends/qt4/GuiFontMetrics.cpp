@@ -535,5 +535,29 @@ int GuiFontMetrics::descent(char_type c) const
 	return value.descent;
 }
 
+
+docstring GuiFontMetrics::elideText(docstring const & str,
+                                    ElideMode mode,
+                                    double len) const
+{
+	int const pix_len = (int)(em() * len);
+	Qt::TextElideMode qmode = Qt::ElideNone;
+	switch (mode) {
+	case ElideLeft:
+		qmode = Qt::ElideLeft;
+		break;
+	case ElideMiddle:
+		qmode = Qt::ElideMiddle;
+		break;
+	case ElideNone:
+		break;
+	case ElideRight:
+		qmode = Qt::ElideRight;
+		break;
+	}
+	return qstring_to_ucs4(metrics_.elidedText(toqstr(str), qmode, pix_len));
+}
+
+
 } // namespace frontend
 } // namespace lyx

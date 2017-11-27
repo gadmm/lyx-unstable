@@ -95,6 +95,10 @@ private:
 	/// makes a very basic label, in case we can't make a pretty one
 	docstring basicLabel(bool for_xhtml = false) const;
 
+	std::pair<ElideMode, double> elideMode() const override {
+		return { ElideMiddle, 30 };
+	}
+
 	/// \name Private functions inherited from Inset class
 	//@{
 	///
@@ -113,13 +117,10 @@ private:
 
 	///
 	struct Cache {
-		Cache() : recalculate(true) {}
 		///
-		bool recalculate;
+		bool recalculate = true;
 		///
 		docstring generated_label;
-		///
-		docstring screen_label;
 	};
 	///
 	mutable Cache cache;

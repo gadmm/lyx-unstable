@@ -49,6 +49,13 @@ namespace lyx {
 
 class Dimension;
 
+enum ElideMode {
+	ElideLeft,
+	ElideMiddle,
+	ElideNone,
+	ElideRight
+};
+
 namespace frontend {
 
 class FontMetrics
@@ -147,6 +154,13 @@ public:
 	/// return the number of expanding characters taken into account for
 	/// increased inter-word spacing during justification
 	virtual int countExpanders(docstring const & str) const = 0;
+
+	/// Returns an elided version of the string. mode: determines whether the
+	/// ellipsis appears on the left, the middle or the right. len: length in
+	/// ems in the current font.
+	virtual docstring elideText(docstring const & str,
+	                            ElideMode mode,
+	                            double len) const = 0;
 };
 
 

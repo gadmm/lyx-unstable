@@ -715,7 +715,8 @@ public:
 	/// \param scope: whether to start with the master document or just
 	/// do this one.
 	/// \param output: whether we are preparing for output.
-	void updateBuffer(UpdateScope scope, UpdateType utype) const;
+	void updateBuffer(UpdateScope scope, UpdateType utype,
+	                  bool recurse = true) const;
 	///
 	void updateBuffer(ParIterator & parit, UpdateType utype) const;
 

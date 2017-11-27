@@ -73,12 +73,6 @@ docstring InsetHyperlink::screenLabel() const
 	if (url.empty())
 		url += getParam("target");
 
-	// elide if long
-	if (url.length() > 30) {
-		docstring end = url.substr(url.length() - 17, url.length());
-		support::truncateWithEllipsis(url, 13);
-		url += end;
-	}
 	return temp + url;
 }
 

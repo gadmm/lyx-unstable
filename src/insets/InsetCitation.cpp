@@ -260,10 +260,12 @@ docstring InsetCitation::toolTip(BufferView const & bv, int, int) const
 		return bi.getInfo(keys[0], buffer(), ci);
 
 	docstring tip;
+	if (!cache.generated_label.empty()) {
+		tip += "<p>" + htmlEscape(cache.generated_label) + "</p>";
+	}
 	tip += "<ol>";
 	int count = 0;
 	for (docstring const & key : keys) {
-		docstring const key_info = bi.getInfo(key, buffer(), ci);
 		// limit to reasonable size.
 		if (count > 9 && keys.size() > 11) {
 			tip.push_back(0x2026);// HORIZONTAL ELLIPSIS
@@ -272,6 +274,7 @@ docstring InsetCitation::toolTip(BufferView const & bv, int, int) const
 				+ "</p>";
 			break;
 		}
+		docstring const key_info = bi.getInfo(key, buffer(), ci);
 		if (key_info.empty())
 			continue;
 		tip += "<li>" + key_info + "</li>";
@@ -449,7 +452,7 @@ docstring InsetCitation::basicLabel(bool for_xhtml) const
 
 docstring InsetCitation::screenLabel() const
 {
-	return cache.screen_label;
+	return cache.generated_label;
 }
 
 
@@ -458,12 +461,8 @@ void InsetCitation::updateBuffer(ParIterator const &, UpdateType)
 	if (!cache.recalculate && buffer().citeLabelsValid())
 		return;
 	// The label may have changed, so we have to re-create it.
-	docstring const glabel = generateLabel();
+	cache.generated_label = generateLabel();
 	cache.recalculate = false;
-	cache.generated_label = glabel;
-	unsigned int const maxLabelChars = 45;
-	cache.screen_label = glabel.substr(0, maxLabelChars + 1);
-	support::truncateWithEllipsis(cache.screen_label, maxLabelChars);
 }
 
 

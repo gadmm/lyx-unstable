@@ -1203,6 +1203,12 @@ docstring const escape(docstring const & lab)
 }
 
 
+docstring htmlEscape(docstring const & str)
+{
+	return qstring_to_ucs4(toqstr(str).toHtmlEscaped());
+}
+
+
 docstring const protectArgument(docstring & arg, char const l,
 			  char const r)
 {

@@ -99,6 +99,7 @@ try <https://github.com/gadmm/lyx-unstable/compare/master...staging>.
 * Precautionary measure against a potential data loss during emergency save.
 * Fix automatically loaded packages with acmart.
 * Properly enforce scrolling boundaries.
+* Properly reset references and counters when updating citations.
 
 ## Minor enhancements
 

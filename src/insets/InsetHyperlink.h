@@ -79,6 +79,10 @@ private:
 	Inset * clone() const { return new InsetHyperlink(*this); }
 	//@}
 
+	std::pair<ElideMode, double> elideMode() const override {
+		return { ElideMiddle, 30 };
+	}
+
 	/// \name Private functions inherited from InsetCommand class
 	//@{
 	///

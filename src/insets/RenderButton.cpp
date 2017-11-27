@@ -41,13 +41,22 @@ void RenderButton::update(docstring const & text, bool editable,
 }
 
 
+void RenderButton::elideMode(std::pair<ElideMode, double> mode)
+{
+	elide_mode_ = mode.first;
+	elide_length_ = mode.second;
+}
+
+
 void RenderButton::metrics(MetricsInfo & mi, Dimension & dim) const
 {
 	FontInfo font = inherit_font_ ? mi.base.font : sane_font;
 	font.decSize();
 	frontend::FontMetrics const & fm = theFontMetrics(font);
 
-	fm.buttonText(text_, Inset::TEXT_TO_INSET_OFFSET, dim.wid, dim.asc, dim.des);
+	docstring const text = fm.elideText(text_, elide_mode_, elide_length_);
+
+	fm.buttonText(text, Inset::TEXT_TO_INSET_OFFSET, dim.wid, dim.asc, dim.des);
 
 	dim_ = dim;
 }
@@ -60,12 +69,15 @@ void RenderButton::draw(PainterInfo & pi, int x, int y) const
 	font.setColor(Color_command);
 	font.decSize();
 
+	frontend::FontMetrics const & fm = theFontMetrics(font);
+	docstring const text = fm.elideText(text_, elide_mode_, elide_length_);
+
 	if (editable_) {
-		pi.pain.buttonText(x, y, text_, font,
+		pi.pain.buttonText(x, y, text, font,
 		                   renderState() ? Color_buttonhoverbg : Color_buttonbg,
 		                   Color_buttonframe, Inset::TEXT_TO_INSET_OFFSET);
 	} else {
-		pi.pain.buttonText(x, y, text_, font,
+		pi.pain.buttonText(x, y, text, font,
 		                   Color_commandbg, Color_commandframe,
 		                   Inset::TEXT_TO_INSET_OFFSET);
 	}

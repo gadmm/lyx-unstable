@@ -72,6 +72,10 @@ public:
 	getTextLayout(docstring const & s, bool const rtl,
 	              double const wordspacing) const;
 
+	docstring elideText(docstring const & str,
+	                    ElideMode mode,
+	                    double len) const override;
+
 private:
 
 	std::pair<int, int> breakAt_helper(docstring const & s, int const x,

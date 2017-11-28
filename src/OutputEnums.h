@@ -5,6 +5,7 @@
  * Licence details can be found in the file COPYING.
  *
  * \author Richard Heck
+ * \author Guillaume Munch
  *
  * Full author contact details are available in file CREDITS.
  */
@@ -12,12 +13,23 @@
 #ifndef OUTPUTENUMS_H
 #define OUTPUTENUMS_H
 
+#include <set>
+
 namespace lyx {
 
 enum UpdateType {
 	InternalUpdate,
 	OutputUpdate
 };
+
+struct AuxFiles {
+	enum Type {
+		Bib,
+		All
+	};
+};
+
+using AuxFilesFlags = std::set<AuxFiles::Type>;
 
 }
 

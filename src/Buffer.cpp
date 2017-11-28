@@ -300,10 +300,9 @@ public:
 	/// Buffer::preview and read from by LFUN_BUFFER_VIEW_CACHE.
 	FileName preview_file_;
 	string preview_format_;
-	/// If there was an error when previewing, on the next preview we do
-	/// a fresh compile (e.g. in case the user installed a package that
-	/// was missing).
-	bool preview_error_;
+
+	// Holds which temporary files are going to be deleted before next run
+	AuxFilesFlags delete_aux_files_;
 
 	mutable RefCache ref_cache_;
 
@@ -428,7 +427,7 @@ Buffer::Impl::Impl(Buffer * owner, FileName const & file, bool readonly_,
 	  file_fully_loaded(false), file_format(LYX_FORMAT), need_format_backup(false),
 	  ignore_parent(false),  toc_backend(owner), macro_lock(false),
 	  checksum_(0), wa_(0),  gui_(0), undo_(*owner), bibinfo_cache_valid_(false),
-	  cite_labels_valid_(false), preview_error_(false),
+	  cite_labels_valid_(false),
 	  inset(0), preview_loader_(0), cloned_buffer_(cloned_buffer),
 	  clone_list_(0), doing_export(false),
 	  tracked_changes_present_(0), externally_modified_(false), parent_buffer(0),
@@ -455,7 +454,7 @@ Buffer::Impl::Impl(Buffer * owner, FileName const & file, bool readonly_,
 	layout_position = cloned_buffer_->d->layout_position;
 	preview_file_ = cloned_buffer_->d->preview_file_;
 	preview_format_ = cloned_buffer_->d->preview_format_;
-	preview_error_ = cloned_buffer_->d->preview_error_;
+	delete_aux_files_ = cloned_buffer_->d->delete_aux_files_;
 	tracked_changes_present_ = cloned_buffer_->d->tracked_changes_present_;
 }
 
@@ -1202,9 +1201,9 @@ void Buffer::setFullyLoaded(bool value)
 }
 
 
-bool Buffer::lastPreviewError() const
+AuxFilesFlags Buffer::deleteAuxFiles() const
 {
-	return d->preview_error_;
+	return d->delete_aux_files_;
 }
 
 
@@ -2445,18 +2444,9 @@ bool Buffer::citeLabelsValid() const
 
 void Buffer::removeBiblioTempFiles() const
 {
-	// We remove files that contain LaTeX commands specific to the
-	// particular bibliographic style being used, in order to avoid
-	// LaTeX errors when we switch style.
-	FileName const aux_file(addName(temppath(), changeExtension(latexName(),".aux")));
-	FileName const bbl_file(addName(temppath(), changeExtension(latexName(),".bbl")));
-	LYXERR(Debug::FILES, "Removing the .aux file " << aux_file);
-	aux_file.removeFile();
-	LYXERR(Debug::FILES, "Removing the .bbl file " << bbl_file);
-	bbl_file.removeFile();
+	d->delete_aux_files_.insert(AuxFiles::Bib);
 	// Also for the parent buffer
-	Buffer const * const pbuf = parent();
-	if (pbuf)
+	if (Buffer const * const pbuf = d->parent())
 		pbuf->removeBiblioTempFiles();
 }
 
@@ -4294,6 +4284,9 @@ Buffer::ExportStatus Buffer::doExport(string const & target, bool put_in_tempdir
 	bool const success = converters.convert(this, FileName(filename),
 		tmp_result_file, FileName(absFileName()), backend_format, format,
 		error_list);
+	d->delete_aux_files_.clear();
+	if (!success)
+		d->delete_aux_files_.insert(AuxFiles::All);
 
 	// Emit the signal to show the error list or copy it back to the
 	// cloned Buffer so that it can be emitted afterwards.
@@ -4428,7 +4421,7 @@ Buffer::ExportStatus Buffer::preview(string const & format, bool includeall) con
 	Impl * theimpl = isClone() ? d->cloned_buffer_->d : d;
 	theimpl->preview_file_ = previewFile;
 	theimpl->preview_format_ = format;
-	theimpl->preview_error_ = (status != ExportSuccess);
+	theimpl->delete_aux_files_ = d->delete_aux_files_;
 
 	if (status != ExportSuccess)
 		return status;

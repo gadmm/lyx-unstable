@@ -93,8 +93,8 @@ bool operator!=(AuxInfo const & a, AuxInfo const & o)
  */
 
 LaTeX::LaTeX(string const & latex, OutputParams const & rp,
-	     FileName const & f, string const & p, string const & lp,
-	     bool const clean_start)
+             FileName const & f, string const & p, string const & lp,
+             AuxFilesFlags const & delete_aux_files)
 	: cmd(latex), file(f), path(p), lpath(lp), runparams(rp), biber(false)
 {
 	num_errors = 0;
@@ -113,52 +113,52 @@ LaTeX::LaTeX(string const & latex, OutputParams const & rp,
 		output_file =
 			FileName(changeExtension(file.absFileName(), ".dvi"));
 	}
-	if (clean_start)
-		removeAuxiliaryFiles();
+	removeAuxiliaryFiles(delete_aux_files);
 }
 
 
-void LaTeX::removeAuxiliaryFiles() const
+void LaTeX::removeAuxiliaryFiles(AuxFilesFlags const & to_remove) const
 {
 	// Note that we do not always call this function when there is an error.
 	// For example, if there is an error but an output file is produced we
 	// still would like to output (export/view) the file.
 
 	// What files do we have to delete?
+	if (to_remove.empty())
+		return;
+
+	bool const bib = to_remove.count(AuxFiles::Bib);
+	bool const all = to_remove.count(AuxFiles::All);
+
+	auto removeExt = [&](std::string const & ext) {
+		FileName const f(changeExtension(file.absFileName(), ext));
+		f.removeFile();
+	};
+
+	if (bib || all) {
+		// bibtex file
+		removeExt(".bbl");
+		removeExt(".blg");
+		// biber file
+		removeExt(".bcf");
+		// Also remove the aux file
+		removeExt(".aux");
+	}
+
+	if (!all)
+		return;
 
 	// This will at least make latex do all the runs
 	depfile.removeFile();
-
 	// but the reason for the error might be in a generated file...
-
-	// bibtex file
-	FileName const bbl(changeExtension(file.absFileName(), ".bbl"));
-	bbl.removeFile();
-
-	// biber file
-	FileName const bcf(changeExtension(file.absFileName(), ".bcf"));
-	bcf.removeFile();
-
 	// makeindex file
-	FileName const ind(changeExtension(file.absFileName(), ".ind"));
-	ind.removeFile();
-
+	removeExt(".ind");
 	// nomencl file
-	FileName const nls(changeExtension(file.absFileName(), ".nls"));
-	nls.removeFile();
-
+	removeExt(".nls");
 	// nomencl file (old version of the package)
-	FileName const gls(changeExtension(file.absFileName(), ".gls"));
-	gls.removeFile();
-
-	// Also remove the aux file
-	FileName const aux(changeExtension(file.absFileName(), ".aux"));
-	aux.removeFile();
-
+	removeExt(".gls");
 	// Also remove the .out file (e.g. hyperref bookmarks) (#9963)
-	FileName const out(changeExtension(file.absFileName(), ".out"));
-	out.removeFile();
-
+	removeExt(".out");
 	// Remove the output file, which is often generated even if error
 	output_file.removeFile();
 }

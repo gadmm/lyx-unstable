@@ -2445,6 +2445,9 @@ bool Buffer::citeLabelsValid() const
 void Buffer::removeBiblioTempFiles() const
 {
 	d->delete_aux_files_.insert(AuxFiles::Bib);
+	// Also for the parent buffer
+	if (Buffer const * const pbuf = d->parent())
+		pbuf->removeBiblioTempFiles();
 }
 
 

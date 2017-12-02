@@ -22,14 +22,12 @@ enum UpdateType {
 	OutputUpdate
 };
 
-struct AuxFiles {
-	enum Type {
-		Bib,
-		All
-	};
+enum struct AuxFiles {
+	Bib,
+	All
 };
 
-using AuxFilesFlags = std::set<AuxFiles::Type>;
+using AuxFilesFlags = std::set<AuxFiles>;
 
 }
 

@@ -9030,14 +9030,12 @@ Verbatim
 \end_layout
 
 \begin_layout Verbatim
-
 This is Verbatim.
 \end_layout
 
 \begin_layout Verbatim
 \noindent
 \align block
-
 The following 2 lines are empty:
 \end_layout
 
@@ -9050,7 +9048,6 @@ The following 2 lines are empty:
 \end_layout
 
 \begin_layout Verbatim
-
 Almost everything is allowed in Verbatim:"%&$§#~'`
 \backslash
 }][{|
@@ -9083,7 +9080,6 @@ Verbatim
 \end_layout
 
 \begin_layout Verbatim*
-
 This is Verbatim*.
 \end_layout
 
@@ -33339,8 +33335,8 @@ double apostrophe
 \begin_inset CommandInset nomenclature
 LatexCommand nomenclature
 symbol "\"@, \"|, \"!, \"\""
-description "The quote sign is output by writing ‘ \"\"\"\" '"
-literal "false"
+description "Le signe de citation est produit en écrivant ' \"\"\"\" '"
+literal "true"
 
 \end_inset
 
@@ -33390,7 +33386,7 @@ LatexCommand nomenclature
 prefix "sigma"
 symbol "$\\sigma$"
 description "entrée illustrative pour le symbole \\textsf{sigma}"
-literal "false"
+literal "true"
 
 \end_inset
 
@@ -33822,7 +33818,7 @@ Dans la sortie imprimée le titre du glossaire devrait apparaître comme
 \begin_inset Quotes cld
 \end_inset
 
-Nomenclature
+Liste des symboles
 \begin_inset Quotes crd
 \end_inset
 
@@ -33837,7 +33833,7 @@ nomname
  dans le préambule.
  Par exemple, si vous voulez utiliser 
 \emph on
-Liste des Symboles
+Nomenclature
 \emph default
 , ajoutez la ligne suivante au préambule:
 \end_layout
@@ -33849,7 +33845,7 @@ Liste des Symboles
 \backslash
 renewcommand{
 \backslash
-nomname}{Liste des Symboles}
+nomname}{Nomenclature}
 \end_layout
 
 \begin_layout Subsection

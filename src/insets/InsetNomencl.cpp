@@ -65,9 +65,11 @@ ParamInfo const & InsetNomencl::findInfo(string const & /* cmdName */)
 	if (param_info_.empty()) {
 		param_info_.add("prefix", ParamInfo::LATEX_OPTIONAL);
 		param_info_.add("symbol", ParamInfo::LATEX_REQUIRED,
-				ParamInfo::HANDLING_LATEXIFY);
+				ParamInfo::ParamHandling(ParamInfo::HANDLING_ESCAPE
+							 | ParamInfo::HANDLING_INDEX_ESCAPE));
 		param_info_.add("description", ParamInfo::LATEX_REQUIRED,
-				ParamInfo::HANDLING_LATEXIFY);
+				ParamInfo::ParamHandling(ParamInfo::HANDLING_ESCAPE
+							 | ParamInfo::HANDLING_INDEX_ESCAPE));
 		param_info_.add("literal", ParamInfo::LYX_INTERNAL);
 	}
 	return param_info_;
@@ -422,6 +424,7 @@ void InsetPrintNomencl::latex(otexstream & os, OutputParams const & runparams_in
 
 void InsetPrintNomencl::validate(LaTeXFeatures & features) const
 {
+	features.useInsetLayout(getLayout());
 	features.require("nomencl");
 }
 

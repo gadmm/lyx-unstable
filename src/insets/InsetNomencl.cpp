@@ -65,9 +65,11 @@ ParamInfo const & InsetNomencl::findInfo(string const & /* cmdName */)
 	if (param_info_.empty()) {
 		param_info_.add("prefix", ParamInfo::LATEX_OPTIONAL);
 		param_info_.add("symbol", ParamInfo::LATEX_REQUIRED,
-				ParamInfo::HANDLING_LATEXIFY);
+				ParamInfo::ParamHandling(ParamInfo::HANDLING_LATEXIFY
+							 | ParamInfo::HANDLING_INDEX_ESCAPE));
 		param_info_.add("description", ParamInfo::LATEX_REQUIRED,
-				ParamInfo::HANDLING_LATEXIFY);
+				ParamInfo::ParamHandling(ParamInfo::HANDLING_LATEXIFY
+							 | ParamInfo::HANDLING_INDEX_ESCAPE));
 #ifdef FILEFORMAT
 		param_info_.add("literal", ParamInfo::LYX_INTERNAL);
 #else
@@ -367,8 +369,11 @@ docstring nomenclWidest(Buffer const & buffer, OutputParams const & runparams)
 			if (inset->lyxCode() != NOMENCL_CODE)
 				continue;
 			nomencl = static_cast<InsetNomencl const *>(inset);
-			docstring const symbol =
-				nomencl->getParam("symbol");
+			// Use proper formatting. We do not escape makeindex chars here
+			docstring const symbol = nomencl ?
+				nomencl->params().prepareCommand(runparams, nomencl->getParam("symbol"),
+							ParamInfo::HANDLING_LATEXIFY)
+				: docstring();
 			// This is only an approximation,
 			// but the best we can get.
 			int const wx = use_gui ?
@@ -381,17 +386,7 @@ docstring nomenclWidest(Buffer const & buffer, OutputParams const & runparams)
 		}
 	}
 	// return the widest (or an empty) string
-	if (symb.empty())
-		return symb;
-
-	// we have to encode the string properly
-	pair<docstring, docstring> latex_symb =
-		runparams.encoding->latexString(symb, runparams.dryrun);
-	if (!latex_symb.second.empty())
-		LYXERR0("Omitting uncodable characters '"
-			<< latex_symb.second
-			<< "' in nomencl widest string!");
-	return latex_symb.first;
+	return symb;
 }
 } // namespace
 
@@ -427,6 +422,7 @@ void InsetPrintNomencl::latex(otexstream & os, OutputParams const & runparams_in
 
 void InsetPrintNomencl::validate(LaTeXFeatures & features) const
 {
+	features.useInsetLayout(getLayout());
 	features.require("nomencl");
 }
 

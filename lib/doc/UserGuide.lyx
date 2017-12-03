@@ -8336,14 +8336,12 @@ Verbatim
 \end_layout
 
 \begin_layout Verbatim
-
 This is Verbatim.
 \end_layout
 
 \begin_layout Verbatim
 \noindent
 \align block
-
 The following 2 lines are empty:
 \end_layout
 
@@ -8356,7 +8354,6 @@ The following 2 lines are empty:
 \end_layout
 
 \begin_layout Verbatim
-
 Almost everything is allowed in Verbatim:"%&$§#~'`
 \backslash
 }][{|
@@ -8380,7 +8377,6 @@ Verbatim
 \end_layout
 
 \begin_layout Verbatim*
-
 This is Verbatim*.
 \end_layout
 
@@ -31278,8 +31274,27 @@ should appear in nomenclature entries they need to be escaped by adding
 \begin_inset CommandInset nomenclature
 LatexCommand nomenclature
 symbol "\"@, \"|, \"!, \"\""
-description "The quote sign is output by writing ‘ \"\"\"\" '"
+description "The quote sign is output by writing ' \"\" '"
+literal "true"
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Update description when bug 
+\begin_inset CommandInset href
+LatexCommand href
+name "10825"
+target "http://www.lyx.org/trac/ticket/10825"
 literal "false"
+
+\end_inset
+
+ is fixed.
+\end_layout
 
 \end_inset
 
@@ -31329,7 +31344,7 @@ LatexCommand nomenclature
 prefix "sigma"
 symbol "$\\sigma$"
 description "dummy entry for the character \\textsf{sigma}"
-literal "false"
+literal "true"
 
 \end_inset
 
@@ -31596,7 +31611,7 @@ page
 \begin_inset Quotes erd
 \end_inset
 
- are automatically translated for some document languages.
+ are automatically translated for most document languages.
  If not, add these lines to your \SpecialChar LaTeX
  preamble:
 \end_layout

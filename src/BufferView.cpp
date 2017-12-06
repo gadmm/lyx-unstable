@@ -557,7 +557,7 @@ void BufferView::updateScrollbar()
 	Text & t = buffer_.text();
 	TextMetrics & tm = d->text_metrics_[&t];
 
-	LYXERR(Debug::GUI, " Updating scrollbar: height: "
+	LYXERR(Debug::SCROLLING, " Updating scrollbar: height: "
 		<< t.paragraphs().size()
 		<< " curr par: " << d->cursor_.bottom().pit()
 		<< " default height " << defaultRowHeight());
@@ -582,9 +582,10 @@ void BufferView::updateScrollbar()
 	int top_pos = first.second->position() - first.second->ascent();
 	int bottom_pos = last.second->position() + last.second->descent()
 		- (lyxrc.scroll_below_document ? minVisiblePart() : height_);
-	bool first_visible = first.first == 0 && top_pos >= 0;
-	bool last_visible = last.first + 1 == int(parsize) && bottom_pos <= 0;
-	if (first_visible && last_visible) {
+	if (first.first == 0
+	    && last.first + 1 == int(parsize)
+	    && bottom_pos <= top_pos) {
+		// BufferView fits on a screen
 		d->scrollbarParameters_.min = 0;
 		d->scrollbarParameters_.max = 0;
 		return;
@@ -2616,17 +2617,12 @@ void BufferView::updateMetrics(bool const scroll)
 }
 
 
-void BufferView::updateMetrics(Update::flags & update_flags,
-                               bool const scroll,
-                               bool const enforce_boundaries)
+void BufferView::updateParagraphMetrics(Update::flags & update_flags, bool clear)
 {
-	if (height_ == 0 || width_ == 0)
-		return;
-
 	Text & buftext = buffer_.text();
 	pit_type const npit = int(buftext.paragraphs().size());
 
-	bool clear = !scroll || !textMetrics(&buftext).contains(d->anchor_pit_);
+	clear = clear || !textMetrics(&buftext).contains(d->anchor_pit_);
 
 	if (d->anchor_pit_ >= npit) {
 		// The anchor pit must have been deleted...
@@ -2637,6 +2633,8 @@ void BufferView::updateMetrics(Update::flags & update_flags,
 	// Clear out or update the position cache in case of full screen redraw, and
 	// clear out or update paragraph metrics to avoid having invalid metrics in
 	// the cache from paragraphs not relayouted below.
+	// The logic is similar whether clear or not. We keep them together so that
+	// the two versions do not diverge.
 	if (!clear) {
 		// the scroll offset is deduced by comparing the current anchor position
 		// with the target value.
@@ -2653,11 +2651,8 @@ void BufferView::updateMetrics(Update::flags & update_flags,
 		d->text_metrics_.clear();
 	}
 
+	// This may have just changed
 	TextMetrics & tm = textMetrics(&buftext);
-
-	// make sure inline completion pointer is ok
-	if (d->inlineCompletionPos_.fixIfBroken())
-		d->inlineCompletionPos_ = DocIterator();
 
 	// Rebreak anchor paragraph if empty
 	ParagraphMetrics & anchor_pm = tm.parMetrics(d->anchor_pit_, true);
@@ -2725,26 +2720,41 @@ void BufferView::updateMetrics(Update::flags & update_flags,
 	else
 		// we still need an up-to-date scroll bar
 		updateScrollbar();
+};
 
-	if (enforce_boundaries) {
-		ScrollbarParameters const & scrollbar = d->scrollbarParameters_;
-		// Scroll bar is now up-to-date. 0 denotes the current position. Check
-		// and enforce boundaries.
-		auto again = [&]() { updateMetrics(update_flags, true, false); };
-		if (scrollbar.min == 0 && scrollbar.max == 0) {
-			// The document fits on the screen
-			LASSERT(tm.contains(0), return);
-			ParagraphMetrics & pm0 = tm.parMetrics(0, false);
-			// Scroll to the top
-			d->anchor_ypos_ -= pm0.position() - pm0.ascent();
-			again();
-		} else if (scrollbar.min > 0) {
-			d->anchor_ypos_ += scrollbar.min;
-			again();
-		} else if (scrollbar.max < 0) {
-			d->anchor_ypos_ -= scrollbar.max;
-			again();
-		}
+
+void BufferView::updateMetrics(Update::flags & update_flags, bool const scroll)
+{
+	if (height_ == 0 || width_ == 0)
+		return;
+
+	Text & buftext = buffer_.text();
+
+	// make sure inline completion pointer is ok
+	if (d->inlineCompletionPos_.fixIfBroken())
+		d->inlineCompletionPos_ = DocIterator();
+
+	updateParagraphMetrics(update_flags, !scroll);
+
+	ScrollbarParameters const & scrollbar = d->scrollbarParameters_;
+	// Scroll bar is now up-to-date. 0 denotes the current position. Check
+	// and enforce boundaries.
+	auto again = [&]() { updateParagraphMetrics(update_flags, false); };
+	if (scrollbar.min == 0 && scrollbar.max == 0) {
+		// The document fits on the screen
+		// textMetrics(&buftext) could have changed.
+		TextMetrics & tm = textMetrics(&buftext);
+		LASSERT(tm.contains(0), return);
+		ParagraphMetrics & pm0 = tm.parMetrics(0, false);
+		// Scroll to the top
+		d->anchor_ypos_ -= pm0.position() - pm0.ascent();
+		again();
+	} else if (scrollbar.min > 0) {
+		d->anchor_ypos_ += scrollbar.min;
+		again();
+	} else if (scrollbar.max < 0) {
+		d->anchor_ypos_ -= scrollbar.max;
+		again();
 	}
 
 	if (lyxerr.debugging(Debug::WORKAREA)) {

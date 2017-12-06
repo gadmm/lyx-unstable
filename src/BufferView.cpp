@@ -557,7 +557,7 @@ void BufferView::updateScrollbar()
 	Text & t = buffer_.text();
 	TextMetrics & tm = d->text_metrics_[&t];
 
-	LYXERR(Debug::GUI, " Updating scrollbar: height: "
+	LYXERR(Debug::SCROLLING, " Updating scrollbar: height: "
 		<< t.paragraphs().size()
 		<< " curr par: " << d->cursor_.bottom().pit()
 		<< " default height " << defaultRowHeight());
@@ -582,9 +582,10 @@ void BufferView::updateScrollbar()
 	int top_pos = first.second->position() - first.second->ascent();
 	int bottom_pos = last.second->position() + last.second->descent()
 		- (lyxrc.scroll_below_document ? minVisiblePart() : height_);
-	bool first_visible = first.first == 0 && top_pos >= 0;
-	bool last_visible = last.first + 1 == int(parsize) && bottom_pos <= 0;
-	if (first_visible && last_visible) {
+	if (first.first == 0
+	    && last.first + 1 == int(parsize)
+	    && bottom_pos <= top_pos) {
+		// BufferView fits on a screen
 		d->scrollbarParameters_.min = 0;
 		d->scrollbarParameters_.max = 0;
 		return;

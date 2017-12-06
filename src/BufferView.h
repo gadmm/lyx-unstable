@@ -371,11 +371,9 @@ private:
 	/// \return true if no further update is needed.
 	bool singleParUpdate();
 	/// do the work for the public updateMetrics().  scroll: whether to optimize
-	/// for scrolling and to avoid redoing paragraphs. enforce_boundaries:
-	/// whether to scroll to enforce boundaries and call updateMetrics again.
-	void updateMetrics(Update::flags & update_flags,
-	                   bool scroll = false,
-	                   bool enforce_boundaries = true);
+	/// for scrolling and to avoid redoing paragraphs.
+	void updateMetrics(Update::flags & update_flags, bool scroll = false);
+	void updateParagraphMetrics(Update::flags & update_flags, bool clear);
 
 	// Set the row on which the cursor lives.
 	void setCurrentRowSlice(CursorSlice const & rowSlice);

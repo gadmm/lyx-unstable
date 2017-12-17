@@ -1344,7 +1344,7 @@ Sweave will use the filename of the Rnw file as the prefix string for the
 \begin_inset CommandInset href
 LatexCommand href
 name "#7551"
-target "http://www.lyx.org/trac/ticket/7551"
+target "https://www.lyx.org/trac/ticket/7551"
 literal "false"
 
 \end_inset
@@ -1638,7 +1638,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://www.lyx.org/MailingLists
+https://www.lyx.org/MailingLists
 \end_layout
 
 \end_inset

@@ -301,6 +301,7 @@ void GuiWorkArea::init()
 			generateSyntheticMouseEvent();
 		});
 
+	d->resetScreen();
 	// With Qt4.5 a mouse event will happen before the first paint event
 	// so make sure that the buffer view has an up to date metrics.
 	d->buffer_view_->resize(viewport()->width(), viewport()->height());
@@ -774,7 +775,7 @@ void GuiWorkArea::contextMenuEvent(QContextMenuEvent * e)
 			if (inset && inset->asInsetMath())
 				--pos.rx();
 			else if (cur.pos() > 0) {
-				Inset * inset = cur.paragraph().getInset(cur.pos() - 1);
+				inset = cur.paragraph().getInset(cur.pos() - 1);
 				if (inset)
 					++pos.rx();
 			}
@@ -1276,12 +1277,15 @@ void GuiWorkArea::paintEvent(QPaintEvent * ev)
 	// LYXERR(Debug::PAINTING, "paintEvent begin: x: " << rc.x()
 	//	<< " y: " << rc.y() << " w: " << rc.width() << " h: " << rc.height());
 
-	if (d->need_resize_ || pixelRatio() != d->last_pixel_ratio_)
+	if (d->need_resize_ || pixelRatio() != d->last_pixel_ratio_) {
+		d->resetScreen();
 		d->resizeBufferView();
+	}
 
 	d->last_pixel_ratio_ = pixelRatio();
 
-	GuiPainter pain(viewport(), pixelRatio());
+	GuiPainter pain(d->screenDevice(), pixelRatio());
+
 	d->buffer_view_->draw(pain, d->caret_visible_);
 
 	// The preedit text, if needed
@@ -1290,6 +1294,9 @@ void GuiWorkArea::paintEvent(QPaintEvent * ev)
 	// and the caret
 	if (d->caret_visible_)
 		d->caret_->draw(pain);
+
+	d->updateScreen(ev->rect());
+
 	ev->accept();
 }
 

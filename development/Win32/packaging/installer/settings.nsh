@@ -14,7 +14,7 @@ These typically need to be modified for each LyX release
 !define APP_VERSION_REVISION 0
 !define APP_VERSION_EMERGENCY "RC-1" # use "1" for an emergency release of LyX otherwise ""
 !define APP_EMERGENCY_DOT "" # use "." for an emergency release of LyX otherwise ""
-!define APP_VERSION_BUILD 6 # Start with 1 for the installer releases of each version
+!define APP_VERSION_BUILD 8 # Start with 1 for the installer releases of each version
 
 !define APP_VERSION "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_REVISION}${APP_EMERGENCY_DOT}${APP_VERSION_EMERGENCY}" # Version to display
 
@@ -26,10 +26,10 @@ These typically need to be modified for each LyX release
 # Typical names for the release are "LyX-211-Installer-1.exe" etc.
 
 !ifndef ExeFile
-  !define ExeFile "LyX-${APP_VERSION_MAJOR}${APP_VERSION_MINOR}${APP_VERSION_REVISION}${APP_VERSION_EMERGENCY}-Installer-${APP_VERSION_BUILD}.exe"
+  !define ExeFile "${APP_NAME}-${APP_VERSION_MAJOR}${APP_VERSION_MINOR}${APP_VERSION_REVISION}${APP_VERSION_EMERGENCY}-Installer-${APP_VERSION_BUILD}.exe"
 !endif
 !ifndef BundleExeFile
-  !define BundleExeFile "LyX-${APP_VERSION_MAJOR}${APP_VERSION_MINOR}${APP_VERSION_REVISION}${APP_VERSION_EMERGENCY}-Bundle-${APP_VERSION_BUILD}.exe"
+  !define BundleExeFile "${APP_NAME}-${APP_VERSION_MAJOR}${APP_VERSION_MINOR}${APP_VERSION_REVISION}${APP_VERSION_EMERGENCY}-Bundle-${APP_VERSION_BUILD}.exe"
 !endif
 
 #--------------------------------

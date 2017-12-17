@@ -53,7 +53,7 @@ class contributor:
      def as_txt_credits(self):
           result = [ '@b%s\n' % self.name ]
           if len(self.contact) != 0:
-               if self.contact.find("http") != -1:
+               if self.contact.find("https") != -1:
                     result.append('@i%s\n' % self.contact)
                else:
                     result.append('@iE-mail: %s\n' % self.contact)
@@ -163,7 +163,7 @@ $email = str_replace(' () ', '@', $email);
 $email = str_replace(' ! ', '.', $email);
 
 if (isset($email) && $email != "") {
-        if (strncasecmp($email,"http",4) == 0)
+        if (strncasecmp($email,"https",4) == 0)
             $output =$output. "<dt><b>[[${email} | ${name}]]</b>";
          else
             $output=$output. "<dt><b>[[mailto:${email} | ${name}]]</b>";
@@ -234,7 +234,7 @@ $output=$output. "
 
 if (isset($msg_ref) && $msg_ref != "") {
         $msg_ref = htmlspecialchars("$msg_ref");
-        $output=$output. "[[http://marc.info/?l=lyx-devel&amp;" . ${msg_ref} . "|" . ${msg_title} . "]]";
+        $output=$output. "[[https://marc.info/?l=lyx-devel&amp;" . ${msg_ref} . "|" . ${msg_title} . "]]";
 } else {
         $output=$output. "${msg_title}";
 }
@@ -251,7 +251,7 @@ function blanket_output() {
 $output=$output."<p>
      The following people hereby grant permission to license their
      contributions to LyX under the
-     [[http://www.opensource.org/licenses/gpl-license.php |
+     [[https://opensource.org/licenses/gpl-license |
      Gnu General Public License]], version 2 or later.
 </p>
 
@@ -269,7 +269,7 @@ $output=$output."
 <p>
      The following people hereby grant permission to license their
      contributions to LyX under the
-     [[http://www.opensource.org/licenses/artistic-license-2.0.php |
+     [[https://opensource.org/licenses/Artistic-2.0 |
      Artistic License 2]].
 </p>
 
@@ -300,28 +300,28 @@ def main(argv, contributors):
          txt_credits_data = unicode(as_txt_credits(contributors)).encode("utf-8")
      else:
          txt_credits_data = str(as_txt_credits(contributors)).encode("utf-8")
-     txt_credits = open(argv[1], "w")
+     txt_credits = open(argv[1], "wb")
      txt_credits.write(txt_credits_data)
 
      if sys.version_info[0] < 3:
          php_credits_data = unicode(as_php_credits(contributors, argv[2])).encode("utf-8")
      else:
          php_credits_data = str(as_php_credits(contributors, argv[2])).encode("utf-8")
-     php_credits = open(argv[2], "w")
+     php_credits = open(argv[2], "wb")
      php_credits.write(php_credits_data)
 
      if sys.version_info[0] < 3:
          php_blanket_data = unicode(as_php_blanket(contributors, argv[3])).encode("utf-8")
      else:
          php_blanket_data = str(as_php_blanket(contributors, argv[3])).encode("utf-8")
-     php_blanket = open(argv[3], "w")
+     php_blanket = open(argv[3], "wb")
      php_blanket.write(php_blanket_data)
 
      if sys.version_info[0] < 3:
          warning_data =  unicode(collate_incomplete(contributors) + '\n').encode("utf-8")
      else:
          warning_data =  str(collate_incomplete(contributors) + '\n').encode("utf-8")
-     sys.stderr.write(warning_data)
+     sys.stderr.write(warning_data.decode('utf-8'))
 
 
 # Store the raw data.
@@ -799,6 +799,14 @@ contributors = [
                  "25 April 2016",
                  u"Mingw-w64 build fixes"),
 
+     contributor(u"D. Gloger",
+                 "2wochenurlaub () gloger ! biz",
+                 "GPL",
+                 "Re: external material template: SVG -> PDF/PS with LaTeX",
+                 "m=151298047124676",
+                 "11 December 2017",
+                 u"Inkscape External Template"),
+
      contributor(u"Hartmut Goebel",
                  "h.goebel () crazy-compilers ! com",
                  "GPL",
@@ -1016,7 +1024,7 @@ contributors = [
                  u"Original name that is now two characters shorter"),
 
      contributor(u"KDE Artists",
-                 "http://artist.kde.org/",
+                 "",
                  "",
                  "",
                  "",
@@ -1176,7 +1184,7 @@ contributors = [
                  u"Added native support for \makebox to mathed. Several bug fixes, both to the source code and to the llncs layout file"),
 
      contributor(u"LibreOffice Team",
-                 "http://www.libreoffice.org/",
+                 "https://www.libreoffice.org/",
                  "LGPL",
                  "",
                  "",
@@ -1360,7 +1368,7 @@ contributors = [
                  u"Improvements to the outliner."),
 
      contributor(u"Oxygen Team",
-                 "http://www.oxygen-icons.org/",
+                 "https://techbase.kde.org/Projects/Oxygen",
                  "LGPL",
                  "",
                  "",
@@ -1775,6 +1783,14 @@ contributors = [
                  "Mar 2 2009",
                  u"Indonesian translation"),
 
+     contributor(u"Yuriy Skalko",
+                 "yuriy.skalko () gmail ! com",
+                 "GPL",
+                 "Re: Updated Russian translation",
+                 "m=151306079714476",
+                 "12 December 2017",
+                 u"Russian translation of the user interface"),
+     
      contributor(u"Giovanni Sora",
                  "g.sora () tiscali ! it",
                  "GPL",

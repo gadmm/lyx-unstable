@@ -55,14 +55,11 @@ void InsetMathRoot::metrics(MetricsInfo & mi, Dimension & dim) const
 	}
 
 	cell(1).metrics(mi, dim);
-	// make sure that the dim is high enough for any character
-	Dimension fontDim;
-	math_font_max_dim(mi.base.font, fontDim.asc, fontDim.des);
-	dim += fontDim;
 
-	dim.asc += (int) 3 * mi.base.solidLineThickness();
-	dim.asc = max(dim.asc, dim0.asc + dim0.des + (dim.asc - dim.des)/2);
-	dim.wid += max(mi.base.mu(6), dim0.width() + mi.base.mu(2));
+	Dimension const dim_rad = mathedRule11RadicalDim(mi.base, dim);
+	dim.asc = max(dim_rad.asc, dim0.asc + dim0.des + (dim.asc - dim.des)/2);
+	dim.des = dim_rad.des;
+	dim.wid += max(dim_rad.wid, dim0.width() + mi.base.mu(4));
 }
 
 
@@ -70,30 +67,21 @@ void InsetMathRoot::draw(PainterInfo & pi, int x, int y) const
 {
 	Changer dummy = pi.base.changeEnsureMath();
 	double const t = pi.base.solidLineThickness();
-	// decoration width
-	double const dw = pi.base.mu(6);
 	Dimension const dim0 = cell(0).dimension(*pi.base.bv);
 	Dimension const dim1 = cell(1).dimension(*pi.base.bv);
-	Dimension const dim = dimension(*pi.base.bv);
-	// ascent without cell(0)
-	double const a = dim1.ascent() + 3 * t;
-	double const d = dim.descent();
-	// middle y
-	double const ym = (int) round(y + (d - a)/2);
+	Dimension const dim_rad = mathedRule11RadicalDim(pi.base, dim1);
 	// the "exponent"
 	{
 		Changer script = pi.base.font.changeStyle(LM_ST_SCRIPTSCRIPT);
-		cell(0).draw(pi, x, ym - dim0.descent());
+		// FIXME: ym is incorrect wrt TeX
+		int const ym = round(y + (dim_rad.des - dim_rad.asc)/2.
+		                     - dim0.descent() - t);
+		cell(0).draw(pi, x, ym);
 	}
 	// the "base"
-	double const x0 = x + max(dw, (double) dim0.width() + pi.base.mu(2));
-	cell(1).draw(pi, (int) x0 + 2 * t, y);
-	// coords of the end of the decoration
-	double const x1 = x + dim.width() - t/2;
-	double const y1 = round(y - a + t/2);
-	double const xp[5] = {x1, x0, x0 - dw/3, x0 - dw*2/3, x0 - dw};
-	double const yp[5] = {y1, y1, y + d,     ym + t,      ym + 2*t};
-	pi.pain.linesDouble(xp, yp, 5, pi.base.font.color(), t);
+	int const x_rad = x + max(0, dim0.width() + pi.base.mu(4) - dim_rad.wid);
+	int const x0 = mathedDrawRadical(pi, x_rad, y, dim1);
+	cell(1).draw(pi, x0, y);
 }
 
 

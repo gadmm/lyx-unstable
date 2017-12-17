@@ -192,24 +192,35 @@ Personalización
 
 \begin_layout Enumerate
 La página de \SpecialChar LyX
- en Internet está en 
+ en Internet está en
+\begin_inset Newline newline
+\end_inset
+
+
 \begin_inset Flex URL
 status collapsed
 
 \begin_layout Plain Layout
 
-http://www.lyx.org/WebEs.Home
+https://www.lyx.org/WebEs.Home
 \end_layout
 
 \end_inset
 
 .
  Consiga allí información sobre el programa, subscríbase a la(s) lista(s)
- de correo, obtenga el 
-\emph on
-Tour Gráfico de \SpecialChar LyX
+ de correo, obtenga el tour gráfico de \SpecialChar LyX
+: 
+\begin_inset Flex URL
+status collapsed
 
-\emph default
+\begin_layout Plain Layout
+
+https://www.lyx.org/WebEs.Walkthrough
+\end_layout
+
+\end_inset
+
 , y muchas más cosas.
 \end_layout
 

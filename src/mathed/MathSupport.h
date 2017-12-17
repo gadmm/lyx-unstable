@@ -34,6 +34,8 @@ class LaTeXFeatures;
 
 int mathed_font_em(FontInfo const &);
 
+int mathed_font_x_height(FontInfo const & font);
+
 int mathed_mu(FontInfo const & font, double mu);
 
 int mathed_thinmuskip(FontInfo const & font);
@@ -56,6 +58,16 @@ void mathed_deco_metrics(MetricsBase const & mb, Dimension & dim,
 
 void mathed_draw_deco(PainterInfo const & pi, double x, double y, double w,
                       double h, docstring const & name);
+
+// Set the dimension for the radical according to rule 11 of Appendix G
+// The width is arbitrary.
+// dim_nucl is the dimension of the nucleus.
+Dimension mathedRule11RadicalDim(MetricsBase & mb, Dimension const & dim_nucl);
+
+// Draw radical around cell of dimension dim_nucl
+// Returns the x at which this cell should be drawn
+int mathedDrawRadical(PainterInfo & pi, double x, double y,
+                      Dimension const & dim_nucl);
 
 void mathed_draw_marker(PainterInfo const & pi, int x, int y, int w, int h,
                         Color col);

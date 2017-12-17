@@ -42,32 +42,18 @@ void InsetMathSqrt::metrics(MetricsInfo & mi, Dimension & dim) const
 {
 	Changer dummy = mi.base.changeEnsureMath();
 	cell(0).metrics(mi, dim);
-	// make sure that the dim is high enough for any character
-	Dimension fontDim;
-	math_font_max_dim(mi.base.font, fontDim.asc, fontDim.des);
-	dim += fontDim;
-	// Some room for the decoration
-	dim.asc += (int) 3 * mi.base.solidLineThickness();
-	dim.wid += mi.base.mu(4);
+	Dimension dim_rad = mathedRule11RadicalDim(mi.base, dim);
+	dim_rad.wid += dim.wid;
+	dim = dim_rad;
 }
 
 
 void InsetMathSqrt::draw(PainterInfo & pi, int x, int y) const
 {
 	Changer dummy = pi.base.changeEnsureMath();
-	double const t = pi.base.solidLineThickness();
-	double const deco_w = pi.base.mu(4);
-	cell(0).draw(pi, x + (int) (deco_w + 2 * t), y);
-	Dimension const dim = dimension(*pi.base.bv);
-	double const a = dim.ascent();
-	double const d = dim.descent();
-	// coords of the end of the decoration
-	double const x0 = x + dim.width() - t/2;
-	double const y0 = round(y - a + t/2);
-	// shape of the decoration
-	double const xp[4] = {x0, x + deco_w, x + deco_w * 4/7, x + t/2};
-	double const yp[4] = {y0, y0,         y + d,            y + (d - a)/2};
-	pi.pain.linesDouble(xp, yp, 4, pi.base.font.color(), t);
+	Dimension const dim0 = cell(0).dimension(*pi.base.bv);
+	int const x0 = mathedDrawRadical(pi, x, y, dim0);
+	cell(0).draw(pi, x0, y);
 }
 
 

@@ -565,6 +565,49 @@ int mathed_font_x_height(FontInfo const & font)
 	return theFontMetrics(font).ascent('x');
 }
 
+
+Dimension mathedRule11RadicalDim(MetricsBase & mb, Dimension const & dimn)
+{
+	Dimension dim;
+	double const t = mb.solidLineThickness();
+	// Width is arbitrary. Include line thickness
+	dim.wid = mb.mu(8) + 2 * t;
+	// We now follow Jackowski's "Appendix G illuminated"
+	int const x = mathed_font_x_height(mb.font);
+	double const phi = (mb.font.style() == LM_ST_DISPLAY) ? double(x) : t;
+	double const psi = t + 0.25 * phi;
+	// height of radical
+	double const dy = max(theFontMetrics(mb.font).ascent('M'),
+	                      dimn.asc + dimn.des) + t + psi;
+	double const delta = max(0., 0.5 * (dy - (dimn.asc + dimn.des + psi)));
+	dim.asc = int(round(dimn.asc + psi + delta + 3 * t));
+	dim.des = int(round(dimn.des + delta));
+	return dim;
+}
+
+
+int mathedDrawRadical(PainterInfo & pi, double x, double y,
+                      Dimension const & dim_nucl)
+{
+	Dimension const dim = mathedRule11RadicalDim(pi.base, dim_nucl);
+	double const t = pi.base.solidLineThickness();
+	double const dw = dim.wid - 2 * t;
+	// minus t is according to Rule 11
+	double const a = dim.asc - t;
+	double const d = dim.des;
+	double const x0 = x + dw;
+	// coords of the end of the decoration
+	double const x1 = x + dim.wid + dim_nucl.width();
+	double const y1 = round(y - a + t/2);
+	double const yr = max(y + (d - a)/2,
+	                      y + d - 3 * mathed_font_x_height(pi.base.font));
+	double const xp[5] = {x1, x0, x0 - dw/3, x0 - dw*2/3, x0 - dw};
+	double const yp[5] = {y1, y1, y + d,     yr + t,      yr + 3*t};
+	pi.pain.linesDouble(xp, yp, 5, pi.base.font.color(), t);
+	return x + dim.wid;
+}
+
+
 /* The math units. Quoting TeX by Topic, p.205:
  *
  * Spacing around mathematical objects is measured in mu units. A mu

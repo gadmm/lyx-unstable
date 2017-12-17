@@ -93,7 +93,7 @@ double InsetMathBig::increase() const
 void InsetMathBig::metrics(MetricsInfo & mi, Dimension & dim) const
 {
 	Changer dummy = mi.base.changeEnsureMath();
-	double const h = theFontMetrics(mi.base.font).ascent('I');
+	double const h = theFontMetrics(mi.base.font).ascent('M');
 	double const height = h * (1 + 2 * increase());
 	int const axis = axis_height(mi.base);
 	dim.wid = max(6, mi.base.mu(6));

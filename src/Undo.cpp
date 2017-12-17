@@ -18,6 +18,7 @@
 #include "Undo.h"
 
 #include "Buffer.h"
+#include "BufferList.h"
 #include "BufferParams.h"
 #include "buffer_funcs.h"
 #include "Cursor.h"
@@ -569,7 +570,8 @@ void Undo::beginUndoGroup()
 	if (d->group_level_ == 0) {
 		// create a new group
 		++d->group_id_;
-		LYXERR(Debug::UNDO, "+++++++Creating new group " << d->group_id_);
+		LYXERR(Debug::UNDO, "+++++++ Creating new group " << d->group_id_
+		       << " for buffer " << &d->buffer_);
 	}
 	++d->group_level_;
 }
@@ -593,7 +595,8 @@ void Undo::endUndoGroup()
 	if (d->group_level_ == 0) {
 		// real end of the group
 		d->group_cur_before_ = CursorData();
-		LYXERR(Debug::UNDO, "-------End of group " << d->group_id_);
+		LYXERR(Debug::UNDO, "------- End of group " << d->group_id_
+		       << " of buffer " << &d->buffer_);
 	}
 }
 
@@ -665,7 +668,8 @@ UndoGroupHelper::UndoGroupHelper(Buffer * buf) : d(new UndoGroupHelper::Impl)
 UndoGroupHelper::~UndoGroupHelper()
 {
 	for (Buffer * buf : d->buffers_)
-		buf->undo().endUndoGroup();
+		if (theBufferList().isLoaded(buf) || theBufferList().isInternal(buf))
+			buf->undo().endUndoGroup();
 	delete d;
 }
 

@@ -1610,7 +1610,7 @@ bool Buffer::write(ostream & ofs) const
 	// Important: Keep the version formatting in sync with lyx2lyx and
 	//            tex2lyx (bug 7951)
 	ofs << "#LyX " << lyx_version_major << "." << lyx_version_minor
-	    << " created this file. For more info see http://www.lyx.org/\n"
+	    << " created this file. For more info see https://www.lyx.org/\n"
 	    << "\\lyxformat " << LYX_FORMAT << "\n"
 	    << "\\begin_document\n";
 
@@ -1794,7 +1794,7 @@ void Buffer::writeLaTeXSource(otexstream & os,
 	// first paragraph of the document. (Asger)
 	if (output_preamble && runparams.nice) {
 		os << "%% LyX " << lyx_version << " created this file.  "
-			"For more info, see http://www.lyx.org/.\n"
+			"For more info, see https://www.lyx.org/.\n"
 			"%% Do not edit unless you really know what "
 			"you are doing.\n";
 	}
@@ -2038,7 +2038,7 @@ void Buffer::writeDocBookSource(odocstream & os, string const & fname,
 			os << from_ascii(tclass.class_header());
 		else if (runparams.flavor == OutputParams::XML)
 			os << "PUBLIC \"-//OASIS//DTD DocBook XML V4.2//EN\" "
-			    << "\"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd\"";
+			    << "\"https://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd\"";
 		else
 			os << " PUBLIC \"-//OASIS//DTD DocBook V4.2//EN\"";
 
@@ -2077,7 +2077,7 @@ void Buffer::writeDocBookSource(odocstream & os, string const & fname,
 
 		os << "<!-- " << ((runparams.flavor == OutputParams::XML)? "XML" : "SGML")
 				<< " file was created by LyX " << lyx_version
-				<< "\n  See http://www.lyx.org/ for more information -->\n";
+				<< "\n  See https://www.lyx.org/ for more information -->\n";
 
 		params().documentClass().counters().reset();
 
@@ -2339,9 +2339,9 @@ void Buffer::registerBibfiles(FileNamePairList const & bf) const {
 		return tmp->registerBibfiles(bf);
 
 	for (auto const & p : bf) {
-		FileNamePairList::const_iterator tmp =
+		FileNamePairList::const_iterator temp =
 			find(d->bibfiles_cache_.begin(), d->bibfiles_cache_.end(), p);
-		if (tmp == d->bibfiles_cache_.end())
+		if (temp == d->bibfiles_cache_.end())
 			d->bibfiles_cache_.push_back(p);
 	}
 }
@@ -2596,7 +2596,8 @@ void Buffer::dispatch(FuncRequest const & func, DispatchResult & dr)
 	string const argument = to_utf8(func.argument());
 	// We'll set this back to false if need be.
 	bool dispatched = true;
-	undo().beginUndoGroup();
+	// This handles undo groups automagically
+	UndoGroupHelper ugh(this);
 
 	switch (func.action()) {
 	case LFUN_BUFFER_TOGGLE_READ_ONLY:
@@ -2721,14 +2722,14 @@ void Buffer::dispatch(FuncRequest const & func, DispatchResult & dr)
 	}
 
 	case LFUN_BRANCH_ADD: {
-		docstring branch_name = func.argument();
-		if (branch_name.empty()) {
+		docstring branchnames = func.argument();
+		if (branchnames.empty()) {
 			dispatched = false;
 			break;
 		}
 		BranchList & branch_list = params().branchlist();
 		vector<docstring> const branches =
-			getVectorFromString(branch_name, branch_list.separator());
+			getVectorFromString(branchnames, branch_list.separator());
 		docstring msg;
 		for (docstring const & branch_name : branches) {
 			Branch * branch = branch_list.find(branch_name);
@@ -2846,7 +2847,6 @@ void Buffer::dispatch(FuncRequest const & func, DispatchResult & dr)
 		break;
 	}
 	dr.dispatched(dispatched);
-	undo().endUndoGroup();
 }
 
 
@@ -2874,24 +2874,24 @@ bool Buffer::isMultiLingual() const
 
 std::set<Language const *> Buffer::getLanguages() const
 {
-	std::set<Language const *> languages;
-	getLanguages(languages);
-	return languages;
+	std::set<Language const *> langs;
+	getLanguages(langs);
+	return langs;
 }
 
 
-void Buffer::getLanguages(std::set<Language const *> & languages) const
+void Buffer::getLanguages(std::set<Language const *> & langs) const
 {
 	ParConstIterator end = par_iterator_end();
 	// add the buffer language, even if it's not actively used
-	languages.insert(language());
+	langs.insert(language());
 	// iterate over the paragraphs
 	for (ParConstIterator it = par_iterator_begin(); it != end; ++it)
-		it->getLanguages(languages);
+		it->getLanguages(langs);
 	// also children
 	ListOfBuffers clist = getDescendents();
 	for (auto const & cit : clist)
-		cit->getLanguages(languages);
+		cit->getLanguages(langs);
 }
 
 
@@ -3024,9 +3024,6 @@ void Buffer::markDirty()
 		updateTitles();
 	}
 	d->bak_clean = false;
-
-	DepClean::iterator it = d->dep_clean.begin();
-	DepClean::const_iterator const end = d->dep_clean.end();
 
 	for (auto & depit : d->dep_clean)
 		depit.second = false;
@@ -3508,10 +3505,10 @@ void Buffer::Impl::updateMacros(DocIterator & it, DocIterator & scope)
 			// is it an external file?
 			if (insit.inset->lyxCode() == INCLUDE_CODE) {
 				// get buffer of external file
-				InsetInclude const & inset =
+				InsetInclude const & incinset =
 					static_cast<InsetInclude const &>(*insit.inset);
 				macro_lock = true;
-				Buffer * child = inset.getChildBuffer();
+				Buffer * child = incinset.getChildBuffer();
 				macro_lock = false;
 				if (!child)
 					continue;
@@ -4321,8 +4318,8 @@ Buffer::ExportStatus Buffer::doExport(string const & target, bool put_in_tempdir
 		// FIXME: There is a possibility of concurrent access to texrow
 		// here from the main GUI thread that should be securized.
 		d->cloned_buffer_->d->texrow = d->texrow;
-		string const error_type = params().bufferFormat();
-		d->cloned_buffer_->d->errorLists[error_type] = d->errorLists[error_type];
+		string const err_type = params().bufferFormat();
+		d->cloned_buffer_->d->errorLists[error_type] = d->errorLists[err_type];
 	}
 
 
@@ -4649,7 +4646,7 @@ void Buffer::updateBuffer(UpdateScope scope, UpdateType utype) const
 			// not updated during the updateBuffer call and TocModel::toc_ is invalid
 			// (bug 5699). The same happens if the master buffer is open in a different
 			// window. This test catches both possibilities.
-			// See: http://marc.info/?l=lyx-devel&m=138590578911716&w=2
+			// See: https://marc.info/?l=lyx-devel&m=138590578911716&w=2
 			// There remains a problem here: If there is another child open in yet a third
 			// window, that TOC is not updated. So some more general solution is needed at
 			// some point.
@@ -5090,7 +5087,7 @@ int Buffer::charCount(bool with_blanks) const
 Buffer::ReadStatus Buffer::reload()
 {
 	setBusy(true);
-	// c.f. bug http://www.lyx.org/trac/ticket/6587
+	// c.f. bug https://www.lyx.org/trac/ticket/6587
 	removeAutosaveFile();
 	// e.g., read-only status could have changed due to version control
 	d->filename.refresh();

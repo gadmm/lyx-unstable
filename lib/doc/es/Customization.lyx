@@ -3036,7 +3036,7 @@ Inspecciona el código fuente de \SpecialChar LyX
 \begin_inset CommandInset href
 LatexCommand href
 name "información en la web"
-target "http://www.lyx.org/HowToUseGIT"
+target "https://www.lyx.org/HowToUseGIT"
 literal "false"
 
 \end_inset
@@ -3483,8 +3483,8 @@ DocName
 Consulta la web de traducción de la documentación en 
 \begin_inset CommandInset href
 LatexCommand href
-name "http://www.lyx.org/Translation"
-target "http://www.lyx.org/Translation"
+name "https://www.lyx.org/Translation"
+target "https://www.lyx.org/Translation"
 literal "false"
 
 \end_inset
@@ -3549,8 +3549,8 @@ De vez en cuando el documento original (del equipo \SpecialChar LyX
  Usa el visor de fuentes en 
 \begin_inset CommandInset href
 LatexCommand href
-name "http://www.lyx.org/trac/timeline"
-target "http://www.lyx.org/trac/timeline"
+name "https://www.lyx.org/trac/timeline"
+target "https://www.lyx.org/trac/timeline"
 literal "false"
 
 \end_inset
@@ -6179,7 +6179,7 @@ Cuando te pongas a escribir un nuevo formato, es de gran ayuda echar un
 \begin_inset CommandInset href
 LatexCommand href
 name "sección 'Layouts' en wiki LyX"
-target "http://wiki.lyx.org/Layouts/Layouts"
+target "https://wiki.lyx.org/Layouts/Layouts"
 literal "false"
 
 \end_inset

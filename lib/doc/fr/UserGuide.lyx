@@ -294,20 +294,8 @@ Enregistrement des propriétés temporaires
 \end_inset
 
 Version 2.3.x
-\end_layout
-
-\begin_layout Standard
-\begin_inset CommandInset toc
-LatexCommand tableofcontents
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset Note Note
-status open
+status collapsed
 
 \begin_layout Plain Layout
 Vous pouvez trouver la dernière version au format PDF de ce manuel ici :
@@ -317,8 +305,17 @@ Vous pouvez trouver la dernière version au format PDF de ce manuel ici :
 
 \family typewriter
 \series bold
-http://wiki.lyx.org/LyX/Manuals#UserGuide
+https://wiki.lyx.org/LyX/Manuals#UserGuide
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
 
 \end_inset
 
@@ -4604,7 +4601,7 @@ NdT: c'est en particulier le cas en français, voyez la documentation de
 \begin_inset CommandInset href
 LatexCommand href
 name "babel french"
-target "http://www.google.com/url?sa=t&source=web&cd=1&ved=0CBoQFjAA&url=http%3A%2F%2Fdaniel.flipo.free.fr%2Ffrenchb%2Ffrenchb2-doc.pdf&rct=j&q=docimentation%20babel%20french&ei=4gtSTvnUE9OxhQf29eTDBg&usg=AFQjCNG9ANBp69Yi-oMNiKsFIzvUinm3qQ&sig2=vks2zUxQN7wEUzh2UB3fWA&cad=rja"
+target "https://ctan.org/tex-archive/macros/latex/contrib/babel-contrib/french/frenchb.pdf"
 literal "false"
 
 \end_inset
@@ -6107,7 +6104,7 @@ Avec
 \begin_inset CommandInset href
 LatexCommand href
 name " babel-french"
-target "http://daniel.flipo.free.fr/frenchb/frenchb-doc.pdf"
+target "https://ctan.org/tex-archive/macros/latex/contrib/babel-contrib/french/frenchb.pdf"
 literal "false"
 
 \end_inset
@@ -13940,12 +13937,9 @@ Implicite
 \family sans
 Implicite
 \family default
- , la police pré-sélectionnée par la classe du document est utilisée.
- 
-\lang english
-With LyX's default font encoding this is a look-alike of
-\lang french
- la police \SpecialChar TeX
+, la police pré-sélectionnée par la classe du document est utilisée.
+ La police implicite du texte apparaissant dans la fenêtre LyX ressemble
+ à la police \SpecialChar TeX
  standard 
 \begin_inset Quotes cld
 \end_inset
@@ -13962,11 +13956,7 @@ Computer Modern
 \family typewriter
 cm
 \family default
-):
-\lang english
- either
-\lang french
- 
+): soit 
 \begin_inset Quotes cld
 \end_inset
 
@@ -13978,11 +13968,7 @@ cm-super
 \begin_inset Quotes crd
 \end_inset
 
- 
-\lang english
-or the bitmap font
-\lang french
- 
+, soit la police matricielle 
 \begin_inset Quotes cld
 \end_inset
 
@@ -13999,11 +13985,7 @@ European Computer Modern
 ec
 \family default
 ).
- 
-\lang english
-However,
-\lang french
- certaines classes pré-sélectionnent des polices différentes.
+ Cependant, certaines classes pré-sélectionnent des polices différentes.
 \end_layout
 
 \begin_layout Standard
@@ -17909,7 +17891,9 @@ Whether line breaks around dashes are allowed depends on the use case and
 \begin_layout Itemize
 
 \lang english
-No line breaks are allowed in ranges of values like A–Z or 1975–1982.
+In English, line breaks are generally allowed after the dash in ranges of
+ values such as 1975–1982, but no line break should occur if only a single
+ character follows the dash (as in A–Z).
 \end_layout
 
 \begin_layout Itemize
@@ -17929,86 +17913,66 @@ In French and Spanish, dashes around parenthetical statements are treated
 \begin_layout Standard
 
 \lang english
-When using spaced en dashes
-\begin_inset space ~
-\end_inset
-
-- common in British English
-\begin_inset space ~
-\end_inset
-
-- line breaks before the dash can be prevented with protected spaces.
-\end_layout
-
-\begin_layout Standard
-
-\lang english
-When using em dashes without spaces—\SpecialChar allowbreak
-common in American English—\SpecialChar allowbreak
-one can insert
- optional line breaks with the menu 
-\family sans
-Insert\SpecialChar menuseparator
-Formatting\SpecialChar menuseparator
-Optional line break
-\family default
-.
-\end_layout
-
-\begin_layout Standard
-
-\lang english
-For documents containing many em dashes, you may consider to select the
- option
-\lang french
- 
+In \SpecialChar LyX
+, line breaks after en-dashes and em-dashes are only allowed (without
+ manual intervention), if the option 
 \family sans
 Document\SpecialChar menuseparator
-
-\lang english
 Settings\SpecialChar menuseparator
 Fonts\SpecialChar menuseparator
-Output en- and em-dashes as ligatures.
- 
+Output en- and em-dashes as ligatures
 \family default
-This forces the output of dashes as 
-\begin_inset Quotes cld
+ is selected (this is the default in \SpecialChar LyX
+ 2.3).
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+In this case, the dashes are output as 
+\begin_inset Quotes eld
 \end_inset
 
 --
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
  and 
-\begin_inset Quotes cld
+\begin_inset Quotes eld
 \end_inset
 
 ---
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
- when exporting to \SpecialChar LaTeX
+, respectively, when exporting to \SpecialChar LaTeX
 .
  The \SpecialChar TeX
  font ligature mechanism converts them to dash characters followed
  by an optional line break.
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 
 \lang english
-Caution:
+Please note:
 \end_layout
 
 \begin_layout Enumerate
 
 \lang english
 This results in optional line breaks after 
-\series bold
+\emph on
 all
-\series default
- en and em dashes.
- Incorrect line breaks must be prevented by wrapping in a makebox
+\emph default
+ en- and em-dashes.
+ Unwanted line breaks must be prevented by wrapping in a makebox
 \lang french
 
 \begin_inset Foot
@@ -18028,9 +17992,9 @@ Objets insérés
 
 \end_inset
 
- 
+
 \lang english
-or preceding with 
+, using protected spaces or preceding with 
 \series bold
 
 \backslash
@@ -18071,7 +18035,7 @@ status open
 \begin_layout Plain Layout
 
 \lang english
-369–378
+368–9
 \end_layout
 
 \end_inset
@@ -18080,36 +18044,34 @@ status open
 \end_layout
 
 \begin_layout Itemize
-Les incises 
-\begin_inset Box Frameless
-position "t"
-hor_pos "c"
-has_inner_box 1
-inner_pos "t"
-use_parbox 0
-use_makebox 1
-width ""
-special "none"
-height "1in"
-height_special "totalheight"
-thickness "0.4pt"
-separation "3pt"
-shadowsize "4pt"
-framecolor "black"
-backgroundcolor "none"
-status open
 
-\begin_layout Plain Layout
-–
+\lang english
+With spaced en dashes
 \begin_inset space ~
 \end_inset
 
-même
-\end_layout
-
+– common e.
+\begin_inset space \thinspace{}
 \end_inset
 
- si tout le monde ne les aime pas
+g.
+ in British English and generally recommended by 
+\emph on
+The Elements of Typographic Style
+\emph default
+
+\begin_inset space ~
+\end_inset
+
+– line breaks should not occur before the dash.
+\end_layout
+
+\begin_layout Itemize
+Les incises –
+\begin_inset space ~
+\end_inset
+
+même si tout le monde ne les aime pas
 \begin_inset space ~
 \end_inset
 
@@ -18215,7 +18177,36 @@ Hyphenation is suppressed in words adjacent to hyphens and ligature dashes.
 \begin_layout Standard
 
 \lang english
-Since \SpecialChar LyX
+If the option 
+\family sans
+Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+Fonts\SpecialChar menuseparator
+Output en- and em-dashes as ligatures
+\family default
+ has not been selected, you can  insert optional line breaks via the menu
+ 
+\family sans
+Insert\SpecialChar menuseparator
+Formatting\SpecialChar menuseparator
+Optional line break
+\family default
+:
+\end_layout
+
+\begin_layout Itemize
+
+\lang english
+Em-dashes without spaces—\SpecialChar allowbreak
+as common in American English—\SpecialChar allowbreak
+should be broken
+ after the dash.
+\end_layout
+
+\begin_layout Standard
+
+\lang english
+As of \SpecialChar LyX
 
 \begin_inset space ~
 \end_inset
@@ -18247,7 +18238,7 @@ Up to \SpecialChar LyX
 \begin_inset space ~
 \end_inset
 
-2.3 provides the option 
+2.3 provides the aforementioned option 
 \family sans
 Output en- and em-dashes as ligatures
 \family default
@@ -29785,7 +29776,7 @@ status open
 
 \begin_layout Plain Layout
 
-http://www.lyx.org
+https://www.lyx.org
 \end_layout
 
 \end_inset
@@ -29867,7 +29858,7 @@ Le nom est le texte qui est imprimé pour représenter le lien.
 \begin_inset CommandInset href
 LatexCommand href
 name "Page d'accueil de LyX"
-target "http://www.lyx.org"
+target "https://www.lyx.org"
 literal "false"
 
 \end_inset
@@ -29940,7 +29931,7 @@ Style de texte
 \begin_inset CommandInset href
 LatexCommand href
 name "Page d'accueil de LyX"
-target "http://www.lyx.org"
+target "https://www.lyx.org"
 literal "false"
 
 \end_inset
@@ -30543,7 +30534,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://wiki.lyx.org/BibTeX/Programs
+https://wiki.lyx.org/BibTeX/Programs
 \end_layout
 
 \end_inset
@@ -30771,7 +30762,7 @@ Pour avoir des informations sur la façon de le faire, voyez
 
 \begin_inset CommandInset href
 LatexCommand href
-target "http://www.ctan.org/get/biblio/bibtex/contrib/doc/btxhak.pdf"
+target "https://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/btxhak.pdf"
 literal "false"
 
 \end_inset
@@ -33059,8 +33050,12 @@ Nota:
 \series default
  
 \lang english
-To use \SpecialChar TeX
- code for nomenclature entries
+To use
+\lang french
+ code \SpecialChar TeX
+ 
+\lang english
+for nomenclature entries
 \lang french
  l'option 
 \family sans
@@ -33322,8 +33317,9 @@ Si les caractères |
 \begin_inset space \space{}
 \end_inset
 
-" apparaissent dans les entrées de la nomenclature, ils doivent être protégés
- en ajoutant un caractère 
+" apparaissent dans les entrées de la nomenclature avec code \SpecialChar TeX
+, ils doivent
+ être protégés en ajoutant un caractère 
 \begin_inset Quotes cld
 \end_inset
 
@@ -33335,7 +33331,7 @@ double apostrophe
 \begin_inset CommandInset nomenclature
 LatexCommand nomenclature
 symbol "\"@, \"|, \"!, \"\""
-description "Le signe de citation est produit en écrivant ' \"\"\"\" '"
+description "Le signe de citation dans code TeX est produit en écrivant ' \"\"\"\" '."
 literal "true"
 
 \end_inset
@@ -33504,6 +33500,13 @@ status collapsed
 \begin_layout Plain Layout
 Glossaire ! Options
 \end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Options-de-glossaire"
 
 \end_inset
 
@@ -33680,7 +33683,11 @@ page
 \end_inset
 
  sont automatiquement traduits pour cerianes langues de documents.
- Sinon, ajoutez v)ces lignes au préambule \SpecialChar LaTeX
+ Sinon, ajoutez vouz ces lignes 
+\lang english
+in front of the nomenclature list as
+\lang french
+ code \SpecialChar TeX
 :
 \end_layout
 
@@ -33690,9 +33697,28 @@ page
 \series bold
 
 \backslash
-renewcommand{
+renewcommand*{
 \backslash
-eqdeclaration}[1]{, see equation
+eqdeclaration}[1]{
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Phantom HPhantom
+status open
+
+\begin_layout Plain Layout
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\backslash
+unskip, voir équation
 \backslash
 nobreakspace(#1)}
 \begin_inset Newline newline
@@ -33700,37 +33726,116 @@ nobreakspace(#1)}
 
 
 \backslash
-renewcommand{
+renewcommand*{
 \backslash
-pagedeclaration}[1]{, page
-\backslash
-nobreakspace{}#1}
-\series default
-
+pagedeclaration}[1]{
 \begin_inset Newline newline
 \end_inset
 
-en remplaçant 
-\begin_inset Quotes cld
+
+\begin_inset Phantom HPhantom
+status open
+
+\begin_layout Plain Layout
+\begin_inset space ~
 \end_inset
 
+
+\end_layout
+
+\end_inset
+
+
+\backslash
+unskip, page
+\backslash
+nobreakspace{}#1}
+\end_layout
+
+\begin_layout Standard
 
 \lang english
-see equation
-\lang french
-
-\begin_inset Quotes crd
+If the numbers should be hyperlinks, assure that you use 
+\family sans
+Hyperref
+\begin_inset space ~
 \end_inset
 
- et 
-\begin_inset Quotes cld
+Support
+\family default
+ in the document settings under 
+\family sans
+PDF
+\begin_inset space ~
 \end_inset
 
-page
-\begin_inset Quotes crd
+Properties
+\family default
+ and use instead:
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+
+\backslash
+renewcommand*{
+\backslash
+eqdeclaration}[1]{
+\begin_inset Newline newline
 \end_inset
 
- par leur traduction.
+
+\begin_inset Phantom HPhantom
+status open
+
+\begin_layout Plain Layout
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\backslash
+unskip, voir 
+\backslash
+hyperlink{equation.#1}{équation
+\backslash
+nobreakspace{}(#1)}}
+\begin_inset Newline newline
+\end_inset
+
+
+\backslash
+renewcommand*{
+\backslash
+pagedeclaration}[1]{
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Phantom HPhantom
+status open
+
+\begin_layout Plain Layout
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\backslash
+unskip, 
+\backslash
+hyperlink{page.#1}{page
+\backslash
+nobreakspace{}#1}}
 \end_layout
 
 \begin_layout Subsection
@@ -36999,7 +37104,8 @@ Une bonne explication de ce que sont les expressions régulières se trouve
  dans cet article Wikipedia: 
 \begin_inset CommandInset href
 LatexCommand href
-target "http://en.wikipedia.org/wiki/Regular_expression"
+name "https://fr.wikipedia.org/wiki/Expression_régulière"
+target "https://fr.wikipedia.org/wiki/Expression_r%C3%A9guli%C3%A8re"
 literal "false"
 
 \end_inset
@@ -37305,7 +37411,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://sourceforge.net/projects/lyxwininstaller/files/hunspell/
+https://sourceforge.net/projects/lyxwininstaller/files/hunspell/
 \end_layout
 
 \end_inset
@@ -37384,10 +37490,6 @@ orthographique permet de sélectionner les bibliothèques de dictionnaires
  que \SpecialChar LyX
  doit utiliser pour la correction.
  En fonction de votre système, les bibliothèques 
-\family typewriter
-aspell
-\family default
-, 
 \family typewriter
 hunspell
 \family default
@@ -37570,7 +37672,7 @@ status collapsed
 \begin_layout Plain Layout
 \begin_inset CommandInset href
 LatexCommand href
-target "http://lingucomponent.openoffice.org/thesaurus.html"
+target "https://lingucomponent.openoffice.org/thesaurus.html"
 literal "false"
 
 \end_inset
@@ -37632,67 +37734,6 @@ th_fr_FR_v2.dat
 \end_layout
 
 \begin_layout Standard
-Si LibreOffice ou OpenOffice est déjà installé sur votre système, avec ses
- dictionnaires de synonymes, ces fichiers devraient déjà être présents.
- Si ce n'est pas le cas, vous pouvez récupérer les dictionnaires, soit à
- partir du site 
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-http://www.lyx.org/trac/browser/dictionaries/trunk/thes
-\end_layout
-
-\end_inset
-
-, soit à partir du site 
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-http://extensions.services.openoffice.org/en/search/node/thesaurus
-\end_layout
-
-\end_inset
-
-
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-Notez que, depuis OpenOffice
-\begin_inset space ~
-\end_inset
-
-3.0, les fichiers de 
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-http://extensions.services.openoffice.org
-\end_layout
-
-\end_inset
-
- sont habituellement stockés dans les archives d'extensions (
-\emph on
-*.oxt
-\emph default
-) qui contiennent d'autres fichiers comme les dictionnaires orthographiques.
- Ces archives sont des fichier zip, vous pouvez donc les décompresser comme
- une archive zip ordinaire.
- 
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
 Mettez les fichiers 
 \emph on
 *.idx
@@ -37734,7 +37775,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://sourceforge.net/projects/lyxwininstaller/files/thesaurus/
+https://sourceforge.net/projects/lyxwininstaller/files/thesaurus/
 \end_layout
 
 \end_inset
@@ -40133,7 +40174,11 @@ Barres d'outils
 \end_layout
 
 \begin_layout Standard
-Avec ce menu, vous pouvez déterminer les barres d'outils qui sont visibles.
+Avec ce menu, vous pouvez 
+\lang english
+set the icon size
+\lang french
+ et déterminer les barres d'outils qui sont visibles.
  Toutes les barres d'outils ainsi que la 
 \family sans
 zone de commande
@@ -44846,7 +44891,7 @@ Driver support
  dans 
 \begin_inset CommandInset href
 LatexCommand href
-target "http://mirrors.ctan.org/macros/latex/required/graphics/grfguide.pdf"
+target "https://www.ctan.org/tex-archive/macros/latex/required/graphics/grfguide.pdf"
 literal "false"
 
 \end_inset
@@ -47509,7 +47554,7 @@ Set
 \begin_inset CommandInset href
 LatexCommand href
 name "this image"
-target "http://wiki.lyx.org/uploads/LyX/NewInLyX20/themes.png"
+target "https://wiki.lyx.org/uploads/LyX/NewInLyX20/themes.png"
 literal "false"
 
 \end_inset
@@ -49216,7 +49261,7 @@ utilisateur permet de choisir la langue utilisée pour les menus de \SpecialChar
 
 \begin_inset CommandInset href
 LatexCommand href
-target "http://www.lyx.org/I18n"
+target "https://www.lyx.org/I18n"
 literal "false"
 
 \end_inset
@@ -51130,138 +51175,6 @@ textwidth
 
 \end_layout
 
-\begin_layout Chapter
-Remerciements
-\begin_inset CommandInset label
-LatexCommand label
-name "cha:Remerciements"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Cette documentation est le résultat de l'effort collectif de nombreuses
- personnes différentes (et nous encourageons tous les volontaires à contribuer
- !).
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-Alejandro Aguilar Sierra
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-Amir Karger
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-David Johnson
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-Hartmut Haase
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-Ignacio García
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-Ivan Schreter
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-John Raithel
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-John Weiss
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-Lars Gullik Bjønnes
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-Matthias Ettrich
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-Matthias Zenker
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-Rich Fields
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-Pascal André
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-Paul Evans
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-Paul Russel
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-Robin Socha
-\end_layout
-
-\begin_layout Itemize
-
-\noun on
-Uwe Stöhr
-\end_layout
-
-\begin_layout Itemize
-L'équipe \SpecialChar LyX
-: 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "lyxcredit"
-literal "true"
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Standard
 \begin_inset Newpage newpage
 \end_inset
@@ -51287,7 +51200,7 @@ L'équipe \SpecialChar LyX
 \begin_inset CommandInset href
 LatexCommand href
 name "Remerciements"
-target "http://www.lyx.org/Credits"
+target "https://www.lyx.org/Credits"
 literal "false"
 
 \end_inset
@@ -51302,7 +51215,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://www.lyx.org/Credits
+https://www.lyx.org/Credits
 \end_layout
 
 \end_inset
@@ -51400,7 +51313,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://mirrors.ctan.org/help/Catalogue/bytopic.html
+http://texcatalogue.ctan.org/bytopic.html
 \end_layout
 
 \end_inset
@@ -51447,7 +51360,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "Documentation"
-target "http://mirrors.ctan.org/biblio/bibtex/contrib/doc/btxdoc.pdf"
+target "https://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/btxdoc.pdf"
 literal "false"
 
 \end_inset
@@ -51467,7 +51380,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://mirrors.ctan.org/biblio/bibtex/contrib/doc/btxdoc.pdf
+https://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/btxdoc.pdf
 \end_layout
 
 \end_inset
@@ -51487,7 +51400,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "Documentation"
-target "http://www.ctan.org/tex-archive/info/bibtex/tamethebeast/ttb_en.pdf"
+target "https://www.ctan.org/tex-archive/info/bibtex/tamethebeast/ttb_en.pdf"
 literal "false"
 
 \end_inset
@@ -51507,7 +51420,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://www.ctan.org/tex-archive/info/bibtex/tamethebeast/ttb_en.pdf
+https://www.ctan.org/tex-archive/info/bibtex/tamethebeast/ttb_en.pdf
 \end_layout
 
 \end_inset
@@ -51527,7 +51440,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "Documentation"
-target "http://www.ctan.org/macros/latex/contrib/biblatex/doc/biblatex.pdf"
+target "https://www.ctan.org/tex-archive/macros/latex/contrib/biblatex/doc/biblatex.pdf"
 literal "false"
 
 \end_inset
@@ -51558,7 +51471,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://mirrors.ctan.org/macros/latex/contrib/biblatex/doc/biblatex.pdf
+https://www.ctan.org/tex-archive/macros/latex/contrib/biblatex/doc/biblatex.pdf
 \end_layout
 
 \end_inset
@@ -51578,7 +51491,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "Documentation"
-target "http://mirrors.ctan.org/biblio/biber/documentation/biber.pdf"
+target "https://www.ctan.org/tex-archive/biblio/biber/documentation/biber.pdf"
 literal "false"
 
 \end_inset
@@ -51609,7 +51522,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://mirrors.ctan.org/biblio/biber/documentation/biber.pdf
+https://www.ctan.org/tex-archive/biblio/biber/documentation/biber.pdf
 \end_layout
 
 \end_inset
@@ -51629,7 +51542,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "Documentation"
-target "http://mirrors.ctan.org/indexing/makeindex/doc/makeindex.pdf"
+target "https://www.ctan.org/tex-archive/indexing/makeindex/doc/makeindex.pdf"
 literal "false"
 
 \end_inset
@@ -51648,7 +51561,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://mirrors.ctan.org/indexing/makeindex/doc/makeindex.pdf
+https://www.ctan.org/tex-archive/indexing/makeindex/doc/makeindex.pdf
 \end_layout
 
 \end_inset
@@ -51668,7 +51581,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "Options"
-target "http://mirrors.ctan.org/indexing/makeindex/doc/manpages.dvi"
+target "https://www.ctan.org/tex-archive/indexing/makeindex/doc/manpages.dvi"
 literal "false"
 
 \end_inset
@@ -51687,7 +51600,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://mirrors.ctan.org/indexing/makeindex/doc/manpages.dvi
+https://www.ctan.org/tex-archive/indexing/makeindex/doc/manpages.dvi
 \end_layout
 
 \end_inset
@@ -51746,7 +51659,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "Documentation"
-target "http://www.ams.org/publications/authors/tex/amslatex"
+target "https://www.ams.org/publications/authors/tex/amslatex"
 literal "false"
 
 \end_inset
@@ -51761,7 +51674,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://www.ams.org/publications/authors/tex/amslatex
+https://www.ams.org/publications/authors/tex/amslatex
 \end_layout
 
 \end_inset
@@ -51781,7 +51694,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "Documentation"
-target "http://mirrors.ctan.org/macros/latex/contrib/caption/caption-eng.pdf"
+target "https://www.ctan.org/tex-archive/macros/latex/contrib/caption/caption-eng.pdf"
 literal "false"
 
 \end_inset
@@ -51812,7 +51725,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://mirrors.ctan.org/macros/latex/contrib/caption/caption-eng.pdf
+https://www.ctan.org/tex-archive/macros/latex/contrib/caption/caption-eng.pdf
 \end_layout
 
 \end_inset
@@ -51832,7 +51745,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "Documentation"
-target "http://mirrors.ctan.org/macros/latex/contrib/enumitem/enumitem.pdf"
+target "https://www.ctan.org/tex-archive/macros/latex/contrib/enumitem/enumitem.pdf"
 literal "false"
 
 \end_inset
@@ -51863,7 +51776,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://mirrors.ctan.org/macros/latex/contrib/enumitem/enumitem.pdf
+https://www.ctan.org/tex-archive/macros/latex/contrib/enumitem/enumitem.pdf
 \end_layout
 
 \end_inset
@@ -51883,7 +51796,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "Documentation"
-target "http://mirrors.ctan.org/macros/latex/contrib/fancyhdr/fancyhdr.pdf"
+target "https://www.ctan.org/tex-archive/macros/latex/contrib/fancyhdr/fancyhdr.pdf"
 literal "false"
 
 \end_inset
@@ -51914,7 +51827,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://mirrors.ctan.org/macros/latex/contrib/fancyhdr/fancyhdr.pdf
+https://www.ctan.org/tex-archive/macros/latex/contrib/fancyhdr/fancyhdr.pdf
 \end_layout
 
 \end_inset
@@ -51934,7 +51847,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "Documentation"
-target "http://www.ctan.org/pkg/hyperref"
+target "https://www.ctan.org/tex-archive/macros/latex/contrib/hyperref/doc/manual.pdf"
 literal "false"
 
 \end_inset
@@ -51965,7 +51878,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://www.ctan.org/pkg/hyperref
+https://www.ctan.org/tex-archive/macros/latex/contrib/hyperref/doc/manual.pdf
 \end_layout
 
 \end_inset
@@ -51985,7 +51898,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "Documentation"
-target "http://mirrors.ctan.org/macros/latex/contrib/microtype/microtype.pdf"
+target "https://www.ctan.org/tex-archive/macros/latex/contrib/microtype/microtype.pdf"
 literal "false"
 
 \end_inset
@@ -52016,7 +51929,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://mirrors.ctan.org/macros/latex/contrib/microtype/microtype.pdf
+https://www.ctan.org/tex-archive/macros/latex/contrib/microtype/microtype.pdf
 \end_layout
 
 \end_inset
@@ -52036,7 +51949,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "Documentation"
-target "http://mirrors.ctan.org/macros/latex/contrib/nomencl/nomencl.pdf"
+target "https://www.ctan.org/tex-archive/macros/latex/contrib/nomencl/nomencl.pdf"
 literal "false"
 
 \end_inset
@@ -52067,7 +51980,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://mirrors.ctan.org/macros/latex/contrib/nomencl/nomencl.pdf
+https://www.ctan.org/tex-archive/macros/latex/contrib/nomencl/nomencl.pdf
 \end_layout
 
 \end_inset
@@ -52087,7 +52000,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "Documentation"
-target "http://www.ctan.org/tex-archive/macros/latex/contrib/prettyref/prettyref.pdf"
+target "https://www.ctan.org/tex-archive/macros/latex/contrib/prettyref/prettyref.pdf"
 literal "false"
 
 \end_inset
@@ -52118,7 +52031,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://www.ctan.org/tex-archive/macros/latex/contrib/prettyref/prettyref.pdf
+https://www.ctan.org/tex-archive/macros/latex/contrib/prettyref/prettyref.pdf
 \end_layout
 
 \end_inset
@@ -52138,7 +52051,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "Documentation"
-target "http://www.ctan.org/tex-archive/macros/latex/contrib/refstyle/refstyle.pdf"
+target "https://www.ctan.org/tex-archive/macros/latex/contrib/refstyle/refstyle.pdf"
 literal "false"
 
 \end_inset
@@ -52169,7 +52082,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://www.ctan.org/tex-archive/macros/latex/contrib/refstyle/refstyle.pdf
+https://www.ctan.org/tex-archive/macros/latex/contrib/refstyle/refstyle.pdf
 \end_layout
 
 \end_inset
@@ -52189,7 +52102,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "page Wiki"
-target "http://wiki.lyx.org/Windows/Arabic"
+target "https://wiki.lyx.org/Windows/Arabic"
 literal "false"
 
 \end_inset
@@ -52205,7 +52118,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://wiki.lyx.org/Windows/Arabic
+https://wiki.lyx.org/Windows/Arabic
 \end_layout
 
 \end_inset
@@ -52225,7 +52138,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "page Wiki"
-target "http://wiki.lyx.org/Windows/Armenian"
+target "https://wiki.lyx.org/Windows/Armenian"
 literal "false"
 
 \end_inset
@@ -52241,7 +52154,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://wiki.lyx.org/Windows/Armenian
+https://wiki.lyx.org/Windows/Armenian
 \end_layout
 
 \end_inset
@@ -52261,7 +52174,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "page Wiki"
-target "http://wiki.lyx.org/Windows/Cyrillic"
+target "https://wiki.lyx.org/Windows/Cyrillic"
 literal "false"
 
 \end_inset
@@ -52277,7 +52190,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://wiki.lyx.org/Windows/Cyrillic
+https://wiki.lyx.org/Windows/Cyrillic
 \end_layout
 
 \end_inset
@@ -52297,7 +52210,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "page Wiki"
-target "http://wiki.lyx.org/Windows/Farsi"
+target "https://wiki.lyx.org/Windows/Farsi"
 literal "false"
 
 \end_inset
@@ -52313,7 +52226,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://wiki.lyx.org/Windows/Farsi
+https://wiki.lyx.org/Windows/Farsi
 \end_layout
 
 \end_inset
@@ -52333,7 +52246,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "page Wiki"
-target "http://wiki.lyx.org/Windows/Hebrew"
+target "https://wiki.lyx.org/Windows/Hebrew"
 literal "false"
 
 \end_inset
@@ -52349,7 +52262,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://wiki.lyx.org/Windows/Hebrew
+https://wiki.lyx.org/Windows/Hebrew
 \end_layout
 
 \end_inset
@@ -52369,7 +52282,7 @@ literal "true"
 \begin_inset CommandInset href
 LatexCommand href
 name "page Wiki"
-target "http://wiki.lyx.org/Windows/Japanese"
+target "https://wiki.lyx.org/Windows/Japanese"
 literal "false"
 
 \end_inset
@@ -52385,7 +52298,7 @@ status collapsed
 
 \begin_layout Plain Layout
 
-http://wiki.lyx.org/Windows/Japanese
+https://wiki.lyx.org/Windows/Japanese
 \end_layout
 
 \end_inset
@@ -52462,6 +52375,64 @@ options "../biblio/alphadin"
 \begin_layout Standard
 La bibliographie ci-dessus a été créée à partir d'une base de données Bib\SpecialChar TeX
 .
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand*{
+\backslash
+pagedeclaration}[1]{
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+unskip, 
+\backslash
+hyperlink{page.#1}{page
+\backslash
+nobreakspace{}#1}}
+\end_layout
+
+\end_inset
+
+
+\lang english
+
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+This command makes the page number a clickable hyperlink, see sec.
+\begin_inset space ~
+\end_inset
+
+
+\lang french
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Options-de-glossaire"
+
+\end_inset
+
+
+\lang english
+ for more info.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

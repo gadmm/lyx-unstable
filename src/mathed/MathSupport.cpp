@@ -541,7 +541,7 @@ public:
 	}
 };
 
-static init_deco_table dummy;
+static init_deco_table dummy_deco_table;
 
 
 deco_struct const * search_deco(docstring const & name)
@@ -761,8 +761,8 @@ void mathed_draw_deco(PainterInfo const & pi, double x, double y,
 		} else {
 			double xp[32];
 			double yp[32];
-			int const n = int(d[i++]);
-			for (int j = 0; j < n; ++j) {
+			int const n2 = int(d[i++]);
+			for (int j = 0; j < n2; ++j) {
 				double xx = d[i++];
 				double yy = d[i++];
 				if (code == 4 || code == 6)
@@ -774,7 +774,7 @@ void mathed_draw_deco(PainterInfo const & pi, double x, double y,
 				xp[j] = x + xx;
 				yp[j] = y + yy;
 			}
-			pi.pain.linesDouble(xp, yp, n, pi.base.font.color(), t);
+			pi.pain.linesDouble(xp, yp, n2, pi.base.font.color(), t);
 		}
 	}
 }

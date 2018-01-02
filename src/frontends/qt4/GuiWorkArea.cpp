@@ -682,6 +682,12 @@ void GuiWorkArea::stopScrolling(bool emit)
 }
 
 
+void GuiWorkArea::finishScrolling()
+{
+	d->finishScrolling();
+}
+
+
 void GuiWorkArea::scrollTo(int value)
 {
 	d->scrollTo(value);

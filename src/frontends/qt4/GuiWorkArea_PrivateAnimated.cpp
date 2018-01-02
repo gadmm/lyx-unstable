@@ -116,6 +116,13 @@ void GuiWorkArea::PrivateAnimated::setDocScrollValue(int value)
 }
 
 
+void GuiWorkArea::PrivateAnimated::finishScrolling()
+{
+	setDocScrollValue(scroll_animation_->endValue().toInt());
+	stopScrolling(true);
+}
+
+
 void GuiWorkArea::PrivateAnimated::stopScrolling(bool emit)
 {
 	scroll_animation_->stop();

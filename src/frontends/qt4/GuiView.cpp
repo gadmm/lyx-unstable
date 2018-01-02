@@ -1663,7 +1663,8 @@ void GuiView::setBuffer(Buffer * newBuffer, bool switch_to)
 		if (lyxrc.use_lastfilepos) {
 			LastFilePosSection::FilePos filepos =
 				theSession().lastFilePos().load(newBuffer->fileName());
-			wa->bufferView().moveToPosition(filepos.pit, filepos.pos, 0, 0);
+			wa->bufferView().moveToPosition(filepos.pit, filepos.pos, 0, 0,
+			                                false);
 		}
 	} else {
 		//Disconnect the old buffer...there's no new one.

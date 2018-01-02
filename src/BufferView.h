@@ -169,7 +169,8 @@ public:
 		pit_type bottom_pit, ///< Paragraph pit, used when par_id is zero or invalid.
 		pos_type bottom_pos, ///< Paragraph pit, used when par_id is zero or invalid.
 		int top_id, ///< Paragraph ID, \sa Paragraph
-		pos_type top_pos ///< Position in the \c Paragraph
+		pos_type top_pos, ///< Position in the \c Paragraph
+		bool smooth = true ///< whether to animate scrolling
 		);
 	/// return the current change at the cursor.
 	Change const getCurrentChange() const;
@@ -184,9 +185,8 @@ public:
 
 	/// set cursor to the given inset. Return true if found.
 	bool setCursorFromInset(Inset const *);
-	/// Recenters the BufferView such that the passed cursor
-	/// is in the center.
-	void recenter();
+	/// Recenters the BufferView such that the cursor is in the center.
+	void recenter(bool smooth = true);
 	/// Ensure that the BufferView cursor is visible.
 	/// This method will automatically scroll and update the BufferView
 	/// (metrics+drawing) if needed.

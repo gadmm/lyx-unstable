@@ -102,6 +102,8 @@ struct GuiWorkArea::Private
 	virtual void scrollTo(int value);
 	// Stop any current scrolling animation
 	virtual void stopScrolling(bool /* emit */ = true) {}
+	// Finish any current scrolling animation, i.e. go to the end instantly
+	virtual void finishScrolling() {}
 	/// Perform clean-up tasks after scrolling
 	void scrollFinish();
 	/// Set the range and value of the scrollbar and connect to its valueChanged

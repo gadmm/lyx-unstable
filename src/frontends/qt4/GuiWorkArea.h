@@ -87,13 +87,15 @@ public:
 
 	/// Stop scrolling animation
 	void stopScrolling(bool emit) override;
+	/// Finish scrolling animation
+	void finishScrolling() override;
 
 public Q_SLOTS:
 	/// Scroll the BufferView.
 	/**
-	  * This is a slot for the valueChanged() signal of the vertical scrollbar.
-	  * \p value value of the scrollbar.
-	*/
+	 * This is a slot for the valueChanged() signal of the vertical scrollbar.
+	 * \p value value of the scrollbar.
+	 */
 	void scrollTo(int value) override;
 	///
 	void stopBlinkingCaret();

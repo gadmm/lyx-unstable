@@ -750,8 +750,11 @@ void BufferView::saveBookmark(unsigned int idx)
 }
 
 
-bool BufferView::moveToPosition(pit_type bottom_pit, pos_type bottom_pos,
-	int top_id, pos_type top_pos)
+bool BufferView::moveToPosition(pit_type const bottom_pit,
+                                pos_type const bottom_pos,
+                                int const top_id,
+                                pos_type const top_pos,
+                                bool const smooth)
 {
 	bool success = false;
 	DocIterator dit;
@@ -803,6 +806,8 @@ bool BufferView::moveToPosition(pit_type bottom_pit, pos_type bottom_pos,
 		// Do not forget to reset the anchor (see #9912)
 		d->cursor_.resetAnchor();
 		processUpdateFlags(Update::FitCursor);
+		if (!smooth)
+			d->wa_.finishScrolling();
 	}
 
 	return success;
@@ -829,9 +834,11 @@ int BufferView::workWidth() const
 }
 
 
-void BufferView::recenter()
+void BufferView::recenter(bool const smooth)
 {
 	scrollToCursor(d->cursor_, true);
+	if (!smooth)
+		d->wa_.finishScrolling();
 }
 
 
@@ -847,9 +854,11 @@ void BufferView::showCursor(DocIterator const & dit, bool recenter)
 }
 
 
-void BufferView::scrollToCursor()
+void BufferView::scrollToCursor(bool const smooth)
 {
 	showCursor();
+	if (!smooth)
+		d->wa_.finishScrolling();
 }
 
 
@@ -2633,8 +2642,8 @@ void BufferView::updateParagraphMetrics(Update::flags & update_flags, bool clear
 	// Clear out or update the position cache in case of full screen redraw, and
 	// clear out or update paragraph metrics to avoid having invalid metrics in
 	// the cache from paragraphs not relayouted below.
-	// The logic is similar whether clear or not. We keep them together so that
-	// the two versions do not diverge.
+	// The logic is similar whether to clear or not. We keep them together so
+	// that the two versions do not diverge.
 	if (!clear) {
 		// the scroll offset is deduced by comparing the current anchor position
 		// with the target value.

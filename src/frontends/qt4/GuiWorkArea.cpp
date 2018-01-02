@@ -580,7 +580,7 @@ void GuiWorkArea::Private::resizeBufferView()
 	bool const caret_in_view = buffer_view_->cursorInView(point, h);
 	buffer_view_->resize(p->viewport()->width(), p->viewport()->height());
 	if (caret_in_view)
-		buffer_view_->scrollToCursor();
+		buffer_view_->scrollToCursor(false);
 	updateCaretGeometry();
 
 	// Update scrollbars which might have changed due different
@@ -679,6 +679,12 @@ void GuiWorkArea::Private::updateScrollbar()
 void GuiWorkArea::stopScrolling(bool emit)
 {
 	d->stopScrolling(emit);
+}
+
+
+void GuiWorkArea::finishScrolling()
+{
+	d->finishScrolling();
 }
 
 

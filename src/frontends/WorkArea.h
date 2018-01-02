@@ -48,6 +48,8 @@ public:
 
 	/// Stop scrolling animation (if any)
 	virtual void stopScrolling(bool emit) = 0;
+	/// Finish scrolling animation (if any)
+	virtual void finishScrolling() = 0;
 
 	/// scroll by a certain value (current position is 0 so the destination is
 	/// the offset)

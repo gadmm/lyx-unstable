@@ -42,6 +42,8 @@ public:
 	int docScrollValue() const;
 	//
 	void stopScrolling(bool emit) override;
+	//
+	void finishScrolling() override;
 
 Q_SIGNALS:
 	//

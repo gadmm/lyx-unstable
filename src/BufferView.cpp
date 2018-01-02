@@ -854,9 +854,11 @@ void BufferView::showCursor(DocIterator const & dit, bool recenter)
 }
 
 
-void BufferView::scrollToCursor()
+void BufferView::scrollToCursor(bool const smooth)
 {
 	showCursor();
+	if (!smooth)
+		d->wa_.finishScrolling();
 }
 
 

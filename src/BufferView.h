@@ -198,7 +198,7 @@ public:
 	void showCursor(DocIterator const & dit, bool recenter);
 	/// Scroll to the cursor.
 	/// This is synonymous to showCursor()
-	void scrollToCursor();
+	void scrollToCursor(bool smooth = true);
 	/// Scroll to the cursor.
 	/// This is synonymous to showCursor(dit, recenter)
 	void scrollToCursor(DocIterator const & dit, bool recenter);

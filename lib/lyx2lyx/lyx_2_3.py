@@ -1862,13 +1862,20 @@ def convert_dashligatures(document):
             if (i < j) or line.startswith("\\labelwidthstring"):
                 continue
             words = line.split()
-            if len(words) > 1 and words[0] == "\\begin_inset" and \
-            words[1] in ["CommandInset", "ERT", "External", "Formula",
-                         "FormulaMacro", "Graphics", "IPA", "listings"]:
+            if (len(words) > 1 and words[0] == "\\begin_inset"
+                and (words[1] in ["CommandInset", "ERT", "External", "Formula",
+                                 "FormulaMacro", "Graphics", "IPA", "listings"]
+                     or ' '.join(words[1:]) == "Flex Code")):
                 j = find_end_of_inset(document.body, i)
                 if j == -1:
                     document.warning("Malformed LyX document: "
                         "Can't find end of %s inset at line %d" % (words[1],i))
+                continue
+            if line == "\\begin_layout LyX-Code":
+                j = find_end_of_layout(document.body, i)
+                if j == -1:
+                    document.warning("Malformed LyX document: "
+                       "Can't find end of %s layout at line %d" % (words[1],i))
                 continue
             # literal dash followed by a word or no-break space:
             if re.search(u"[\u2013\u2014]([\w\u00A0]|$)", line,
@@ -1903,10 +1910,6 @@ def revert_dashligatures(document):
         return
     use_dash_ligatures = get_bool_value(document.header, "\\use_dash_ligatures", i)
     del document.header[i]
-    use_non_tex_fonts = False
-    i = find_token(document.header, "\\use_non_tex_fonts", 0)
-    if i != -1:
-        use_non_tex_fonts = get_bool_value(document.header, "\\use_non_tex_fonts", i)
     if not use_dash_ligatures or document.backend != "latex":
         return
 
@@ -1918,15 +1921,24 @@ def revert_dashligatures(document):
             new_body.append(line)
             continue
         words = line.split()
-        if len(words) > 1 and words[0] == "\\begin_inset" and \
-           words[1] in ["CommandInset", "ERT", "External", "Formula",
-                        "FormulaMacro", "Graphics", "IPA", "listings"]:
+        if (len(words) > 1 and words[0] == "\\begin_inset"
+            and (words[1] in ["CommandInset", "ERT", "External", "Formula",
+                              "FormulaMacro", "Graphics", "IPA", "listings"]
+                 or ' '.join(words[1:]) == "Flex Code")):
             j = find_end_of_inset(document.body, i)
             if j == -1:
                 document.warning("Malformed LyX document: Can't find end of "
                                  + words[1] + " inset at line " + str(i))
             new_body.append(line)
             continue
+        if line == "\\begin_layout LyX-Code":
+            j = find_end_of_layout(document.body, i)
+            if j == -1:
+                document.warning("Malformed LyX document: "
+                    "Can't find end of %s layout at line %d" % (words[1],i))
+            new_body.append(line)
+            continue
+        # TODO: skip replacement in typewriter fonts
         line = line.replace(u'\u2013', '\\twohyphens\n')
         line = line.replace(u'\u2014', '\\threehyphens\n')
         lines = line.split('\n')
@@ -2134,7 +2146,7 @@ def revert_allowbreak(document):
     " \SpecialChar allowbreak -> Zero widths Space-inset. "
     body = "\n".join(document.body)
     body = body.replace("\\SpecialChar allowbreak\n",
-                        "\\begin_inset space \hspace{}\n"
+                        "\n\\begin_inset space \hspace{}\n"
                         "\\length 0dd\n"
                         "\\end_inset\n\n")
     document.body = body.split("\n")

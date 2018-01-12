@@ -30,6 +30,7 @@ namespace lyx {
 
 namespace frontend { class Painter; }
 class BufferView;
+class Length;
 class MacroContext;
 
 
@@ -70,6 +71,14 @@ public:
 	int mu(double len) const;
 	/// length of len em in pixels
 	int em(double len) const;
+	/** return the on-screen size of this length
+	 *
+	 *  This version of the function uses the current inset width as
+	 *  width and the EM value of the current font.
+	 */
+	int inPixels(Length const & len) const;
+	double inPixelsDouble(Length const & len) const;
+
 private:
 	double solid_line_thickness_ = 1;
 };

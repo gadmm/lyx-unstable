@@ -210,7 +210,9 @@ public:
 	virtual bool showInsetDialog(BufferView *) const;
 
 	/// draw two angular markers
-	virtual void drawMarkers(PainterInfo & pi, int x, int y) const;
+	void drawMarkers(PainterInfo & pi, int x, int y) const;
+	/// draw four angular markers
+	void drawMarkers2(PainterInfo & pi, int x, int y) const;
 	/// add space for markers
 	void metricsMarkers(Dimension & dim, int framesize = 1) const;
 	/// add space for markers

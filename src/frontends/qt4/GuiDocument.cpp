@@ -1079,7 +1079,7 @@ GuiDocument::GuiDocument(GuiView & lv)
 	Encodings::const_iterator it = encodings.begin();
 	Encodings::const_iterator const end = encodings.end();
 	for (auto const & encvar : encodings) {
-		if (!encvar.unsafe())
+		if (!encvar.unsafe() && !encvar.guiName().empty())
 			encodinglist.append(qt_(encvar.guiName()));
 	}
 	encodinglist.sort();
@@ -2307,7 +2307,7 @@ void GuiDocument::updatePagestyle(string const & items, string const & sel)
 
 void GuiDocument::browseLayout()
 {
-	QString const label1 = qt_("Layouts|#o#O");
+	QString const label1 = qt_("Lay&outs");
 	QString const dir1 = toqstr(lyxrc.document_path);
 	QStringList const filter(qt_("LyX Layout (*.layout)"));
 	QString file = browseRelToParent(QString(), bufferFilePath(),
@@ -2376,7 +2376,7 @@ void GuiDocument::browseMaster()
 	QString const docpath = toqstr(support::onlyPath(buffer().absFileName()));
 	QStringList const filter(qt_("LyX Files (*.lyx)"));
 	QString file = browseRelToSub(old, docpath, title, filter, false,
-		qt_("Documents|#o#O"), toqstr(lyxrc.document_path));
+		qt_("D&ocuments"), toqstr(lyxrc.document_path));
 
 	if (!file.isEmpty())
 		latexModule->childDocLE->setText(file);

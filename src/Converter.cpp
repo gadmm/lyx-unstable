@@ -416,9 +416,19 @@ bool Converters::convert(Buffer const * buffer,
 			LYXERR(Debug::FILES, "No converter defined! "
 				   "I use convertDefault.py:\n\t" << command);
 			Systemcall one;
-			one.startscript(Systemcall::Wait, command,
-			                buffer ? buffer->filePath() : string(),
-			                buffer ? buffer->layoutPos() : string());
+			Systemcall::Starttype starttype =
+				(buffer && buffer->isClone()) ?
+					Systemcall::WaitLoop : Systemcall::Wait;
+			int const exitval = one.startscript(starttype, command,
+					buffer ? buffer->filePath() : string(),
+					buffer ? buffer->layoutPos() : string());
+			if (exitval == Systemcall::KILLED) {
+				frontend::Alert::warning(
+					_("Converter killed"),
+					bformat(_("The running converter\n %1$s\nwas killed by the user."), 
+						from_utf8(command)));
+				return false;
+			}
 			if (to_file.isReadableFile()) {
 				if (conversionflags & try_cache)
 					ConverterCache::get().add(orig_from,
@@ -564,6 +574,8 @@ bool Converters::convert(Buffer const * buffer,
 			    && !contains(command, "-shell-escape"))
 				command += " -shell-escape ";
 			LYXERR(Debug::FILES, "Running " << command);
+			// FIXME KILLED
+			// Check changed return value here.
 			if (!runLaTeX(*buffer, command, runparams, errorList))
 				return false;
 		} else {
@@ -592,6 +604,8 @@ bool Converters::convert(Buffer const * buffer,
 					LYXERR(Debug::FILES, "Running "
 						<< command
 						<< " to update aux file");
+					// FIXME KILLED
+					// Check changed return value here.
 					if (!runLaTeX(*buffer, command,
 						      runparams, errorList))
 						return false;
@@ -640,12 +654,23 @@ bool Converters::convert(Buffer const * buffer,
 				// We're not waiting for the result, so we can't do anything
 				// else here.
 			} else {
-				res = one.startscript(Systemcall::Wait,
+				Systemcall::Starttype starttype =
+						(buffer && buffer->isClone()) ?
+							Systemcall::WaitLoop : Systemcall::Wait;
+				res = one.startscript(starttype,
 						to_filesystem8bit(from_utf8(command)),
 						buffer ? buffer->filePath()
 						       : string(),
 						buffer ? buffer->layoutPos()
 						       : string());
+				if (res == Systemcall::KILLED) {
+					frontend::Alert::warning(
+						_("Converter killed"),
+						bformat(_("The running converter\n %1$s\nwas killed by the user."), 
+							from_utf8(command)));
+					return false;
+				}
+				
 				if (!real_outfile.empty()) {
 					Mover const & mover = getMover(conv.to());
 					if (!mover.rename(outfile, real_outfile))
@@ -663,17 +688,32 @@ bool Converters::convert(Buffer const * buffer,
 					string const command2 = conv.parselog() +
 						" < " + quoteName(infile2 + ".out") +
 						" > " + quoteName(logfile);
-					one.startscript(Systemcall::Wait,
+					res = one.startscript(starttype,
 						to_filesystem8bit(from_utf8(command2)),
 						buffer->filePath(),
 						buffer->layoutPos());
+					if (res == Systemcall::KILLED) {
+						frontend::Alert::warning(
+							_("Converter killed"),
+							bformat(_("The running converter\n %1$s\nwas killed by the user."), 
+								from_utf8(command)));
+						return false;
+					}
 					if (!scanLog(*buffer, command, makeAbsPath(logfile, path), errorList))
 						return false;
 				}
 			}
 
 			if (res) {
-				if (conv.to() == "program") {
+				if (res == Systemcall::KILLED) {
+					Alert::information(_("Process Killed"),
+						bformat(_("The conversion process was killed while running:\n%1$s"),
+							wrapParas(from_utf8(command))));
+				} else if (res == Systemcall::TIMEOUT) {
+					Alert::information(_("Process Timed Out"),
+						bformat(_("The conversion process:\n%1$s\ntimed out before completing."),
+							wrapParas(from_utf8(command))));
+				} else if (conv.to() == "program") {
 					Alert::error(_("Build errors"),
 						_("There were errors during the build process."));
 				} else {
@@ -786,6 +826,8 @@ bool Converters::scanLog(Buffer const & buffer, string const & /*command*/,
 }
 
 
+// FIXME KILL
+// Probably need to return an INT here
 bool Converters::runLaTeX(Buffer const & buffer, string const & command,
 			  OutputParams const & runparams, ErrorList & errorList)
 {
@@ -796,7 +838,7 @@ bool Converters::runLaTeX(Buffer const & buffer, string const & command,
 	string const name = buffer.latexName();
 	LaTeX latex(command, runparams, FileName(makeAbsPath(name)),
 	            buffer.filePath(), buffer.layoutPos(),
-	            buffer.lastPreviewError());
+	            buffer.isClone(), buffer.lastPreviewError());
 	TeXErrors terr;
 	// The connection closes itself at the end of the scope when latex is
 	// destroyed. One cannot close (and destroy) buffer while the converter is
@@ -805,6 +847,12 @@ bool Converters::runLaTeX(Buffer const & buffer, string const & command,
 			buffer.message(msg);
 		});
 	int const result = latex.run(terr);
+
+	if (result == Systemcall::KILLED) {
+		Alert::error(_("Export canceled"),
+			_("The export process was terminated by the user."));
+		return result;
+	}
 
 	if (result & LaTeX::ERRORS)
 		buffer.bufferErrors(terr, errorList);

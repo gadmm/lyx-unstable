@@ -34,9 +34,23 @@ class Systemcall {
 public:
 	/// whether to wait for completion
 	enum Starttype {
-		Wait, //< wait for completion before returning from startscript()
-		DontWait //< don't wait for completion
+		Wait,     //< wait for completion before returning from startscript()
+		WaitLoop, //< wait, but check occasionally for cancellation
+		DontWait  //< don't wait for completion
 	};
+
+	// enum values chosen hopefully not to conflict with ordinary return values
+	enum ReturnValue {
+		OK = 0,
+		NOSTART = 1001,
+		ERROR = 2001,
+		TIMEOUT = 4001,
+		KILLED = 9001
+	};
+
+
+	// Kill the process which is running at time being
+	static void killscript();
 
 	/** Start child process.
 	 *  The string "what" contains a commandline with arguments separated

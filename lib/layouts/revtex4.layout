@@ -11,13 +11,16 @@
 #          Amir Karger (RevTeX 4 beta) 9/1999, 7/2000
 # Heavily modifed and enhanced by serveral developers.
 
-Format 65
+Format 66
 
 Columns                   1
 Sides                     1
 PageStyle                 Headers
+
 Provides natbib-internal  1
 Provides url              1
+Provides tablefootnote    1
+Provides footnote-alternative 1
 
 SecNumDepth               4
 TocDepth                  3
@@ -274,6 +277,12 @@ Style Keywords
 	Latexname             keywords
 	LabelSep              M
 	LabelString           "Keywords:"
+End
+
+
+# RevTeX uses normal footnotes in tables
+InsetLayout Foot:InFloatTable
+	CopyStyle             Foot
 End
 
 

@@ -112,7 +112,7 @@ QString browseFile(QString const & filename,
 		lastPath = fallback_dir;
 
 	FileDialog dlg(title);
-	dlg.setButton2(label1, dir1);
+	dlg.setButton1(label1, dir1);
 	dlg.setButton2(label2, dir2);
 
 	FileDialog::Result result;
@@ -138,11 +138,11 @@ QString browseLibFile(QString const & dir,
 	QStringList const & filters)
 {
 	// FIXME UNICODE
-	QString const label1 = qt_("System files|#S#s");
+	QString const label1 = qt_("&System files");
 	QString const dir1 =
 		toqstr(addName(package().system_support().absFileName(), fromqstr(dir)));
 
-	QString const label2 = qt_("User files|#U#u");
+	QString const label2 = qt_("&User files");
 	QString const dir2 =
 		toqstr(addName(package().user_support().absFileName(), fromqstr(dir)));
 

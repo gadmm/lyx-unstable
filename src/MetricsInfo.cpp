@@ -26,6 +26,8 @@
 #include "support/lassert.h"
 #include "support/RefChanger.h"
 
+#include <cmath>
+
 using namespace std;
 
 
@@ -93,7 +95,7 @@ int MetricsBase::inPixels(Length const & len) const
 }
 
 
-int MetricsBase::inPixelsDouble(Length const & len) const
+double MetricsBase::inPixelsDouble(Length const & len) const
 {
 	FontInfo fi = font;
 	if (len.unit() == Length::MU)
@@ -114,7 +116,7 @@ int MetricsBase::mu(double len) const
 
 int MetricsBase::em(double len) const
 {
-	return Length(len, Length::EM).inPixels(*this);
+	return inPixels(Length(len, Length::EM));
 }
 
 

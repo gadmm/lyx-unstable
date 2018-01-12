@@ -163,6 +163,7 @@ public:
 	      support::FileName const & file,
 	      std::string const & path = empty_string(),
 	      std::string const & lpath = empty_string(),
+	      bool allow_cancellation = false,
 	      AuxFilesFlags const & to_remove = {});
 
 	/// runs LaTeX several times
@@ -188,12 +189,12 @@ private:
 	///
 	void deplog(DepTable & head);
 
-	///
-	bool runMakeIndex(std::string const &, OutputParams const &,
+	/// returns exit code
+	int runMakeIndex(std::string const &, OutputParams const &,
 			  std::string const & = std::string());
 
-	///
-	bool runMakeIndexNomencl(support::FileName const &,
+	/// returns exit code
+	int runMakeIndexNomencl(support::FileName const &, 
 				 std::string const &, std::string const &);
 
 	///
@@ -215,7 +216,7 @@ private:
 
 	///
 	bool runBibTeX(std::vector<AuxInfo> const &,
-		       OutputParams const &);
+		       OutputParams const &, int & exit_code);
 
 	///
 	void removeAuxiliaryFiles(AuxFilesFlags const & to_remove) const;
@@ -243,9 +244,10 @@ private:
 
 	/// Do we use biber?
 	bool biber;
-
 	///
 	std::vector <std::string> children;
+	///
+	bool allow_cancel;
 };
 
 

@@ -64,4 +64,5 @@ namespace lyx {
 		static frontend::FontMetrics dummy;
 		return dummy;
 	}
+
 } // namespace lyx

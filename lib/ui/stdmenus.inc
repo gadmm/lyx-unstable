@@ -134,7 +134,6 @@ Menuset
 # obvious what the context is for the others)
 		OptItem "Increase List Depth|I" "depth-increment"
 		OptItem "Decrease List Depth|D" "depth-decrement"
-		EnvironmentSeparators
 		OptItem "Dissolve Inset" "inset-dissolve"
 		OptItem "TeX Code Settings...|C" "inset-settings ert"
 # 'a' shortcut to match Insert entry, shouldn't clash with Table Settings
@@ -393,10 +392,14 @@ Menuset
 		Item "Hyperlink...|k" "href-insert"
 		Item "Footnote|F" "footnote-insert"
 		Item "Marginal Note|M" "marginalnote-insert"
-		Arguments
-		Item "TeX Code" "ert-insert"
 		Item "Program Listing[[Menu]]" "listing-insert"
 		Item "Date" "date-insert"
+		Separator
+		EnvironmentSeparators
+		Separator
+		Arguments
+		Separator
+		Item "TeX Code" "ert-insert"
 		Item "Preview|w" "preview-insert"
 	End
 
@@ -541,6 +544,7 @@ Menuset
 		UpdateFormats
 		OptItem "View Master Document|M" "master-buffer-view"
 		OptItem "Update Master Document|a" "master-buffer-update"
+		OptItem "Cancel Background Process|P" "export-cancel"
 		Separator
 		Item "Compressed|o" "buffer-toggle-compression"
 		Item "Disable Editing|E" "buffer-toggle-read-only"

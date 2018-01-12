@@ -1870,14 +1870,9 @@ void BufferView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 			Alert::warning(_("Branch already exists"), drtmp.message());
 			break;
 		}
-		BranchList & branch_list = buffer_.params().branchlist();
-		vector<docstring> const branches =
-			getVectorFromString(branch_name, branch_list.separator());
-		for (vector<docstring>::const_iterator it = branches.begin();
-		     it != branches.end(); ++it) {
-			branch_name = *it;
-			lyx::dispatch(FuncRequest(LFUN_BRANCH_INSERT, branch_name));
-		}
+		docstring const sep = buffer_.params().branchlist().separator();
+		for (docstring const & branch : getVectorFromString(branch_name, sep))
+			lyx::dispatch(FuncRequest(LFUN_BRANCH_INSERT, branch));
 		break;
 	}
 
@@ -2371,18 +2366,11 @@ bool BufferView::setCursorFromInset(Inset const * inset)
 
 void BufferView::gotoLabel(docstring const & label)
 {
-	ListOfBuffers bufs = buffer().allRelatives();
-	ListOfBuffers::iterator it = bufs.begin();
-	for (; it != bufs.end(); ++it) {
-		Buffer const * buf = *it;
-
+	for (Buffer const * buf : buffer().allRelatives()) {
 		// find label
-		shared_ptr<Toc> toc = buf->tocBackend().toc("label");
-		Toc::const_iterator toc_it = toc->begin();
-		Toc::const_iterator end = toc->end();
-		for (; toc_it != end; ++toc_it) {
-			if (label == toc_it->str()) {
-				lyx::dispatch(toc_it->action());
+		for (TocItem const & item : *buf->tocBackend().toc("label")) {
+			if (label == item.str()) {
+				lyx::dispatch(item.action());
 				return;
 			}
 		}
@@ -2993,13 +2981,19 @@ namespace {
 
 bool sliceInRow(CursorSlice const & cs, Text const *, Row const & row)
 {
+	/* The normal case is the last line. The previous line takes care
+	 * of empty rows (e.g. empty paragraphs). Cursor boundary issues
+	 * are taken care of when setting caret_slice_ in
+	 * BufferView::draw.
+	 */
 	return !cs.empty()
 		/// FIXME: cs.inset_ may be dangling (regression at e7fdce0b). We
 		///disable the test for now. Let us cross fingers and hope that the
 		///resulting heuristic is good enough.
 		//&& cs.text() == text
 		&& cs.pit() == row.pit()
-		&& row.pos() <= cs.pos() && cs.pos() < row.endpos();
+	    && ((row.pos() == row.endpos() && row.pos() == cs.pos())
+	       || (row.pos() <= cs.pos() && cs.pos() < row.endpos()));
 }
 
 }
@@ -3184,8 +3178,9 @@ void BufferView::draw(frontend::Painter & pain, bool paint_caret)
 	// Remember what has just been done for the next draw() step
 	if (paint_caret) {
 		d->caret_slice_ = d->cursor_.top();
-		if (d->cursor_.boundary()
-		    || d->cursor_.top().pos() == d->cursor_.top().lastpos())
+		if (d->caret_slice_.pos() > 0
+		    && (d->cursor_.boundary()
+		        || d->caret_slice_.pos() == d->caret_slice_.lastpos()))
 			--d->caret_slice_.pos();
 	} else
 		d->caret_slice_ = CursorSlice();

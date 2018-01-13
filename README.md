@@ -80,6 +80,7 @@ For a complete list of changes try
 * Fix automatically loaded packages with acmart.
 * Properly enforce scrolling boundaries.
 * Properly reset references and counters when updating citations.
+* Fix visual ambiguity between nested pars and continues environments. (#10978)
 
 ## Minor enhancements
 

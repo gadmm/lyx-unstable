@@ -10617,6 +10617,59 @@ Argument item:1
 
 \end_deeper
 \begin_layout Description
+
+\lang english
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+AutoNests
+\end_layout
+
+\end_inset
+
+ Includes a comma-separated list of layouts that should be nested in and
+ after the current layout.
+ Only makes sense for nestable layouts (such as environments).
+ Must be ended by 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+EndAutoNests
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+ See also 
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+IsAutoNestedBy
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Description
 \begin_inset Flex Code
 status collapsed
 
@@ -11276,6 +11329,59 @@ TitleLatexName
 \end_inset
 
 も参照）．
+\end_layout
+
+\begin_layout Description
+
+\lang english
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+IsAutoNestedBy
+\end_layout
+
+\end_inset
+
+ Includes a comma-separated list of layouts after which this one should
+ be nested.
+ Only makes sense with regard to nestable layouts (such as environments).
+ Must be ended by 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+EndIsAutoNestedBy
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+ See also 
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+AutoNests
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Description
@@ -24828,11 +24934,11 @@ commandframe コマンド差込枠の縁色
 \end_layout
 
 \begin_layout Description
-commentbg コメントの背景色
+comment コメント色
 \end_layout
 
 \begin_layout Description
-commentlabel コメント色
+commentbg コメントの背景色
 \end_layout
 
 \begin_layout Description
@@ -24976,11 +25082,11 @@ nonunique_inlinecompletion 行内補完の一意でない部分の色
 \end_layout
 
 \begin_layout Description
-notebg 註釈の背景色
+note 註釈のラベル色
 \end_layout
 
 \begin_layout Description
-notelabel 註釈のラベル色
+notebg 註釈の背景色
 \end_layout
 
 \begin_layout Description

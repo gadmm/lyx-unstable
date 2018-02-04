@@ -366,7 +366,23 @@ enum OutlineOp {
 };
 
 
-static void outline(OutlineOp mode, Cursor & cur)
+static void insertSeparator(Cursor & cur, depth_type const depth)
+{
+	Buffer & buf = *cur.buffer();
+	lyx::dispatch(FuncRequest(LFUN_PARAGRAPH_BREAK));
+	DocumentClass const & tc = buf.params().documentClass();
+	lyx::dispatch(FuncRequest(LFUN_LAYOUT, from_ascii("\"") + tc.plainLayout().name()
+				  + from_ascii("\" ignoreautonests")));
+	// FIXME: Bibitem mess!
+	if (cur.prevInset() && cur.prevInset()->lyxCode() == BIBITEM_CODE)
+		lyx::dispatch(FuncRequest(LFUN_CHAR_DELETE_BACKWARD));
+	lyx::dispatch(FuncRequest(LFUN_SEPARATOR_INSERT, "plain"));
+	while (cur.paragraph().params().depth() > depth)
+		lyx::dispatch(FuncRequest(LFUN_DEPTH_DECREMENT));
+}
+
+
+static void outline(OutlineOp mode, Cursor & cur, Text * text)
 {
 	Buffer & buf = *cur.buffer();
 	pit_type & pit = cur.pit();
@@ -377,6 +393,7 @@ static void outline(OutlineOp mode, Cursor & cur)
 	// The final paragraph of area to be copied:
 	ParagraphList::iterator finish = start;
 	ParagraphList::iterator const end = pars.end();
+	depth_type const current_depth = cur.paragraph().params().depth();
 
 	int const thistoclevel = buf.text().getTocLevel(distance(bgn, start));
 	int toclevel;
@@ -411,10 +428,47 @@ static void outline(OutlineOp mode, Cursor & cur)
 			// Not found; do nothing
 			if (toclevel == Layout::NOT_IN_TOC || toclevel > thistoclevel)
 				return;
-			pit_type const newpit = distance(bgn, dest);
+			pit_type newpit = distance(bgn, dest);
 			pit_type const len = distance(start, finish);
 			pit_type const deletepit = pit + len;
 			buf.undo().recordUndo(cur, newpit, deletepit - 1);
+			// If we move an environment upwards, make sure it is
+			// separated from its new neighbour below:
+			// If an environment of the same layout follows, and the moved
+			// paragraph sequence does not end with a separator, insert one.
+			ParagraphList::iterator lastmoved = finish;
+			--lastmoved;
+			if (start->layout().isEnvironment()
+			    && dest->layout() == start->layout()
+			    && !lastmoved->isEnvSeparator(lastmoved->beginOfBody())) {
+				cur.pit() = distance(bgn, lastmoved);
+				cur.pos() = cur.lastpos();
+				insertSeparator(cur, current_depth);
+				cur.pit() = pit;
+			}
+			// Likewise, if we moved an environment upwards, make sure it
+			// is separated from its new neighbour above.
+			// The paragraph before the target of movement
+			if (dest != bgn) {
+				ParagraphList::iterator before = dest;
+				--before;
+				// Get the parent paragraph (outer in nested context)
+				pit_type const parent =
+					before->params().depth() > current_depth
+						? text->depthHook(distance(bgn, before), current_depth)
+						: distance(bgn, before);
+				// If a environment with same layout preceeds the moved one in the new
+				// position, and there is no separator yet, insert one.
+				if (start->layout().isEnvironment()
+				    && pars[parent].layout() == start->layout()
+				    && !before->isEnvSeparator(before->beginOfBody())) {
+					cur.pit() = distance(bgn, before);
+					cur.pos() = cur.lastpos();
+					insertSeparator(cur, current_depth);
+					cur.pit() = pit;
+				}
+			}
+			newpit = distance(bgn, dest);
 			pars.splice(dest, start, finish);
 			cur.pit() = newpit;
 			break;
@@ -432,9 +486,45 @@ static void outline(OutlineOp mode, Cursor & cur)
 				      && toclevel <= thistoclevel)
 					break;
 			}
-			// One such was found:
+			// One such was found, so go on...
+			// If we move an environment downwards, make sure it is
+			// separated from its new neighbour above.
 			pit_type newpit = distance(bgn, dest);
 			buf.undo().recordUndo(cur, pit, newpit - 1);
+			// The paragraph before the target of movement
+			ParagraphList::iterator before = dest;
+			--before;
+			// Get the parent paragraph (outer in nested context)
+			pit_type const parent =
+				before->params().depth() > current_depth
+					? text->depthHook(distance(bgn, before), current_depth)
+					: distance(bgn, before);
+			// If a environment with same layout preceeds the moved one in the new
+			// position, and there is no separator yet, insert one.
+			if (start->layout().isEnvironment()
+			    && pars[parent].layout() == start->layout()
+			    && !before->isEnvSeparator(before->beginOfBody())) {
+				cur.pit() = distance(bgn, before);
+				cur.pos() = cur.lastpos();
+				insertSeparator(cur, current_depth);
+				cur.pit() = pit;
+			}
+			// Likewise, make sure moved environments are separated
+			// from their new neighbour below:
+			// If an environment of the same layout follows, and the moved
+			// paragraph sequence does not end with a separator, insert one.
+			ParagraphList::iterator lastmoved = finish;
+			--lastmoved;
+			if (dest != end
+			    && start->layout().isEnvironment()
+			    && dest->layout() == start->layout()
+			    && !lastmoved->isEnvSeparator(lastmoved->beginOfBody())) {
+				cur.pit() = distance(bgn, lastmoved);
+				cur.pos() = cur.lastpos();
+				insertSeparator(cur, current_depth);
+				cur.pit() = pit;
+			}
+			newpit = distance(bgn, dest);
 			pit_type const len = distance(start, finish);
 			pars.splice(dest, start, finish);
 			cur.pit() = newpit - len;
@@ -1141,9 +1231,9 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 			Font const f(inherit_font, cur.current_font.language());
 			pars_[cur.pit() - 1].resetFonts(f);
 		} else {
-			if (par.isEnvSeparator(cur.pos()))
+			if (par.isEnvSeparator(cur.pos()) && cmd.getArg(1) != "ignoresep")
 				cur.posForward();
-			breakParagraph(cur, cmd.argument() == "inverse");
+			breakParagraph(cur, cmd.getArg(0) == "inverse");
 		}
 		cur.resetAnchor();
 		// If we have a list and autoinsert item insets,
@@ -1197,6 +1287,7 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 			if (cur.selection())
 				cutSelection(cur, true, false);
 			cur.insert(inset);
+			cur.forceBufferUpdate();
 			if (inset->editable() && inset->asInsetText())
 				inset->edit(cur, true);
 			else
@@ -1421,7 +1512,8 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 		break;
 
 	case LFUN_LAYOUT: {
-		docstring layout = cmd.argument();
+		bool const ignoreautonests = cmd.getArg(1) == "ignoreautonests";
+		docstring layout = ignoreautonests ? from_utf8(cmd.getArg(0)) : cmd.argument();
 		LYXERR(Debug::INFO, "LFUN_LAYOUT: (arg) " << to_utf8(layout));
 
 		Paragraph const & para = cur.paragraph();
@@ -1475,8 +1567,18 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 			}
 		}
 
-		if (change_layout)
+		if (change_layout) {
 			setLayout(cur, layout);
+			if (cur.pit() > 0 && !ignoreautonests) {
+				set<docstring> const & autonests =
+						pars_[cur.pit() - 1].layout().autonests();
+				set<docstring> const & autonested =
+						pars_[cur.pit()].layout().isAutonestedBy();
+				if (autonests.find(layout) != autonests.end()
+						|| autonested.find(old_layout) != autonested.end())
+					lyx::dispatch(FuncRequest(LFUN_DEPTH_INCREMENT));
+			}
+		}
 
 		Layout::LaTeXArgMap args = tclass[layout].args();
 		Layout::LaTeXArgMap::const_iterator lait = args.begin();
@@ -1494,36 +1596,78 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 
 	case LFUN_ENVIRONMENT_SPLIT: {
 		bool const outer = cmd.argument() == "outer";
+		bool const previous = cmd.argument() == "previous";
+		bool const before = cmd.argument() == "before";
+		bool const normal = cmd.argument().empty();
 		Paragraph const & para = cur.paragraph();
-		docstring layout = para.layout().name();
+		docstring layout;
+		if (para.layout().isEnvironment())
+			layout = para.layout().name();
 		depth_type split_depth = cur.paragraph().params().depth();
-		if (outer) {
-			// check if we have an environment in our nesting hierarchy
+		depth_type nextpar_depth = 0;
+		if (outer || previous) {
+			// check if we have an environment in our scope
 			pit_type pit = cur.pit();
 			Paragraph cpar = pars_[pit];
 			while (true) {
-				if (pit == 0 || cpar.params().depth() == 0)
+				if (pit == 0)
 					break;
 				--pit;
 				cpar = pars_[pit];
+				if (layout.empty() && previous
+				    && cpar.layout().isEnvironment()
+				    && cpar.params().depth() <= split_depth)
+					layout = cpar.layout().name();
 				if (cpar.params().depth() < split_depth
 				    && cpar.layout().isEnvironment()) {
-						layout = cpar.layout().name();
+						if (!previous)
+							layout = cpar.layout().name();
 						split_depth = cpar.params().depth();
 				}
+				if (cpar.params().depth() == 0)
+					break;
 			}
 		}
-		if (cur.pos() > 0)
+		if ((outer || normal) && cur.pit() < cur.lastpit()) {
+			// save nesting of following paragraph
+			Paragraph cpar = pars_[cur.pit() + 1];
+			nextpar_depth = cpar.params().depth();
+		}
+		if (before)
+			cur.top().setPitPos(cur.pit(), 0);
+		if (before || cur.pos() > 0)
 			lyx::dispatch(FuncRequest(LFUN_PARAGRAPH_BREAK));
+		else if (previous && cur.nextInset() && cur.nextInset()->lyxCode() == SEPARATOR_CODE)
+			lyx::dispatch(FuncRequest(LFUN_PARAGRAPH_BREAK, "inverse ignoresep"));
 		if (outer) {
 			while (cur.paragraph().params().depth() > split_depth)
 				lyx::dispatch(FuncRequest(LFUN_DEPTH_DECREMENT));
 		}
 		DocumentClass const & tc = bv->buffer().params().documentClass();
-		lyx::dispatch(FuncRequest(LFUN_LAYOUT, tc.plainLayout().name()));
+		lyx::dispatch(FuncRequest(LFUN_LAYOUT, from_ascii("\"") + tc.plainLayout().name()
+					  + from_ascii("\" ignoreautonests")));
+		// FIXME: Bibitem mess!
+		if (cur.prevInset() && cur.prevInset()->lyxCode() == BIBITEM_CODE)
+			lyx::dispatch(FuncRequest(LFUN_CHAR_DELETE_BACKWARD));
 		lyx::dispatch(FuncRequest(LFUN_SEPARATOR_INSERT, "plain"));
-		lyx::dispatch(FuncRequest(LFUN_PARAGRAPH_BREAK, "inverse"));
+		if (before) {
+			cur.backwardPos();
+			lyx::dispatch(FuncRequest(LFUN_PARAGRAPH_BREAK, "inverse ignoresep"));
+			while (cur.paragraph().params().depth() < split_depth)
+				lyx::dispatch(FuncRequest(LFUN_DEPTH_INCREMENT));
+		}
+		else
+			lyx::dispatch(FuncRequest(LFUN_PARAGRAPH_BREAK, "inverse"));
 		lyx::dispatch(FuncRequest(LFUN_LAYOUT, layout));
+		if ((outer || normal) && nextpar_depth > 0) {
+			// restore nesting of following paragraph
+			DocIterator scur = cur;
+			depth_type const max_depth = cur.paragraph().params().depth() + 1;
+			cur.forwardPar();
+			while (cur.paragraph().params().depth() < min(nextpar_depth, max_depth))
+				lyx::dispatch(FuncRequest(LFUN_DEPTH_INCREMENT));
+			cur.setCursor(scur);
+		}
 
 		break;
 	}
@@ -1886,6 +2030,7 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 			break;
 		cur.recordUndo();
 		insertInset(cur, inset);
+		cur.forceBufferUpdate();
 		cur.posForward();
 		break;
 	}
@@ -2500,27 +2645,28 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 		break;
 
 	case LFUN_OUTLINE_UP:
-		outline(OutlineUp, cur);
+		outline(OutlineUp, cur, this);
 		setCursor(cur, cur.pit(), 0);
 		cur.forceBufferUpdate();
 		needsUpdate = true;
 		break;
 
-	case LFUN_OUTLINE_DOWN:
-		outline(OutlineDown, cur);
+	case LFUN_OUTLINE_DOWN: {
+		outline(OutlineDown, cur, this);
 		setCursor(cur, cur.pit(), 0);
 		cur.forceBufferUpdate();
 		needsUpdate = true;
 		break;
+	}
 
 	case LFUN_OUTLINE_IN:
-		outline(OutlineIn, cur);
+		outline(OutlineIn, cur, this);
 		cur.forceBufferUpdate();
 		needsUpdate = true;
 		break;
 
 	case LFUN_OUTLINE_OUT:
-		outline(OutlineOut, cur);
+		outline(OutlineOut, cur, this);
 		cur.forceBufferUpdate();
 		needsUpdate = true;
 		break;
@@ -3157,7 +3303,8 @@ bool Text::getStatus(Cursor & cur, FuncRequest const & cmd,
 
 	case LFUN_LAYOUT: {
 		DocumentClass const & tclass = cur.buffer()->params().documentClass();
-		docstring layout = cmd.argument();
+		bool const ignoreautonests = cmd.getArg(1) == "ignoreautonests";
+		docstring layout = ignoreautonests ? from_utf8(cmd.getArg(0)) : cmd.argument();
 		if (layout.empty())
 			layout = tclass.defaultLayoutName();
 		enable = !owner_->forcePlainLayout() && tclass.hasLayout(layout);
@@ -3184,8 +3331,22 @@ bool Text::getStatus(Cursor & cur, FuncRequest const & cmd,
 			enable = res;
 			break;
 		}
+		else if (cmd.argument() == "previous") {
+			// look if we have an environment in the previous par
+			pit_type pit = cur.pit();
+			Paragraph cpar = pars_[pit];
+			if (pit > 0) {
+				--pit;
+				cpar = pars_[pit];
+				enable = cpar.layout().isEnvironment();
+				break;
+			}
+			enable = false;
+			break;
+		}
 		else if (cur.paragraph().layout().isEnvironment()) {
-			enable = true;
+			enable = cmd.argument() == "before"
+				|| cur.pos() > 0 || !isFirstInSequence(cur.pit());
 			break;
 		}
 		enable = false;

@@ -58,6 +58,8 @@
 \@ifpackageloaded{babel}{%
 \frenchbsetup{GlobalLayoutFrench=false}
 }{}
+
+\AtBeginDocument{\addto\captionsfrench{\def\nomname{Glossaire}}}
 \end_preamble
 \options refpage,intoc,bibliography=totoc,index=totoc,BCOR7.5mm,captions=tableheading,numbers=noenddot
 \use_default_options false
@@ -9012,8 +9014,9 @@ avoir un langage et un style de texte;
 
 \begin_layout Itemize
 contenir des hyperliens, des boites, les notes de pied de page ou en marge,
- des notes, des maths, des entrées d'index ou de glossaire, des étiquettes,
- des tableaux, des graphiques, des listings, des flottants et du code \SpecialChar TeX
+ des notes, des maths, des entrées d'index ou de liste de symboles, des
+ étiquettes, des tableaux, des graphiques, des listings, des flottants et
+ du code \SpecialChar TeX
 .
 \end_layout
 
@@ -9027,12 +9030,14 @@ Verbatim
 \end_layout
 
 \begin_layout Verbatim
+
 This is Verbatim.
 \end_layout
 
 \begin_layout Verbatim
 \noindent
 \align block
+
 The following 2 lines are empty:
 \end_layout
 
@@ -9045,6 +9050,7 @@ The following 2 lines are empty:
 \end_layout
 
 \begin_layout Verbatim
+
 Almost everything is allowed in Verbatim:"%&$§#~'`
 \backslash
 }][{|
@@ -9077,6 +9083,7 @@ Verbatim
 \end_layout
 
 \begin_layout Verbatim*
+
 This is Verbatim*.
 \end_layout
 
@@ -11408,21 +11415,27 @@ Pour diviser une liste existante en deux listes, mettez le curseur à la
  fin du dernier élément de le première liste désirée et utilisez le menu
  
 \family sans
-Édition\SpecialChar menuseparator
-Début de nouvel environnement
+Insertion\SpecialChar menuseparator
+
+\lang english
+Separated <Name> Above
 \family default
+\lang french
+ ou 
+\family sans
+Insertion\SpecialChar menuseparator
+
+\lang english
+Separated <Name> Below
+\family default
+\lang french
 .
  Ceci insère un séparateur ordinaire (une ligne rouge dans la fenêtre \SpecialChar LyX
-),
- la nouvelle liste est après.
- Le menu 
-\family sans
-Édition\SpecialChar menuseparator
-Début de nouvel environnement parent
-\family default
- n'apparaît que si l'élément est encapsulé.
- Il ne fait pas que mettre une séparation dans la liste, il en en crée une
- nouvelle en dehors de l'encapsulation.
+)
+ et la nouvelle liste avant ou après.
+ 
+\lang english
+Inside nested environments, it is also possible to split the outer environment.
 \end_layout
 
 \begin_layout Standard
@@ -14411,18 +14424,44 @@ Paquetages \SpecialChar LaTeX
 \end_inset
 
 .
- L'option
+\end_layout
+
+\begin_layout Standard
+
 \lang english
- 
+The option  
 \family sans
-\lang french
-Exporter les tirets de longueur en et &em comme des ligatures
+Disallow line breaks after dashes
 \family default
- utiliser les ligatures -- et --- à la place 
+ outputs en- and em-dashes as literal characters
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+
 \lang english
-of a sigle character
-\lang french
- pour les tirets de longueur en et em.
+Or \SpecialChar LaTeX
+ macro, if the literal character is not supported by the \SpecialChar LaTeX
+ input encoding.
+\end_layout
+
+\end_inset
+
+ instead of ligatures (--, ---) (see section
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Dashes-and-line-breaks"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Standard
@@ -17621,32 +17660,10 @@ Alt
 \family default
  
 \family sans
-/ AltGr 
+ 
 \family default
 key).
- Alternatively, dashes can be inserted with 
-\family sans
-\lang french
-Insertion\SpecialChar menuseparator
-Caractère
-\begin_inset space ~
-\end_inset
-
-spécial\SpecialChar menuseparator
-Symboles
-\family default
-\lang english
- or with the 
-\begin_inset Quotes eld
-\end_inset
-
-unicode-insert
-\begin_inset Quotes erd
-\end_inset
-
- \SpecialChar LyX
- function with the Unicode code point as argument (2013 for the em dash
- and 2014 for the en dash).
+ 
 \end_layout
 
 \end_inset
@@ -17780,16 +17797,13 @@ Special
 Character\SpecialChar menuseparator
 Symbols
 \family default
- or the 
-\begin_inset Quotes eld
-\end_inset
-
+ or using the 
+\family typewriter
 unicode-insert
-\begin_inset Quotes erd
-\end_inset
-
+\family default
  \SpecialChar LyX
- function.
+ function with the Unicode code point as argument (2013 for the em dash
+ and 2014 for the en dash).
 \end_layout
 
 \begin_layout Standard
@@ -17884,16 +17898,19 @@ name "subsec:Dashes-and-line-breaks"
 \begin_layout Standard
 
 \lang english
-Whether line breaks around dashes are allowed depends on the use case and
- locale:
+Whether line breaks before or after dashes are allowed depends on the use
+ case and locale, e.
+\begin_inset space \thinspace{}
+\end_inset
+
+g.:
 \end_layout
 
 \begin_layout Itemize
 
 \lang english
-In English, line breaks are generally allowed after the dash in ranges of
- values such as 1975–1982, but no line break should occur if only a single
- character follows the dash (as in A–Z).
+In English, line breaks are generally allowed after the dash, but no line
+ break should occur if only a single character follows the dash (as in A–Z).
 \end_layout
 
 \begin_layout Itemize
@@ -17913,66 +17930,43 @@ In French and Spanish, dashes around parenthetical statements are treated
 \begin_layout Standard
 
 \lang english
-In \SpecialChar LyX
-, line breaks after en-dashes and em-dashes are only allowed (without
- manual intervention), if the option 
-\family sans
-Document\SpecialChar menuseparator
-Settings\SpecialChar menuseparator
-Fonts\SpecialChar menuseparator
-Output en- and em-dashes as ligatures
-\family default
- is selected (this is the default in \SpecialChar LyX
- 2.3).
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-
-\lang english
-In this case, the dashes are output as 
+By default, dashes are output by \SpecialChar LyX
+ to \SpecialChar LaTeX
+ as 
 \begin_inset Quotes eld
 \end_inset
 
---
+ligature dashes
 \begin_inset Quotes erd
 \end_inset
 
- and 
-\begin_inset Quotes eld
-\end_inset
-
----
-\begin_inset Quotes erd
-\end_inset
-
-, respectively, when exporting to \SpecialChar LaTeX
-.
- The \SpecialChar TeX
- font ligature mechanism converts them to dash characters followed
- by an optional line break.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-
-\lang english
-Please note:
+ (-- and ---).
+ \SpecialChar LaTeX
+ allows line breaks after hyphens, en-dashes and em-dashes.
 \end_layout
 
 \begin_layout Enumerate
 
 \lang english
-This results in optional line breaks after 
+Line breaks before spaced en dashes
+\begin_inset space ~
+\end_inset
+
+– common in British English and generally recommended by 
 \emph on
-all
+The Elements of Typographic Style
 \emph default
- en- and em-dashes.
- Unwanted line breaks must be prevented by wrapping in a makebox
+
+\begin_inset space ~
+\end_inset
+
+– can be prevented using protected spaces.
+\end_layout
+
+\begin_layout Enumerate
+
+\lang english
+Unwanted line breaks after dashes can be prevented by wrapping in a makebox
 \lang french
 
 \begin_inset Foot
@@ -17994,7 +17988,7 @@ Objets insérés
 
 
 \lang english
-, using protected spaces or preceding with 
+ or preceding with 
 \series bold
 
 \backslash
@@ -18035,7 +18029,7 @@ status open
 \begin_layout Plain Layout
 
 \lang english
-368–9
+36–39
 \end_layout
 
 \end_inset
@@ -18044,34 +18038,36 @@ status open
 \end_layout
 
 \begin_layout Itemize
+Les incises 
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 1
+width ""
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
 
-\lang english
-With spaced en dashes
+\begin_layout Plain Layout
+–
 \begin_inset space ~
 \end_inset
 
-– common e.
-\begin_inset space \thinspace{}
-\end_inset
-
-g.
- in British English and generally recommended by 
-\emph on
-The Elements of Typographic Style
-\emph default
-
-\begin_inset space ~
-\end_inset
-
-– line breaks should not occur before the dash.
+même
 \end_layout
 
-\begin_layout Itemize
-Les incises –
-\begin_inset space ~
 \end_inset
 
-même si tout le monde ne les aime pas
+ si tout le monde ne les aime pas
 \begin_inset space ~
 \end_inset
 
@@ -18097,6 +18093,7 @@ nobreakdash
 —un inciso con rayas— se escribe así.
 \end_layout
 
+\end_deeper
 \begin_layout Standard
 
 \lang english
@@ -18112,80 +18109,52 @@ An incorrect line break is easily overlooked because
  log.
 \end_layout
 
-\end_deeper
-\begin_layout Enumerate
-
-\lang english
-The setting is ignored for documents using non-\SpecialChar TeX
- fonts.
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-
-\lang english
-Xe\SpecialChar TeX
- provides the 
-\series bold
-
-\backslash
-XeTeXdashbreakstate
-\series default
- setting.
- The default causes dashes to behave like ligature dashes.
- The usual behaviour of literal dashes can be achieved by inserting 
-\family typewriter
-\series bold
-
-\backslash
-XeTeXdashbreakstate=0
-\family default
-\series default
- into the \SpecialChar LaTeX
- preamble.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-
-\lang english
-Em dashes in 
-\family typewriter
-typewriter
-\family default
- fonts become 
-\family typewriter
-–-
-\family default
- or 
-\family typewriter
----
-\family default
- in the output.
-\end_layout
-
-\begin_layout Enumerate
-
-\lang english
-Hyphenation is suppressed in words adjacent to hyphens and ligature dashes.
-\end_layout
-
 \begin_layout Standard
 
 \lang english
-If the option 
+If you want to globally disable line breaks after dashes, you can select
+ the option 
 \family sans
 Document\SpecialChar menuseparator
 Settings\SpecialChar menuseparator
 Fonts\SpecialChar menuseparator
-Output en- and em-dashes as ligatures
+Disallow line breaks after dashes
 \family default
- has not been selected, you can  insert optional line breaks via the menu
- 
+:
+\end_layout
+
+\begin_layout Enumerate
+
+\lang english
+Line breaks are still allowed after spaced dashes.
+ They can be prevented using protected spaces (without need for a makebox
+ or \SpecialChar TeX
+ code).
+ Example:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Les incises –
+\begin_inset space ~
+\end_inset
+
+même si tout le monde ne les aime pas
+\begin_inset space ~
+\end_inset
+
+– sont très utiles.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+
+\lang english
+Line breaks after unspaced dashes can be allowed via the menu
+\begin_inset Newline newline
+\end_inset
+
+
 \family sans
 Insert\SpecialChar menuseparator
 Formatting\SpecialChar menuseparator
@@ -18194,29 +18163,68 @@ Optional line break
 :
 \end_layout
 
+\begin_deeper
 \begin_layout Itemize
 
 \lang english
 Em-dashes without spaces—\SpecialChar allowbreak
-as common in American English—\SpecialChar allowbreak
-should be broken
- after the dash.
+common in American English—\SpecialChar allowbreak
+should be followed by
+ a line break opportunity.
 \end_layout
 
 \begin_layout Standard
 
 \lang english
-As of \SpecialChar LyX
-
+This also allows hyphenation of the word following the dash (see section
 \begin_inset space ~
 \end_inset
 
-2.2, -- and --- are exported to LaTeX as -{}- and -{}-{}- to prevent ligation
- to dashes.
-\begin_inset Foot
-status collapsed
 
-\begin_layout Plain Layout
+\lang french
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Césure"
+
+\end_inset
+
+
+\lang english
+).
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+
+\lang english
+With this setting, \SpecialChar LaTeX
+ hyphenates words also if immediately followed by em
+ or en dashes (see section
+\begin_inset space ~
+\end_inset
+
+
+\lang french
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Césure"
+
+\end_inset
+
+
+\lang english
+).
+\end_layout
+
+\begin_layout Subsubsection
+
+\lang english
+Changes and backwards compatibility
+\end_layout
+
+\begin_layout Standard
 
 \lang english
 Up to \SpecialChar LyX
@@ -18224,90 +18232,134 @@ Up to \SpecialChar LyX
 \begin_inset space ~
 \end_inset
 
-2.1, -- and --- was output unchanged which led to different look in \SpecialChar LyX
-, text
- export, HTML export and the PDF export.
+2.1, consecutive hyphen characters (-- and ---) in the LyX source were merged
+ to en or em dashes by LaTeX.
+ These 
+\begin_inset Quotes eld
+\end_inset
+
+ligature dashes
+\begin_inset Quotes erd
+\end_inset
+
+ retain the line-break properties of hyphens while literal dash characters
+ are regarded by \SpecialChar LaTeX
+ as 
+\emph on
+non-breakable
+\emph default
+.
 \end_layout
 
-\end_inset
-
- Occurrences in older documents are converted to literal Unicode dashes.
- This led to different line breaks in some documents.
- \SpecialChar LyX
-
-\begin_inset space ~
-\end_inset
-
-2.3 provides the aforementioned option 
-\family sans
-Output en- and em-dashes as ligatures
-\family default
- in the menu 
-\family sans
-Document\SpecialChar menuseparator
-Settings\SpecialChar menuseparator
-Fonts.
-
-\family default
- It is on by default but unselected when opening documents edited with \SpecialChar LyX
-
-\begin_inset space ~
-\end_inset
-
-2.2.
-\begin_inset Newline newline
-\end_inset
-
-Note the following side-effects of the changes in \SpecialChar LyX
-'s dash handling:
-\end_layout
-
-\begin_layout Itemize
+\begin_layout Standard
 
 \lang english
-If you used literal em- and en dashes in pre-\SpecialChar LyX
+Since \SpecialChar LyX
 
 \begin_inset space ~
 \end_inset
 
-2.2 documents, you must manually unselect 
-\family sans
-Output en- and em-dashes as ligatures
+2.2, consecutive hyphens in the LyX source are exported to \SpecialChar LaTeX
+ in a way that
+ prevents ligation to dashes.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Ligature dashes
+\begin_inset Quotes erd
+\end_inset
+
+ in documents from earlier versions are converted to literal dash characters
+ (except in 
+\family typewriter
+typewriter
 \family default
- to ensure unchanged behavior.
+ font); typed in consecutive hyphens are merged to dash characters immediately
+ after the input (unless the current text font is 
+\family typewriter
+type
+\family default
+writer).
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+
+\lang english
+The behavior was changed since 
+\begin_inset Quotes eld
+\end_inset
+
+lyx --help
+\begin_inset Quotes erd
+\end_inset
+
+ became 
+\begin_inset Quotes eld
+\end_inset
+
+lyx –help
+\begin_inset Quotes erd
+\end_inset
+
+ in PDF, Postscript, and DVI output.
+ An unintended consequence of these changes was that all dashes were output
+ as non-breakable dashes.
+ This also resulted in changed line breaks in some older documents.
  
 \end_layout
 
-\begin_layout Itemize
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 
 \lang english
-If you used both, literal and ligature dashes in pre-\SpecialChar LyX
+\SpecialChar LyX
+
+\begin_inset space ~
+\end_inset
+
+2.3 outputs 
+\emph on
+breakable
+\emph default
+ dashes by default.
+ When opening documents edited with \SpecialChar LyX
+
+\begin_inset space ~
+\end_inset
+
+2.2 or earlier and containing literal dash characters not followed by whitespace,
+ the setting 
+\family sans
+Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+Fonts\SpecialChar menuseparator
+Disallow line breaks after dashes
+\family default
+ is active to prevent changes to the line breaks.
+\series bold
+Warning:
+\series default
+ If you used both literal and 
+\begin_inset Quotes eld
+\end_inset
+
+ligature
+\begin_inset Quotes erd
+\end_inset
+
+ dashes in pre-\SpecialChar LyX
 
 \begin_inset space ~
 \end_inset
 
 2.2 documents, you may need to enable or prevent individual line breaks as
- shown above to restore the correct line breaking behaviour.
-\end_layout
-
-\begin_layout Itemize
-
-\lang english
-Zero-width space (ZWSP) characters in older \SpecialChar LyX
- documents that follow literal
- em- and en-dashes are removed during the conversion to the format of \SpecialChar LyX
-
-\begin_inset space ~
-\end_inset
-
-2.3.
- If you used them as optional line breaks after dashes, convert them to
- space insets before opening your document with \SpecialChar LyX
-
-\begin_inset space ~
-\end_inset
-
-2.3 or the optional line breaks will be lost.
+ shown above to restore the correct line breaking behavior.
 \end_layout
 
 \begin_layout Subsection
@@ -18376,6 +18428,14 @@ Paramètres
 \end_inset
 
 .
+
+\lang english
+ \SpecialChar LaTeX
+ does not hyphenate text in the 
+\family sans
+typewriter
+\family default
+ font and words immediately preceded or followed by hyphens or dashes.
 \end_layout
 
 \begin_layout Standard
@@ -32859,20 +32919,16 @@ book
 \end_layout
 
 \begin_layout Itemize
-L'option 
+l'option 
 \family sans
 Littéral
 \family default
- 
-\lang english
-allows to input \SpecialChar TeX
- code in
-\lang french
- le nom d'index.
+ permet la saisie de code \SpecialChar TeX
+ dans le nom indexé.
 \end_layout
 
 \begin_layout Section
-Glossaire
+Liste des symboles
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:Glossaire"
@@ -32881,10 +32937,10 @@ name "sec:Glossaire"
 
 
 \begin_inset Index idx
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Glossaire
+Liste des symboles
 \end_layout
 
 \end_inset
@@ -32922,16 +32978,64 @@ status collapsed
 \end_inset
 
 
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+Glossaire|see
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Liste des symboles
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 On a parfois besoin de compiler une liste de tous les symboles utilisés
- dans un document avec une brève description pour chacun – on appelle cela
- un glossaire ou une nomenclature ou encore une liste des symboles.
+ dans un document avec une brève description pour chacun – on appelle également
+ cela un glossaire ou une nomenclature
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Dans un souci de cohérence, nous avons traduit le terme anglophone 
+\emph on
+nomenclature
+\emph default
+ par liste des symboles de manière unifiée dans l'interface et dans la documenta
+tion (NdT).
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-Pour pouvoir créer des glossaires, vous avez besoin du paquetage \SpecialChar LaTeX
+Pour pouvoir créer des listes de symboles, vous avez besoin du paquetage
+ \SpecialChar LaTeX
  
 \series bold
 nomencl
@@ -32962,19 +33066,11 @@ literal "true"
 \end_layout
 
 \begin_layout Standard
-Une entrée de glossaire est créée en plaçant le curseur juste après le symbole
- que l'on veut référencer en utilisant le menu 
+Une entrée dans la liste est créée en plaçant le curseur juste après le
+ symbole que l'on veut référencer en utilisant le menu 
 \family sans
 Insertion\SpecialChar menuseparator
-Entrée
-\begin_inset space ~
-\end_inset
-
-de
-\begin_inset space ~
-\end_inset
-
-glossaire
+Symbole
 \family default
  ou le bouton 
 \begin_inset Info
@@ -32995,13 +33091,12 @@ Nom
 \begin_inset Quotes crd
 \end_inset
 
- est insérée et une fenêtre de dialogue apparaît pour décrire l'entrée de
- glossaire.
+ est insérée et une fenêtre de dialogue apparaît pour décrire le symbole.
  
 \end_layout
 
 \begin_layout Standard
-Une entrée de glossaire consiste en deux éléments principaux.
+Une entrée consiste en deux éléments principaux.
  Le premier est le 
 \family sans
 Symbole
@@ -33011,32 +33106,7 @@ Symbole
 Description
 \family default
  que vous voulez lui attacher.
- L'option 
-\family sans
-Littéral
-\family default
  
-\lang english
-in the
-\lang french
- citation 
-\lang english
-dialog allows to input \SpecialChar TeX
- code to the fields
-\lang french
- 
-\family sans
-Description
-\family default
- et 
-\family sans
-Classé
-\begin_inset space ~
-\end_inset
-
-comme
-\family default
-.
 \end_layout
 
 \begin_layout Standard
@@ -33048,26 +33118,13 @@ status open
 \series bold
 Nota:
 \series default
- 
-\lang english
-To use
-\lang french
- code \SpecialChar TeX
- 
-\lang english
-for nomenclature entries
-\lang french
- l'option 
+ l'utilisation de code \SpecialChar TeX
+ dans les entrées de la liste des symboles requiert
+ l'utilisation de l'option 
 \family sans
 Littéral
 \family default
- 
-\lang english
-in the
-\lang french
- dialogue de glossaire
-\lang english
- has to be used.
+ dans la fenêtre de dialogue.
 \end_layout
 
 \end_inset
@@ -33076,12 +33133,12 @@ in the
 \end_layout
 
 \begin_layout Subsection
-Définition et mise en forme du glossaire
+Définition et mise en forme de la liste des symboles
 \begin_inset Index idx
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Glossaire ! Mise en forme
+Liste des symboles! Mise en forme
 \end_layout
 
 \end_inset
@@ -33091,7 +33148,7 @@ Glossaire ! Mise en forme
 
 \begin_layout Standard
 Quand votre symbole est utilisé dans des formules mathématiques, vous devez
- le mettrez dans le champ 
+ le mettre dans le champ 
 \family sans
 Symbole
 \family default
@@ -33184,7 +33241,7 @@ texte
  pour mettre en forme le texte de description, vous devez utiliser des commandes
  \SpecialChar LaTeX
 .
- Par exemple la description de l'entrée de glossaire du 
+ Par exemple la description de l'entrée du 
 \begin_inset Quotes cld
 \end_inset
 
@@ -33317,9 +33374,9 @@ Si les caractères |
 \begin_inset space \space{}
 \end_inset
 
-" apparaissent dans les entrées de la nomenclature avec code \SpecialChar TeX
-, ils doivent
- être protégés en ajoutant un caractère 
+" apparaissent dans les entrées de la liste des symboles avec code \SpecialChar TeX
+, ils
+ doivent être protégés en ajoutant un caractère 
 \begin_inset Quotes cld
 \end_inset
 
@@ -33331,7 +33388,7 @@ double apostrophe
 \begin_inset CommandInset nomenclature
 LatexCommand nomenclature
 symbol "\"@, \"|, \"!, \"\""
-description "Le signe de citation dans code TeX est produit en écrivant ' \"\"\"\" '."
+description "Le signe de citation en code TeX est produit en écrivant ' \"\"\"\" '."
 literal "true"
 
 \end_inset
@@ -33340,12 +33397,12 @@ literal "true"
 \end_layout
 
 \begin_layout Subsection
-Ordre de tri des entrées de glossaire
+Ordre de tri des entrées
 \begin_inset Index idx
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Glossaire ! Ordre des entrées
+Liste des symboles ! Ordre des entrées
 \end_layout
 
 \end_inset
@@ -33354,12 +33411,12 @@ Glossaire ! Ordre des entrées
 \end_layout
 
 \begin_layout Standard
-Les entrées de glossaire sont classées dans l'ordre alphabétique du code
- \SpecialChar LaTeX
+Les entrées de la liste des symboles sont classées dans l'ordre alphabétique
+ du code \SpecialChar LaTeX
  de la définition du symbole.
  Cela peut donner des résultats indésirables quand vous utilisez des symboles
  qui se trouvent dans des formules mathématiques.
- Supposons que nous avons des entrées de glossaire pour les symboles 
+ Supposons que nous avons des entrées pour les symboles 
 \emph on
 a
 \begin_inset CommandInset nomenclature
@@ -33453,7 +33510,7 @@ Classé
 
 comme
 \family default
- dans la boîte de dialogue de glossaire.
+ dans la fenêtre de dialogue.
  Les entrées seront alors triées en utilisant cette entrée et non pas la
  définition du symbole.
  Dans notre exemple, on peut entrer 
@@ -33493,12 +33550,12 @@ literal "true"
 \end_layout
 
 \begin_layout Subsection
-Options de glossaire
+Options de la liste des symboles
 \begin_inset Index idx
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Glossaire ! Options
+Liste des symboles ! Options
 \end_layout
 
 \end_inset
@@ -33518,7 +33575,7 @@ Le paquetage
 \series bold
 nomencl
 \series default
- offre plusieurs options pour modifier l'apparence du glossaire.
+ offre plusieurs options pour modifier l'apparence de la liste des symboles.
  Voici quelques-unes de ces options, pour plus d'options, voyez la documentation
 :
 \end_layout
@@ -33540,13 +33597,13 @@ eq
 \begin_inset Quotes erd
 \end_inset
 
- à chaque entrée de glossaire, avec 
+ à chaque entrée de la liste, avec 
 \family sans
 \emph on
 eq
 \family default
 \emph default
- le numéro de la dernière équation située juste avant l'entrée de glossaire;
+ le numéro de la dernière équation située juste avant l'entrée;
 \end_layout
 
 \begin_layout Description
@@ -33566,21 +33623,21 @@ page
 \begin_inset Quotes erd
 \end_inset
 
- à chaque entrée de glossaire, avec 
+ à chaque entrée de la liste, avec 
 \family sans
 \emph on
 page
 \family default
 \emph default
- est le numéro de la page sur laquelle apparaît l'entrée de glossaire;
+ est le numéro de la page sur laquelle apparaît l'entrée;
 \end_layout
 
 \begin_layout Description
-intoc insère le glossaire dans la table de matières.
+intoc insère la liste des symboles dans la table de matières.
 \end_layout
 
 \begin_layout Standard
-Pour utiliser une ou plusieurs de ces options, ajoutez-les, séparés par
+Pour utiliser une ou plusieurs de ces options, ajoutez-les, séparées par
  des virgules, à la liste d'options de la classe de document de la fenêtre
  de dialogue 
 \family sans
@@ -33613,12 +33670,12 @@ refpage, intoc
 
 \begin_layout Standard
 Vous pouvez aussi utiliser les deux premières options seulement pour certaines
- entrées de glossaires quand vous ajoutez une des commandes qui suivent
+ entrées particulières quand vous ajoutez une des commandes qui suivent
  dans le champ 
 \family sans
 Description
 \family default
- de la fenêtre de glossaire:
+ de la fenêtre de dialogue:
 \end_layout
 
 \begin_layout Description
@@ -33682,12 +33739,9 @@ page
 \begin_inset Quotes crd
 \end_inset
 
- sont automatiquement traduits pour cerianes langues de documents.
- Sinon, ajoutez vouz ces lignes 
-\lang english
-in front of the nomenclature list as
-\lang french
- code \SpecialChar TeX
+ sont automatiquement traduits pour certaines langues de documents.
+ Sinon, ajoutez ces lignes avant la liste des symboles en tant que code
+ \SpecialChar TeX
 :
 \end_layout
 
@@ -33753,25 +33807,16 @@ nobreakspace{}#1}
 \end_layout
 
 \begin_layout Standard
-
-\lang english
-If the numbers should be hyperlinks, assure that you use 
+Pour que les nombres soient des liens hypertexte, vérifiez que vous avez
+ activé le support pour 
 \family sans
-Hyperref
-\begin_inset space ~
-\end_inset
-
-Support
+hyperref
 \family default
- in the document settings under 
+ dans les paramètres du document, rubrique 
 \family sans
-PDF
-\begin_inset space ~
-\end_inset
-
-Properties
+Propriétés du PDF
 \family default
- and use instead:
+ et saisissez à la place:
 \end_layout
 
 \begin_layout Standard
@@ -33839,12 +33884,12 @@ nobreakspace{}#1}}
 \end_layout
 
 \begin_layout Subsection
-Impression du glossaire
+Impression de la liste des symboles
 \begin_inset Index idx
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Glossaire ! Impression
+Liste des symboles ! Impression
 \end_layout
 
 \end_inset
@@ -33853,7 +33898,7 @@ Glossaire ! Impression
 \end_layout
 
 \begin_layout Standard
-Pour imprimer le glossaire dans votre document, utilisez 
+Pour imprimer la liste dans votre document, utilisez 
 \family sans
 Insertion\SpecialChar menuseparator
 Listes
@@ -33865,7 +33910,7 @@ Listes
 \end_inset
 
 TdM\SpecialChar menuseparator
-Glossaire
+Liste des symboles
 \family default
 .
  Une boîte bleu clair marquée 
@@ -33874,13 +33919,13 @@ Glossaire
 
 
 \family sans
-Glossaire
+Liste des symboles
 \family default
 
 \begin_inset Quotes crd
 \end_inset
 
- est insérée pour montrer la place à laquelle le glossaire sera imprimé.
+ est insérée pour montrer la place à laquelle la liste sera imprimée.
  Via un clic droit dans la boîte, la taille des espacements pour les symboles
  peut être modifiée.
  Vous pouvez choisir parmi ces réglages:
@@ -33911,7 +33956,7 @@ plus
 \begin_inset space ~
 \end_inset
 
-longue la largeur du symbole le plus large de tout le glossaire est insérée;
+longue la largeur du symbole le plus large de toute la liste est insérée;
 \end_layout
 
 \begin_layout Description
@@ -33919,7 +33964,7 @@ Réglable espacement paramétrable.
 \end_layout
 
 \begin_layout Standard
-Dans la sortie imprimée le titre du glossaire devrait apparaître comme 
+Dans la sortie imprimée le titre de la liste devrait apparaître comme 
 \begin_inset Quotes cld
 \end_inset
 
@@ -33948,18 +33993,24 @@ Nomenclature
 \series bold
 
 \backslash
-renewcommand{
+AtBeginDocument{
 \backslash
-nomname}{Nomenclature}
+addto
+\backslash
+captionsfrench{
+\backslash
+def
+\backslash
+nomname{Glossaire}}}
 \end_layout
 
 \begin_layout Subsection
-Moteur d'indexation pour un glossaire
+Moteur d'indexation pour la liste de symboles
 \begin_inset Index idx
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Glossaire!Moteur
+Liste des symboles!Moteur
 \end_layout
 
 \end_inset
@@ -33980,7 +34031,7 @@ name "subsec:programme-glossaire"
 \family sans
 makeindex
 \family default
- pour créer le glossaire.
+ pour créer la liste.
  Ce dernier fait partie de toutes les distributions \SpecialChar LaTeX
 .
  La fenêtre de dialogue de préférences de \SpecialChar LyX
@@ -36171,10 +36222,10 @@ name "sec:Aperçu-de-morceaux"
 
 
 \begin_inset Index idx
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Aperçu au vol
+Aperçu sur le vif
 \end_layout
 
 \end_inset
@@ -40030,27 +40081,6 @@ reference "subsec:Profondeur-section"
 .
 \end_layout
 
-\begin_layout Subsection
-Début de nouvel environnement/Début de nouvel environnement parent
-\end_layout
-
-\begin_layout Standard
-Ces menus ne sont visibles que s'il est possible d'avoir deux environnements
- consécutifs de même type.
- Voir la section
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "subsec:Separate-Emboîtements"
-
-\end_inset
-
- pour une explication.
-\end_layout
-
 \begin_layout Section
 Le menu Affichage
 \begin_inset Index idx
@@ -41095,7 +41125,7 @@ reference "sec:Index"
 
 \end_inset
 
-, le glossaire section
+, la liste des symboles section
 \begin_inset space ~
 \end_inset
 
@@ -41406,11 +41436,11 @@ reference "sec:Index"
 \end_layout
 
 \begin_layout Subsection
-Entrée de glossaire
+Symbole
 \end_layout
 
 \begin_layout Standard
-Insère une entrée de glossaire, décrite section
+Insère une entrée de la liste des symboles, décrite section
 \begin_inset space ~
 \end_inset
 
@@ -41551,6 +41581,30 @@ reference "sec:Notes_en_Marge"
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+\lang english
+Separate <Name> (Above/Below)
+\end_layout
+
+\begin_layout Standard
+Ces menus ne sont visibles que s'il est possible d'avoir deux environnements
+ consécutifs de même type.
+ Voir la section
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Separate-Emboîtements"
+
+\end_inset
+
+ pour une explication.
 \end_layout
 
 \begin_layout Subsection
@@ -44033,15 +44087,7 @@ arg   "nomencl-insert"
 
 \family sans
 Insertion\SpecialChar menuseparator
-Entrée
-\begin_inset space ~
-\end_inset
-
-de
-\begin_inset space ~
-\end_inset
-
-glossaire
+Symbole
 \end_layout
 
 \end_inset
@@ -50018,7 +50064,7 @@ reference "subsec:Programme-d'indexation"
 \end_layout
 
 \begin_layout Description
-Commande
+Construction
 \begin_inset space ~
 \end_inset
 
@@ -50026,8 +50072,20 @@ de
 \begin_inset space ~
 \end_inset
 
-nomenclature Commande pour le programme qui génère le glossaire (nomenclature),
- voir la section
+la
+\begin_inset space ~
+\end_inset
+
+liste
+\begin_inset space ~
+\end_inset
+
+des
+\begin_inset space ~
+\end_inset
+
+symboles Commande pour le programme qui génère la liste des symboles, voir
+ la section
 \begin_inset space ~
 \end_inset
 

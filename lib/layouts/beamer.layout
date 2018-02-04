@@ -6,7 +6,7 @@
 #   Richard Heck <rgheck@lyx.org>, Martin Vermeer <martin.vermeer@hut.fi> and probably others.
 
 
-Format 65
+Format 66
 
 #
 # GLOBAL SETTINGS
@@ -216,6 +216,7 @@ Style Part
     LabelString    "Short Title|S"
     Tooltip        "The part as it appears in the table of contents/running headers"
     InsertCotext   1
+    IsTocCaption   1
   EndArgument
   NeedProtect      1
   NextNoIndent     1
@@ -270,6 +271,7 @@ Style Section
     LabelString    "Short Title|S"
     Tooltip        "The section as it appears in the table of contents/running headers"
     InsertCotext   1
+    IsTocCaption   1
   EndArgument
   Font
     Family         Roman
@@ -331,6 +333,7 @@ Style Subsection
     LabelString    "Short Title|S"
     Tooltip        "The subsection as it appears in the table of contents/running headers"
     InsertCotext   1
+    IsTocCaption   1
   EndArgument
   Font
     Family         Roman
@@ -392,6 +395,7 @@ Style Subsubsection
     LabelString    "Short Title|S"
     Tooltip        "The subsubsection as it appears in the table of contents/running headers"
     InsertCotext   1
+    IsTocCaption   1
   EndArgument
   Font
     Family         Roman
@@ -481,7 +485,14 @@ Style Frame
       Size         largest
     EndFont
     AutoInsert     1
+    IsTocCaption   1
   EndArgument
+  AutoNests 
+	Standard,Itemize,Enumerate,Description,FrameTitle,FrameSubtitle,Column,
+	Columns,ColumnsCenterAligned,ColumnsTopAligned,Pause,Overprint,OverlayArea,Only,Block,
+	ExampleBlock,AlertBlock,Bibliography,Quotation,Quote,Verse,Corollary,Definition,Definitions,
+	Example,Examples,Fact,Lemma,Proof,Theorem,LyX-Code
+  EndAutoNests
 End
 
 Style PlainFrame
@@ -550,6 +561,7 @@ Style AgainFrame
     Color           latex
     Size            Largest
   EndFont
+  TocLevel          4
 End
 
 Style FrameTitle
@@ -665,6 +677,11 @@ Style Columns
     Family         Roman
     Color          latex
   EndFont
+  AutoNests 
+	Standard,Itemize,Enumerate,Description,Pause,Overprint,OverlayArea,Only,Block,
+	ExampleBlock,AlertBlock,Bibliography,Quotation,Quote,Verse,Corollary,Definition,Definitions,
+	Example,Examples,Fact,Lemma,Proof,Theorem,LyX-Code
+  EndAutoNests
 End
 
 Style ColumnsCenterAligned
@@ -885,6 +902,10 @@ Style Block
     EndFont
     AutoInsert     1
   EndArgument
+  AutoNests 
+	Standard,Itemize,Enumerate,Description,Pause,Overprint,OverlayArea,Only,Quotation,
+	Quote,Verse,Corollary,Definition,Definitions,Example,Examples,Fact,Lemma,Proof,Theorem,LyX-Code
+  EndAutoNests
 End
 
 Style ExampleBlock
@@ -1228,6 +1249,9 @@ Style Corollary
     LabelString    "Additional Theorem Text"
     Tooltip        "Additional text appended to the theorem header"
   EndArgument
+  AutoNests 
+	Standard,Itemize,Enumerate,Description,Pause,Overprint,OverlayArea,Only,LyX-Code
+  EndAutoNests
 End
 
 Style Definition

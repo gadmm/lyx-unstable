@@ -1,6 +1,5 @@
 #include <config.h>
 
-#include "Format.h"
 #include "support/Messages.h"
 
 using namespace std;
@@ -11,11 +10,6 @@ namespace lyx {
 
 	// Dummy LyXRC support
 	class LyXRC { string icon_set; } lyxrc;
-
-	// Dummy LyXAlignment support
-	enum LyXAlignment {
-		DUMMY
-	};
 
 	// Keep the linker happy on Windows
 	void lyx_exit(int) {}
@@ -34,31 +28,4 @@ namespace lyx {
 		return lyx_messages;
 	}
 
-	// Dummy formats support (needed by Lexer)
-	Formats & theFormats()
-	{
-		static Formats dummy_formats;
-		return dummy_formats;
-	}
-
-	string alignmentToCSS(LyXAlignment)
-	{
-		return string();
-	}
-
-	//
-	// Dummy FontMetrics (needed by Length)
-	//
-	namespace frontend {
-	class FontMetrics {
-		int em() const { return 0; };
-	};
-	} // namespace frontend
-
-	class FontInfo;
-
-	frontend::FontMetrics const & theFontMetrics(FontInfo const &) {
-		static frontend::FontMetrics dummy;
-		return dummy;
-	}
 } // namespace lyx

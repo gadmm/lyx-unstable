@@ -683,7 +683,8 @@ void TeXOnePar(Buffer const & buf,
 	       otexstream & os,
 	       OutputParams const & runparams_in,
 	       string const & everypar,
-	       int start_pos, int end_pos)
+	       int start_pos, int end_pos,
+	       bool const force)
 {
 	BufferParams const & bparams = runparams_in.is_child
 		? buf.masterParams() : buf.params();
@@ -694,7 +695,7 @@ void TeXOnePar(Buffer const & buf,
 	Layout const & style = text.inset().forcePlainLayout() ?
 		bparams.documentClass().plainLayout() : par.layout();
 
-	if (style.inpreamble)
+	if (style.inpreamble && !force)
 		return;
 
 	LYXERR(Debug::LATEX, "TeXOnePar for paragraph " << pit << " ptr " << &par << " '"
@@ -728,18 +729,22 @@ void TeXOnePar(Buffer const & buf,
 				os << '\n';
 		}
 
-		par.latex(bparams, outerfont, os, runparams, start_pos, end_pos);
+		par.latex(bparams, outerfont, os, runparams, start_pos, end_pos, force);
 		return;
 	}
 
 	Paragraph const * nextpar = runparams.isLastPar
 		? 0 : &paragraphs.at(pit + 1);
 
+	bool const intitle_command = style.intitle && style.latextype == LATEX_COMMAND;
+
 	if (style.pass_thru) {
 		Font const outerfont = text.outerFont(pit);
 		parStartCommand(par, os, runparams, style);
+		if (intitle_command)
+			os << '{';
 
-		par.latex(bparams, outerfont, os, runparams, start_pos, end_pos);
+		par.latex(bparams, outerfont, os, runparams, start_pos, end_pos, force);
 
 		// I did not create a parEndCommand for this minuscule
 		// task because in the other user of parStartCommand
@@ -811,6 +816,13 @@ void TeXOnePar(Buffer const & buf,
 	string lang_command_termination = "%\n";
 	bool const using_begin_end = use_polyglossia ||
 					!lang_end_command.empty();
+
+	// For InTitle commands, we need to switch the language inside the command
+	// (see #10849); thus open the command here.
+	if (intitle_command) {
+		parStartCommand(par, os, runparams, style);
+		os << '{';
+	}
 
 	// In some insets (such as Arguments), we cannot use \selectlanguage
 	bool const localswitch = text.inset().forceLocalFontSwitch()
@@ -975,24 +987,39 @@ void TeXOnePar(Buffer const & buf,
 			os << "\n\\appendix\n";
 		}
 
-		if (!par.params().spacing().isDefault()
-			&& (pit == 0 || !priorpar->hasSameLayout(par)))
-		{
-			os << from_ascii(par.params().spacing().writeEnvirBegin(useSetSpace))
-			    << '\n';
-		}
+		// InTitle commands must use switches (not environments)
+		// inside the commands (see #9332)
+		if (style.intitle) {
+			if (!par.params().spacing().isDefault())
+			{
+				if (runparams.moving_arg)
+					os << "\\protect";
+				os << from_ascii(par.params().spacing().writeCmd(useSetSpace));
+			}
+		} else {
+			if (!par.params().spacing().isDefault()
+				&& (pit == 0 || !priorpar->hasSameLayout(par)))
+			{
+				os << from_ascii(par.params().spacing().writeEnvirBegin(useSetSpace))
+				    << '\n';
+			}
 
-		if (style.isCommand()) {
-			os << '\n';
+			if (style.isCommand()) {
+				os << '\n';
+			}
 		}
 	}
 
-	parStartCommand(par, os, runparams, style);
+	// For InTitle commands, we already started the command before
+	// the language switch
+	if (!intitle_command)
+		parStartCommand(par, os, runparams, style);
+
 	Font const outerfont = text.outerFont(pit);
 
 	// FIXME UNICODE
 	os << from_utf8(everypar);
-	par.latex(bparams, outerfont, os, runparams, start_pos, end_pos);
+	par.latex(bparams, outerfont, os, runparams, start_pos, end_pos, force);
 
 	Font const font = par.empty()
 		 ? par.getLayoutFont(bparams, outerfont)
@@ -1000,13 +1027,16 @@ void TeXOnePar(Buffer const & buf,
 
 	bool const is_command = style.isCommand();
 
-	if (is_command) {
-		os << '}';
-		if (!style.postcommandargs().empty())
-			latexArgInsets(par, os, runparams, style.postcommandargs(), "post:");
-		if (runparams.encoding != prev_encoding) {
-			runparams.encoding = prev_encoding;
-			os << setEncoding(prev_encoding->iconvName());
+	// InTitle commands need to be closed after the language has been closed.
+	if (!intitle_command) {
+		if (is_command) {
+			os << '}';
+			if (!style.postcommandargs().empty())
+				latexArgInsets(par, os, runparams, style.postcommandargs(), "post:");
+			if (runparams.encoding != prev_encoding) {
+				runparams.encoding = prev_encoding;
+				os << setEncoding(prev_encoding->iconvName());
+			}
 		}
 	}
 
@@ -1039,12 +1069,13 @@ void TeXOnePar(Buffer const & buf,
 	// possible
 	// fall through
 	default:
-		// we don't need it for the last paragraph!!!
-		if (nextpar)
+		// we don't need it for the last paragraph and in InTitle commands!!!
+		if (nextpar && !intitle_command)
 			pending_newline = true;
 	}
 
-	if (par.allowParagraphCustomization()) {
+	// InTitle commands use switches (not environments) for space settings
+	if (par.allowParagraphCustomization() && !style.intitle) {
 		if (!par.params().spacing().isDefault()
 			&& (runparams.isLastPar || !nextpar->hasSameLayout(par))) {
 			if (pending_newline)
@@ -1060,9 +1091,10 @@ void TeXOnePar(Buffer const & buf,
 		}
 	}
 
-	// Closing the language is needed for the last paragraph; it is also
-	// needed if we're within an \L or \R that we may have opened above (not
-	// necessarily in this paragraph) and are about to close.
+	// Closing the language is needed for the last paragraph in a given language
+	// as well as for any InTitleCommand (since these set the language locally);
+	// it is also needed if we're within an \L or \R that we may have opened above
+	// (not necessarily in this paragraph) and are about to close.
 	bool closing_rtl_ltr_environment = !using_begin_end
 		// not for ArabTeX
 		&& (par_language->lang() != "arabic_arabtex"
@@ -1074,7 +1106,8 @@ void TeXOnePar(Buffer const & buf,
 		&&((nextpar && par_lang != nextpar_lang)
 		   || (runparams.isLastPar && par_lang != outer_lang));
 
-	if (closing_rtl_ltr_environment
+	if ((intitle_command && using_begin_end)
+	    || closing_rtl_ltr_environment
 	    || ((runparams.isLastPar || close_lang_switch)
 	        && (par_lang != outer_lang || (using_begin_end
 						&& style.isEnvironment()
@@ -1144,6 +1177,19 @@ void TeXOnePar(Buffer const & buf,
 	}
 	if (closing_rtl_ltr_environment)
 		os << "}";
+
+	// InTitle commands need to be closed after the language has been closed.
+	if (intitle_command) {
+		if (is_command) {
+			os << '}';
+			if (!style.postcommandargs().empty())
+				latexArgInsets(par, os, runparams, style.postcommandargs(), "post:");
+			if (runparams.encoding != prev_encoding) {
+				runparams.encoding = prev_encoding;
+				os << setEncoding(prev_encoding->iconvName());
+			}
+		}
+	}
 
 	bool const last_was_separator =
 		par.size() > 0 && par.isEnvSeparator(par.size() - 1);
@@ -1488,7 +1534,7 @@ pair<bool, int> switchEncoding(odocstream & os, BufferParams const & bparams,
 	// * with useNonTeXFonts: "utf8plain",
 	// * with XeTeX and TeX fonts: "ascii" (inputenc fails),
 	// * with LuaTeX and TeX fonts: only one encoding accepted by luainputenc.
-	if (runparams.isFullUnicode())
+	if (runparams.isFullUnicode() || newEnc.name() == "inherit")
 		return make_pair(false, 0);
 
 	Encoding const & oldEnc = *runparams.encoding;

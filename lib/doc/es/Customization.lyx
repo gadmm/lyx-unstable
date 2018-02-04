@@ -11817,6 +11817,59 @@ Argument item:1
 
 \end_deeper
 \begin_layout Description
+
+\lang english
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+AutoNests
+\end_layout
+
+\end_inset
+
+ Includes a comma-separated list of layouts that should be nested in and
+ after the current layout.
+ Only makes sense for nestable layouts (such as environments).
+ Must be ended by 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+EndAutoNests
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+ See also 
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+IsAutoNestedBy
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Description
 \begin_inset Flex Code
 status collapsed
 
@@ -12600,6 +12653,59 @@ TitleLatexName
 \end_inset
 
 ).
+\end_layout
+
+\begin_layout Description
+
+\lang english
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+IsAutoNestedBy
+\end_layout
+
+\end_inset
+
+ Includes a comma-separated list of layouts after which this one should
+ be nested.
+ Only makes sense with regard to nestable layouts (such as environments).
+ Must be ended by 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+EndIsAutoNestedBy
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+ See also 
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+AutoNests
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Description
@@ -28131,11 +28237,11 @@ commandframe Color marco recuadros de comando
 \end_layout
 
 \begin_layout Description
-commentbg Color fondo de comentarios
+comment Color etiqueta de comentarios
 \end_layout
 
 \begin_layout Description
-commentlabel Color etiqueta de comentarios
+commentbg Color fondo de comentarios
 \end_layout
 
 \begin_layout Description
@@ -28279,11 +28385,11 @@ nonunique_inlinecompletion Color autofinalización en línea parte no única
 \end_layout
 
 \begin_layout Description
-notebg Color fondo de notas
+note Color etiqueta de notas
 \end_layout
 
 \begin_layout Description
-notelabel Color etiqueta de notas
+notebg Color fondo de notas
 \end_layout
 
 \begin_layout Description

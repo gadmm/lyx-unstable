@@ -140,12 +140,11 @@ enumitem
 \papercolumns 1
 \papersides 2
 \paperpagestyle default
-\tracking_changes true
+\tracking_changes false
 \output_changes false
 \html_math_output 0
 \html_css_as_file 0
 \html_be_strict true
-\author -712698321 "Jürgen Spitzmüller"
 \end_header
 
 \begin_body
@@ -10528,20 +10527,19 @@ enumeration
 To split an existing list into two lists, set the cursor at the end of a
  list item and use the menu 
 \family sans
-Edit\SpecialChar menuseparator
-Start New Environment
+Insert\SpecialChar menuseparator
+Separated <Name> Above
+\family default
+ or
+\family sans
+ Insert\SpecialChar menuseparator
+Separated <Name> Below
 \family default
 .
  This inserts a plain separator (red line in \SpecialChar LyX
-) and behind it the new list.
- The menu 
-\family sans
-Edit\SpecialChar menuseparator
-Start New Parent Environment
-\family default
- only appears if the item is nested.
- It does not only separate the list but also creates a new one outside the
- nesting.
+) and before or behind it the
+ new list.
+ Inside nested environments, it is also possible to split the outer environment.
 \end_layout
 
 \begin_layout Standard
@@ -13369,11 +13367,41 @@ status collapsed
 \end_inset
 
 .
- The option 
+ 
+\end_layout
+
+\begin_layout Standard
+The option 
 \family sans
-Output en- and em-dashes as ligatures
+Disallow line breaks after dashes
 \family default
- outputs en- and em-dashes as ligatures (--, ---) instead of a sigle character.
+ outputs en- and em-dashes as literal characters
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Or \SpecialChar LaTeX
+ macro, if the literal character is not supported by the \SpecialChar LaTeX
+ input encoding.
+\end_layout
+
+\end_inset
+
+ instead of ligatures (--, ---) (see section
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Dashes-and-line-breaks"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Standard
@@ -16324,34 +16352,10 @@ Opt
 \family default
  is the Mac label for the right 
 \family sans
-Alt
-\family default
- 
-\family sans
-/ AltGr 
+Alt 
 \family default
 key).
- Alternatively, dashes can be inserted with 
-\family sans
-Insert\SpecialChar menuseparator
-Special
-\begin_inset space ~
-\end_inset
-
-Character\SpecialChar menuseparator
-Symbols
-\family default
- or with the 
-\begin_inset Quotes eld
-\end_inset
-
-unicode-insert
-\begin_inset Quotes erd
-\end_inset
-
- \SpecialChar LyX
- function with the Unicode code point as argument (2013 for the em dash
- and 2014 for the en dash).
+ 
 \end_layout
 
 \end_inset
@@ -16477,16 +16481,13 @@ Special
 Character\SpecialChar menuseparator
 Symbols
 \family default
- or the 
-\begin_inset Quotes eld
-\end_inset
-
+ or using the 
+\family typewriter
 unicode-insert
-\begin_inset Quotes erd
-\end_inset
-
+\family default
  \SpecialChar LyX
- function.
+ function with the Unicode code point as argument (2013 for the em dash
+ and 2014 for the en dash).
 \end_layout
 
 \begin_layout Standard
@@ -16508,7 +16509,7 @@ hyphen
 \end_layout
 
 \begin_layout Enumerate
-From A–Z; pages
+A–Z; pages
 \begin_inset space ~
 \end_inset
 
@@ -16575,19 +16576,17 @@ name "subsec:Dashes-and-line-breaks"
 \end_layout
 
 \begin_layout Standard
-Whether line breaks 
-\change_deleted -712698321 1513438804
-around
-\change_inserted -712698321 1513438805
-at
-\change_unchanged
- dashes are allowed depends on the use case and locale:
+Whether line breaks before or after dashes are allowed depends on the use
+ case and locale, e.
+\begin_inset space \thinspace{}
+\end_inset
+
+g.:
 \end_layout
 
 \begin_layout Itemize
-In English, line breaks are generally allowed after the dash in ranges of
- values such as 1975–1982, but no line break should occur if only a single
- character follows the dash (as in A–Z).
+In English, line breaks are generally allowed after the dash, but no line
+ break should occur if only a single character follows the dash (as in A–Z).
 \end_layout
 
 \begin_layout Itemize
@@ -16601,85 +16600,39 @@ In French and Spanish, dashes around parenthetical statements are treated
 \end_layout
 
 \begin_layout Standard
-
-\change_deleted -712698321 1513437551
-In \SpecialChar LyX
-, 
-\change_inserted -712698321 1513437622
-The dashes that are output by \SpecialChar LyX
+By default, dashes are output by \SpecialChar LyX
  to \SpecialChar LaTeX
- by default generally allow for 
-\change_unchanged
-line breaks after en-dashes and em-dashes
-\change_deleted -712698321 1513498469
- 
-\change_inserted -712698321 1513437597
-.
-\change_deleted -712698321 1513438851
-are only allowed (without manual intervention), if the option 
-\family sans
-Document\SpecialChar menuseparator
-Settings\SpecialChar menuseparator
-Fonts\SpecialChar menuseparator
-Output en- and em-dashes as ligatures
-\family default
- is selected (this is the default in \SpecialChar LyX
- 2.3).
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-In this case, the dashes are output as 
+ as 
 \begin_inset Quotes eld
 \end_inset
 
---
+ligature dashes
 \begin_inset Quotes erd
 \end_inset
 
- and 
-\begin_inset Quotes eld
-\end_inset
-
----
-\begin_inset Quotes erd
-\end_inset
-
-, respectively, when exporting to \SpecialChar LaTeX
-.
- The \SpecialChar TeX
- font ligature mechanism converts them to dash characters followed
- by an optional line break.
-\end_layout
-
-\end_inset
-
-
-\change_unchanged
-
-\end_layout
-
-\begin_layout Standard
-Please note:
+ (-- and ---).
+ \SpecialChar LaTeX
+ allows line breaks after hyphens, en-dashes and em-dashes.
 \end_layout
 
 \begin_layout Enumerate
+Line breaks before spaced en dashes
+\begin_inset space ~
+\end_inset
 
-\change_deleted -712698321 1513437637
-This results in optional line breaks after 
+– common in British English and generally recommended by 
 \emph on
-all
+The Elements of Typographic Style
 \emph default
- en- and em-dashes.
- 
-\change_unchanged
-Unwanted line breaks 
-\change_deleted -712698321 1513437645
-must
-\change_inserted -712698321 1513437646
-can
-\change_unchanged
- be prevented by wrapping in a makebox
+
+\begin_inset space ~
+\end_inset
+
+– can be prevented using protected spaces.
+\end_layout
+
+\begin_layout Enumerate
+Unwanted line breaks after dashes can be prevented by wrapping in a makebox
 \begin_inset Foot
 status collapsed
 
@@ -16701,7 +16654,7 @@ Objects
 
 \end_inset
 
-, using protected spaces or preceding with 
+ or preceding with 
 \series bold
 
 \backslash
@@ -16738,43 +16691,49 @@ backgroundcolor "none"
 status open
 
 \begin_layout Plain Layout
-368–9
+36–39
 \end_layout
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Itemize
-With spaced en dashes
-\begin_inset space ~
-\end_inset
-
-– common e.
-\begin_inset space \thinspace{}
-\end_inset
-
-g.
- in British English and generally recommended by 
-\emph on
-The Elements of Typographic Style
-\emph default
-
-\begin_inset space ~
-\end_inset
-
-– line breaks should not occur before the dash.
 \end_layout
 
 \begin_layout Itemize
 
 \lang french
-Les incises –
+Les incises 
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 1
+width ""
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+
+\lang french
+–
 \begin_inset space ~
 \end_inset
 
-même si tout le monde ne les aime pas
+même
+\end_layout
+
+\end_inset
+
+ si tout le monde ne les aime pas
 \begin_inset space ~
 \end_inset
 
@@ -16800,6 +16759,7 @@ nobreakdash
 —un inciso con rayas— se escribe así.
 \end_layout
 
+\end_deeper
 \begin_layout Standard
 An incorrect line break is easily overlooked because
 \begin_inset space ~
@@ -16813,117 +16773,48 @@ An incorrect line break is easily overlooked because
  log.
 \end_layout
 
-\end_deeper
-\begin_layout Enumerate
-
-\change_deleted -712698321 1513437701
-The setting is ignored for documents using non-\SpecialChar TeX
- fonts.
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-Xe\SpecialChar TeX
- provides the 
-\series bold
-
-\backslash
-XeTeXdashbreakstate
-\series default
- setting.
- The default causes dashes to behave like ligature dashes.
- The usual behaviour of literal dashes can be achieved by inserting 
-\family typewriter
-\series bold
-
-\backslash
-XeTeXdashbreakstate=0
-\family default
-\series default
- into the \SpecialChar LaTeX
- preamble.
-\end_layout
-
-\end_inset
-
-
-\change_unchanged
-
-\end_layout
-
-\begin_layout Enumerate
-
-\change_deleted -712698321 1513437705
-Em dashes in 
-\family typewriter
-typewriter
-\family default
- fonts become 
-\family typewriter
-–-
-\family default
- or 
-\family typewriter
----
-\family default
- in the output.
-\change_unchanged
-
-\end_layout
-
-\begin_layout Enumerate
-
-\change_inserted -712698321 1513437950
-The default dashes output to \SpecialChar LaTeX
- disable 
-\change_deleted -712698321 1513437951
-H
-\change_inserted -712698321 1513437954
-h
-\change_unchanged
-yphenation 
-\change_deleted -712698321 1513437961
-is suppressed 
-\change_unchanged
-in words adjacent to hyphens and ligature dashes.
-\end_layout
-
 \begin_layout Standard
-If 
-\change_inserted -712698321 1513498511
-you want to globally disable line breaks after dashes, you can select 
-\change_unchanged
-the option 
+If you want to globally disable line breaks after dashes, you can select
+ the option 
 \family sans
 Document\SpecialChar menuseparator
 Settings\SpecialChar menuseparator
 Fonts\SpecialChar menuseparator
-
-\change_inserted -712698321 1513498530
 Disallow line breaks after dashes
 \family default
-.
- In this case optional line breaks after individual
-\family sans
- dashes
-\change_deleted -712698321 1513438124
-Output en- and em-dashes as ligatures
-\family default
- has not been selected, you
-\change_unchanged
- can 
-\change_inserted -712698321 1513438126
-be 
-\change_deleted -712698321 1513438191
-insert
-\change_inserted -712698321 1513438193
-re-allowed
-\change_unchanged
- 
-\change_deleted -712698321 1513438149
-optional line breaks 
-\change_unchanged
-via the menu 
+:
+\end_layout
+
+\begin_layout Enumerate
+Line breaks are still allowed after spaced dashes.
+ They can be prevented using protected spaces (without need for a makebox
+ or \SpecialChar TeX
+ code).
+ Example:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\lang french
+Les incises –
+\begin_inset space ~
+\end_inset
+
+même si tout le monde ne les aime pas
+\begin_inset space ~
+\end_inset
+
+– sont très utiles.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Line breaks after unspaced dashes can be allowed via the menu
+\begin_inset Newline newline
+\end_inset
+
+
 \family sans
 Insert\SpecialChar menuseparator
 Formatting\SpecialChar menuseparator
@@ -16932,296 +16823,185 @@ Optional line break
 :
 \end_layout
 
+\begin_deeper
 \begin_layout Itemize
 Em-dashes without spaces—\SpecialChar allowbreak
-as common in American English—\SpecialChar allowbreak
-should be broken
- after the dash.
+common in American English—\SpecialChar allowbreak
+should be followed by
+ a line break opportunity.
 \end_layout
 
 \begin_layout Standard
-
-\change_inserted -712698321 1513440855
-Note: Up to \SpecialChar LyX
-
+This also allows hyphenation of the word following the dash (see section
 \begin_inset space ~
 \end_inset
 
-2.1, you could insert en-dashes and em-dashes as -- and ---, respectively;
- they were automatically merged to proper (breakable) dashes in the output,
- but kept as consecutive hyphen characters in the LyX document.
- If you inserted literal dash characters, however, they were output to \SpecialChar LaTeX
 
- as 
-\emph on
-non-breakable
-\emph default
- dashes (this was actually rather by accident than intentionally, but some
- used these two forms of dashes deliberately).
- 
-\change_unchanged
-As of \SpecialChar LyX
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Hyphenation"
+plural "false"
+caps "false"
+noprefix "false"
 
-\begin_inset space ~
 \end_inset
 
-2.2, 
-\change_inserted -712698321 1513439795
-things work differently: consecutive hyphens are merged to dashes immediately
- in the input.
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-
-\change_inserted -712698321 1513439552
-The behavior was changed since it led to different look in \SpecialChar LyX
-, text export,
- HTML export and the PDF export.
+).
 \end_layout
 
+\end_deeper
+\begin_layout Enumerate
+With this setting, \SpecialChar LaTeX
+ hyphenates words also if immediately followed by em
+ or en dashes (see section
+\begin_inset space ~
 \end_inset
 
- If you copy consecutive hyphens, by contrast, they are output as consecutive
- hyphen characters.
- An unintended consequence of this change was that all dashes now were output
- as non-breakable dashes.
- 
-\change_deleted -712698321 1513438403
--- and --- are exported to LaTeX as -{}- and -{}-{}- to prevent ligation
- to dashes.
-\begin_inset Foot
-status collapsed
 
-\begin_layout Plain Layout
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Hyphenation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Subsubsection
+Changes and backwards compatibility
+\end_layout
+
+\begin_layout Standard
 Up to \SpecialChar LyX
 
 \begin_inset space ~
 \end_inset
 
-2.1, -- and --- was output unchanged which led to different look in \SpecialChar LyX
-, text
- export, HTML export and the PDF export.
+2.1, consecutive hyphen characters (-- and ---) in the LyX source were merged
+ to en or em dashes by LaTeX.
+ These 
+\begin_inset Quotes eld
+\end_inset
+
+ligature dashes
+\begin_inset Quotes erd
+\end_inset
+
+ retain the line-break properties of hyphens while literal dash characters
+ are regarded by \SpecialChar LaTeX
+ as 
+\emph on
+non-breakable
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+Since \SpecialChar LyX
+
+\begin_inset space ~
+\end_inset
+
+2.2, consecutive hyphens in the LyX source are exported to \SpecialChar LaTeX
+ in a way that
+ prevents ligation to dashes.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Ligature dashes
+\begin_inset Quotes erd
+\end_inset
+
+ in documents from earlier versions are converted to literal dash characters
+ (except in 
+\family typewriter
+typewriter
+\family default
+ font); typed in consecutive hyphens are merged to dash characters immediately
+ after the input (unless the current text font is 
+\family typewriter
+type
+\family default
+writer).
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The behavior was changed since 
+\begin_inset Quotes eld
+\end_inset
+
+lyx --help
+\begin_inset Quotes erd
+\end_inset
+
+ became 
+\begin_inset Quotes eld
+\end_inset
+
+lyx –help
+\begin_inset Quotes erd
+\end_inset
+
+ in PDF, Postscript, and DVI output.
+ An unintended consequence of these changes was that all dashes were output
+ as non-breakable dashes.
+ This also resulted in changed line breaks in some older documents.
+ 
 \end_layout
 
 \end_inset
 
 
-\change_unchanged
- 
-\change_inserted -712698321 1513439864
-Since furthermore, in order to maintain the output, 
-\change_deleted -712698321 1513439597
-O
-\change_inserted -712698321 1513439745
-o
-\change_unchanged
-ccurrences 
-\change_inserted -712698321 1513439745
-of consecutive hyphens 
-\change_unchanged
-in 
-\change_deleted -712698321 1513439612
-older 
-\change_unchanged
-documents
-\change_inserted -712698321 1513439745
- that were saved by
-\change_unchanged
- 
-\change_inserted -712698321 1513439745
+\end_layout
+
+\begin_layout Standard
 \SpecialChar LyX
 
 \begin_inset space ~
 \end_inset
 
-2.1 or earlier versions, 
-\change_deleted -712698321 1513439871
-a
-\change_inserted -712698321 1513439871
-we
-\change_unchanged
-re converted to literal 
-\change_deleted -712698321 1513438458
-Unicode 
-\change_inserted -712698321 1513439745
-en- and em-
-\change_unchanged
-dash
-\change_inserted -712698321 1513439745
- charact
-\change_unchanged
-e
-\change_inserted -712698321 1513439745
-r
-\change_unchanged
-s
-\change_inserted -712698321 1513439884
-, respectively, these were output to \SpecialChar LaTeX
- in \SpecialChar LyX
-
-\begin_inset space ~
-\end_inset
-
-2.2 as 
-\emph on
-non-breakable
-\emph default
- dashes as well
-\change_unchanged
-.
- 
-\change_inserted -712698321 1513439888
-An obvious drawback of all this was that 
-\change_deleted -712698321 1513438506
-This
-\change_inserted -712698321 1513439745
-it 
-\change_deleted -712698321 1513440124
- led to
-\change_inserted -712698321 1513440127
-resulted in
-\change_unchanged
- different line breaks in some documents.
- \SpecialChar LyX
-
-\begin_inset space ~
-\end_inset
-
-2.3
-\change_inserted -712698321 1513439906
-, by contrast and as outlined above, outputs
-\change_unchanged
- 
-\change_inserted -712698321 1513441767
-
+2.3 outputs 
 \emph on
 breakable
 \emph default
- dashes by default, so if you load a document saved previous to LyX 2.2,
- you should get the identical output with LyX 2.3 for the dashes inserted
- with -- and ---.
- Furthermore, \SpecialChar LyX
+ dashes by default.
+ When opening documents edited with \SpecialChar LyX
 
 \begin_inset space ~
 \end_inset
 
-2.3 
-\change_unchanged
-provides the aforementioned option 
-\change_deleted -712698321 1513438447
-
-\family sans
-Output en- and em-dashes as ligatures
-\change_inserted -712698321 1513498544
-Disallow line breaks after dashes
-\change_unchanged
-
-\family default
- in the menu 
+2.2 or earlier and containing literal dash characters not followed by whitespace,
+ the setting 
 \family sans
 Document\SpecialChar menuseparator
 Settings\SpecialChar menuseparator
-Fonts.
-
-\family default
- It is o
-\change_deleted -712698321 1513438517
-n
-\change_inserted -712698321 1513441759
-ff
-\change_unchanged
- by default but 
-\change_deleted -712698321 1513438522
-un
-\change_unchanged
-selected when opening documents edited with \SpecialChar LyX
-
-\begin_inset space ~
-\end_inset
-
-2.2
-\change_inserted -712698321 1513441759
- in order to maintain line breaking between \SpecialChar LyX
- 2.2 and 2.3 (so these document
- have non-breakable dashes)
-\change_unchanged
-.
-\begin_inset Newline newline
-\end_inset
-
-Note the following side-effects of the changes in \SpecialChar LyX
-'s dash handling:
-\end_layout
-
-\begin_layout Itemize
-If you used 
-\change_inserted -712698321 1513440192
-only 
-\change_unchanged
-literal em- and en dashes in pre-\SpecialChar LyX
-
-\begin_inset space ~
-\end_inset
-
-2.2 documents, you must manually 
-\change_deleted -712698321 1513438688
-un
-\change_unchanged
-select 
-\change_deleted -712698321 1513438687
-
-\family sans
-Output en- and em-dashes as ligatures
-\change_inserted -712698321 1513498551
+Fonts\SpecialChar menuseparator
 Disallow line breaks after dashes
-\change_unchanged
-
 \family default
- to ensure unchanged behavior.
- 
-\end_layout
+ is active to prevent changes to the line breaks.
+\series bold
+Warning:
+\series default
+ If you used both literal and 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Itemize
-If you used both
-\change_deleted -712698321 1513441852
-,
-\change_unchanged
- literal and 
-\change_deleted -712698321 1513441864
 ligature
-\change_inserted -712698321 1513441867
---/---
-\change_unchanged
+\begin_inset Quotes erd
+\end_inset
+
  dashes in pre-\SpecialChar LyX
 
 \begin_inset space ~
 \end_inset
 
 2.2 documents, you may need to enable or prevent individual line breaks as
- shown above to restore the correct line breaking behavio
-\change_deleted -712698321 1513441864
-u
-\change_unchanged
-r.
-\end_layout
-
-\begin_layout Itemize
-Zero-width space (ZWSP) characters in older \SpecialChar LyX
- documents that follow literal
- em- and en-dashes are removed during the conversion to the format of \SpecialChar LyX
-
-\begin_inset space ~
-\end_inset
-
-2.3.
- If you used them as optional line breaks after dashes, convert them to
- space insets before opening your document with \SpecialChar LyX
-
-\begin_inset space ~
-\end_inset
-
-2.3 or the optional line breaks will be lost.
+ shown above to restore the correct line breaking behavior.
 \end_layout
 
 \begin_layout Subsection
@@ -17265,6 +17045,12 @@ status collapsed
 \end_inset
 
  following the rules of the document language.
+ \SpecialChar LaTeX
+ does not hyphenate text in the 
+\family sans
+typewriter
+\family default
+ font and words immediately preceded or followed by hyphens or dashes.
 \end_layout
 
 \begin_layout Standard
@@ -17322,10 +17108,10 @@ A-b c
 \begin_inset Quotes erd
 \end_inset
 
- as a hyphenation possibility.
- Hyphenating at this point would look ugly.
- To prevent the shortcut from being hyphenated, you can use a protected
- hyphen (
+ as a line break possibility.
+ A line break at this point would look ugly.
+ To prevent the shortcut from being broken, you can use a protected hyphen
+ (
 \family sans
 Insert\SpecialChar menuseparator
 Formatting\SpecialChar menuseparator
@@ -38263,29 +38049,6 @@ reference "subsec:Numbering-depth"
 .
 \end_layout
 
-\begin_layout Subsection
-
-\family sans
-Start New Environment/Start New Parent Environment
-\end_layout
-
-\begin_layout Standard
-These menus are only visible if it is possible to have two consecutive environme
-nts of the same type.
- See section
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "subsec:Separate-Nestings"
-
-\end_inset
-
- for an explanation.
-\end_layout
-
 \begin_layout Section
 The View Menu
 \begin_inset Index idx
@@ -39829,6 +39592,29 @@ reference "sec:Marginal-Notes"
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Subsection
+
+\family sans
+Separate <Name> (Above/Below)
+\end_layout
+
+\begin_layout Standard
+These menu items are only visible if it is possible to have two consecutive
+ environments of the same type.
+ See section
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Separate-Nestings"
+
+\end_inset
+
+ for an explanation.
 \end_layout
 
 \begin_layout Subsection

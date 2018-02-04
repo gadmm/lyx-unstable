@@ -415,8 +415,8 @@ if(LYX_BUNDLE)
 		set(OSX_BUNDLE_DIRS "Resources;Resources;Resources")
 
 		# Process Info.plist and lyxrc.dist
+		# See development/cmake/Install.cmake
 		configure_file("${CMAKE_CURRENT_SOURCE_DIR}/development/MacOSX/Info.plist.in" "${CMAKE_CURRENT_BINARY_DIR}/Info.plist")
-		configure_file("${CMAKE_CURRENT_SOURCE_DIR}/development/MacOSX/lyxrc.dist.in" "${CMAKE_CURRENT_BINARY_DIR}/lyxrc.dist")
 
 		set(LYX_BUILD_BUNDLE MACOSX_BUNDLE)
 		set(LYX_DATA_SUBDIR ${LYX_BUNDLE_NAME}.app/Contents/Resources/ CACHE STRING "Bundle Contents dir" FORCE)
@@ -694,7 +694,8 @@ endif()
 
 find_package(Magic)
 if(Magic_FOUND)
-	set(HAVE_MAGIC_H 1)
+  set(HAVE_MAGIC_H 1)
+  include_directories(${Magic_INCLUDE_DIR})
 endif()
 
 include_directories(${TOP_BINARY_DIR} ${TOP_SRC_DIR}/src)
@@ -1037,15 +1038,17 @@ if(LYX_INSTALL)
 endif()
 include(../Install)
 
+# By running the URL tests first, time can be saved when running the ctests in
+# parallel since the URL tests take a long time to run (e.g. 10 minutes).
+if(LYX_ENABLE_URLTESTS)
+	add_subdirectory(development/checkurls "${TOP_BINARY_DIR}/checkurls")
+endif()
 add_subdirectory(src "${TOP_BINARY_DIR}/src")
 add_subdirectory(lib/lyx2lyx "${TOP_BINARY_DIR}/lyx2lyx")
 add_subdirectory(lib/scripts "${TOP_BINARY_DIR}/scripts")
 add_subdirectory(lib/examples "${TOP_BINARY_DIR}/lib/examples")
 add_subdirectory(sourcedoc "${TOP_BINARY_DIR}/sourcedoc")
 add_subdirectory(development/autotests "${TOP_BINARY_DIR}/autotests")
-if(LYX_ENABLE_URLTESTS)
-	add_subdirectory(development/checkurls "${TOP_BINARY_DIR}/checkurls")
-endif()
 
 message(STATUS)
 message(STATUS "Build params, switch LYX_* options by -DLYX_*=ON or OFF, LYX_* combos by -DLYX_*=value:")

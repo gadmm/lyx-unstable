@@ -19,7 +19,7 @@
 # see http://www.springer.com/authors for class files and further instructions
 
 
-Format 65
+Format 66
 PageStyle		Plain
 
 
@@ -140,6 +140,7 @@ Style PartBacktext
 	  Mandatory	1
 	  LabelString	"Part Title"
 	  Tooltip	"Title of this part"
+	  IsTocCaption  1
 	EndArgument
 	Preamble
 	  \newenvironment{svmultpartbacktext}[1]{\begin{partbacktext}

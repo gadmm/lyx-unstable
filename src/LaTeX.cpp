@@ -94,8 +94,9 @@ bool operator!=(AuxInfo const & a, AuxInfo const & o)
 
 LaTeX::LaTeX(string const & latex, OutputParams const & rp,
              FileName const & f, string const & p, string const & lp,
-             AuxFilesFlags const & delete_aux_files)
-	: cmd(latex), file(f), path(p), lpath(lp), runparams(rp), biber(false)
+             bool allow_cancellation, AuxFilesFlags const & delete_aux_files)
+	: cmd(latex), file(f), path(p), lpath(lp), runparams(rp), biber(false),
+      allow_cancel(allow_cancellation)
 {
 	num_errors = 0;
 	// lualatex can still produce a DVI with --output-format=dvi. However,
@@ -244,12 +245,16 @@ int LaTeX::run(TeXErrors & terr)
 	message(runMessage(count));
 
 	int exit_code = startscript();
+	if (exit_code == Systemcall::KILLED)
+		return Systemcall::KILLED;
 
 	scanres = scanLogFile(terr);
 	if (scanres & ERROR_RERUN) {
 		LYXERR(Debug::LATEX, "Rerunning LaTeX");
 		terr.clearErrors();
 		exit_code = startscript();
+		if (exit_code == Systemcall::KILLED)
+			return Systemcall::KILLED;
 		scanres = scanLogFile(terr);
 	}
 
@@ -279,20 +284,34 @@ int LaTeX::run(TeXErrors & terr)
 		LYXERR(Debug::LATEX, "Running MakeIndex.");
 		message(_("Running Index Processor."));
 		// onlyFileName() is needed for cygwin
-		rerun |= runMakeIndex(onlyFileName(idxfile.absFileName()),
-				runparams);
+		int const ret = 
+				runMakeIndex(onlyFileName(idxfile.absFileName()), runparams);
+		if (ret == Systemcall::KILLED)
+			return Systemcall::KILLED;
+		rerun = true;
 	}
+
 	FileName const nlofile(changeExtension(file.absFileName(), ".nlo"));
 	// If all nomencl entries are removed, nomencl writes an empty nlo file.
 	// DepTable::hasChanged() returns false in this case, since it does not
 	// distinguish empty files from non-existing files. This is why we need
 	// the extra checks here (to trigger a rerun). Cf. discussions in #8905.
 	// FIXME: Sort out the real problem in DepTable.
-	if (head.haschanged(nlofile) || (nlofile.exists() && nlofile.isFileEmpty()))
-		rerun |= runMakeIndexNomencl(file, ".nlo", ".nls");
+	if (head.haschanged(nlofile) || (nlofile.exists() && nlofile.isFileEmpty())) {
+		int const ret = runMakeIndexNomencl(file, ".nlo", ".nls");
+		if (ret == Systemcall::KILLED)
+			return Systemcall::KILLED;
+		rerun = true;
+	}
+
 	FileName const glofile(changeExtension(file.absFileName(), ".glo"));
-	if (head.haschanged(glofile))
-		rerun |= runMakeIndexNomencl(file, ".glo", ".gls");
+	if (head.haschanged(glofile)) {
+		int const ret = runMakeIndexNomencl(file, ".glo", ".gls");
+		if (ret)
+			return ret;
+		rerun = true;
+	}
+
 
 	// check if we're using biber instead of bibtex
 	// biber writes no info to the aux file, so we just check
@@ -310,7 +329,10 @@ int LaTeX::run(TeXErrors & terr)
 		LYXERR(Debug::LATEX, "Running BibTeX.");
 		message(_("Running BibTeX."));
 		updateBibtexDependencies(head, bibtex_info);
-		rerun |= runBibTeX(bibtex_info, runparams);
+		int exit_code;
+		rerun |= runBibTeX(bibtex_info, runparams, exit_code);
+		if (exit_code == Systemcall::KILLED)
+			return Systemcall::KILLED;
 		FileName const blgfile(changeExtension(file.absFileName(), ".blg"));
 		if (blgfile.exists())
 			bscanres = scanBlgFile(head, terr);
@@ -339,7 +361,9 @@ int LaTeX::run(TeXErrors & terr)
 		LYXERR(Debug::DEPEND, "Dep. file has changed or rerun requested");
 		LYXERR(Debug::LATEX, "Run #" << count);
 		message(runMessage(count));
-		startscript();
+		int exit_code = startscript();
+		if (exit_code == Systemcall::KILLED)
+			return Systemcall::KILLED;
 		scanres = scanLogFile(terr);
 
 		// update the depedencies
@@ -361,7 +385,10 @@ int LaTeX::run(TeXErrors & terr)
 		LYXERR(Debug::LATEX, "Running BibTeX.");
 		message(_("Running BibTeX."));
 		updateBibtexDependencies(head, bibtex_info);
-		rerun |= runBibTeX(bibtex_info, runparams);
+		int exit_code;
+		rerun |= runBibTeX(bibtex_info, runparams, exit_code);
+		if (exit_code == Systemcall::KILLED)
+			return Systemcall::KILLED;
 		FileName const blgfile(changeExtension(file.absFileName(), ".blg"));
 		if (blgfile.exists())
 			bscanres = scanBlgFile(head, terr);
@@ -381,15 +408,18 @@ int LaTeX::run(TeXErrors & terr)
 		LYXERR(Debug::LATEX, "Running MakeIndex.");
 		message(_("Running Index Processor."));
 		// onlyFileName() is needed for cygwin
-		rerun = runMakeIndex(onlyFileName(changeExtension(
+		int const ret = runMakeIndex(onlyFileName(changeExtension(
 				file.absFileName(), ".idx")), runparams);
+		if (ret == Systemcall::KILLED)
+			return Systemcall::KILLED;
+		rerun =	true;
 	}
 
-	// I am not pretty sure if need this twice.
+	// MSVC complains that bool |= int is unsafe. Not sure why.
 	if (head.haschanged(nlofile))
-		rerun |= runMakeIndexNomencl(file, ".nlo", ".nls");
+		rerun |= (runMakeIndexNomencl(file, ".nlo", ".nls") != 0);
 	if (head.haschanged(glofile))
-		rerun |= runMakeIndexNomencl(file, ".glo", ".gls");
+		rerun |= (runMakeIndexNomencl(file, ".glo", ".gls") != 0);
 
 	// 5
 	// we will only run latex more if the log file asks for it.
@@ -442,11 +472,13 @@ int LaTeX::startscript()
 		     + quoteName(onlyFileName(file.toFilesystemEncoding()))
 		     + " > " + os::nulldev();
 	Systemcall one;
-	return one.startscript(Systemcall::Wait, tmp, path, lpath);
+	Systemcall::Starttype const starttype = 
+		allow_cancel ? Systemcall::WaitLoop : Systemcall::Wait;
+	return one.startscript(starttype, tmp, path, lpath, true);
 }
 
 
-bool LaTeX::runMakeIndex(string const & f, OutputParams const & runparams,
+int LaTeX::runMakeIndex(string const & f, OutputParams const & runparams,
 			 string const & params)
 {
 	string tmp = runparams.use_japanese ?
@@ -469,12 +501,13 @@ bool LaTeX::runMakeIndex(string const & f, OutputParams const & runparams,
 	tmp += quoteName(f);
 	tmp += params;
 	Systemcall one;
-	one.startscript(Systemcall::Wait, tmp, path, lpath);
-	return true;
+	Systemcall::Starttype const starttype = 
+		allow_cancel ? Systemcall::WaitLoop : Systemcall::Wait;
+	return one.startscript(starttype, tmp, path, lpath, true);
 }
 
 
-bool LaTeX::runMakeIndexNomencl(FileName const & file,
+int LaTeX::runMakeIndexNomencl(FileName const & file,
 		string const & nlo, string const & nls)
 {
 	LYXERR(Debug::LATEX, "Running MakeIndex for nomencl.");
@@ -485,8 +518,9 @@ bool LaTeX::runMakeIndexNomencl(FileName const & file,
 	tmp += " -o "
 		+ onlyFileName(changeExtension(file.toFilesystemEncoding(), nls));
 	Systemcall one;
-	one.startscript(Systemcall::Wait, tmp, path, lpath);
-	return true;
+	Systemcall::Starttype const starttype = 
+		allow_cancel ? Systemcall::WaitLoop : Systemcall::Wait;
+	return one.startscript(starttype, tmp, path, lpath, true);
 }
 
 
@@ -620,9 +654,10 @@ void LaTeX::updateBibtexDependencies(DepTable & dep,
 
 
 bool LaTeX::runBibTeX(vector<AuxInfo> const & bibtex_info,
-		      OutputParams const & runparams)
+		      OutputParams const & runparams, int & exit_code)
 {
 	bool result = false;
+	exit_code = 0;
 	for (vector<AuxInfo>::const_iterator it = bibtex_info.begin();
 	     it != bibtex_info.end(); ++it) {
 		if (!biber && it->databases.empty())
@@ -635,7 +670,12 @@ bool LaTeX::runBibTeX(vector<AuxInfo> const & bibtex_info,
 		tmp += quoteName(onlyFileName(removeExtension(
 				it->aux_file.absFileName())));
 		Systemcall one;
-		one.startscript(Systemcall::Wait, tmp, path, lpath);
+		Systemcall::Starttype const starttype = 
+	        allow_cancel ? Systemcall::WaitLoop : Systemcall::Wait;
+		exit_code = one.startscript(starttype, tmp, path, lpath, true);
+		if (exit_code) {
+			return result;
+		}
 	}
 	// Return whether bibtex was run
 	return result;

@@ -634,7 +634,7 @@ int mathedDrawRadical(PainterInfo & pi, double x, double y,
 int mathed_mu(FontInfo const & font, double mu)
 {
 	MetricsBase mb(nullptr, font);
-	return Length(mu, Length::MU).inPixels(mb);
+	return mb.inPixels(Length(mu, Length::MU));
 }
 
 int mathed_thinmuskip(FontInfo const & font) { return mathed_mu(font, 3.0); }

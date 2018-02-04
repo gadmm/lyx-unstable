@@ -12547,6 +12547,59 @@ status collapsed
 \begin_layout Plain Layout
 
 \lang english
+AutoNests
+\end_layout
+
+\end_inset
+
+ Includes a comma-separated list of layouts that should be nested in and
+ after the current layout.
+ Only makes sense for nestable layouts (such as environments).
+ Must be ended by 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+EndAutoNests
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+ See also 
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+IsAutoNestedBy
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Description
+
+\lang english
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
 BabelPreamble
 \end_layout
 
@@ -13388,6 +13441,59 @@ TitleLatexName
 \end_inset
 
  dans les paramètres généraux).
+\end_layout
+
+\begin_layout Description
+
+\lang english
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+IsAutoNestedBy
+\end_layout
+
+\end_inset
+
+ Includes a comma-separated list of layouts after which this one should
+ be nested.
+ Only makes sense with regard to nestable layouts (such as environments).
+ Must be ended by 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+EndIsAutoNestedBy
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+ See also 
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang english
+AutoNests
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Description
@@ -31157,17 +31263,17 @@ commandframe
 \begin_layout Description
 
 \lang english
-commentbg
+comment
 \lang french
- fond de commentaire
+ étiquette de commentaire
 \end_layout
 
 \begin_layout Description
 
 \lang english
-commentlabel
+commentbg
 \lang french
- étiquette de commentaire
+ fond de commentaire
 \end_layout
 
 \begin_layout Description
@@ -31445,17 +31551,17 @@ nonunique_inlinecompletion
 \begin_layout Description
 
 \lang english
-notebg
+note
 \lang french
- fond de note 
+ étiquette de note
 \end_layout
 
 \begin_layout Description
 
 \lang english
-notelabel
+notebg
 \lang french
- étiquette de note
+ fond de note 
 \end_layout
 
 \begin_layout Description

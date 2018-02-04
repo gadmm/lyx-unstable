@@ -1940,6 +1940,10 @@ bool GuiView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 		enable = doc_buffer != 0;
 		break;
 
+	case LFUN_EXPORT_CANCEL:
+		enable = d.processing_thread_watcher_.isRunning();
+		break;
+
 	case LFUN_BUFFER_CLOSE:
 	case LFUN_VIEW_CLOSE:
 		enable = doc_buffer != 0;
@@ -2215,8 +2219,8 @@ bool GuiView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 static FileName selectTemplateFile()
 {
 	FileDialog dlg(qt_("Select template file"));
-	dlg.setButton1(qt_("Documents|#o#O"), toqstr(lyxrc.document_path));
-	dlg.setButton2(qt_("Templates|#T#t"), toqstr(lyxrc.template_path));
+	dlg.setButton1(qt_("D&ocuments"), toqstr(lyxrc.document_path));
+	dlg.setButton2(qt_("&Templates"), toqstr(lyxrc.template_path));
 
 	FileDialog::Result result = dlg.open(toqstr(lyxrc.template_path),
 				 QStringList(qt_("LyX Documents (*.lyx)")));
@@ -2272,8 +2276,8 @@ void GuiView::openDocument(string const & fname)
 
 	if (fname.empty()) {
 		FileDialog dlg(qt_("Select document to open"));
-		dlg.setButton1(qt_("Documents|#o#O"), toqstr(lyxrc.document_path));
-		dlg.setButton2(qt_("Examples|#E#e"), toqstr(lyxrc.example_path));
+		dlg.setButton1(qt_("D&ocuments"), toqstr(lyxrc.document_path));
+		dlg.setButton2(qt_("&Examples"), toqstr(lyxrc.example_path));
 
 		QStringList const filter(qt_("LyX Documents (*.lyx)"));
 		FileDialog::Result result =
@@ -2410,8 +2414,8 @@ void GuiView::importDocument(string const & argument)
 			theFormats().prettyName(format));
 
 		FileDialog dlg(toqstr(text));
-		dlg.setButton1(qt_("Documents|#o#O"), toqstr(lyxrc.document_path));
-		dlg.setButton2(qt_("Examples|#E#e"), toqstr(lyxrc.example_path));
+		dlg.setButton1(qt_("D&ocuments"), toqstr(lyxrc.document_path));
+		dlg.setButton2(qt_("&Examples"), toqstr(lyxrc.example_path));
 
 		docstring filter = theFormats().prettyName(format);
 		filter += " (*.{";
@@ -2543,8 +2547,8 @@ void GuiView::insertLyXFile(docstring const & fname)
 
 		// FIXME UNICODE
 		FileDialog dlg(qt_("Select LyX document to insert"));
-		dlg.setButton1(qt_("Documents|#o#O"), toqstr(lyxrc.document_path));
-		dlg.setButton2(qt_("Examples|#E#e"), toqstr(lyxrc.example_path));
+		dlg.setButton1(qt_("D&ocuments"), toqstr(lyxrc.document_path));
+		dlg.setButton2(qt_("&Examples"), toqstr(lyxrc.example_path));
 
 		FileDialog::Result result = dlg.open(toqstr(initpath),
 					 QStringList(qt_("LyX Documents (*.lyx)")));
@@ -2583,8 +2587,8 @@ bool GuiView::renameBuffer(Buffer & b, docstring const & newname, RenameKind kin
 		// No argument? Ask user through dialog.
 		// FIXME UNICODE
 		FileDialog dlg(qt_("Choose a filename to save document as"));
-		dlg.setButton1(qt_("Documents|#o#O"), toqstr(lyxrc.document_path));
-		dlg.setButton2(qt_("Templates|#T#t"), toqstr(lyxrc.template_path));
+		dlg.setButton1(qt_("D&ocuments"), toqstr(lyxrc.document_path));
+		dlg.setButton2(qt_("&Templates"), toqstr(lyxrc.template_path));
 
 		if (!isLyXFileName(fname.absFileName()))
 			fname.changeExtension(".lyx");
@@ -2701,7 +2705,7 @@ bool GuiView::exportBufferAs(Buffer & b, docstring const & iformat)
 	FileName fname = b.fileName();
 
 	FileDialog dlg(qt_("Choose a filename to export the document as"));
-	dlg.setButton1(qt_("Documents|#o#O"), toqstr(lyxrc.document_path));
+	dlg.setButton1(qt_("D&ocuments"), toqstr(lyxrc.document_path));
 
 	QStringList types;
 	QString const anyformat = qt_("Guess from extension (*.*)");
@@ -3748,6 +3752,10 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 						0, &Buffer::preview);
 			break;
 		}
+		case LFUN_EXPORT_CANCEL: {
+			Systemcall::killscript();
+			break;
+		}
 		case LFUN_BUFFER_SWITCH: {
 			string const file_name = to_utf8(cmd.argument());
 			if (!FileName::isAbsolute(file_name)) {
@@ -4721,7 +4729,6 @@ SEMenu::SEMenu(QWidget * parent)
 	connect(action, SIGNAL(triggered()),
 		parent, SLOT(disableShellEscape()));
 }
-
 
 } // namespace frontend
 } // namespace lyx

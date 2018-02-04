@@ -19,11 +19,14 @@
 
 #include "mathed/MathSupport.h"
 
+#include "frontends/FontMetrics.h"
 #include "frontends/Painter.h"
 
 #include "support/docstring.h"
 #include "support/lassert.h"
 #include "support/RefChanger.h"
+
+#include <cmath>
 
 using namespace std;
 
@@ -86,6 +89,25 @@ Changer MetricsBase::changeEnsureMath(Inset::mode_type mode)
 }
 
 
+int MetricsBase::inPixels(Length const & len) const
+{
+	return (int) std::round(inPixelsDouble(len));
+}
+
+
+double MetricsBase::inPixelsDouble(Length const & len) const
+{
+	FontInfo fi = font;
+	if (len.unit() == Length::MU)
+		// mu is 1/18th of an em in the math symbol font
+		fi.setFamily(SYMBOL_FAMILY);
+	else
+		// Math style is only taken into account in the case of mu
+		fi.setStyle(LM_ST_TEXT);
+	return len.inPixelsDouble(textwidth, theFontMetrics(fi).em());
+}
+
+
 int MetricsBase::mu(double len) const
 {
 	return mathed_mu(font, len);
@@ -94,7 +116,7 @@ int MetricsBase::mu(double len) const
 
 int MetricsBase::em(double len) const
 {
-	return Length(len, Length::EM).inPixels(*this);
+	return inPixels(Length(len, Length::EM));
 }
 
 

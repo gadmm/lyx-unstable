@@ -127,7 +127,7 @@ void InsetMathSpace::metrics(MetricsInfo & mi, Dimension & dim) const
 	dim.asc = mi.base.mu(4);
 	dim.des = 1 + (int) mi.base.solidLineThickness();
 	if (space_info[space_].custom)
-		dim.wid = abs(length_.inPixels(mi.base));
+		dim.wid = abs(mi.base.inPixels(length_));
 	else
 		dim.wid = mi.base.mu(space_info[space_].width);
 }

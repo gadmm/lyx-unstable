@@ -12165,6 +12165,51 @@ Argument item:1
 status collapsed
 
 \begin_layout Plain Layout
+AutoNests
+\end_layout
+
+\end_inset
+
+ Includes a comma-separated list of layouts that should be nested in and
+ after the current layout.
+ Only makes sense for nestable layouts (such as environments).
+ Must be ended by 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+EndAutoNests
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+ See also 
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+IsAutoNestedBy
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Description
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
 BabelPreamble
 \end_layout
 
@@ -12889,6 +12934,51 @@ TitleLatexName
 \end_inset
 
  global entries).
+\end_layout
+
+\begin_layout Description
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+IsAutoNestedBy
+\end_layout
+
+\end_inset
+
+ Includes a comma-separated list of layouts after which this one should
+ be nested.
+ Only makes sense with regard to nestable layouts (such as environments).
+ Must be ended by 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+EndIsAutoNestedBy
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+ See also 
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+AutoNests
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Description
@@ -27875,11 +27965,11 @@ commandframe Frame color for command insets
 \end_layout
 
 \begin_layout Description
-commentbg Background color of comments
+comment Label color for comments
 \end_layout
 
 \begin_layout Description
-commentlabel Label color for comments
+commentbg Background color of comments
 \end_layout
 
 \begin_layout Description
@@ -28021,11 +28111,11 @@ nonunique_inlinecompletion Inline completion color for the non-unique part
 \end_layout
 
 \begin_layout Description
-notebg Background color of notes
+note Label color for notes
 \end_layout
 
 \begin_layout Description
-notelabel Label color for notes
+notebg Background color of notes
 \end_layout
 
 \begin_layout Description

@@ -5,7 +5,7 @@
 # Jason Waskiewicz <jason.waskiewicz@sendit.nodak.edu>, 2009/10/18
 # Modified by Uwe Stöhr <uwestoehr@web.de>, 2009/11/15
 
-Format 65
+Format 66
 
 Provides geometry 1
 Provides natbib-internal 1
@@ -34,14 +34,17 @@ Input stdclass.inc
 
 Style Title
 	InPreamble		1
+	NeedProtect		1
 End
 
 Style Author
 	InPreamble		1
+	NeedProtect		1
 End
 
 Style Date
 	InPreamble		1
+	NeedProtect		1
 End
 
 NoStyle Abstract
@@ -78,8 +81,9 @@ Style Chapter
 	RefPrefix		chap
 	Argument 1
 	  LabelString	"Short Title|S"
-	  Tooltip		"The chapter as it appears in the table of contents/running headers"
+	  Tooltip	"The chapter as it appears in the table of contents/running headers"
 	  InsertCotext	1
+	  IsTocCaption  1
 	EndArgument
 	Font
 	  Series		Bold
@@ -106,8 +110,9 @@ Style Section
 	RefPrefix		sec
 	Argument 1
 	  LabelString	"Short Title|S"
-	  Tooltip		"The section as it appears in the table of contents/running headers"
+	  Tooltip	"The section as it appears in the table of contents/running headers"
 	  InsertCotext	1
+	  IsTocCaption  1
 	EndArgument
 	Font
 	  Series		Bold

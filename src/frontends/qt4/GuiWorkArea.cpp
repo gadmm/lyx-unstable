@@ -277,7 +277,6 @@ GuiWorkArea::GuiWorkArea(QWidget * /* w */)
 GuiWorkArea::GuiWorkArea(Buffer & buffer, GuiView & gv)
 	: GuiWorkArea(0)
 {
-	new CompressorProxy(this); // not a leak
 	setGuiView(gv);
 	buffer.params().display_pixel_ratio = theGuiApp()->pixelRatio();
 	setBuffer(buffer);

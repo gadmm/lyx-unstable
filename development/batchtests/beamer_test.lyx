@@ -1,9 +1,9 @@
-#LyX 2.3 created this file. For more info see http://www.lyx.org/
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
 \lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
-\origin /systemlyxdir/examples/fr/
+\origin unavailable
 \textclass beamer
 \begin_preamble
 % We use the "Berkeley" theme with a 3.45em-wide side bar on the left
@@ -11,7 +11,7 @@
 \end_preamble
 \use_default_options true
 \maintain_unincluded_children false
-\language french
+\language english
 \language_package default
 \inputencoding auto
 \fontencoding global
@@ -67,7 +67,7 @@
 \paragraph_indentation default
 \is_math_indent 0
 \math_numbering_side default
-\quotes_style swiss
+\quotes_style english
 \dynamic_quotes 0
 \papercolumns 1
 \papersides 1
@@ -81,69 +81,6 @@
 
 \begin_body
 
-\begin_layout Standard
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-Traduction française Jean-Pierre Chrétien, septembre 2014
-\end_layout
-
-\begin_layout Plain Layout
-Revue pour LyX 2.2, mars 2015
-\end_layout
-
-\begin_layout Plain Layout
-Revue pour LyX 2.3, janvier 2017 (simplification de l'insertion de nouveaux
- cadres et autre constructions)
-\end_layout
-
-\begin_layout Plain Layout
-Nota : du point de vue de l'interface, la nouvelle intégration très complète
- de Beamer dans \SpecialChar LyX
- crée de nombreux conflits de raccourcis.
- J'ai supprimé les raccourcis de menus chaque fois qu'il existait un raccourci
- global défini dans les fichiers .bind.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Title
-Présentations Beamer avec \SpecialChar LyX
-
-\end_layout
-
-\begin_layout Subtitle
-Introduction au principales directives
-\end_layout
-
-\begin_layout Author
-Équipe \SpecialChar LyX
-
-\end_layout
-
-\begin_layout Date
-Version
-\begin_inset space ~
-\end_inset
-
-2.3
-\end_layout
-
-\begin_layout TitleGraphic
-\begin_inset Graphics
-	filename ../../doc/clipart/3D-structure-distort.pdf
-	lyxscale 30
-	scale 10
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Frame
 
 \end_layout
@@ -151,7 +88,7 @@ Version
 \begin_deeper
 \begin_layout FrameTitle
 \begin_inset Argument 1
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -160,7 +97,7 @@ presentation
 
 \end_inset
 
-Contenu
+Contents
 \end_layout
 
 \begin_layout Standard
@@ -173,8 +110,15 @@ LatexCommand tableofcontents
 \end_layout
 
 \end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
-Objectifs
+Purposes
 \end_layout
 
 \begin_layout Frame
@@ -190,10 +134,10 @@ status open
 
 
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Objectifs de la classe Beamer
+Purpose of the Beamer class
 \end_layout
 
 \end_inset
@@ -202,9 +146,9 @@ Objectifs de la classe Beamer
 \end_layout
 
 \begin_layout Frame
-Avec la classe 
+With the 
 \begin_inset Flex Structure
-status collapsed
+status open
 
 \begin_layout Plain Layout
 Beamer
@@ -212,97 +156,51 @@ Beamer
 
 \end_inset
 
-, vous pouvez c
-\begin_inset Flex Alert
-status collapsed
-
-\begin_layout Plain Layout
-Insertion\SpecialChar menuseparator
-Cadre séparé au-dessous
-\end_layout
-
-\end_inset
-
- (
-\begin_inset Info
-type  "shortcut"
-arg   "environment-split"
-\end_inset
-
- si vous vous trouvez dans un paragraphe 
-\begin_inset Flex Structure
-status collapsed
-
-\begin_layout Plain Layout
-Cadre
-\end_layout
-
-\end_inset
-
- non emboîté, ou 
-\begin_inset Info
-type  "shortcut"
-arg   "environment-split outer"
-\end_inset
-
-, respectivement, si vous vous trouvez dans un paragraphe emboîté à l'intérieur
- du cadre)! Si vous êtes dans un titre de cadre, 
-\begin_inset Flex Alert
-status collapsed
-
-\begin_layout Plain Layout
-Insertion\SpecialChar menuseparator
-Cadre séparé au-dessus
-\end_layout
-
-\end_inset
-
- insère un nouveau cadre séparé correctement au-dessus du cadre courantréer,
- en vue d'une présentation, des diapositives qui
+ class, you can produce presentation slides, which
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-sont visuellement très paramétrables
+are visually highly customizable
 \end_layout
 
 \begin_layout Itemize
-peuvent être très bien structurées
+can be very well structured
 \end_layout
 
 \begin_layout Itemize
-peuvent être affichées pas à pas (concept de 
-\begin_inset Quotes cld
+can be constructed step-by-step (
+\begin_inset Quotes eld
 \end_inset
 
-recouvrement
-\begin_inset Quotes crd
+overlay
+\begin_inset Quotes erd
 \end_inset
 
-)
+ concept)
 \end_layout
 
 \begin_layout Itemize
-peuvent contenir des chemins de navigation variés (notez que les diapositives
- contiennent touts sortes d’hyperliens)
+may contain different navigation paths (note that the slides contain all
+ sorts of hyperlinks)
 \end_layout
 
 \begin_layout Itemize
-utilisent la superbe qualité de \SpecialChar LaTeX
-
+use \SpecialChar LaTeX
+'s superb output quality
 \end_layout
 
 \begin_layout Itemize
-peuvent encapsuler des contenus multimédia (audio, vidéo)
+might embed multimedia content (audio, video)
 \end_layout
 
 \begin_layout Itemize
-peuvent facilement être adaptées sous forme de documents d’accompagnement
- (par exemple, une brochure du type article)
+can easily be transformed to accompanying material (such as an article-like
+ handout)
 \end_layout
 
 \begin_layout Itemize
-et beaucoup plus \SpecialChar ldots
+and much more \SpecialChar ldots
 
 \end_layout
 
@@ -316,10 +214,10 @@ et beaucoup plus \SpecialChar ldots
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Objectifs de cette présentation
+Purpose of this presentation
 \end_layout
 
 \end_inset
@@ -328,12 +226,12 @@ Objectifs de cette présentation
 \end_layout
 
 \begin_layout Frame
-Cette présentation
+This presentation
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-décrit les fonctionnalités essentielles de 
+describes some basic features of 
 \begin_inset Flex Structure
 status collapsed
 
@@ -347,13 +245,13 @@ Beamer
 \end_layout
 
 \begin_layout Itemize
-précise en particulier comment elles peuvent être accessibles avec \SpecialChar LyX
+especially how they can be used with \SpecialChar LyX
 
 \end_layout
 
 \end_deeper
 \begin_layout Frame
-Pour une information plus générale et détaillée au sujet de 
+For more general and comprehensive information on 
 \begin_inset Flex Structure
 status collapsed
 
@@ -363,28 +261,34 @@ Beamer
 
 \end_inset
 
- proprement dit, veuillez vous référer au manuel très complet de la classe
- 
+ itself, please refer to the extensive class manual 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "beamer-ug"
 literal "true"
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
 \begin_layout Section
-Éléments d'une présentation
+Segments of a presentation
 \end_layout
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-La structure globale
+The global structure
 \end_layout
 
 \end_inset
@@ -393,25 +297,25 @@ La structure globale
 \end_layout
 
 \begin_layout Frame
-Une présentation comporte d'habitude
+A presentation usually consists of
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-une page de titre
+a title page
 \end_layout
 
 \begin_layout Itemize
-des diapositives qui peuvent être regroupées en sections ou parties
+slides that might be grouped to sections/parts
 \end_layout
 
 \begin_layout Itemize
-un appendice contenant une information complémentaire, comme une bibliographie
+an appendix with additional information, such as a bibliography
 \end_layout
 
 \end_deeper
 \begin_layout Frame
-Ces éléments sont décrits ci-après
+We describe these global segments in what follows.
 \end_layout
 
 \begin_layout Standard
@@ -423,10 +327,10 @@ Ces éléments sont décrits ci-après
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-La page de titre
+The title page
 \end_layout
 
 \end_inset
@@ -435,13 +339,13 @@ La page de titre
 \end_layout
 
 \begin_layout Frame
-Dans \SpecialChar LyX
-,une page de titre est construite à l'aide des styles 
+Within \SpecialChar LyX
+, a title page is constructed by the layouts 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Titre
+Title
 \end_layout
 
 \end_inset
@@ -451,7 +355,7 @@ Titre
 status collapsed
 
 \begin_layout Plain Layout
-SousTitre
+Subtitle
 \end_layout
 
 \end_inset
@@ -461,7 +365,7 @@ SousTitre
 status collapsed
 
 \begin_layout Plain Layout
-Auteur
+Author
 \end_layout
 
 \end_inset
@@ -471,7 +375,7 @@ Auteur
 status collapsed
 
 \begin_layout Plain Layout
-Institut
+Institute
 \end_layout
 
 \end_inset
@@ -486,28 +390,28 @@ Date
 
 \end_inset
 
- et 
+ and 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-GraphiqueTitre
+TitleGraphic
 \end_layout
 
 \end_inset
 
-
+.
+ 
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-aucun de ces styles n'est obligatoire, mais au moins un d'entre eux doit
- apparaître
+None of these elements is mandatory, but at least one must be given 
 \end_layout
 
 \begin_layout Itemize
-l’ordre d'insertion est indifférent (l'ordre effectif est imposé par la
- thème 
+The order of insertion does not matter (the real order is defined in the
+ 
 \begin_inset Flex Structure
 status collapsed
 
@@ -517,16 +421,16 @@ Beamer
 
 \end_inset
 
-)
+ theme)
 \end_layout
 
 \begin_layout Itemize
-pour 
+For 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Titre
+Title
 \end_layout
 
 \end_inset
@@ -536,7 +440,7 @@ Titre
 status collapsed
 
 \begin_layout Plain Layout
-SousTitre
+Subtitle
 \end_layout
 
 \end_inset
@@ -546,7 +450,7 @@ SousTitre
 status collapsed
 
 \begin_layout Plain Layout
-Auteur
+Author
 \end_layout
 
 \end_inset
@@ -556,12 +460,12 @@ Auteur
 status collapsed
 
 \begin_layout Plain Layout
-Institut
+Institute
 \end_layout
 
 \end_inset
 
-, et 
+ and 
 \begin_inset Flex Structure
 status collapsed
 
@@ -571,58 +475,58 @@ Date
 
 \end_inset
 
-, vous pouvez déclarer des formes 
-\begin_inset Quotes cld
+, you can define 
+\begin_inset Quotes eld
 \end_inset
 
-courtes
-\begin_inset Quotes crd
+short
+\begin_inset Quotes erd
 \end_inset
 
- via 
+ forms via 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Insertion\SpecialChar menuseparator
-Titre court\SpecialChar breakableslash
-Date raccourcie\SpecialChar breakableslash
+Insert\SpecialChar menuseparator
+Short Title\SpecialChar breakableslash
+Date\SpecialChar breakableslash
 \SpecialChar ldots
 
 \end_layout
 
 \end_inset
 
- Celles-ci sont utilisées dans le menu latéral ou les en-têtes (si le thème
- affiche de tels éléments)
+ These are used in the sidebar\SpecialChar breakableslash
+heading (given the theme actually provides
+ a sidebar\SpecialChar breakableslash
+heading)
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
-si vous sélectionnez 
+If you select 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Titre (Cadre simple)
+Title (Plain Frame)
 \end_layout
 
 \end_inset
 
- à la place de 
+ instead of 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Titre
+Title
 \end_layout
 
 \end_inset
 
-, la page de titre ne comportera ni menu latéral, ni en-tête
+, the title page will have no sidebar or heading
 \end_layout
 
-\end_deeper
 \end_deeper
 \begin_layout Standard
 \begin_inset Separator plain
@@ -633,10 +537,10 @@ Titre
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Diapositives/cadres
+Slides/Frames
 \end_layout
 
 \end_inset
@@ -645,15 +549,15 @@ Diapositives/cadres
 \end_layout
 
 \begin_layout Frame
-Les diapositives sont dénommées 
-\begin_inset Quotes cld
+Slides are called 
+\begin_inset Quotes eld
 \end_inset
 
-cadres
-\begin_inset Quotes crd
+frames
+\begin_inset Quotes erd
 \end_inset
 
- en 
+ in 
 \begin_inset Flex Structure
 status collapsed
 
@@ -663,42 +567,43 @@ Beamer
 
 \end_inset
 
-: tout ce qui est dans un cadre est affiché sur une diapositive (qui peut
- elle-même comporter plusieurs sous-diapos)
+.
+ Everything inside a frame is put on one slide (which itself might consist
+ of sub-slides).
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-sélectionner le style 
+Select the 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Cadre
+Frame
 \end_layout
 
 \end_inset
 
- pour débuter un cadre
+ style to start a frame
 \end_layout
 
 \begin_layout Itemize
-le titre du cadre doit être encapsulé dans un insert 
-\begin_inset Quotes cld
+The frame title is to be inserted in the 
+\begin_inset Quotes eld
 \end_inset
 
-Titre du cadre
-\begin_inset Quotes crd
+Frame title
+\begin_inset Quotes erd
 \end_inset
 
-, qui s’affiche automatiquement pour les nouveaux cadres ou qui peut être
- créé manuellement via 
+ inset, which is automatically inserted for new frames or can be manually
+ inserted via 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Insertion\SpecialChar menuseparator
-Titre du cadre
+Insert\SpecialChar menuseparator
+Frame Title
 \end_layout
 
 \end_inset
@@ -707,40 +612,36 @@ Titre du cadre
 \end_layout
 
 \begin_layout Itemize
-vous pouvez également utiliser le style 
+Alternatively, you can also use the 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-TitreCadre
+FrameTitle
 \end_layout
 
 \end_inset
 
-, qui propose une option de titre court (rarement nécessaire), mais aussi
- des options de recouvrement, plus utiles
+ layout, which additionally offers a (rarely used) short frame title option,
+ and, more importantly, overlay options
 \end_layout
 
 \begin_layout Itemize
-un sous-titre peut être ajouté via le style 
+A subtitle can be added via the 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-SousTitreCadre
+FrameSubtitle
 \end_layout
 
 \end_inset
 
-
+ layout
 \end_layout
 
 \begin_layout Itemize
-les options de cadre (voir
-\begin_inset space ~
-\end_inset
-
-
+Frame options (see 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "beamer-ug"
@@ -748,29 +649,40 @@ literal "true"
 
 \end_inset
 
- pour une liste d'options) sont insérées via 
+ for the diverse options) are inserted via 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Insertion\SpecialChar menuseparator
-Options du cadre
+Insert\SpecialChar menuseparator
+Frame Options
 \end_layout
 
 \end_inset
 
-, les options de recouvrement via 
+, overlay options via 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Insertion\SpecialChar menuseparator
-Spécifications de recouvrement {implicites}
+Insert\SpecialChar menuseparator
+Overlay Specifications
 \end_layout
 
 \end_inset
 
- (voir les explications ci-après)
+ and 
+\begin_inset Flex Alert
+status collapsed
+
+\begin_layout Plain Layout
+Insert\SpecialChar menuseparator
+Default Overlay Specifications
+\end_layout
+
+\end_inset
+
+ (we explain later what this is)
 \end_layout
 
 \end_deeper
@@ -804,10 +716,10 @@ label=myframe
 
 
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Les cadres peuvent être répétés
+Frames can be repeated
 \end_layout
 
 \end_inset
@@ -816,20 +728,21 @@ Les cadres peuvent être répétés
 \end_layout
 
 \begin_layout Frame
-Les cadres peuvent être répétés entièrement, ou seulement en termes de sous-diap
-ositives spécifiées, plusieurs fois et partout dans la présentation
+Frames can be repeated fully or only in terms of selected sub-slides, multiple
+ times at any later point of the presentation.
 \end_layout
 
 \begin_layout Frame
-Il suffit de donner au cadre voulu une étiquette via l'option de cadre 
-\begin_inset Quotes cld
+You just need to give the respective frame a label name via the frame option
+ 
+\begin_inset Quotes eld
 \end_inset
 
 label
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
- (comme il est fait ici)
+ (as done here).
 \end_layout
 
 \begin_deeper
@@ -839,47 +752,48 @@ label
 
 \end_deeper
 \begin_layout Frame
-Vous pouvez ensuite répéter ce cadre plus loin dans la présentation via
- la style 
+Then you can repeat this frame by means of the 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-RepriseCadre
+AgainFrame
 \end_layout
 
 \end_inset
 
-: saisir l'étiquette dans le style 
+ layout later in the presentation.
+ Just enter the label name in the 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-RepriseCadre
+AgainFrame
 \end_layout
 
 \end_inset
 
- et spécifier, si besoin, les sous-diapositives à répéter via 
+ layout and specify, if required, which sub-slides you want to be repeated
+ via 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Insertion\SpecialChar menuseparator
-Spécifications de recouvrement
+Insert\SpecialChar menuseparator
+Overlay Specifications
 \end_layout
 
 \end_inset
 
- (voir ci-après le concept de 
-\begin_inset Quotes cld
+ (again, see below for the concept of 
+\begin_inset Quotes eld
 \end_inset
 
-recouvrement
-\begin_inset Quotes crd
+overlays
+\begin_inset Quotes erd
 \end_inset
 
-)
+).
 \end_layout
 
 \begin_deeper
@@ -899,13 +813,13 @@ status open
 status collapsed
 
 \begin_layout Plain Layout
-Voici la preuve!
+Here's the proof!
 \end_layout
 
 \end_inset
 
- (ce texte est affiché seulement dans la sous-diapositive 3 qui est elle-même
- affichée seulement quand ce cadre sera répété ci-après)
+ (This text is only shown on sub-slide 3 which is itself only shown when
+ this frame is repeated later on)
 \end_layout
 
 \end_deeper
@@ -918,76 +832,67 @@ Voici la preuve!
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Contrôler le contenu des cadres
+Keeping frames together
 \end_layout
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Frame
-
-\end_layout
-
-\begin_layout Frame
 
 \end_layout
 
 \begin_deeper
 \begin_layout FrameSubtitle
-Utiliser l'emboîtement!
+Use nesting!
 \end_layout
 
 \begin_layout Itemize
-Noter que le contenu du cadre, si le style n'est pas 
+Note that all frame content, if the style is not 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Cadre
+Frame
 \end_layout
 
 \end_inset
 
-, doit être emboîté dans l'environnement de cadre (via 
+, must be nested to the frame environment (via 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Édition\SpecialChar menuseparator
-Augmenter le profondeur de liste
+Edit\SpecialChar menuseparator
+Increase List Depth
 \end_layout
 
 \end_inset
 
- ou 
+ or 
 \begin_inset Info
 type  "shortcut"
 arg   "depth-increment"
 \end_inset
 
-); ceci est automatique si vous insérez de nouveaux paragraphes dans le
- cadre.
+).
+ This is done automatically if you insert new frame paragraphs.
 \end_layout
 
 \begin_layout Itemize
-Le contenu emboîté est marqué par une barre verticale rouge dans la marge
- de la fenêtre de travail \SpecialChar LyX
-
+Nested content is marked by a red bar in the margin of the \SpecialChar LyX
+ workarea
 \end_layout
 
 \end_deeper
 \begin_layout Itemize
-Un contenu non emboîté (comme celui-ci) sera également affiché dans la présentat
-ion (sur une diapositive différente), mais ne sera pas aligné correctement
+Non-nested content (such as this) will also be displayed in the presentation
+ (on a separate slide), but not properly aligned
 \end_layout
 
 \begin_layout Itemize
-À éviter!
+So please avoid this
 \end_layout
 
 \begin_layout Standard
@@ -999,10 +904,10 @@ ion (sur une diapositive différente), mais ne sera pas aligné correctement
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Séparer les cadres
+Separating frames
 \end_layout
 
 \end_inset
@@ -1012,28 +917,33 @@ Séparer les cadres
 
 \begin_layout Frame
 \noindent
-Les cadres consécutifs doivent être séparés les uns de autres: ceci se fait
- par le biais du style 
+Consecutive frames have to be separated from each other.
+ This is done by means of the 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
 \noindent
-Séparateur
+Separator
 \end_layout
 
 \end_inset
 
- de paragraphe
+ inset, which can be produced by hitting return in an empty Standard paragraph
+ right below the frame (see UserGuide, sec.
+\begin_inset space ~
+\end_inset
+
+3.4.6).
 \end_layout
 
 \begin_deeper
 \begin_layout Block
 \begin_inset Argument 2
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Astuce
+Tip
 \end_layout
 
 \end_inset
@@ -1042,14 +952,14 @@ Astuce
 \end_layout
 
 \begin_layout Block
-Il existe une méthode automatique simple pour commencer un nouveau cadre,
- via 
+There is a simple and much more convenient way to start a new frame: Issue
+ 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Insertion\SpecialChar menuseparator
-Cadre séparé au-dessous
+Insert\SpecialChar menuseparator
+Separated Frame Below
 \end_layout
 
 \end_inset
@@ -1057,42 +967,48 @@ Cadre séparé au-dessous
  (
 \begin_inset Info
 type  "shortcut"
-arg   "command-alternatives environment-split ; environment-split previous"
+arg   "environment-split"
 \end_inset
 
- si vous vous trouvez dans un paragraphe 
+ if you are in a non-nested 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Cadre
+Frame
 \end_layout
 
 \end_inset
 
- non emboîté, ou 
+ paragraph, or 
 \begin_inset Info
 type  "shortcut"
 arg   "environment-split outer"
 \end_inset
 
-, respectivement, si vous vous trouvez dans un paragraphe emboîté à l'intérieur
- du cadre).
- Si vous êtes dans un titre de cadre, 
+, respectively, if you are in a nested paragraph within the frame).
+ If you are in the frame heading, 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Insertion\SpecialChar menuseparator
-Cadre séparé au-dessus
+Insert\SpecialChar menuseparator
+Separated Frame Above
 \end_layout
 
 \end_inset
 
- insère un nouveau cadre séparé correctement au-dessus du cadre courant!
+ inserts a new, properly separated frame above the current one!
 \end_layout
 
 \end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
 \begin_layout AgainFrame
 \begin_inset Argument 1
 status open
@@ -1116,10 +1032,10 @@ myframe
 
 \begin_layout PlainFrame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Types de cadres particuliers
+Special frame types
 \end_layout
 
 \end_inset
@@ -1129,7 +1045,7 @@ Types de cadres particuliers
 
 \begin_layout PlainFrame
 \SpecialChar LyX
- offre deux types de cadres particuliers:
+ provides two special frame types:
 \end_layout
 
 \begin_deeper
@@ -1138,14 +1054,14 @@ Types de cadres particuliers
 status collapsed
 
 \begin_layout Plain Layout
-CadreSimple
+Frame (plain)
 \end_layout
 
 \end_inset
 
- est un cadre sans menu latéral ni en-tête (comme celui-ci).
- Ceci est utile pour des cadres avec beaucoup de contenu ou des tableaux
- larges
+ is a frame without a sidebar/header (such as this one).
+ This is useful for slides with much content\SpecialChar breakableslash
+wide tables
 \end_layout
 
 \begin_layout Enumerate
@@ -1153,41 +1069,41 @@ CadreSimple
 status collapsed
 
 \begin_layout Plain Layout
-CadreFragile
+Frame (fragile)
 \end_layout
 
 \end_inset
 
- doit être utilisé si le cadre contient des éléments 
-\begin_inset Quotes cld
+ is to be used if the frame consists of 
+\begin_inset Quotes eld
 \end_inset
 
-fragiles
-\begin_inset Quotes crd
+fragile
+\begin_inset Quotes erd
 \end_inset
 
-, par exemple un contenu verbatim comme un listing 
+ content, especially verbatim stuff such as program listings
 \end_layout
 
 \end_deeper
 \begin_layout PlainFrame
-Si vous désirez un cadre simple fragile, passez l'option 
-\begin_inset Quotes cld
+If you want a fragile plain frame, pass the option 
+\begin_inset Quotes eld
 \end_inset
 
 plain
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
- à un cadre fragile ou l'option 
-\begin_inset Quotes cld
+ to a fragile frame or the option 
+\begin_inset Quotes eld
 \end_inset
 
 fragile
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
- à un cadre simple
+ to a plain frame.
 \end_layout
 
 \begin_layout Standard
@@ -1199,10 +1115,10 @@ fragile
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Structuration d'une présentation
+Sectioning a presentation
 \end_layout
 
 \end_inset
@@ -1212,8 +1128,7 @@ Structuration d'une présentation
 
 \begin_deeper
 \begin_layout Itemize
-Pour regrouper les cadres, vous pouvez utiliser les commandes usuelles de
- sectionnement (
+To group frames, you can use the usual sectioning commands (
 \begin_inset Flex Structure
 status collapsed
 
@@ -1228,31 +1143,31 @@ Section
 status collapsed
 
 \begin_layout Plain Layout
-SousSection
+Subsection
 \end_layout
 
 \end_inset
 
-, etc.)
+ etc.)
 \end_layout
 
 \begin_layout Itemize
-Ces sections sont affichées dans la table des matières, le menu latéral
- ou l'en-tête (en fonction du thème) et dans la sortie de type article (pour
- 
-\begin_inset Quotes cld
+These are shown in the table of contents, the sidebar\SpecialChar breakableslash
+header (depending on
+ the theme) and the article output (for 
+\begin_inset Quotes eld
 \end_inset
 
 article
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
-, voir ci-après la section sur les 
-\begin_inset Quotes cld
+ see below, the section on 
+\begin_inset Quotes eld
 \end_inset
 
 modes
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
 )
@@ -1268,35 +1183,31 @@ modes
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Les parties ont une signification particulière
+Parts have special meaning
 \end_layout
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Frame
 
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-Vous pouvez également diviser votre présentation en 
+You can also divide your presentation into 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Parties
+Parts
 \end_layout
 
 \end_inset
 
 .
- Notez cependant que, avec 
+ Note, however, that parts behave differently in 
 \begin_inset Flex Structure
 status collapsed
 
@@ -1306,17 +1217,22 @@ Beamer
 
 \end_inset
 
-, les parties ne se comportent pas comme avec les autres classes de document:
- une partie est vue comme 
-\begin_inset Quotes cld
+ than in other document classes: a part is considered to be 
+\begin_inset Quotes eld
 \end_inset
 
-une mini-présentation autonome, avec sa propre table des matières, ses propres
- menus de navigation, etc.
-\begin_inset Quotes crd
+a little 
+\begin_inset Quotes els
 \end_inset
 
-.
+talk of its own
+\begin_inset Quotes ers
+\end_inset
+
+ with its own table of contents, its own navigation bars, and so on.
+\begin_inset Quotes erd
+\end_inset
+
  
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -1330,10 +1246,11 @@ literal "true"
 \end_layout
 
 \begin_layout Itemize
-Ceci signifie par exemple que, si vous utilisez des parties, une table des
- matières ne reprendra que les sections et les sous-sections de la partie
- incluant cette table des matières, et les menus latéraux et les en-têtes
- ne feront apparaître que les sections de la partie courante.
+This means, for instance, that if you use parts, the table of contents will
+ only list the sections and subsections of the part that contains this table
+ of contents, and the sidebar\SpecialChar breakableslash
+header will also only show the sections of
+ the current part.
 \end_layout
 
 \end_deeper
@@ -1346,10 +1263,10 @@ Ceci signifie par exemple que, si vous utilisez des parties, une table des
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Réarranger les cadres
+Re-arranging frames
 \end_layout
 
 \end_inset
@@ -1360,10 +1277,10 @@ Réarranger les cadres
 \begin_deeper
 \begin_layout Block
 \begin_inset Argument 2
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Astuce
+Tip
 \end_layout
 
 \end_inset
@@ -1372,14 +1289,14 @@ Astuce
 \end_layout
 
 \begin_layout Block
-Saviez-vous que vous pouviez facilement déplacer et réarranger des cadres
- entiers via le plan (
+Did you know that you can easily move and re-arrange whole frames via the
+ outliner (
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Affichage\SpecialChar menuseparator
-Panneau du plan
+View\SpecialChar menuseparator
+Outline Pane
 \end_layout
 
 \end_inset
@@ -1388,17 +1305,17 @@ Panneau du plan
 \end_layout
 
 \begin_layout Block
-De même, vous pouvez aller à un cadre particulier via le menu de 
+Also, you can navigate to a specific frame via the 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Navigation
+Navigate
 \end_layout
 
 \end_inset
 
-!
+ menu!
 \end_layout
 
 \end_deeper
@@ -1411,10 +1328,10 @@ Navigation
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-L'annexe
+The appendix
 \end_layout
 
 \end_inset
@@ -1424,58 +1341,61 @@ L'annexe
 
 \begin_deeper
 \begin_layout Itemize
-Les annexes peuvent être utile pour un contenu additionnel ou mis en réserve.
- Une annexe fait partie de la présentation, mais n'apparaît pas dans la
- table des matières, le menu latéral et l'en-tête 
+Appendices might be useful for additional\SpecialChar breakableslash
+reserve material.
+ The appendix is part of the presentation, but not shown in the table of
+ contents\SpecialChar breakableslash
+sidebar\SpecialChar breakableslash
+header
 \end_layout
 
 \begin_layout Itemize
-Une annexe est insérée comme d'habitude dans \SpecialChar LyX
-
+An appendix is inserted as usual in \SpecialChar LyX
+:
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-utiliser 
+Use 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
 Document\SpecialChar menuseparator
-Début annexe(s) ici
+Start Appendix Here
 \end_layout
 
 \end_inset
 
- là où l'annexe doit commencer
+ at the position where the appendix should begin
 \end_layout
 
 \end_deeper
 \begin_layout Itemize
-Un contenu typique de l'annexe est la bibliographie
+Typical content of the appendix is the bibliography
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-elle est insérée comme avec les autres classes \SpecialChar LyX
-, via le style 
+You insert it as in all other \SpecialChar LyX
+ classes, via the 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Bibliographie
+Bibliography
 \end_layout
 
 \end_inset
 
- (voir la bibliographie à la fin de cette présentation pour un exemple)
+ style (see the bibliography at the end of this presentation as an example)
 \end_layout
 
 \begin_layout Itemize
-vous pouvez aussi utiliser Bib\SpecialChar TeX
-, bien que tous les styles Bib\SpecialChar TeX
- ne conviennent
- pas pour 
+Note that you can also use Bib\SpecialChar TeX
+, although not all Bib\SpecialChar TeX
+ styles are prepared
+ to work with 
 \begin_inset Flex Structure
 status collapsed
 
@@ -1490,16 +1410,23 @@ Beamer
 
 \end_deeper
 \end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
-Le concept de recouvrement
+The overlay concept
 \end_layout
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Que sont les recouvrements?
+What are overlays?
 \end_layout
 
 \end_inset
@@ -1508,11 +1435,9 @@ Que sont les recouvrements?
 \end_layout
 
 \begin_layout Frame
-Fondamentalement, les recouvrements permettent de modifier le contenu d'un
- cadre dynamiquement.
- Vous pouvez révéler des objets ou du texte par morceaux, faire s'atténuer
- du contenu, mettre des éléments en évidence, remplacer du texte, des images,
- etc.
+Basically, the overlay concept allows to change the slide content dynamically.
+ You can uncover things/text piecewise, fade out content, highlight things,
+ replace text, images etc.
 \end_layout
 
 \begin_deeper
@@ -1531,23 +1456,21 @@ status open
 
 \end_inset
 
-les recouvrements sont utiles pour construire les cadres pendant que vous
- parlez
+Overlays are useful to build up slides as you speak
 \end_layout
 
 \begin_layout Itemize
-ils vous aident à focaliser l'attention de votre auditoire sur des points
- particuliers
+They help you to shift your audience's focus on specific things
 \end_layout
 
 \begin_layout Itemize
-et ils aident votre auditoire à vous suivre
+And they help your audience to follow you
 \end_layout
 
 \begin_layout Itemize
-utilisez donc les recouvrements! 
+So use overlays! 
 \begin_inset Flex Alert
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Argument 1
@@ -1560,7 +1483,7 @@ status open
 
 \end_inset
 
-Vraiment, faites-le!
+Really, use them!
 \end_layout
 
 \end_inset
@@ -1578,10 +1501,10 @@ Vraiment, faites-le!
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Types de recouvrements
+Overlay types
 \end_layout
 
 \end_inset
@@ -1599,39 +1522,39 @@ Beamer
 
 \end_inset
 
- fournit de nombreux types de recouvrement différents.
- Les plus importants sont:
+ provides many different overlay types.
+ The most important ones are:
 \end_layout
 
 \begin_deeper
 \begin_layout Description
-Contenu
+Hidden
 \begin_inset space ~
 \end_inset
 
-caché: complètement invisible jusqu'à un certain point
+content: Stuff that is completely invisible up to a point
 \end_layout
 
 \begin_layout Description
-Contenu
+Covered
 \begin_inset space ~
 \end_inset
 
-couvert: atténué (pas tout à fait invisible)
+content: Stuff that is faded out (not completely invisible)
 \end_layout
 
 \begin_layout Description
-Contenu
+Highlighted
 \begin_inset space ~
 \end_inset
 
-exhibé: mis en évidence jusqu'à un certain point
+content: Stuff that is somehow emphasized at a certain point
 \end_layout
 
 \end_deeper
 \begin_layout Frame
-Nous donnons des exemples de ces types dans ce qui suit, mais nous commencerons
- par des remarques générales sur les possibilités offertes par les recouvrements
+We give examples for these types in what follows, but begin with some general
+ remarks on overlay possibilities
 \end_layout
 
 \begin_layout Standard
@@ -1643,10 +1566,10 @@ Nous donnons des exemples de ces types dans ce qui suit, mais nous commencerons
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Revue des actions possibles
+General overlay/action possibilities
 \end_layout
 
 \end_inset
@@ -1655,7 +1578,7 @@ Revue des actions possibles
 \end_layout
 
 \begin_layout Frame
-De nombreux éléments de 
+Many 
 \begin_inset Flex Structure
 status collapsed
 
@@ -1665,74 +1588,85 @@ Beamer
 
 \end_inset
 
- proposent des réglages de recouvrement.
- À la base, vous pouvez définir sur quelle(s) sous-diapositive(s) apparaîtra
- un contenu donné (
-\begin_inset Quotes cld
+ elements provide overlay settings.
+ Basically, you can define on which sub-slide(s) a given content appears
+ (
+\begin_inset Quotes eld
 \end_inset
 
 2
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
 , 
-\begin_inset Quotes cld
+\begin_inset Quotes eld
 \end_inset
 
 2-4
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
 , 
-\begin_inset Quotes cld
+\begin_inset Quotes eld
 \end_inset
 
 3-
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
 , 
-\begin_inset Quotes cld
+\begin_inset Quotes eld
 \end_inset
 
 1,3
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
- etc.), ou en quel mode d'exportation (
-\begin_inset Quotes cld
+ etc.), or in which output mode (
+\begin_inset Quotes eld
 \end_inset
 
-présentation
-\begin_inset Quotes crd
+presentation
+\begin_inset Quotes erd
 \end_inset
 
 , 
-\begin_inset Quotes cld
+\begin_inset Quotes eld
 \end_inset
 
 article
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
-, etc.)
+ etc.)
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-en \SpecialChar LyX
-, ces réglages sont accessibles en général via 
+In \SpecialChar LyX
+, these settings are generally accessible via 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Insérer\SpecialChar menuseparator
-Spécifications de {recouvrement|action}
+Insert\SpecialChar menuseparator
+Overlay Specifications
 \end_layout
 
 \end_inset
 
- 
+ or 
+\begin_inset Flex Alert
+status collapsed
+
+\begin_layout Plain Layout
+Insert\SpecialChar menuseparator
+Action Specifications
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Overprint
@@ -1751,53 +1685,54 @@ status open
 
 \begin_deeper
 \begin_layout Definition
-\begin_inset Quotes cld
+\begin_inset Quotes eld
 \end_inset
 
 Action
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
- est un concept plus général, qui n'inclut pas seulement ce que nous avons
- appelé 
-\begin_inset Quotes cld
+ is a more general concept, which does not only include what we have called
+ 
+\begin_inset Quotes eld
 \end_inset
 
-recouvrements
-\begin_inset Quotes crd
+overlays
+\begin_inset Quotes erd
 \end_inset
 
  (
-\begin_inset Quotes cld
+\begin_inset Quotes eld
 \end_inset
 
-sur quelles sous-diapo ceci doit-il être caché/recouvert/exhibé
-\begin_inset Quotes crd
+on which sub-slide[s] is this to be shown\SpecialChar breakableslash
+hidden\SpecialChar breakableslash
+highlighted
+\begin_inset Quotes erd
 \end_inset
 
-), mais aussi des directives comme 
-\begin_inset Quotes cld
+), but also tasks such as 
+\begin_inset Quotes eld
 \end_inset
 
-afficher ceci dans la présentation, pas dans le tirage papier
-\begin_inset Quotes crd
+only show this in the presentation, not on the handout
+\begin_inset Quotes erd
 \end_inset
 
- ou 
-\begin_inset Quotes cld
+ or 
+\begin_inset Quotes eld
 \end_inset
 
-afficher ceci seulement sur le second écran
-\begin_inset Quotes crd
+show this on the second screen only
+\begin_inset Quotes erd
 \end_inset
 
- (c.-à-d.
- les 
-\begin_inset Quotes cld
+ (so-called 
+\begin_inset Quotes eld
 \end_inset
 
 modes
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
 ).
@@ -1821,11 +1756,11 @@ status open
 \begin_deeper
 \begin_layout AlertBlock
 \begin_inset Argument 2
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Note aux aficionados de \SpecialChar LaTeX
-
+Note to the \SpecialChar LaTeX
+ aficionados
 \end_layout
 
 \end_inset
@@ -1834,8 +1769,8 @@ Note aux aficionados de \SpecialChar LaTeX
 \end_layout
 
 \begin_layout AlertBlock
-Les réglages de recouvrement/action correspondent aux options de commandes/envir
-onnements enserrées par
+The mentioned overlay/action settings conform to those command/environment
+ options embraced by
 \begin_inset Flex Alert
 status collapsed
 
@@ -1849,7 +1784,7 @@ status collapsed
 
 \end_inset
 
- et 
+ and 
 \begin_inset Flex Alert
 status collapsed
 
@@ -1860,44 +1795,43 @@ status collapsed
 
 \end_inset
 
- dans le code \SpecialChar LaTeX
- exporté.
+ in the \SpecialChar LaTeX
+ output.
 \end_layout
 
 \begin_layout AlertBlock
-Notez que \SpecialChar LyX
- ajoute ces signes en exportant, vous ne devez donc pas les ajouter
- vous-même.
- En d’autres termes, saisissez 
-\begin_inset Quotes cld
+Note that \SpecialChar LyX
+ adds those braces on export, so you must not enter them yourself.
+ In other words, enter 
+\begin_inset Quotes eld
 \end_inset
 
 1
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
- ou 
-\begin_inset Quotes cld
+ or 
+\begin_inset Quotes eld
 \end_inset
 
 +-
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
- dans l'insert et non 
-\begin_inset Quotes cld
+ to the overlay/action insets, not 
+\begin_inset Quotes eld
 \end_inset
 
 <1>
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
- ou 
-\begin_inset Quotes cld
+ or 
+\begin_inset Quotes eld
 \end_inset
 
 [<+->]
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
 !
@@ -1914,10 +1848,10 @@ Notez que \SpecialChar LyX
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Un exemple
+An example
 \end_layout
 
 \end_inset
@@ -1926,38 +1860,38 @@ Un exemple
 \end_layout
 
 \begin_layout Frame
-Soit par exemple une citation.
- Dans un environnement 
+Take for example a quote.
+ In a 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Cite
+Quote
 \end_layout
 
 \end_inset
 
-, vous pouvez spécifier les réglages de recouvrement via 
+ environment, you can specify the overlay settings via 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Insérer\SpecialChar menuseparator
-Spécifications de recouvrement
+Insert\SpecialChar menuseparator
+Overlay Specifications
 \end_layout
 
 \end_inset
 
 .
- Si vous les faites et saisissez 
-\begin_inset Quotes cld
+ If you do this and enter 
+\begin_inset Quotes eld
 \end_inset
 
 2
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
-, la citation n’apparaîtra que sur la (sous-)diapo 2:
+, the quote will only appear on (sub-)slide 2:
 \end_layout
 
 \begin_deeper
@@ -1972,32 +1906,24 @@ status open
 
 \end_inset
 
-
-\lang english
 Fear no more the heat o’ the sun
 \end_layout
 
 \begin_layout Quote
-
-\lang english
 Nor the furious winter’s rages
 \end_layout
 
 \begin_layout Quote
-
-\lang english
 Thou thy worldly task hast done
 \end_layout
 
 \begin_layout Quote
-
-\lang english
 Home art gone, and ta’en thy wages
 \end_layout
 
 \end_deeper
 \begin_layout Frame
-Voilà comment fonctionne le concept, fondamentalement
+This is how the concept works, basically.
 \end_layout
 
 \begin_layout Standard
@@ -2009,10 +1935,11 @@ Voilà comment fonctionne le concept, fondamentalement
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Couvrir ou cacher?
+Covering vs.
+ hiding
 \end_layout
 
 \end_inset
@@ -2021,27 +1948,26 @@ Couvrir ou cacher?
 \end_layout
 
 \begin_layout Frame
-La différence entre 
-\begin_inset Quotes cld
+The difference between 
+\begin_inset Quotes eld
 \end_inset
 
-couvert
-\begin_inset Quotes crd
+covering
+\begin_inset Quotes erd
 \end_inset
 
- et 
-\begin_inset Quotes cld
+ and 
+\begin_inset Quotes eld
 \end_inset
 
-caché
-\begin_inset Quotes crd
+hiding
+\begin_inset Quotes erd
 \end_inset
 
- consiste dans le fait que le contenu caché n’est simplement pas là, alors
- que le contenu couvert est seulement couvert (et l'espace correspondant
- est réservé).
- Si nous avions caché la citation sur la diapo précédente au lieu de la
- couvrir, elle n’aurait pris sa place qu'en apparaissant:
+ is that hidden content is treated as if it isn't there, while covered content
+ is just covered (and the space is reserved).
+ If we would have hidden the quote on the last slide and not covered, it
+ would only have taken space on appearance:
 \end_layout
 
 \begin_deeper
@@ -2056,26 +1982,18 @@ only@2
 
 \end_inset
 
-
-\lang english
 Fear no more the heat o’ the sun
 \end_layout
 
 \begin_layout Quote
-
-\lang english
 Nor the furious winter’s rages
 \end_layout
 
 \begin_layout Quote
-
-\lang english
 Thou thy worldly task hast done
 \end_layout
 
 \begin_layout Quote
-
-\lang english
 Home art gone, and ta’en thy wages
 \end_layout
 
@@ -2085,7 +2003,7 @@ Home art gone, and ta’en thy wages
 \end_layout
 
 \begin_layout Frame
-Vous pouvez voir comment le texte bouge quand la citation est révélée.
+You can see how this text moves when the quote is un-hidden.
 \end_layout
 
 \begin_layout Standard
@@ -2097,10 +2015,10 @@ Vous pouvez voir comment le texte bouge quand la citation est révélée.
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Degrés de couverture
+Coverage degrees
 \end_layout
 
 \end_inset
@@ -2110,7 +2028,7 @@ Degrés de couverture
 
 \begin_layout Frame
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -2134,15 +2052,15 @@ Beamer
 
 \end_inset
 
- propose plusieurs degrés de 
-\begin_inset Quotes cld
+ offers several degrees of 
+\begin_inset Quotes eld
 \end_inset
 
-couverture
-\begin_inset Quotes crd
+coverage
+\begin_inset Quotes erd
 \end_inset
 
-, qui peuvent être choisis via la commande 
+, which can be set via the command 
 \begin_inset Flex Alert
 status collapsed
 
@@ -2154,18 +2072,22 @@ setbeamercovered
 
 \end_inset
 
- soit globalement (pour toute la présentation), soit localement (pour un
- cadre isolé, comme ici).
- Implicitement, le contenu est complètement couvert.
- En mode 
-\begin_inset Quotes cld
+ either globally (for the whole presentation) or locally (e.
+\begin_inset space \thinspace{}
+\end_inset
+
+g.
+ for a single frame, as here).
+ By default, content is completely covered.
+ In 
+\begin_inset Quotes eld
 \end_inset
 
 transparent
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
-, le texte couvert est grisé.
+ mode, you can see covered text greyed-out:
 \end_layout
 
 \begin_deeper
@@ -2180,32 +2102,24 @@ status open
 
 \end_inset
 
-
-\lang english
 Fear no more the heat o’ the sun
 \end_layout
 
 \begin_layout Quote
-
-\lang english
 Nor the furious winter’s rages
 \end_layout
 
 \begin_layout Quote
-
-\lang english
 Thou thy worldly task hast done
 \end_layout
 
 \begin_layout Quote
-
-\lang english
 Home art gone, and ta’en thy wages
 \end_layout
 
 \end_deeper
 \begin_layout Frame
-Voyez le manuel 
+Check the 
 \begin_inset Flex Structure
 status collapsed
 
@@ -2215,7 +2129,7 @@ Beamer
 
 \end_inset
 
- pour d'autres possibilités.
+ manual for more possibilities.
 \end_layout
 
 \begin_layout Standard
@@ -2227,30 +2141,14 @@ Beamer
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Spécifications de recouvrement/action
+Default overlay/action specifications vs.
 \begin_inset Newline newline
 \end_inset
 
-
-\begin_inset Quotes cld
-\end_inset
-
-implicites
-\begin_inset Quotes crd
-\end_inset
-
- et 
-\begin_inset Quotes cld
-\end_inset
-
-normales
-\begin_inset Quotes crd
-\end_inset
-
-
+(normal) overlay/action specifications
 \end_layout
 
 \end_inset
@@ -2260,47 +2158,55 @@ normales
 
 \begin_deeper
 \begin_layout Itemize
-Pour certains environnements (comme les listes et les cadres), vous pouvez
- définir des 
-\begin_inset Quotes cld
+For some environments (such as lists and also frames), you can set 
+\begin_inset Quotes eld
 \end_inset
 
-spécifications implicites
-\begin_inset Quotes crd
+default specifications
+\begin_inset Quotes erd
 \end_inset
 
- en plus des spécifications normales (dans le cas des listes: 
-\begin_inset Quotes cld
+ additionally to normal overlay/action specifications (or in the case of
+ lists: 
+\begin_inset Quotes eld
 \end_inset
 
-spécifications de recouvrement {d'élément}
-\begin_inset Quotes crd
+overlay specifications
+\begin_inset Quotes erd
 \end_inset
 
- pour toute la liste ou pour un élément)
+ for the whole list and 
+\begin_inset Quotes eld
+\end_inset
+
+item overlay specifications
+\begin_inset Quotes erd
+\end_inset
+
+ for singular items)
 \end_layout
 
 \begin_layout Itemize
-Les spécifications implicites s’appliquent à tout le contenu de l’environnement,
- si ce n'est pas spécifié autrement
+Default specifications apply to all content of the given environment, if
+ not individually specified otherwise
 \end_layout
 
 \begin_layout Itemize
-La syntaxe est celle d'un placement.
+They use a placeholder syntax.
  E.
 \begin_inset space \thinspace{}
 \end_inset
 
 g., 
-\begin_inset Quotes cld
+\begin_inset Quotes eld
 \end_inset
 
 +(1)-
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
- découvrira tous les éléments de la liste un par un (avec un décalage initial
- de 1) s'il n'y a pas de spécification particulière pour un élément:
+ will uncover all items in a list step by step (with a start offset of 1)
+ if they have no individual item specification:
 \end_layout
 
 \begin_deeper
@@ -2315,15 +2221,15 @@ status open
 
 \end_inset
 
-Un
+One
 \end_layout
 
 \begin_layout Itemize
-deux
+Two
 \end_layout
 
 \begin_layout Itemize
-trois
+Three
 \end_layout
 
 \begin_layout Itemize
@@ -2337,13 +2243,13 @@ status open
 
 \end_inset
 
-toujours
+Always
 \end_layout
 
 \end_deeper
 \end_deeper
 \begin_layout Frame
-Veuillez consulter le manuel 
+Please consult the 
 \begin_inset Flex Structure
 status collapsed
 
@@ -2353,7 +2259,7 @@ Beamer
 
 \end_inset
 
- pour les détails.
+ manual for details on this syntax.
 \end_layout
 
 \begin_layout Frame
@@ -2380,30 +2286,14 @@ status open
 
 
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Spécifications de recouvrement/action
+Default overlay/action specifications vs.
 \begin_inset Newline newline
 \end_inset
 
-
-\begin_inset Quotes cld
-\end_inset
-
-implicites
-\begin_inset Quotes crd
-\end_inset
-
- et 
-\begin_inset Quotes cld
-\end_inset
-
-normales
-\begin_inset Quotes crd
-\end_inset
-
-
+(normal) overlay/action specifications
 \end_layout
 
 \end_inset
@@ -2413,35 +2303,39 @@ normales
 
 \begin_layout Frame
 \noindent
-Ce cadre utilise une spécification de recouvrement implicite qui provoquera,
- pour chaque paragraphe sensible au recouvrement
+This frame uses a specific default overlay specification
+\end_layout
+
+\begin_layout Frame
+which causes each overlay-aware paragraph \SpecialChar ldots
+
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 \SpecialChar ldots
- ou élément de liste, \SpecialChar ldots
+ or list item \SpecialChar ldots
 
 \end_layout
 
 \begin_layout Itemize
 \SpecialChar ldots
- son apparition \SpecialChar ldots
+ to appear \SpecialChar ldots
 
 \end_layout
 
 \begin_layout Itemize
 \SpecialChar ldots
- sur une sous-diapo différente \SpecialChar ldots
+ on a subsequent sub-slide \SpecialChar ldots
 
 \end_layout
 
 \begin_layout Block
 \begin_inset Argument 2
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Un bloc
+A block
 \end_layout
 
 \end_inset
@@ -2451,7 +2345,7 @@ Un bloc
 
 \begin_layout Block
 \SpecialChar ldots
- l'un après l'autre
+ one after the other
 \end_layout
 
 \end_deeper
@@ -2475,30 +2369,14 @@ alert@+
 
 
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Spécifications de recouvrement/action
+Default overlay/action specifications vs.
 \begin_inset Newline newline
 \end_inset
 
-
-\begin_inset Quotes cld
-\end_inset
-
-implicites
-\begin_inset Quotes crd
-\end_inset
-
- et 
-\begin_inset Quotes cld
-\end_inset
-
-normales
-\begin_inset Quotes crd
-\end_inset
-
-
+(normal) overlay/action specifications
 \end_layout
 
 \end_inset
@@ -2508,24 +2386,26 @@ normales
 
 \begin_layout Frame
 \noindent
-Et ce cadre utilise une spécification de recouvrement implicite 
+And this frame uses a specific default overlay specification \SpecialChar ldots
+
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 \SpecialChar ldots
- qui provoquera, pour chaque éléments de liste,
-\end_layout
-
-\begin_layout Itemize
-\SpecialChar ldots
- une mise en relief \SpecialChar ldots
+ which causes each overlay-aware list item \SpecialChar ldots
 
 \end_layout
 
 \begin_layout Itemize
 \SpecialChar ldots
- sur des sous-diapos
+ to be highlighted \SpecialChar ldots
+
+\end_layout
+
+\begin_layout Itemize
+\SpecialChar ldots
+ on respective sub-slides
 \end_layout
 
 \end_deeper
@@ -2538,7 +2418,7 @@ Et ce cadre utilise une spécification de recouvrement implicite
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
 Pause
@@ -2550,7 +2430,7 @@ Pause
 \end_layout
 
 \begin_layout Frame
-Le style 
+The 
 \begin_inset Flex Structure
 status collapsed
 
@@ -2560,8 +2440,8 @@ Pause
 
 \end_inset
 
- vous permet de marquer un endroit à partir duquel le contenu sera couvert
- (implicitement sur une diapo, par rapport au contenu précédent):
+ layout lets you mark a point where all following content will be covered
+ (by default for one slide, with regard to the content preceding the pause):
 \end_layout
 
 \begin_deeper
@@ -2570,7 +2450,7 @@ Pause
 \end_layout
 
 \begin_layout Standard
-Après la première pause
+After first pause
 \end_layout
 
 \begin_layout Pause
@@ -2578,12 +2458,12 @@ Après la première pause
 \end_layout
 
 \begin_layout Standard
-Après la deuxième pause
+After second pause
 \end_layout
 
 \begin_layout Pause
 \begin_inset Argument 1
-status collapsed
+status open
 
 \begin_layout Plain Layout
 2
@@ -2596,7 +2476,8 @@ status collapsed
 
 \end_deeper
 \begin_layout Frame
-Implicitement, le pauses consécutive se terminent consécutivement.
+By default, consecutive pauses also end consecutively.
+ 
 \end_layout
 
 \begin_layout Frame
@@ -2605,15 +2486,14 @@ Via
 status collapsed
 
 \begin_layout Plain Layout
-Insérer\SpecialChar menuseparator
-Numéro de pause
+Insert\SpecialChar menuseparator
+Pause Number
 \end_layout
 
 \end_inset
 
-, vous pouvez cependant préciser un numéro de sous-diapo dans laquelle la
- pause concernée doit se terminer, indépendamment du nombre de pauses insérées
- précédemment..
+, however, you can specify a specific sub-slide at which the given pause
+ ends, independent from the number of pauses inserted before this one.
 \end_layout
 
 \begin_layout Standard
@@ -2625,10 +2505,10 @@ Numéro de pause
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Recouvrements de paragraphes
+Paragraph-wide overlays
 \end_layout
 
 \end_inset
@@ -2646,11 +2526,10 @@ Beamer
 
 \end_inset
 
- et \SpecialChar LyX
- proposent des styles de paragraphes dont le but est d'afficher/cacher
- des paragraphes entiers ou des séquences de paragraphes sur des diapos
- spécifiques.
- Ceux-ci sont:
+ and \SpecialChar LyX
+ provide you with paragraph layouts whose purpose it is to show/hide
+ whole paragraphs or sequences of paragraphs on specific slides.
+ These are particularly:
 \end_layout
 
 \begin_deeper
@@ -2669,24 +2548,24 @@ status open
 \end_layout
 
 \begin_layout Uncover
-Le style 
+The 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Découvrir
+Uncovered
 \end_layout
 
 \end_inset
 
- découvre la totalité du contenu dans la diapo spécifiée\SpecialChar ldots
+ layout which uncovers all content on the specified slides \SpecialChar ldots
 
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 \SpecialChar ldots
- en incluant les paragraphes emboîtés dans d'autres styles.
+ including nested paragraphs of other layout.
 \end_layout
 
 \end_deeper
@@ -2705,27 +2584,25 @@ status open
 \end_layout
 
 \begin_layout Only
-Le style 
+The 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Seulement
+Only
 \end_layout
 
 \end_inset
 
- révèle le contenu (notez de nouveau comment le texte encadrant le paragraphe
- concerné 
-\begin_inset Quotes cld
+ layout which un-hides content (note again how the surrounding text 
+\begin_inset Quotes eld
 \end_inset
 
-bouge
-\begin_inset Quotes crd
+moves
+\begin_inset Quotes erd
 \end_inset
 
- quand ce paragraphe devient visible).
- 
+ when this gets visible).
 \end_layout
 
 \begin_layout Overprint
@@ -2744,17 +2621,17 @@ status open
 
 \begin_deeper
 \begin_layout Standard
-Et l'environnement 
+And the 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Surimpression
+Overprint
 \end_layout
 
 \end_inset
 
- vous permet de saisir\SpecialChar ldots
+ environment which lets you enter \SpecialChar ldots
 
 \end_layout
 
@@ -2776,13 +2653,13 @@ status open
 \begin_deeper
 \begin_layout Standard
 \SpecialChar ldots
- un texte alternatif prenant un espace spécifique sur des différentes diapo
+ alternative text taking a specific space on specified slides.
 \end_layout
 
 \end_deeper
 \end_deeper
 \begin_layout Frame
-comme illustré ici.
+as demonstrated here.
 \end_layout
 
 \begin_layout Standard
@@ -2794,10 +2671,10 @@ comme illustré ici.
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Recouvrements en ligne
+Inline overlays
 \end_layout
 
 \end_inset
@@ -2810,7 +2687,7 @@ Recouvrements en ligne
 status collapsed
 
 \begin_layout Plain Layout
-Pour illustrer la différence entre découvert et visible:
+To demonstrate uncover/visible difference:
 \end_layout
 
 \end_inset
@@ -2844,37 +2721,37 @@ Beamer
 
 \end_inset
 
- inclut aussi des recouvrements en ligne pour les éléments textuels (en
- contraste avec les paragraphes entiers), accessibles via 
+ also supports inline overlays for text parts (as opposed to whole paragraphs),
+ which are accessible via 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Édition\SpecialChar menuseparator
- Style de texte
+Edit\SpecialChar menuseparator
+Text Style
 \end_layout
 
 \end_inset
 
- en \SpecialChar LyX
+ in \SpecialChar LyX
 :
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-vous pouvez 
+You can 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-découvrir
+uncover
 \end_layout
 
 \end_inset
 
- du 
+ 
 \begin_inset Flex Uncover
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Argument 1
@@ -2887,18 +2764,18 @@ status open
 
 \end_inset
 
-texte
+text
 \end_layout
 
 \end_inset
 
- sur les diapos spécifiées
+ on specific slides
 \end_layout
 
 \begin_layout Itemize
-vous pouvez rendre du 
+You can make 
 \begin_inset Flex Visible
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Argument 1
@@ -2911,7 +2788,7 @@ status open
 
 \end_inset
 
-texte
+text
 \end_layout
 
 \end_inset
@@ -2926,29 +2803,29 @@ visible
 
 \end_inset
 
- (ce qui est différent de simplement 
-\begin_inset Quotes cld
+ (which makes a difference to 
+\begin_inset Quotes eld
 \end_inset
 
-découvrir
-\begin_inset Quotes crd
+uncover
+\begin_inset Quotes erd
 \end_inset
 
- avec un réglage de couverture 
-\begin_inset Quotes cld
+ only with 
+\begin_inset Quotes eld
 \end_inset
 
 transparent
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
-, comme utilisé localement sur le présente diapo)
+ coverage setting, as used locally on this slide)
 \end_layout
 
 \begin_layout Itemize
-vous pouvez montrer du 
+You can show 
 \begin_inset Flex Only
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Argument 1
@@ -2971,18 +2848,18 @@ text
 status collapsed
 
 \begin_layout Plain Layout
-seulement
+only
 \end_layout
 
 \end_inset
 
- sur des diapos spécifiques
+ on specific slides
 \end_layout
 
 \begin_layout Itemize
-vous pouvez rendre du 
+You can make 
 \begin_inset Flex Invisible
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Argument 1
@@ -2995,7 +2872,7 @@ status open
 
 \end_inset
 
-texte
+text
 \end_layout
 
 \end_inset
@@ -3014,9 +2891,9 @@ invisible
 \end_layout
 
 \begin_layout Itemize
-et vous pouvez afficher du texte 
+And you can show 
 \begin_inset Flex Alternative
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Argument 1
@@ -3034,7 +2911,7 @@ status open
 status open
 
 \begin_layout Plain Layout
-différent
+different
 \end_layout
 
 \end_inset
@@ -3044,7 +2921,7 @@ différent
 status collapsed
 
 \begin_layout Plain Layout
-alternatif
+alternative
 \end_layout
 
 \end_inset
@@ -3054,23 +2931,23 @@ alternatif
 
 \end_inset
 
-
+ text
 \end_layout
 
 \end_deeper
 \begin_layout Frame
-Pour les styles de paragraphe, les réglages de recouvrement sont accessibles
- via le menu d'
+As for the paragraph layouts, the overlay settings can be accessed via the
+ 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Insertion
+Insert
 \end_layout
 
 \end_inset
 
-.
+ menu.
 \end_layout
 
 \begin_layout Standard
@@ -3082,10 +2959,10 @@ Insertion
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Commandes sensibles au recouvrement
+Overlay-aware commands
 \end_layout
 
 \end_inset
@@ -3094,33 +2971,34 @@ Commandes sensibles au recouvrement
 \end_layout
 
 \begin_layout Frame
-De nombreuses commandes 
-\begin_inset Quotes cld
+Many 
+\begin_inset Quotes eld
 \end_inset
 
-en ligne
-\begin_inset Quotes crd
+inline
+\begin_inset Quotes erd
 \end_inset
 
- (qui se trouvent dans le menu 
+ commands (also to be found at 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Édition\SpecialChar menuseparator
-Style de texte
+Edit\SpecialChar menuseparator
+Text Style
 \end_layout
 
 \end_inset
 
-) sont sensibles au recouvrement.
+) are overlay-aware.
+ 
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-De ce fait, vous pouvez mettre du texte sur des diapos spécifiques 
+Thus, you can make for instance text on specific slides 
 \begin_inset Flex Emphasize
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Argument 1
@@ -3133,14 +3011,14 @@ status open
 
 \end_inset
 
-en évidence
+emphasized
 \end_layout
 
 \end_inset
 
 , 
 \begin_inset Flex Bold
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Argument 1
@@ -3153,14 +3031,14 @@ status open
 
 \end_inset
 
-en gras
+bold
 \end_layout
 
 \end_inset
 
-, en 
+, shown in 
 \begin_inset Flex Alert
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Argument 1
@@ -3173,14 +3051,14 @@ status open
 
 \end_inset
 
-alerte
+alert
 \end_layout
 
 \end_inset
 
- ou en couleur 
+ or 
 \begin_inset Flex Structure
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Argument 1
@@ -3193,12 +3071,12 @@ status open
 
 \end_inset
 
-structurée
+structure
 \end_layout
 
 \end_inset
 
-.
+ color.
 \end_layout
 
 \begin_layout Block
@@ -3214,10 +3092,10 @@ status open
 
 
 \begin_inset Argument 2
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Indice
+Tip
 \end_layout
 
 \end_inset
@@ -3226,10 +3104,9 @@ Indice
 \end_layout
 
 \begin_layout Block
-Utilisez ces inserts de Mise en évidence et de police grasse (à la place
- des réglages de police usuels) également si vous n'avez pas beoin de recouvreme
-nt.
- Du fait de la manière dont 
+Use these Emphasize and Bold insets (instead of the usual respective font
+ settings) also if you do not need overlay specifications.
+ Due to the way emphasized and bold is defined in 
 \begin_inset Flex Structure
 status collapsed
 
@@ -3239,23 +3116,33 @@ Beamer
 
 \end_inset
 
- définit la mise en évidence et la police grasse, les modifications de police
- habituelles peuvent déclencher des erreurs \SpecialChar LaTeX
-, si on les utilise par exemple
- dans les en-têtes de section.
+, normal emphasizing and boldface can lead to \SpecialChar LaTeX
+ errors, e.
+\begin_inset space \thinspace{}
+\end_inset
+
+g.
+ when used in section headings.
 \end_layout
 
 \end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
-Environnements spécifiques
+Specific environments
 \end_layout
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Environnements spécifiques
+Specific environments
 \end_layout
 
 \end_inset
@@ -3264,33 +3151,33 @@ Environnements spécifiques
 \end_layout
 
 \begin_layout Frame
-Des environnements particulièrement adaptés aux présentations sont les suivants:
+Specific environments, particularly suited for presentations are:
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-divers 
-\begin_inset Quotes cld
+Diverse 
+\begin_inset Quotes eld
 \end_inset
 
-blocs
-\begin_inset Quotes crd
+blocks
+\begin_inset Quotes erd
 \end_inset
 
 
 \end_layout
 
 \begin_layout Itemize
-des environnements de théorèmes
+Theorem-style environments
 \end_layout
 
 \begin_layout Itemize
-des colonnes
+Columns
 \end_layout
 
 \end_deeper
 \begin_layout Frame
-Ils sont brièvement décrits ci-après.
+We sketch them briefly in what follows.
 \end_layout
 
 \begin_layout Standard
@@ -3302,10 +3189,10 @@ Ils sont brièvement décrits ci-après.
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Les blocs
+Blocks
 \end_layout
 
 \end_inset
@@ -3314,25 +3201,25 @@ Les blocs
 \end_layout
 
 \begin_layout Frame
-Les blocs peuvent contenir toutes sortes d’informations.
- Nous les avons utilisés jusqu'ici pour des 
-\begin_inset Quotes cld
+Blocks can contain all sorts of information.
+ We used them here for 
+\begin_inset Quotes eld
 \end_inset
 
-astuces
-\begin_inset Quotes crd
+tips
+\begin_inset Quotes erd
 \end_inset
 
- et des 
-\begin_inset Quotes cld
+ and 
+\begin_inset Quotes eld
 \end_inset
 
-indices
-\begin_inset Quotes crd
+hints
+\begin_inset Quotes erd
 \end_inset
 
 .
- La classe fournit 3 blocs pré-définis d'apparence différente:
+ The class provides 3 pre-defined blocks with different look:
 \end_layout
 
 \begin_deeper
@@ -3349,10 +3236,10 @@ status open
 
 
 \begin_inset Argument 2
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Bloc
+Block
 \end_layout
 
 \end_inset
@@ -3361,7 +3248,7 @@ Bloc
 \end_layout
 
 \begin_layout Block
-Un bloc d'usage général
+A general-purpose block
 \end_layout
 
 \begin_layout ExampleBlock
@@ -3377,10 +3264,10 @@ status open
 
 
 \begin_inset Argument 2
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Bloc exemple
+Example Block
 \end_layout
 
 \end_inset
@@ -3389,12 +3276,12 @@ Bloc exemple
 \end_layout
 
 \begin_layout ExampleBlock
-Un bloc pour les 
-\begin_inset Quotes cld
+A block for 
+\begin_inset Quotes eld
 \end_inset
 
-exemples
-\begin_inset Quotes crd
+examples
+\begin_inset Quotes erd
 \end_inset
 
 
@@ -3413,10 +3300,10 @@ status open
 
 
 \begin_inset Argument 2
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Bloc alerte
+Alert Block
 \end_layout
 
 \end_inset
@@ -3425,15 +3312,15 @@ Bloc alerte
 \end_layout
 
 \begin_layout AlertBlock
-Et un bloc 
-\begin_inset Quotes cld
+And an 
+\begin_inset Quotes eld
 \end_inset
 
-alerte
-\begin_inset Quotes crd
+alert
+\begin_inset Quotes erd
 \end_inset
 
- pour les remarques importantes.
+ block for important remarks.
 \end_layout
 
 \end_deeper
@@ -3446,10 +3333,10 @@ alerte
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Gestion des blocs
+Handling Blocks
 \end_layout
 
 \end_inset
@@ -3459,20 +3346,19 @@ Gestion des blocs
 
 \begin_deeper
 \begin_layout Itemize
-En \SpecialChar LyX
-, l'interface des blocs est similaire à celui des cadres, ce qui signifie
- que
+In \SpecialChar LyX
+, blocks have a similar user interface to frames, which means that
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-le, contenu interne au bloc doit être emboîté (si le style de paragraphe
- n'est pas 
+Content inside blocks needs to be nested (if the paragraph layout is not
+ 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Bloc
+Block
 \end_layout
 
 \end_inset
@@ -3481,18 +3367,17 @@ Bloc
 \end_layout
 
 \begin_layout Itemize
-les blocs consécutifs de même type doivent être séparés par un paragraphe
- de style 
+Consecutive blocks of the same type must be separated by the 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Séparateur
+Separator
 \end_layout
 
 \end_inset
 
-
+ paragraph style
 \end_layout
 
 \begin_deeper
@@ -3509,10 +3394,10 @@ only@2
 
 
 \begin_inset Argument 2
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Astuce
+Tip
 \end_layout
 
 \end_inset
@@ -3521,13 +3406,13 @@ Astuce
 \end_layout
 
 \begin_layout Block
-Utiliser 
+Use 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Édition\SpecialChar menuseparator
-Début de nouvel environnement (Bloc)
+Edit\SpecialChar menuseparator
+Start New Environment
 \end_layout
 
 \end_inset
@@ -3538,14 +3423,13 @@ type  "shortcut"
 arg   "environment-split"
 \end_inset
 
-) pour commencer instantanément un nouveau bloc depuis l'intérieur d'un
- bloc existant!
+) to quickly start a new block from within a previous block!
 \end_layout
 
 \end_deeper
 \end_deeper
 \begin_layout Itemize
-Les blocs sont sensibles au recouvrement
+Blocks are overlay-aware
 \end_layout
 
 \end_deeper
@@ -3558,10 +3442,10 @@ Les blocs sont sensibles au recouvrement
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Les environnements de théorèmes
+Theorem-style environments
 \end_layout
 
 \end_inset
@@ -3571,24 +3455,23 @@ Les environnements de théorèmes
 
 \begin_deeper
 \begin_layout FrameSubtitle
-(Théorème, corollaire, définition, définitions, exemple, exemples, fait,
- preuve, lemme)
+(Theorem, Corollary, Definition, Definitions, Example, Examples, Fact, Proof)
 \end_layout
 
 \end_deeper
 \begin_layout Frame
-Les théorèmes ressemblent aux blocs lors du rendu, mais leur titre est figé
- (en fonction du type de théorème).
+Theorems look similar to blocks in the output, but they have a fixed title
+ (depending on the type).
  
 \end_layout
 
 \begin_deeper
 \begin_layout Theorem
-Ceci est un théorème!
+This is a theorem!
 \end_layout
 
 \begin_layout Fact
-Ceci est un fait!
+This is a fact!
 \end_layout
 
 \begin_layout Pause
@@ -3602,13 +3485,13 @@ Via
 status collapsed
 
 \begin_layout Plain Layout
-Insertion\SpecialChar menuseparator
-Texte de théorème complémentaire
+Insert\SpecialChar menuseparator
+Additional Theorem Text
 \end_layout
 
 \end_inset
 
-, vous pouvez compléter le titre figé
+, you can add some extra text to this fixed title
 \end_layout
 
 \begin_deeper
@@ -3617,7 +3500,7 @@ Texte de théorème complémentaire
 status open
 
 \begin_layout Plain Layout
-il est mauvais!
+a bad one!
 \end_layout
 
 \end_inset
@@ -3626,8 +3509,7 @@ il est mauvais!
 \end_layout
 
 \begin_layout Example
-Un exemple avec du texte complémentaire (les parenthèses sont ajoutées automatiq
-uement)
+An example with additional text (brackets added automatically)
 \end_layout
 
 \end_deeper
@@ -3640,10 +3522,10 @@ uement)
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Les colonnes
+Columns
 \end_layout
 
 \end_inset
@@ -3652,7 +3534,7 @@ Les colonnes
 \end_layout
 
 \begin_layout Frame
-Il est quelquefois utile de diviser une présentation en colonnes.
+Sometimes it is useful to divide a presentation into columns
 \end_layout
 
 \begin_deeper
@@ -3663,7 +3545,7 @@ Il est quelquefois utile de diviser une présentation en colonnes.
 \begin_deeper
 \begin_layout Column
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -3678,17 +3560,17 @@ textwidth
 \end_layout
 
 \begin_layout Standard
-Pour ce faire, sélectionner d'abord le style 
+To do this, first select 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Colonnes
+Columns
 \end_layout
 
 \end_inset
 
- (attention au pluriel) pour commencer les colonnes
+ (note the plural) to start the columns
 \end_layout
 
 \begin_layout Pause
@@ -3697,7 +3579,7 @@ Colonnes
 
 \begin_layout Column
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -3712,17 +3594,17 @@ textwidth
 \end_layout
 
 \begin_layout Standard
-Puis, dans le paragraphe suivant, sélectionner 
+And then, in the following paragraph, select 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Colonne
+Column
 \end_layout
 
 \end_inset
 
- (au singulier) pour commencer une colonne particulière
+ (singular) to start a specific column
 \end_layout
 
 \end_deeper
@@ -3744,76 +3626,83 @@ Note:
 
 \begin_deeper
 \begin_layout Itemize
-avec l'environnement 
+In the 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Colonne
+Column
 \end_layout
 
 \end_inset
 
- (au singulier), il vous faut spécifier la largeur à l'aide de la syntaxe
- \SpecialChar LaTeX
- (mais quelque chose comme 
-\begin_inset Quotes cld
+ (singular) environment, you need to specify the width using \SpecialChar LaTeX
+ syntax (but
+ also something like 
+\begin_inset Quotes eld
 \end_inset
 
 3.5cm
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
- fonctionnera aussi)
+ will work)
 \end_layout
 
 \begin_layout Itemize
-toute 
+Any (singular) 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Colonne
+Column
 \end_layout
 
 \end_inset
 
- (au singulier) doit être encapsulée dans une 
+ must be nested to the (plural) 
 \begin_inset Flex Structure
 status collapsed
 
 \begin_layout Plain Layout
-Colonnes
-\end_layout
-
-\end_inset
-
- (au pluriel).
- De même, un contenu de colonne peut être n'importe quel style de paragraphe
- encapsulé dans une 
-\begin_inset Flex Structure
-status collapsed
-
-\begin_layout Plain Layout
-Colonne
+Columns
 \end_layout
 
 \end_inset
 
 .
+ Likewise, column content can be any paragraph style that is nested to a
+ singular 
+\begin_inset Flex Structure
+status collapsed
+
+\begin_layout Plain Layout
+Column
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
-Courtes remarques au sujet des modes
+Short remarks on modes
 \end_layout
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Les modes
+Modes
 \end_layout
 
 \end_inset
@@ -3822,7 +3711,7 @@ Les modes
 \end_layout
 
 \begin_layout Frame
-En termes 
+In 
 \begin_inset Flex Structure
 status collapsed
 
@@ -3832,60 +3721,60 @@ Beamer
 
 \end_inset
 
-, un 
-\begin_inset Quotes cld
+ terms, a 
+\begin_inset Quotes eld
 \end_inset
 
 mode
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
- est une chemin spécifique vers un rendu.
- Il y a plusieurs modes avec des objectifs différents, nous en retiendrons
- particulièrement trois: 
+ is a specific output route.
+ There are several modes for different purposes.
+ We just want to highlight three:
 \end_layout
 
 \begin_deeper
 \begin_layout Enumerate
-Le mode 
-\begin_inset Quotes cld
+The 
+\begin_inset Quotes eld
 \end_inset
 
 beamer
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
- 
+ mode
 \end_layout
 
 \begin_layout Enumerate
-Le mode 
-\begin_inset Quotes cld
+The 
+\begin_inset Quotes eld
 \end_inset
 
-présentation
-\begin_inset Quotes crd
+presentation
+\begin_inset Quotes erd
 \end_inset
 
-
+ mode
 \end_layout
 
 \begin_layout Enumerate
-Le mode 
-\begin_inset Quotes cld
+The 
+\begin_inset Quotes eld
 \end_inset
 
 article
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
- 
+ mode
 \end_layout
 
 \end_deeper
 \begin_layout Frame
-Le mode beamer est implicite.
- Sans autre spécification, votre document 
+The beamer mode is the default.
+ Unless explicitly specified otherwise, your 
 \begin_inset Flex Structure
 status collapsed
 
@@ -3895,15 +3784,15 @@ Beamer
 
 \end_inset
 
- est en mode 
-\begin_inset Quotes cld
+ document is in 
+\begin_inset Quotes eld
 \end_inset
 
 beamer
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
-.
+ mode.
 \end_layout
 
 \begin_layout Standard
@@ -3926,10 +3815,10 @@ presentation
 
 
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Changement de mode
+Switching Modes
 \end_layout
 
 \end_inset
@@ -3938,45 +3827,43 @@ Changement de mode
 \end_layout
 
 \begin_layout Frame
-Cependant, vous pouvez basculer des parties de document, des cadres, des
- en-têtes et tous les environnements sensibles à l'
-\begin_inset Quotes cld
+However, you can switch document parts, frames, headings and all 
+\begin_inset Quotes eld
 \end_inset
 
 action
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
- dans un mode différent.
- Par exemple, nous avons basculé le cadre courant en mode 
-\begin_inset Quotes cld
+-aware environments to a different mode.
+ For instance, we have switched this frame to 
+\begin_inset Quotes eld
 \end_inset
 
-présentation
-\begin_inset Quotes crd
+presentation
+\begin_inset Quotes erd
 \end_inset
 
-.
+ mode.
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-Qu'est-ce que cela signifie?
+What does this mean?
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-Cela veut dire qu'il ne sera visible que dans la présentation, pas dans
- l' 
-\begin_inset Quotes cld
+It means that this frame will only be visible in the presentation, not in
+ the accompanying 
+\begin_inset Quotes eld
 \end_inset
 
 article
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
- qui l'accompagne, si vous produisez un tel article (nous allons préciser
- ceci ci-après) 
+, if you produce such an article (we will elaborate on this a bit below)
 \end_layout
 
 \end_deeper
@@ -4001,10 +3888,10 @@ article
 
 
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Changement de mode
+Switching Modes
 \end_layout
 
 \end_inset
@@ -4013,16 +3900,16 @@ Changement de mode
 \end_layout
 
 \begin_layout Frame
-Ce cadre ne sera pas visible dans la présentation, mais seulement dans l'article
-, puisqu'il est en mode 
-\begin_inset Quotes cld
+This frame will not be visible in the presentation, but only in the article,
+ since it is in 
+\begin_inset Quotes eld
 \end_inset
 
 article
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
-.
+ mode.
 \end_layout
 
 \begin_layout Standard
@@ -4034,10 +3921,10 @@ article
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Et alors?
+So what?
 \end_layout
 
 \end_inset
@@ -4046,40 +3933,38 @@ Et alors?
 \end_layout
 
 \begin_layout Frame
-C'est très pratique! Vous pouvez construire un seul document et produire
- à la fois une présentation et – en utilisant le mode article – une version
- papier.
+This is actually pretty useful! You can set up a single document and produce
+ both a presentation and – using the article mode – a handout.
+ 
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-Et nous disons bien un 
+And we mean a 
 \begin_inset Flex Emphasize
 status collapsed
 
 \begin_layout Plain Layout
-vrai
+real
 \end_layout
 
 \end_inset
 
- rendu papier, utilisable, et non pas une de ces impressions mises à l’échelle
- si communes aujourd’hui (mais si vous y tenez, vous pouvez aussi produire
- ce genre de rendu)
+, useful handout, not one of those scaled slide printouts that are so common
+ nowadays (but if you insist, you can produce one of those as well)
 \end_layout
 
 \begin_layout Itemize
-Les modes vous permettent d'ajouter du contenu complémentaire au rendu papier,
- ou d'enlever certaines parties
+Modes allow you to add extra text to the handout or hide parts from it
 \end_layout
 
 \begin_layout Itemize
-Vous pouvez par exemple utiliser des graphiques différents dans le présentation
- et dans le rendu papier
+You can use for instance different graphics for the presentation and the
+ handout
 \end_layout
 
 \begin_layout Itemize
-et cetera \SpecialChar ldots
+and so on \SpecialChar ldots
 
 \end_layout
 
@@ -4093,10 +3978,10 @@ et cetera \SpecialChar ldots
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Exemples
+Examples
 \end_layout
 
 \end_inset
@@ -4105,15 +3990,16 @@ Exemples
 \end_layout
 
 \begin_layout Frame
-Comme on l'a vu, beaucoup d'éléments sont sensibles au mode.
+As said, many elements are mode-aware.
+ 
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 \noindent
-Vous pouvez afficher certains éléments textuels 
+You can show particular text 
 \begin_inset Flex Only
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Argument 1
@@ -4126,14 +4012,14 @@ presentation
 
 \end_inset
 
-seulement dans la présentation
+only in the presentation
 \end_layout
 
 \end_inset
 
 
 \begin_inset Flex Only
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Argument 1
@@ -4146,7 +4032,7 @@ article
 
 \end_inset
 
-seulement dans l'article
+only in the article
 \end_layout
 
 \end_inset
@@ -4157,9 +4043,9 @@ status collapsed
 
 \begin_layout Plain Layout
 \noindent
-Édition\SpecialChar menuseparator
-Style de texte\SpecialChar menuseparator
-Seulement
+Edit\SpecialChar menuseparator
+Text Style\SpecialChar menuseparator
+Only
 \end_layout
 
 \end_inset
@@ -4170,46 +4056,44 @@ Seulement
 \end_deeper
 \begin_layout Frame
 \begin_inset Flex ArticleMode
-status collapsed
+status open
 
 \begin_layout Itemize
-Ou mettre toutes sortes de contenus compliqués dans un insert qui n'apparaîtra
- que dans le rendu papier via 
+Or put all sorts of complex contents via 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Insertion\SpecialChar menuseparator
-Inserts personnalisés\SpecialChar menuseparator
-ModeArticle
+Insert\SpecialChar menuseparator
+Custom Insets\SpecialChar menuseparator
+ArticleMode
 \end_layout
 
 \end_inset
 
-
+ in an inset that will only be output in article mode
 \end_layout
 
 \end_inset
 
 
 \begin_inset Flex PresentationMode
-status collapsed
+status open
 
 \begin_layout Itemize
-Ou mettre toutes sortes de contenus compliqués dans un insert qui n'apparaîtra
- que dans la présentation via 
+Or put all sorts of complex contents via 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Insertion\SpecialChar menuseparator
-Inserts personnalisés\SpecialChar menuseparator
-ModePrésentation
+Insert\SpecialChar menuseparator
+Custom Insets\SpecialChar menuseparator
+PresentationMode
 \end_layout
 
 \end_inset
 
-
+ in an inset that will only be output in presentation mode
 \end_layout
 
 \end_inset
@@ -4219,7 +4103,7 @@ ModePrésentation
 
 \begin_deeper
 \begin_layout Itemize
-Ou vous pouvez décider qu'une 
+Or you can define that an 
 \begin_inset Flex Emphasize
 status collapsed
 
@@ -4234,14 +4118,14 @@ presentation
 
 \end_inset
 
-mise en évidence
+emphasizing
 \end_layout
 
 \end_inset
 
- n'apparaîtra que dans la présentation, une 
+ should only apply to the presentation, 
 \begin_inset Flex Bold
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Argument 1
@@ -4254,38 +4138,39 @@ article
 
 \end_inset
 
-police grasse
+a bold face
 \end_layout
 
 \end_inset
 
- seulement dans l'article
-\end_layout
-
-\begin_layout Itemize
-Vous pouvez aussi afficher des en-têtes de section ou des titres/sous-titres
- de cadre seulement dans la présentation ou l'article (comme nous le faisons
- ici pour les titres de la 
-\begin_inset Quotes cld
-\end_inset
-
-Table des matières
-\begin_inset Quotes crd
-\end_inset
-
- et des 
-\begin_inset Quotes cld
-\end_inset
-
-Références
-\begin_inset Quotes crd
-\end_inset
-
-).
+ only to article
 \end_layout
 
 \begin_layout Itemize
-Et beaucoup plus de choses de ce style \SpecialChar ldots
+You can also show section headings or frame titles\SpecialChar breakableslash
+subtitles only in the
+ presentation\SpecialChar breakableslash
+article (like we do for the 
+\begin_inset Quotes eld
+\end_inset
+
+Contents
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+References
+\begin_inset Quotes erd
+\end_inset
+
+ frame titles in this presentation)
+\end_layout
+
+\begin_layout Itemize
+And much more of this sort \SpecialChar ldots
 
 \end_layout
 
@@ -4299,10 +4184,10 @@ Et beaucoup plus de choses de ce style \SpecialChar ldots
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Construction d'un article
+Setting up an article
 \end_layout
 
 \end_inset
@@ -4311,13 +4196,14 @@ Construction d'un article
 \end_layout
 
 \begin_layout Frame
-Construire un article beamer est facile.
+Setting up a beamer article with \SpecialChar LyX
+ is easy.
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 \noindent
-Il suffit de créer un nouveau document de la classe 
+Just create a new document with the class 
 \begin_inset Flex Structure
 status collapsed
 
@@ -4328,7 +4214,7 @@ Beamer Article (Standard Class)
 
 \end_inset
 
- ou 
+ or 
 \begin_inset Flex Structure
 status collapsed
 
@@ -4343,15 +4229,15 @@ Beamer Article (KOMA-Script)
 \end_layout
 
 \begin_layout Itemize
-Puis d'ajouter la présentation à ce document en tant que sous-document (via
- 
+Then add the presentation to this document as a child (via 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
-Insertion\SpecialChar menuseparator
-Fichier\SpecialChar menuseparator
-Sous-document
+Insert\SpecialChar menuseparator
+File\SpecialChar menuseparator
+Child Document\SpecialChar ldots
+
 \end_layout
 
 \end_inset
@@ -4360,31 +4246,34 @@ Sous-document
 \end_layout
 
 \begin_layout Itemize
-Et voilà! Maintenant vous pouvez produire le rendu papier et la présentation
- en compilant l'un de ces deux documents, alors qu'il vous suffit d'en éditer
- un seul, c'est-à-dire la présentation.
+And that's it.
+ Now you can produce the handout and the presentation by compiling one of
+ these two documents, while you only need to edit one, namely the presentation
 \end_layout
 
 \end_deeper
 \begin_layout Frame
-Voyez le document d'exemple 
-\family typewriter
-beamer-article
-\family default
- accompagnant cette présentation.
- Vous le trouverez dans le même répertoire que le présent document.
+Check out the accompanying beamer-article example document for this presentation.
+ You can find it in the same folder as this document.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
-Modifier l'apparence
+Changing the look
 \end_layout
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Les thèmes
+Themes
 \end_layout
 
 \end_inset
@@ -4394,7 +4283,6 @@ Les thèmes
 
 \begin_deeper
 \begin_layout Itemize
-Les présentations 
 \begin_inset Flex Structure
 status collapsed
 
@@ -4404,10 +4292,10 @@ Beamer
 
 \end_inset
 
- sont structurées en thèmes.
- Les thèmes définissent les couleurs utilisées, la structure macroscopique
- (utilisation de barres latérales, des en-têtes, etc.), les polices, l'apparence
- des listes, des blocs et plus généralement l'ergonomie d'une présentation
+ presentations are themeable.
+ Themes determine the colors used, the macro structure (use of sidebars,
+ headlines etc.), the fonts, the look of list items, blocks and in general
+ the whole look and feel of a presentation
 \end_layout
 
 \begin_layout Itemize
@@ -4420,37 +4308,33 @@ Beamer
 
 \end_inset
 
- fournit lui-même un certain nombre de thèmes d'apparence différente dans
- lesquels choisir (nous utilisons ici le thème 
-\begin_inset Quotes cld
+ itself ships a number of different-looking themes to chose from (we use
+ the 
+\begin_inset Quotes eld
 \end_inset
 
 Berkeley
-\begin_inset Quotes crd
+\begin_inset Quotes erd
 \end_inset
 
-, ouvrir 
+ theme in this presentation; see 
 \begin_inset Flex Alert
 status collapsed
 
 \begin_layout Plain Layout
 Document\SpecialChar menuseparator
-Paramètres\SpecialChar menuseparator
-Préambule
-\begin_inset space ~
-\end_inset
-
-LaTeX
+Settings\SpecialChar menuseparator
+\SpecialChar LaTeX
+ Preamble
 \end_layout
 
 \end_inset
 
- pour voir comment nous avons activé et légèrement modifié ce thème)
+ for how we activated and slightly tweaked the theme)
 \end_layout
 
 \begin_layout Itemize
-En plus de cet ensemble standard, vous pouvez trouver d'autres thèmes sur
- 
+In addition to this standard set, you can get more themes from 
 \begin_inset CommandInset href
 LatexCommand href
 name "CTAN"
@@ -4459,13 +4343,12 @@ literal "false"
 
 \end_inset
 
- et ailleurs dans l'Internet
+ and other places at the Internet
 \end_layout
 
 \begin_layout Itemize
-Si vous n'êtes toujours pas satisfait ou si vous avez besoin d'un thème
- adapté à celui de votre université ou votre entreprise, la construction
- d'un thème nouveau est expliquée dans le le manuel 
+If you still are not satisified or if you need a theme matching to your
+ University's or company's corporate design, the 
 \begin_inset Flex Structure
 status collapsed
 
@@ -4475,7 +4358,7 @@ Beamer
 
 \end_inset
 
- 
+ manual 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "beamer-ug"
@@ -4483,7 +4366,7 @@ literal "true"
 
 \end_inset
 
-.
+ explains how you can setup your own theme
 \end_layout
 
 \end_deeper
@@ -4496,10 +4379,10 @@ literal "true"
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Les thèmes peuvent être modifiés
+Themes can be modified
 \end_layout
 
 \end_inset
@@ -4508,18 +4391,18 @@ Les thèmes peuvent être modifiés
 \end_layout
 
 \begin_layout Frame
-Mais vous n'êtes pas obligé de construire un thème à partir de rien si vous
- voulez modifier l'apparence
+But you do not need to write a theme from scratch if you want to alter the
+ look.
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-Les thèmes existants peuvent être modifiés dans le détail ou dans les principaux
- attributs (comme la couleur)
+Existing themes can be modified both in details and in major areas (such
+ as the coloring)
 \end_layout
 
 \begin_layout Itemize
-Consulter le manuel 
+Consult the 
 \begin_inset Flex Structure
 status collapsed
 
@@ -4529,7 +4412,7 @@ Beamer
 
 \end_inset
 
- 
+ manual 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "beamer-ug"
@@ -4537,22 +4420,29 @@ literal "true"
 
 \end_inset
 
- pour en savoir plus
+ for details
 \end_layout
 
 \end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
-Et plus \SpecialChar ldots
+And more \SpecialChar ldots
 
 \end_layout
 
 \begin_layout Frame
 \begin_inset Argument 4
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \SpecialChar ldots
- beaucoup plus!
+ much more!
 \end_layout
 
 \end_inset
@@ -4561,7 +4451,7 @@ status collapsed
 \end_layout
 
 \begin_layout Frame
-Notez bien 
+Note that 
 \begin_inset Flex Structure
 status collapsed
 
@@ -4571,8 +4461,8 @@ Beamer
 
 \end_inset
 
- peut faire beaucoup plus que ce qui est décrit ici.
- Le manuel 
+ can do much more than we have described here.
+ The 
 \begin_inset Flex Structure
 status collapsed
 
@@ -4582,7 +4472,7 @@ Beamer
 
 \end_inset
 
- 
+ manual 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "beamer-ug"
@@ -4590,11 +4480,11 @@ literal "true"
 
 \end_inset
 
- contient une documentation détaillée.
+ provides a comprehensive documentation.
 \end_layout
 
 \begin_layout Frame
-Voyez également les exemples et modèles 
+Also, have a look at the 
 \begin_inset Flex Structure
 status collapsed
 
@@ -4604,30 +4494,30 @@ Beamer
 
 \end_inset
 
- distribués avec \SpecialChar LyX
+ examples and templates shipped with \SpecialChar LyX
 !
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
 \start_of_appendix
-Annexe bibliographique
+Appendix
 \end_layout
 
 \begin_layout Standard
 \begin_inset Note Note
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Nous utilisons ci-après le style TitreCadre (et non pas l'insert 
-\begin_inset Quotes cld
-\end_inset
-
-Titre du cadre
-\begin_inset Quotes crd
-\end_inset
-
-)pour éviter la redondance du titre dans le mode article.
- Notez également le 
+We use a FrameTitle layout (and not the Frame Title inset) below in order
+ to exclude the redundant title from the article.
+ Also note the 
 \begin_inset Flex Alert
 status collapsed
 
@@ -4639,8 +4529,9 @@ newblock
 
 \end_inset
 
- dans la bibliographie, nécessaire pour obtenir un rendu correct de l'entrée
- (remarquez la couleur différente du nom d'auteur dans le rendu PDF).
+ in the bibliography.
+ It is needed for proper entry rendering (note the different coloring of
+ the author in the PDF output).
 \end_layout
 
 \end_inset
@@ -4664,7 +4555,7 @@ presentation
 
 \end_inset
 
-Références
+References
 \end_layout
 
 \begin_layout Bibliography
@@ -4688,11 +4579,7 @@ newblock
 
 \end_inset
 
- 
-\lang english
-The beamer class.
-
-\lang french
+ The beamer class.
  
 \begin_inset Flex URL
 status collapsed
@@ -4708,5 +4595,12 @@ https://ctan.org/tex-archive/macros/latex/contrib/beamer/doc/beameruserguide.pdf
 \end_layout
 
 \end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
 \end_body
 \end_document

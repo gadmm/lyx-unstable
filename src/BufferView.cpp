@@ -82,6 +82,7 @@
 #include "support/gettext.h"
 #include "support/lassert.h"
 #include "support/lstrings.h"
+#include "support/lyxlib.h"
 #include "support/Package.h"
 #include "support/types.h"
 
@@ -369,8 +370,8 @@ BufferView::~BufferView()
 
 int BufferView::rightMargin() const
 {
-	// The value used to be hardcoded to 10, which is 0.1in at 100dpi
-	int const default_margin = Length(0.1, Length::IN).inPixels(0);
+	// The value used to be hardcoded to 10
+	int const default_margin = zoomedPixels(10);
 	// The additional test for the case the outliner is opened.
 	if (!full_screen_ || !lyxrc.full_screen_limit
 	    || width_ < lyxrc.full_screen_width + 2 * default_margin)
@@ -396,6 +397,21 @@ double BufferView::inPixelsDouble(Length const & len) const
 int BufferView::inPixels(Length const & len) const
 {
 	return (int) round(inPixelsDouble(len));
+}
+
+
+int BufferView::zoomedPixels(int pix) const
+{
+	// FIXME: the dpi setting should really depend on the BufferView
+	// (think different monitors).
+
+	// Zoom factor specified by user in percent
+	double const zoom = lyxrc.currentZoom / 100.0; // [percent]
+
+	// DPI setting for monitor: pixels/inch
+	double const dpi = lyxrc.dpi; // screen resolution [pixels/inch]
+
+	return support::iround(pix * zoom * dpi);
 }
 
 

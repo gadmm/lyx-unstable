@@ -152,6 +152,7 @@ dist_frexamples_DATA = \
 	examples/fr/seminar.lyx \
 	examples/fr/simplecv.lyx \
 	examples/fr/splash.lyx \
+	examples/fr/xyfigure.lyx \
 	examples/fr/xyfigure.png \
 	examples/fr/xypic.lyx
 
@@ -2381,6 +2382,7 @@ dist_scripts_DATA += \
 	scripts/lyxpak.py \
 	scripts/lyxpreview2bitmap.py \
 	scripts/lyxpreview_tools.py \
+	scripts/lyx_batch.pl.in \
 	scripts/prefs2prefs.py \
 	scripts/prefs2prefs_lfuns.py \
 	scripts/prefs2prefs_prefs.py \

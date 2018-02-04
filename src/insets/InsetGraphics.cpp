@@ -1097,13 +1097,14 @@ void getGraphicsGroups(Buffer const & b, set<string> & ids)
 	Inset & inset = b.inset();
 	InsetIterator it  = inset_iterator_begin(inset);
 	InsetIterator const end = inset_iterator_end(inset);
-	for (; it != end; ++it)
-		if (it->lyxCode() == GRAPHICS_CODE) {
-			InsetGraphics & ins = static_cast<InsetGraphics &>(*it);
-			InsetGraphicsParams inspar = ins.getParams();
-			if (!inspar.groupId.empty())
-				ids.insert(inspar.groupId);
-		}
+	for (; it != end; ++it) {
+		InsetGraphics const * ins = it->asInsetGraphics();
+		if (!ins)
+			continue;
+		InsetGraphicsParams const & inspar = ins->getParams();
+		if (!inspar.groupId.empty())
+			ids.insert(inspar.groupId);
+	}
 }
 
 
@@ -1115,12 +1116,13 @@ int countGroupMembers(Buffer const & b, string const & groupId)
 	Inset & inset = b.inset();
 	InsetIterator it = inset_iterator_begin(inset);
 	InsetIterator const end = inset_iterator_end(inset);
-	for (; it != end; ++it)
-		if (it->lyxCode() == GRAPHICS_CODE) {
-			InsetGraphics & ins = static_cast<InsetGraphics &>(*it);
-			if (ins.getParams().groupId == groupId)
-				++n;
-		}
+	for (; it != end; ++it) {
+		InsetGraphics const * ins = it->asInsetGraphics();
+		if (!ins)
+			continue; 
+		if (ins->getParams().groupId == groupId)
+			++n;
+	}
 	return n;
 }
 
@@ -1132,16 +1134,17 @@ string getGroupParams(Buffer const & b, string const & groupId)
 	Inset & inset = b.inset();
 	InsetIterator it  = inset_iterator_begin(inset);
 	InsetIterator const end = inset_iterator_end(inset);
-	for (; it != end; ++it)
-		if (it->lyxCode() == GRAPHICS_CODE) {
-			InsetGraphics & ins = static_cast<InsetGraphics &>(*it);
-			InsetGraphicsParams inspar = ins.getParams();
-			if (inspar.groupId == groupId) {
-				InsetGraphicsParams tmp = inspar;
-				tmp.filename.erase();
-				return InsetGraphics::params2string(tmp, b);
-			}
+	for (; it != end; ++it) {
+		InsetGraphics const * ins = it->asInsetGraphics();
+		if (!ins)
+			continue;
+		InsetGraphicsParams const & inspar = ins->getParams();
+		if (inspar.groupId == groupId) {
+			InsetGraphicsParams tmp = inspar;
+			tmp.filename.erase();
+			return InsetGraphics::params2string(tmp, b);
 		}
+	}
 	return string();
 }
 
@@ -1157,14 +1160,14 @@ void unifyGraphicsGroups(Buffer & b, string const & argument)
 	InsetIterator it  = inset_iterator_begin(inset);
 	InsetIterator const end = inset_iterator_end(inset);
 	for (; it != end; ++it) {
-		if (it->lyxCode() == GRAPHICS_CODE) {
-			InsetGraphics & ins = static_cast<InsetGraphics &>(*it);
-			InsetGraphicsParams inspar = ins.getParams();
-			if (params.groupId == inspar.groupId) {
-				CursorData(it).recordUndo();
-				params.filename = inspar.filename;
-				ins.setParams(params);
-			}
+		InsetGraphics * ins = it->asInsetGraphics();
+		if (!ins)
+			continue;
+		InsetGraphicsParams const & inspar = ins->getParams();
+		if (params.groupId == inspar.groupId) {
+			CursorData(it).recordUndo();
+			params.filename = inspar.filename;
+			ins->setParams(params);
 		}
 	}
 }
@@ -1173,12 +1176,12 @@ void unifyGraphicsGroups(Buffer & b, string const & argument)
 InsetGraphics * getCurrentGraphicsInset(Cursor const & cur)
 {
 	Inset * instmp = &cur.inset();
-	if (instmp->lyxCode() != GRAPHICS_CODE)
+	if (!instmp->asInsetGraphics())
 		instmp = cur.nextInset();
-	if (!instmp || instmp->lyxCode() != GRAPHICS_CODE)
+	if (!instmp || !instmp->asInsetGraphics())
 		return 0;
 
-	return static_cast<InsetGraphics *>(instmp);
+	return instmp->asInsetGraphics();
 }
 
 } // namespace graphics

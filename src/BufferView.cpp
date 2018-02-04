@@ -400,7 +400,7 @@ int BufferView::inPixels(Length const & len) const
 }
 
 
-int BufferView::zoomedPixels(int pix) const
+double BufferView::zoomedPixelsDouble(double pix) const
 {
 	// FIXME: the dpi setting should really depend on the BufferView
 	// (think different monitors).
@@ -411,7 +411,13 @@ int BufferView::zoomedPixels(int pix) const
 	// DPI setting for monitor relative to 100dpi
 	double const dpizoom = lyxrc.dpi / 100.0; // [per 100dpi]
 
-	return (int) round(pix * zoom * dpizoom);
+	return pix * zoom * dpizoom;
+}
+
+
+int BufferView::zoomedPixels(int pix) const
+{
+	return (int) round(zoomedPixelsDouble((double) pix));
 }
 
 

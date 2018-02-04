@@ -60,7 +60,7 @@ public:
 		/// cached offset
 		mutable int offset_;
 		/// how many hlines above this row?
-		unsigned int lines_;
+		int lines_;
 		/// parameter to the line break
 		Length crskip_;
 		/// extra distance between lines
@@ -81,7 +81,7 @@ public:
 		/// cached offset
 		mutable int offset_;
 		/// how many lines to the left of this column?
-		unsigned int lines_;
+		int lines_;
 		/// additional amount to the right to be skipped when drawing
 		int skip_;
 		/// Special alignment.
@@ -191,7 +191,7 @@ public:
 	idx_type index(row_type r, col_type c) const;
 	///
 	bool idxBetween(idx_type idx, idx_type from, idx_type to) const;
-	///
+	/// 
 	virtual int defaultColSpace(col_type) { return 0; }
 	///
 	virtual char defaultColAlign(col_type) { return 'c'; }
@@ -200,15 +200,15 @@ public:
 	///
 	virtual bool interpretString(Cursor & cur, docstring const & str);
 
-	///
+	/// column separation in non-zoomed pixels
 	virtual int colsep() const;
-	///
+	/// row separation in non-zoomed pixels
 	virtual int rowsep() const;
-	///
+	/// horizontal line separation in non-zoomed pixels
 	virtual int hlinesep() const;
-	///
+	/// vertical line separation in non-zoomed pixels
 	virtual int vlinesep() const;
-	///
+	/// border width in non-zoomed pixels
 	virtual int border() const;
 	///
 	virtual bool handlesMulticolumn() const { return false; }
@@ -245,10 +245,10 @@ protected:
 	/// returns y offset of cell compared to inset
 	int cellYOffset(idx_type idx) const;
 	/// Width of cell, taking combined columns into account
-	int cellWidth(idx_type idx) const;
-	///
+	int cellWidth(BufferView const & bv, idx_type idx) const;
+	/// left margin in non-zoomed pixels
 	virtual int leftMargin() const { return 0; }
-	///
+	/// right margin in non-zoomed pixels
 	virtual int rightMargin() const { return 0; }
 
 	/// returns proper 'end of line' code for LaTeX
@@ -261,7 +261,7 @@ protected:
 	/// Column alignment for display of cell \p idx.
 	/// Must not be written to file!
 	virtual char displayColAlign(idx_type idx) const;
-	/// Column spacing for display of column \p col.
+	/// Column spacing for display of column \p col in non-zoomed pixels.
 	/// Must not be written to file!
 	virtual int displayColSpace(col_type col) const;
 
@@ -269,12 +269,13 @@ protected:
 	// InsetMathSplit.
 	/// The value of a fixed col align for a certain hull type
 	static char colAlign(HullType type, col_type col);
-	/// The value of a fixed col spacing for a certain hull type
+	/// The value of a fixed col spacing for a certain hull type in non-zoomed
+	/// pixels
 	static int colSpace(HullType type, col_type col);
 
 	/// positions of vertical and horizontal lines
-	int vLineHOffset(col_type col, unsigned int line) const;
-	int hLineVOffset(row_type row, unsigned int line) const;
+	double vLineHOffset(BufferView const & bv, col_type col, int line) const;
+	double hLineVOffset(BufferView const & bv, row_type row, int line) const;
 
 	/// row info.
 	/// rowinfo_[nrows()] is a dummy row used only for hlines.

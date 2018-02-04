@@ -120,6 +120,7 @@ public:
 	 * 100dpi and 100% zoom.
 	 */
 	int zoomedPixels(int pix) const;
+	double zoomedPixelsDouble(double pix) const;
 
 	/// \return true if the BufferView is at the top of the document.
 	bool isTopScreen() const;

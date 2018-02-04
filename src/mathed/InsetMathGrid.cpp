@@ -423,15 +423,14 @@ void InsetMathGrid::metrics(MetricsInfo & mi, Dimension & dim) const
 
 	// compute vertical offsets
 	rowinfo_[0].offset_ = 0;
-	for (row_type row = 1; row <= nrows(); ++row) {
+	for (row_type row = 1; row <= nrows(); ++row)
 		rowinfo_[row].offset_ =
 			rowinfo_[row - 1].offset_ +
 			rowinfo_[row - 1].descent_ +
 			rowinfo_[row - 1].skipPixels(mi) +
-			rowsep() +
-			rowinfo_[row].lines_ * hlinesep() +
+			bv.zoomedPixels(rowsep() +
+			                rowinfo_[row].lines_ * hlinesep()) +
 			rowinfo_[row].ascent_;
-	}
 
 	// adjust vertical offset
 	int h = 0;
@@ -453,7 +452,7 @@ void InsetMathGrid::metrics(MetricsInfo & mi, Dimension & dim) const
 	// vector of last columns.
 	// This is only used if the grid has more than one row, since for
 	// one-row grids multicolumn cells do not need special handling
-	vector<map<col_type, int> > mcolwidths(ncols());
+	vector<map<col_type, int>> mcolwidths(ncols());
 
 	// compute absolute sizes of horizontal structure
 	for (col_type col = 0; col < ncols(); ++col) {
@@ -481,14 +480,15 @@ void InsetMathGrid::metrics(MetricsInfo & mi, Dimension & dim) const
 	colinfo_[ncols()].width_  = 0;
 
 	// compute horizontal offsets
-	colinfo_[0].offset_ = border() + colinfo_[0].lines_ * vlinesep();;
+	colinfo_[0].offset_ = bv.zoomedPixels(border()
+	                                      + colinfo_[0].lines_ * vlinesep());;
 	for (col_type col = 1; col <= ncols(); ++col) {
 		colinfo_[col].offset_ =
 			colinfo_[col - 1].offset_ +
 			colinfo_[col - 1].width_ +
-			displayColSpace(col - 1) +
-			colsep() +
-			colinfo_[col].lines_ * vlinesep();
+			bv.zoomedPixels(displayColSpace(col - 1) +
+			                colsep() +
+			                colinfo_[col].lines_ * vlinesep());
 	}
 
 	// increase column widths for multicolumn cells if needed
@@ -508,9 +508,9 @@ void InsetMathGrid::metrics(MetricsInfo & mi, Dimension & dim) const
 			int const nextoffset =
 				colinfo_[first].offset_ +
 				wid +
-				displayColSpace(last) +
-				colsep() +
-				colinfo_[last+1].lines_ * vlinesep();
+				bv.zoomedPixels(displayColSpace(last) +
+				                colsep() +
+				                colinfo_[last+1].lines_ * vlinesep());
 			int const dx = nextoffset - colinfo_[last+1].offset_;
 			if (dx > 0) {
 				colinfo_[last].width_ += dx;
@@ -523,18 +523,18 @@ void InsetMathGrid::metrics(MetricsInfo & mi, Dimension & dim) const
 
 	dim.wid = colinfo_[ncols() - 1].offset_
 		+ colinfo_[ncols() - 1].width_
-		+ vlinesep() * colinfo_[ncols()].lines_
-		+ border();
+		+ bv.zoomedPixels(vlinesep() * colinfo_[ncols()].lines_
+		                  + border());
 
 	dim.asc = - rowinfo_[0].offset_
 		+ rowinfo_[0].ascent_
-		+ hlinesep() * rowinfo_[0].lines_
-		+ border();
+		+ bv.zoomedPixels(hlinesep() * rowinfo_[0].lines_
+		                  + border());
 
 	dim.des = rowinfo_[nrows() - 1].offset_
 		+ rowinfo_[nrows() - 1].descent_
-		+ hlinesep() * rowinfo_[nrows()].lines_
-		+ border() + 1;
+		+ bv.zoomedPixels(hlinesep() * rowinfo_[nrows()].lines_
+		                  + border() + 1);
 
 
 /*
@@ -587,51 +587,60 @@ void InsetMathGrid::metrics(MetricsInfo & mi, Dimension & dim) const
 		cxrow->setBaseline(cxrow->getBaseline() - ascent);
 	}
 */
-	dim.wid += leftMargin() + rightMargin();
+	dim.wid += bv.zoomedPixels(leftMargin() + rightMargin());
 }
 
 
-int InsetMathGrid::vLineHOffset(col_type col, unsigned int line) const
+double InsetMathGrid::vLineHOffset(BufferView const & bv,
+                                   col_type col, int line) const
 {
 	if (col < ncols())
-		return leftMargin() + colinfo_[col].offset_
-			- (colinfo_[col].lines_ - line - 1) * vlinesep()
-			- vlinesep()/2 - colsep()/2;
+		return colinfo_[col].offset_
+			+ bv.zoomedPixelsDouble(leftMargin()
+			                        - (colinfo_[col].lines_ - line - 0.5) * vlinesep()
+			                        - 0.5 * colsep());
 	else {
 		LASSERT(col == ncols(), return 0);
-		return leftMargin() + colinfo_[col-1].offset_ + colinfo_[col-1].width_
-			+ line * vlinesep()
-			+ vlinesep()/2 + colsep()/2;
+		return colinfo_[col-1].offset_ + colinfo_[col-1].width_
+			+ bv.zoomedPixelsDouble(leftMargin()
+			                        + (line + 0.5) * vlinesep()
+			                        + 0.5 * colsep());
 	}
 }
 
 
-int InsetMathGrid::hLineVOffset(row_type row, unsigned int line) const
+double InsetMathGrid::hLineVOffset(BufferView const & bv,
+                                   row_type row, int line) const
 {
 	return rowinfo_[row].offset_
 		- rowinfo_[row].ascent_
-		- line * hlinesep()
-		- hlinesep()/2 - rowsep()/2;
+		- bv.zoomedPixelsDouble((line + 0.5) * hlinesep()
+		                        + 0.5 * rowsep());
 }
 
 
 void InsetMathGrid::draw(PainterInfo & pi, int x, int y) const
 {
 	BufferView const & bv = *pi.base.bv;
+	double const t = pi.base.solidLineThickness();
+	int const left_margin = bv.zoomedPixels(leftMargin());
 
 	for (idx_type idx = 0; idx < nargs(); ++idx) {
 		if (cellinfo_[idx].multi_ != CELL_PART_OF_MULTICOLUMN) {
 			cell(idx).draw(pi,
-			               x + leftMargin() + cellXOffset(bv, idx),
+			               x + left_margin + cellXOffset(bv, idx),
 			               y + cellYOffset(idx));
 
 			row_type r = row(idx);
-			int const yy1 = y + hLineVOffset(r, 0);
-			int const yy2 = y + hLineVOffset(r + 1, rowinfo_[r + 1].lines_ - 1);
+			// avoid overlapping vertical lines
+			int start = (r > 0 && rowinfo_[r].lines_ == 0) ? -1 : 0;
+			double const yy1 = y + hLineVOffset(bv, r, start) + 0.5;
+			double const yy2 =
+				y + hLineVOffset(bv, r + 1, rowinfo_[r + 1].lines_ - 1) - 0.5;
 			auto draw_left_borders = [&](col_type c) {
-				for (unsigned int i = 0; i < colinfo_[c].lines_; ++i) {
-					int const xx = x + vLineHOffset(c, i);
-					pi.pain.line(xx, yy1, xx, yy2, Color_foreground);
+				for (int i = 0; i < colinfo_[c].lines_; ++i) {
+					double const xx = x + vLineHOffset(bv, c, i);
+					pi.pain.lineDouble(xx, yy1, xx, yy2, Color_foreground, t);
 				}
 			};
 			col_type c = col(idx);
@@ -645,11 +654,12 @@ void InsetMathGrid::draw(PainterInfo & pi, int x, int y) const
 
 	// Draw horizontal borders
 	for (row_type r = 0; r <= nrows(); ++r) {
-		int const xx1 = x + vLineHOffset(0, 0);
-		int const xx2 = x + vLineHOffset(ncols(), colinfo_[ncols()].lines_ - 1);
-		for (unsigned int i = 0; i < rowinfo_[r].lines_; ++i) {
-			int const yy = y + hLineVOffset(r, i);
-			pi.pain.line(xx1, yy, xx2, yy, Color_foreground);
+		double const xx1 = x + vLineHOffset(bv, 0, 0);
+		double const xx2 = x + vLineHOffset(bv, ncols(),
+		                                    colinfo_[ncols()].lines_ - 1);
+		for (int i = 0; i < rowinfo_[r].lines_; ++i) {
+			double const yy = y + hLineVOffset(bv, r, i);
+			pi.pain.lineDouble(xx1, yy, xx2, yy, Color_foreground, t);
 		}
 	}
 }
@@ -918,9 +928,9 @@ int InsetMathGrid::cellXOffset(BufferView const & bv, idx_type idx) const
 	char align = displayColAlign(idx);
 	Dimension const & celldim = cell(idx).dimension(bv);
 	if (align == 'r' || align == 'R')
-		x += cellWidth(idx) - celldim.wid;
+		x += cellWidth(bv, idx) - celldim.wid;
 	if (align == 'c' || align == 'C')
-		x += (cellWidth(idx) - celldim.wid) / 2;
+		x += (cellWidth(bv, idx) - celldim.wid) / 2;
 	return x;
 }
 
@@ -931,7 +941,7 @@ int InsetMathGrid::cellYOffset(idx_type idx) const
 }
 
 
-int InsetMathGrid::cellWidth(idx_type idx) const
+int InsetMathGrid::cellWidth(BufferView const & bv, idx_type idx) const
 {
 	switch (cellinfo_[idx].multi_) {
 	case CELL_NORMAL:
@@ -941,9 +951,9 @@ int InsetMathGrid::cellWidth(idx_type idx) const
 		col_type c2 = c1 + ncellcols(idx);
 		return colinfo_[c2].offset_
 			- colinfo_[c1].offset_
-			- displayColSpace(c2)
-			- colsep()
-			- colinfo_[c2].lines_ * vlinesep();
+			- bv.zoomedPixels(displayColSpace(c2)
+			                  + colsep()
+			                  + colinfo_[c2].lines_ * vlinesep());
 	}
 	case CELL_PART_OF_MULTICOLUMN:
 		return 0;
@@ -1610,7 +1620,7 @@ void InsetMathGrid::doDispatch(Cursor & cur, FuncRequest & cmd)
 			if (hline_enabled)
 				rowinfo_[cur.row()].lines_ += grid.rowinfo_[0].lines_;
 			else {
-				for (unsigned int l = 0; l < grid.rowinfo_[0].lines_; ++l) {
+				for (int l = 0; l < grid.rowinfo_[0].lines_; ++l) {
 					 cur.cell().insert(0,
 						MathAtom(new InsetMathUnknown(from_ascii("\\hline"))));
 					 cur.pos()++;
@@ -1631,7 +1641,7 @@ void InsetMathGrid::doDispatch(Cursor & cur, FuncRequest & cmd)
 				if (hline_enabled)
 					rowinfo_[r].lines_ += grid.rowinfo_[r].lines_;
 				else {
-					for (unsigned int l = 0; l < grid.rowinfo_[r].lines_; ++l) {
+					for (int l = 0; l < grid.rowinfo_[r].lines_; ++l) {
 						idx_type i = index(r + cur.row(), 0);
 						cell(i).insert(0,
 							MathAtom(new InsetMathUnknown(from_ascii("\\hline"))));
@@ -1650,7 +1660,7 @@ void InsetMathGrid::doDispatch(Cursor & cur, FuncRequest & cmd)
 				if (hline_enabled)
 					rowinfo_[r].lines_ += grid.rowinfo_[r].lines_;
 				else {
-					for (unsigned int l = 0; l < grid.rowinfo_[r].lines_; ++l) {
+					for (int l = 0; l < grid.rowinfo_[r].lines_; ++l) {
 						cell(i).insert(0,
 							MathAtom(new InsetMathUnknown(from_ascii("\\hline"))));
 					}

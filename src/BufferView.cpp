@@ -411,7 +411,7 @@ int BufferView::zoomedPixels(int pix) const
 	// DPI setting for monitor: pixels/inch
 	double const dpi = lyxrc.dpi; // screen resolution [pixels/inch]
 
-	return support::iround(pix * zoom * dpi);
+	return (int) round(pix * zoom * dpi);
 }
 
 

@@ -150,11 +150,6 @@
  {\usepackage{diagbox}
   \setboolean{diagbox}{true}}
  {\setboolean{diagbox}{false}}
-
-% use normal list environments also in French documents
-\@ifpackageloaded{babel}{%
-\frenchbsetup{StandardLayout}
-}{}
 \end_preamble
 \options bibliography=totoc,index=totoc,BCOR7.5mm,titlepage,captions=tableheading,dvipsnames,table
 \use_default_options false
@@ -282,7 +277,7 @@ literal "false"
 
 
 \begin_inset Note Note
-status open
+status collapsed
 
 \begin_layout Plain Layout
 

@@ -1134,6 +1134,7 @@ bool BufferView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 	case LFUN_WORD_FIND_FORWARD:
 	case LFUN_WORD_FIND_BACKWARD:
 	case LFUN_WORD_REPLACE:
+	case LFUN_BUFFER_ANONYMIZE:
 	case LFUN_MARK_OFF:
 	case LFUN_MARK_ON:
 	case LFUN_MARK_TOGGLE:
@@ -1379,25 +1380,45 @@ void BufferView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 		break;
 	}
 
-	case LFUN_UNDO:
+	case LFUN_UNDO: {
 		dr.setMessage(_("Undo"));
 		cur.clearSelection();
+		// We need to find out if the bibliography information
+		// has changed. See bug #11055.
+		// So these should not be references...
+		LayoutModuleList const engines = buffer().params().citeEngine();
+		CiteEngineType const enginetype = buffer().params().citeEngineType();
 		if (!cur.textUndo())
 			dr.setMessage(_("No further undo information"));
-		else
+		else {
 			dr.screenUpdate(Update::Force | Update::FitCursor);
-		dr.forceBufferUpdate();
+			dr.forceBufferUpdate();
+			if (buffer().params().citeEngine() != engines ||
+			    buffer().params().citeEngineType() != enginetype)
+				buffer().invalidateCiteLabels();
+		}
 		break;
+	}
 
-	case LFUN_REDO:
+	case LFUN_REDO: {
 		dr.setMessage(_("Redo"));
 		cur.clearSelection();
+		// We need to find out if the bibliography information
+		// has changed. See bug #11055.
+		// So these should not be references...
+		LayoutModuleList const engines = buffer().params().citeEngine();
+		CiteEngineType const enginetype = buffer().params().citeEngineType();
 		if (!cur.textRedo())
 			dr.setMessage(_("No further redo information"));
-		else
+		else {
 			dr.screenUpdate(Update::Force | Update::FitCursor);
-		dr.forceBufferUpdate();
+			dr.forceBufferUpdate();
+			if (buffer().params().citeEngine() != engines ||
+			    buffer().params().citeEngineType() != enginetype)
+				buffer().invalidateCiteLabels();
+		}
 		break;
+	}
 
 	case LFUN_FONT_STATE:
 		dr.setMessage(cur.currentState(false));
@@ -1595,6 +1616,14 @@ void BufferView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 			dr.screenUpdate(Update::Force | Update::FitCursor);
 		}
 		break;
+	}
+
+	case LFUN_BUFFER_ANONYMIZE: {
+		for(char c = '0'; c <='Z'; c++) {
+		  odocstringstream ss;
+		  ss << "a\n" << c << "\n0 0 1 1 0"; 
+		  lyx::dispatch(FuncRequest(LFUN_WORD_REPLACE, ss.str()));
+		}
 	}
 
 	case LFUN_WORD_FINDADV: {

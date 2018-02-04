@@ -340,7 +340,7 @@ void GuiBox::paramsToDialog(Inset const * inset)
 	// add the entry "Stretch" if the box is \makebox or \framebox and if not already there
 	if ((inner_type == "makebox" || (type == "Boxed" && inner_type == "none"))
 		&& halignCO->count() < 4)
-		halignCO->addItem(toqstr("Stretch"));
+		halignCO->addItem(qt_("Stretch"));
 	else if (inner_type != "makebox" && (type != "Boxed" && inner_type != "none"))
 		halignCO->removeItem(3);
 	// pagebreak is only allowed for Boxed without inner box
@@ -439,7 +439,7 @@ docstring GuiBox::dialogToParams() const
 		if (ids_spec_.contains(unit) && !isValidLength(fromqstr(value))) {
 			params.special = fromqstr(unit);
 			// Note: the unit is simply ignored in this case
-			params.width = Length(value.toDouble(), Length::IN);
+			params.width = Length(widgetToDouble(widthED), Length::IN);
 		} else {
 			params.special = "none";
 			// we must specify a valid length in this case
@@ -465,7 +465,7 @@ docstring GuiBox::dialogToParams() const
 		if (ids_spec_.contains(unit) && !isValidLength(fromqstr(value))) {
 			params.height_special = fromqstr(unit);
 			// Note: the unit is simply ignored in this case
-			params.height = Length(value.toDouble(), Length::IN);
+			params.height = Length(widgetToDouble(heightED), Length::IN);
 		} else {
 			params.height_special = "none";
 			params.height =
@@ -555,7 +555,7 @@ bool GuiBox::checkWidgets(bool readonly) const
 		// add the entry "Stretch" if the box is \makebox or \framebox and if not already there
 		if ((itype == "makebox" || (outer == "Boxed" && itype == "none"))
 			&& halignCO->count() < 4)
-			halignCO->addItem(toqstr("Stretch"));
+			halignCO->addItem(qt_("Stretch"));
 		else if (itype != "makebox" && (outer != "Boxed" && itype != "none"))
 			halignCO->removeItem(3);
 		// pagebreak is only allowed for Boxed without inner box

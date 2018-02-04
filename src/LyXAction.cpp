@@ -4211,13 +4211,23 @@ void LyXAction::init()
  * \li Action: Replace a string in the document.
  * \li Syntax: word-replace [<DATA>]
  * \li Params: <DATA>: data is of the form
-                       "<replace> \n
-                        <search> \n
+                       "<replacestring> \n
+                        <searchstring> \n
                         <casesensitive> <matchword> <all> <forward> <findnext>"
  * \li Origin: Andre, Jan 7 2004
  * \endvar
  */
 		{ LFUN_WORD_REPLACE, "word-replace", Noop, Edit },
+
+/*!
+ * \var lyx::FuncCode lyx::LFUN_BUFFER_ANONYMIZE
+ * \li Action: For debug purposes only. Convert all [a-zA-Z0-1] characters to
+               single character. Useful when submitting docs to list or bugzilla.
+ * \li Syntax: buffer-anonymize
+ * \li Origin: sanda, Feb 1 2018
+ * \endvar
+ */
+		{ LFUN_BUFFER_ANONYMIZE, "buffer-anonymize", Noop, Edit },
 
 /*!
  * \var lyx::FuncCode lyx::LFUN_WORD_RIGHT

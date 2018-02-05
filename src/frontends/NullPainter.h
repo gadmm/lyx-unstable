@@ -97,7 +97,7 @@ public:
 
 	/// draw a string and enclose it inside a button frame
 	void buttonText(int, int, docstring const &,
-	                FontInfo const &, Color, Color, int) {}
+	                FontInfo const &, Color, Color, int, double) override {}
 
 	/// draw a character of a preedit string for cjk support.
 	int preeditText(int, int, char_type, FontInfo const &,

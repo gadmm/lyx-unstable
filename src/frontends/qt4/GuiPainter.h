@@ -142,7 +142,8 @@ public:
 
 	/// draw a string and enclose it inside a button frame
 	virtual void buttonText(int x, int baseline, docstring const & s,
-		FontInfo const & font, Color back, Color frame, int offset);
+	                        FontInfo const & font, Color back, Color frame,
+	                        int offset, double lw = thin_line);
 
 	/// start monochrome painting mode, i.e. map every color into [min,max]
 	virtual void enterMonochromeMode(Color const & min,

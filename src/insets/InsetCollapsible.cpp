@@ -248,9 +248,11 @@ void InsetCollapsible::draw(PainterInfo & pi, int x, int y) const
 		FontInfo labelfont = getLabelfont();
 		labelfont.setColor(labelColor());
 		labelfont.realize(pi.base.font);
+		double const t = pi.base.solidLineThickness();
+		int const offset = pi.base.textToInsetOffset();
 		pi.pain.buttonText(x, y, buttonLabel(bv), labelfont,
 		                   view_[&bv].mouse_hover_ ? Color_buttonhoverbg : Color_buttonbg,
-		                   Color_buttonframe, TEXT_TO_INSET_OFFSET);
+		                   Color_buttonframe, offset, t);
 		// Draw the change tracking cue on the label, unless RowPainter already
 		// takes care of it.
 		if (canPaintChange(bv))

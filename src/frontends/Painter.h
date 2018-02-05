@@ -177,7 +177,8 @@ public:
 
 	/// draw a string and enclose it inside a button frame
 	virtual void buttonText(int x, int baseline, docstring const & s,
-		FontInfo const & font, Color back, Color frame, int offset) = 0;
+	                        FontInfo const & font, Color back, Color frame,
+	                        int offset, double line_width = thin_line) = 0;
 
 	/// draw a character of a preedit string for cjk support.
 	virtual int preeditText(int x, int y,

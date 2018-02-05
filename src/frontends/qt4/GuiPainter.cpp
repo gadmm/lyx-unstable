@@ -600,18 +600,20 @@ void GuiPainter::rectText(int x, int y, docstring const & str,
 
 
 void GuiPainter::buttonText(int x, int baseline, docstring const & s,
-	FontInfo const & font, Color back, Color frame, int offset)
+                            FontInfo const & font, Color const back, Color const frame,
+                            int const offset, double const lw)
 {
 	int width, ascent, descent;
 
 	FontMetrics const & fm = theFontMetrics(font);
 	fm.buttonText(s, offset, width, ascent, descent);
 
-	static int const d = offset / 2;
+	int const d = offset / 2;
 
 	fillRectangle(x + d + 1, baseline - ascent + 1, width - offset - 1,
 			      ascent + descent - 1, back);
-	rectangle(x + d, baseline - ascent, width - offset, ascent + descent, frame);
+	rectangleDouble(x + d, baseline - ascent, width - offset, ascent + descent,
+	                frame, lw);
 	text(x + offset, baseline, s, font);
 }
 

@@ -357,8 +357,9 @@ void MathRow::draw(PainterInfo & pi, int x, int const y) const
 			if (e.color == Color_none)
 				break;
 			Dimension const d = theFontMetrics(pi.base.font).dimension('I');
-			pi.pain.rectangle(x + e.before + 1, y - d.ascent(),
-			                  d.width() - 1, d.height() - 1, e.color);
+			pi.pain.rectangleDouble(x + e.before + 1, y - d.ascent(),
+			                        d.width() - 1, d.height() - 1, e.color,
+			                        pi.base.thinLineThickness());
 			x += d.wid + 2 + e.before + e.after;
 			break;
 		}

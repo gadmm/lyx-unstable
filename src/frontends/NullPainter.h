@@ -50,7 +50,10 @@ public:
 
 	/// draw a rectangle
 	void rectangle(int, int, int, int, Color,
-		line_style = line_solid, int = thin_line) {}
+	               line_style = line_solid, int = thin_line) override {}
+	void rectangleDouble(double, double, double, double,
+	                     Color, double = thin_line,
+	                     line_style = line_solid) override {}
 
 	/// draw a filled rectangle
 	void fillRectangle(int, int, int, int, Color) {}

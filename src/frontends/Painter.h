@@ -120,6 +120,9 @@ public:
 	/// draw a rectangle
 	virtual void rectangle(int x, int y, int w, int h, Color,
 		line_style = line_solid, int line_width = thin_line) = 0;
+	virtual void rectangleDouble(double x, double y, double w, double h, Color,
+	                             double line_width = thin_line,
+	                             line_style = line_solid) = 0;
 
 	/// draw a filled rectangle
 	virtual void fillRectangle(int x, int y, int w, int h, Color) = 0;

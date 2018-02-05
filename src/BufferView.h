@@ -122,6 +122,13 @@ public:
 	int zoomedPixels(int pix) const;
 	double zoomedPixelsDouble(double pix) const;
 
+	///
+	double solidLineThickness() const;
+	///
+	double thinLineThickness() const;
+	/// supersedes TEXT_TO_INSET_OFFSET from insets/Inset.h
+	int textToInsetOffset() const;
+
 	/// \return true if the BufferView is at the top of the document.
 	bool isTopScreen() const;
 

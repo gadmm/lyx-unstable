@@ -421,6 +421,26 @@ int BufferView::zoomedPixels(int pix) const
 }
 
 
+double BufferView::solidLineThickness() const
+{
+	return inPixelsDouble(Length(0.5, Length::PT));
+}
+
+
+double BufferView::thinLineThickness() const
+{
+	double thick = solidLineThickness();
+	double const thin = 0.55 * thick;
+	return (thin < 1) ? min(1., thick) : thin;
+}
+
+
+int BufferView::textToInsetOffset() const
+{
+	return (int) round(4 * thinLineThickness());
+}
+
+
 bool BufferView::isTopScreen() const
 {
 	return 0 == d->scrollbarParameters_.min;

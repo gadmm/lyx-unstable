@@ -602,8 +602,6 @@ public:
 	virtual ColorCode backgroundColor(PainterInfo const &) const;
 	///
 	virtual ColorCode labelColor() const;
-	//
-	enum { TEXT_TO_INSET_OFFSET = 4 };
 
 	/// Determine the action of backspace and delete: do we select instead of
 	/// deleting if not already selected?

@@ -1924,9 +1924,9 @@ void TextMetrics::drawParagraph(PainterInfo & pi, pit_type const pit, int const 
 			// the begining/end of row. However, it will not work if
 			// the caret has a ridiculous width like 6. (see ticket
 			// #10797)
-			pi.pain.fillRectangle(max(row_x, 0) - Inset::TEXT_TO_INSET_OFFSET,
+			pi.pain.fillRectangle(max(row_x, 0) - pi.base.textToInsetOffset(),
 			                      y - row.ascent(),
-			                      width() + 2 * Inset::TEXT_TO_INSET_OFFSET,
+			                      width() + 2 * pi.base.textToInsetOffset(),
 			                      row.height(), pi.background_color);
 		}
 

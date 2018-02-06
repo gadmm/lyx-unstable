@@ -3733,7 +3733,7 @@ void InsetTabular::metrics(MetricsInfo & mi, Dimension & dim) const
 			// with LYX_VALIGN_BOTTOM the descent is relative to the last par
 			// = descent of text in last par + TEXT_TO_INSET_OFFSET:
 			int const lastpardes = tm.last().second->descent()
-				+ TEXT_TO_INSET_OFFSET;
+				+ mi.base.textToInsetOffset();
 			int offset = 0;
 			switch (tabular.getVAlignment(cell)) {
 				case Tabular::LYX_VALIGN_TOP:

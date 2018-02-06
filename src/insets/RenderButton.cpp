@@ -56,7 +56,7 @@ void RenderButton::metrics(MetricsInfo & mi, Dimension & dim) const
 
 	docstring const text = fm.elideText(text_, elide_mode_, elide_length_);
 
-	fm.buttonText(text, Inset::TEXT_TO_INSET_OFFSET, dim.wid, dim.asc, dim.des);
+	fm.buttonText(text, mi.base.textToInsetOffset(), dim.wid, dim.asc, dim.des);
 
 	dim_ = dim;
 }

@@ -120,7 +120,7 @@ void InsetCaption::metrics(MetricsInfo & mi, Dimension & dim) const
 	mi.base.font = mi.base.bv->buffer().params().getFont().fontInfo();
 	labelwidth_ = theFontMetrics(mi.base.font).width(full_label_);
 	// add some space to separate the label from the inset text
-	labelwidth_ += 2 * TEXT_TO_INSET_OFFSET;
+	labelwidth_ += 2 * mi.base.textToInsetOffset();
 	dim.wid = labelwidth_;
 	Dimension textdim;
 	// Correct for button and label width
@@ -137,8 +137,8 @@ void InsetCaption::metrics(MetricsInfo & mi, Dimension & dim) const
 void InsetCaption::drawBackground(PainterInfo & pi, int x, int y) const
 {
 	TextMetrics & tm = pi.base.bv->textMetrics(&text());
-	int const h = tm.height() + 2 * TEXT_TO_INSET_OFFSET;
-	int const yy = y - TEXT_TO_INSET_OFFSET - tm.ascent();
+	int const h = tm.height() + 2 * pi.base.textToInsetOffset();
+	int const yy = y - pi.base.textToInsetOffset() - tm.ascent();
 	pi.pain.fillRectangle(x, yy, labelwidth_, h, pi.backgroundColor(this));
 }
 
@@ -156,7 +156,7 @@ void InsetCaption::draw(PainterInfo & pi, int x, int y) const
 	FontInfo tmpfont = pi.base.font;
 	pi.base.font = pi.base.bv->buffer().params().getFont().fontInfo();
 	pi.base.font.setColor(pi.textColor(pi.base.font.color()).baseColor);
-	int const xx = x + TEXT_TO_INSET_OFFSET;
+	int const xx = x + pi.base.textToInsetOffset();
 	pi.pain.text(xx, y, full_label_, pi.base.font);
 	InsetText::draw(pi, x + labelwidth_, y);
 	pi.base.font = tmpfont;

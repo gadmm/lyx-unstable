@@ -1353,7 +1353,7 @@ static docstring makeDispatchMessage(docstring const & msg,
 			      || cmd.origin() == FuncRequest::COMMANDBUFFER);
 
 	if (cmd.action() == LFUN_SELF_INSERT || !verbose) {
-		LYXERR(Debug::ACTION, "dispatch msg is " << msg);
+		LYXERR(Debug::ACTION, "dispatch msg is `" << msg << "'");
 		return msg;
 	}
 

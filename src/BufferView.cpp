@@ -82,6 +82,7 @@
 #include "support/gettext.h"
 #include "support/lassert.h"
 #include "support/lstrings.h"
+#include "support/lyxlib.h"
 #include "support/Package.h"
 #include "support/types.h"
 
@@ -369,8 +370,8 @@ BufferView::~BufferView()
 
 int BufferView::rightMargin() const
 {
-	// The value used to be hardcoded to 10, which is 0.1in at 100dpi
-	int const default_margin = Length(0.1, Length::IN).inPixels(0);
+	// The value used to be hardcoded to 10
+	int const default_margin = zoomedPixels(10);
 	// The additional test for the case the outliner is opened.
 	if (!full_screen_ || !lyxrc.full_screen_limit
 	    || width_ < lyxrc.full_screen_width + 2 * default_margin)
@@ -396,6 +397,47 @@ double BufferView::inPixelsDouble(Length const & len) const
 int BufferView::inPixels(Length const & len) const
 {
 	return (int) round(inPixelsDouble(len));
+}
+
+
+double BufferView::zoomedPixelsDouble(double pix) const
+{
+	// FIXME: the dpi setting should really depend on the BufferView
+	// (think different monitors).
+
+	// Zoom factor specified by user in percent
+	double const zoom = lyxrc.currentZoom / 100.0; // [percent]
+
+	// DPI setting for monitor relative to 100dpi
+	double const dpizoom = lyxrc.dpi / 100.0; // [per 100dpi]
+
+	return pix * zoom * dpizoom;
+}
+
+
+int BufferView::zoomedPixels(int pix) const
+{
+	return (int) round(zoomedPixelsDouble((double) pix));
+}
+
+
+double BufferView::solidLineThickness() const
+{
+	return inPixelsDouble(Length(0.5, Length::PT));
+}
+
+
+double BufferView::thinLineThickness() const
+{
+	double thick = solidLineThickness();
+	double const thin = 0.55 * thick;
+	return (thin < 1) ? min(1., thick) : thin;
+}
+
+
+int BufferView::textToInsetOffset() const
+{
+	return (int) round(4 * thinLineThickness());
 }
 
 
@@ -1087,6 +1129,7 @@ bool BufferView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 	case LFUN_WORD_FIND_FORWARD:
 	case LFUN_WORD_FIND_BACKWARD:
 	case LFUN_WORD_REPLACE:
+	case LFUN_BUFFER_ANONYMIZE:
 	case LFUN_MARK_OFF:
 	case LFUN_MARK_ON:
 	case LFUN_MARK_TOGGLE:
@@ -1332,25 +1375,45 @@ void BufferView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 		break;
 	}
 
-	case LFUN_UNDO:
+	case LFUN_UNDO: {
 		dr.setMessage(_("Undo"));
 		cur.clearSelection();
+		// We need to find out if the bibliography information
+		// has changed. See bug #11055.
+		// So these should not be references...
+		LayoutModuleList const engines = buffer().params().citeEngine();
+		CiteEngineType const enginetype = buffer().params().citeEngineType();
 		if (!cur.textUndo())
 			dr.setMessage(_("No further undo information"));
-		else
+		else {
 			dr.screenUpdate(Update::Force | Update::FitCursor);
-		dr.forceBufferUpdate();
+			dr.forceBufferUpdate();
+			if (buffer().params().citeEngine() != engines ||
+			    buffer().params().citeEngineType() != enginetype)
+				buffer().invalidateCiteLabels();
+		}
 		break;
+	}
 
-	case LFUN_REDO:
+	case LFUN_REDO: {
 		dr.setMessage(_("Redo"));
 		cur.clearSelection();
+		// We need to find out if the bibliography information
+		// has changed. See bug #11055.
+		// So these should not be references...
+		LayoutModuleList const engines = buffer().params().citeEngine();
+		CiteEngineType const enginetype = buffer().params().citeEngineType();
 		if (!cur.textRedo())
 			dr.setMessage(_("No further redo information"));
-		else
+		else {
 			dr.screenUpdate(Update::Force | Update::FitCursor);
-		dr.forceBufferUpdate();
+			dr.forceBufferUpdate();
+			if (buffer().params().citeEngine() != engines ||
+			    buffer().params().citeEngineType() != enginetype)
+				buffer().invalidateCiteLabels();
+		}
 		break;
+	}
 
 	case LFUN_FONT_STATE:
 		dr.setMessage(cur.currentState(false));
@@ -1548,6 +1611,14 @@ void BufferView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 			dr.screenUpdate(Update::Force | Update::FitCursor);
 		}
 		break;
+	}
+
+	case LFUN_BUFFER_ANONYMIZE: {
+		for(char c = '0'; c <='Z'; c++) {
+		  odocstringstream ss;
+		  ss << "a\n" << c << "\n0 0 1 1 0"; 
+		  lyx::dispatch(FuncRequest(LFUN_WORD_REPLACE, ss.str()));
+		}
 	}
 
 	case LFUN_WORD_FINDADV: {

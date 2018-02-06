@@ -147,7 +147,7 @@ void RenderGraphic::metrics(MetricsInfo & mi, Dimension & dim) const
 
 	bool const image_ready = displayGraphic(params_) && readyToDisplay(loader_);
 	if (image_ready) {
-		dim.wid = loader_.image()->width() + 2 * Inset::TEXT_TO_INSET_OFFSET;
+		dim.wid = loader_.image()->width() + 2 * mi.base.textToInsetOffset();
 		dim.asc = loader_.image()->height();
 		dim_ = dim;
 		return;
@@ -185,9 +185,9 @@ void RenderGraphic::draw(PainterInfo & pi, int x, int y) const
 {
 	// This will draw the graphics. If the graphics has not been
 	// loaded yet, we draw just a rectangle.
-	int const x1 = x + Inset::TEXT_TO_INSET_OFFSET;
+	int const x1 = x + pi.base.textToInsetOffset();
 	int const y1 = y - dim_.asc;
-	int const w = dim_.wid - 2 * Inset::TEXT_TO_INSET_OFFSET;
+	int const w = dim_.wid - 2 * pi.base.textToInsetOffset();
 	int const h = dim_.height();
 
 	if (displayGraphic(params_) && readyToDisplay(loader_))

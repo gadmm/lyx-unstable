@@ -42,15 +42,10 @@ namespace lyx {
 MetricsBase::MetricsBase(BufferView * b, FontInfo f, int w)
 	: bv(b), font(move(f)), fontname("mathnormal"),
 	  textwidth(w), macro_nesting(0),
-	  solid_line_thickness_(b ? b->inPixelsDouble(Length(0.5, Length::PT)) : 1)
+	  solid_line_thickness_(b ? b->solidLineThickness() : 1),
+	  thin_line_thickness_(b ? b->thinLineThickness() : 1),
+	  text_to_inset_offset_(b ? b->textToInsetOffset() : 4)
 {}
-
-
-double MetricsBase::thinLineThickness() const
-{
-	double const t = 0.55 * solid_line_thickness_;
-	return (t < 1) ? min(1., solid_line_thickness_) : t;
-}
 
 
 Changer MetricsBase::changeFontSet(string const & name)
@@ -91,7 +86,7 @@ Changer MetricsBase::changeEnsureMath(Inset::mode_type mode)
 
 int MetricsBase::inPixels(Length const & len) const
 {
-	return (int) std::round(inPixelsDouble(len));
+	return (int) round(inPixelsDouble(len));
 }
 
 

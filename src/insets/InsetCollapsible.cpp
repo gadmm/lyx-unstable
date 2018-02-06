@@ -150,7 +150,7 @@ Dimension InsetCollapsible::dimensionCollapsed(BufferView const & bv) const
 	FontInfo labelfont(getLabelfont());
 	labelfont.realize(sane_font);
 	theFontMetrics(labelfont).buttonText(
-		buttonLabel(bv), TEXT_TO_INSET_OFFSET, dim.wid, dim.asc, dim.des);
+		buttonLabel(bv), bv.textToInsetOffset(), dim.wid, dim.asc, dim.des);
 	return dim;
 }
 
@@ -207,7 +207,7 @@ void InsetCollapsible::metrics(MetricsInfo & mi, Dimension & dim) const
 				dim.des = max(dim.des - textdim.asc + dim.asc, textdim.des);
 				dim.asc = textdim.asc;
 			} else {
-				dim.des += textdim.height() + TEXT_TO_INSET_OFFSET;
+				dim.des += textdim.height() + mi.base.textToInsetOffset();
 				dim.wid = max(dim.wid, textdim.wid);
 			}
 		}
@@ -248,9 +248,11 @@ void InsetCollapsible::draw(PainterInfo & pi, int x, int y) const
 		FontInfo labelfont = getLabelfont();
 		labelfont.setColor(labelColor());
 		labelfont.realize(pi.base.font);
+		double const t = pi.base.solidLineThickness();
+		int const offset = pi.base.textToInsetOffset();
 		pi.pain.buttonText(x, y, buttonLabel(bv), labelfont,
 		                   view_[&bv].mouse_hover_ ? Color_buttonhoverbg : Color_buttonbg,
-		                   Color_buttonframe, TEXT_TO_INSET_OFFSET);
+		                   Color_buttonframe, offset, t);
 		// Draw the change tracking cue on the label, unless RowPainter already
 		// takes care of it.
 		if (canPaintChange(bv))
@@ -310,8 +312,8 @@ void InsetCollapsible::draw(PainterInfo & pi, int x, int y) const
 		// Colour the frame according to the change type. (Like for tables.)
 		Color colour = pi.change_.changed() ? pi.change_.color()
 		                                    : Color_foreground;
-		const int xx1 = x + TEXT_TO_INSET_OFFSET - 1;
-		const int xx2 = x + textdim.wid - TEXT_TO_INSET_OFFSET + 1;
+		const int xx1 = x + pi.base.textToInsetOffset() - 1;
+		const int xx2 = x + textdim.wid - pi.base.textToInsetOffset() + 1;
 		int const y1 = y - textdim.asc + 3;
 		drawMarkers(pi, xx1, y + desc, xx2, y1,
 		            colour, colour, bv.cursor().isInside(this));

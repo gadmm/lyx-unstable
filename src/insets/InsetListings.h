@@ -84,6 +84,8 @@ private:
 #endif
 			;
 	}
+	///
+	Encoding const * forcedEncoding(Encoding const *, Encoding const *) const;
 
 	///
 	InsetListingsParams params_;

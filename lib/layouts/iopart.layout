@@ -286,6 +286,7 @@ Style "Bibliography (plain)"
 	  Series	Bold
 	  Size		Larger
 	EndFont
+	TocLevel        1
 End
 
 

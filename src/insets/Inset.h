@@ -39,11 +39,13 @@ class Cursor;
 class CursorSlice;
 class Dimension;
 class DocIterator;
+class Encoding;
 class FuncRequest;
 class FuncStatus;
 class InsetArgument;
 class InsetCollapsible;
 class InsetCommand;
+class InsetGraphics;
 class InsetIterator;
 class InsetLayout;
 class InsetList;
@@ -158,6 +160,10 @@ public:
 	virtual InsetCommand const * asInsetCommand() const { return 0; }
 	/// is this inset based on the InsetArgument class?
 	virtual InsetArgument const * asInsetArgument() const { return nullptr; }
+	/// is this inset based on the InsetGraphics class?
+	virtual InsetGraphics * asInsetGraphics() { return 0; }
+	/// is this inset based on the InsetGraphics class?
+	virtual InsetGraphics const * asInsetGraphics() const { return 0; }
 
 	/// the real dispatcher
 	void dispatch(Cursor & cur, FuncRequest & cmd);
@@ -421,6 +427,10 @@ public:
 	/// if this inset has paragraphs should they be forced to use a
 	/// local font language switch?
 	virtual bool forceLocalFontSwitch() const { return false; }
+	/// Does the inset force a specific encoding?
+	virtual Encoding const * forcedEncoding(Encoding const *, Encoding const *) const
+	{ return 0; }
+
 
 	/// Is the content of this inset part of the output document?
 	virtual bool producesOutput() const { return true; }
@@ -592,8 +602,6 @@ public:
 	virtual ColorCode backgroundColor(PainterInfo const &) const;
 	///
 	virtual ColorCode labelColor() const;
-	//
-	enum { TEXT_TO_INSET_OFFSET = 4 };
 
 	/// Determine the action of backspace and delete: do we select instead of
 	/// deleting if not already selected?

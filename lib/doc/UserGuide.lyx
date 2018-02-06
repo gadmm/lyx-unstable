@@ -24694,7 +24694,7 @@ limits
 , versus
 \begin_inset Formula 
 \[
-\sum\nolimits _{n=0}^{\infty}\frac{1}{n!}=e
+\sum_{n=0}^{\infty}\frac{1}{n!}=e
 \]
 
 \end_inset
@@ -31906,13 +31906,38 @@ List of Symbols
 
 \begin_layout Standard
 
-\family roman
 \series bold
 
 \backslash
-renewcommand{
+AtBeginDocument{
 \backslash
-nomname}{List of Symbols}
+addto
+\backslash
+captionsenglish{
+\backslash
+def
+\backslash
+nomname{List of Symbols}}}
+\end_layout
+
+\begin_layout Standard
+When you are using another document language than English, replace
+\begin_inset Newline newline
+\end_inset
+
+
+\series bold
+
+\backslash
+captionsenglish
+\series default
+ by 
+\series bold
+
+\backslash
+extras***
+\series default
+, where *** is the name of the language used.
 \end_layout
 
 \begin_layout Subsection

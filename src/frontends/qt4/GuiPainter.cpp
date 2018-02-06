@@ -191,26 +191,41 @@ void GuiPainter::line(int x1, int y1, int x2, int y2,
 }
 
 
+namespace {
+
+/// Align a QPointF on the grid according to its line width to avoid
+/// unnecessary blur.
+void align_point(double const lw, QPointF & p)
+{
+	double const align = lw/2 - (int) lw/2;
+	p.rx() += align;
+	p.ry() += align;
+}
+
+} // namespace
+
+
+void GuiPainter::setAbsoluteOffset(QPointF const & p, double const lw)
+{
+	QPen qpen = pen();
+	qpen.setDashOffset((p.x() + p.y()) / lw);
+	setPen(qpen);
+}
+
+
 void GuiPainter::linesDouble(vector<QPointF> points, Color col, double lw,
                              fill_style fs, line_style ls)
 {
 	if (points.empty())
 		return;
-	//offset for aligning the line on grid and avoid unnecessary blur
-	double const align = lw/2 - (int) lw/2;
-	for (QPointF & p : points) {
-		p.rx() += align;
-		p.ry() += align;
-	}
+	for (QPointF & p : points)
+		align_point(lw, p);
 	QColor const color = computeColor(col);
 	setQPainterPen(color, ls, lw);
 	setRenderHint(Antialiasing, true);
 	// offset-align absolute dashed lines
-	if (ls == line_onoffdash_absolute) {
-		QPen p = pen();
-		p.setDashOffset((points[0].x() + points[0].y()) / lw);
-		setPen(p);
-	}
+	if (ls == line_onoffdash_absolute)
+		setAbsoluteOffset(points[0], lw);
 	if (fs == fill_none) {
 		drawPolyline(points.data(), points.size());
 	} else {
@@ -283,6 +298,25 @@ void GuiPainter::rectangle(int x, int y, int w, int h,
 {
 	setQPainterPen(computeColor(col), ls, lw);
 	drawRect(x, y, w, h);
+}
+
+
+void GuiPainter::rectangleDouble(double x, double y, double w, double h,
+                                 Color col, double lw, line_style ls)
+{
+	//drawRect does not handle non-integer width
+	vector<QPointF> points{{x,y},{x+w,y},{x+w,y+h},{x,y+h},{x,y}};
+	linesDouble(move(points), col, lw, fill_none, ls);
+	/*
+	setQPainterPen(computeColor(col), ls, lw);
+	QPointF top_left(x,y);
+	align_point(lw, top_left);
+	QPointF bottom_right(x + w, y + h);
+	align_point(lw, bottom_right);
+	if (ls == line_onoffdash_absolute)
+		setAbsoluteOffset(top_left, lw);
+	drawRect(QRectF(top_left, bottom_right));
+	*/
 }
 
 
@@ -566,18 +600,25 @@ void GuiPainter::rectText(int x, int y, docstring const & str,
 
 
 void GuiPainter::buttonText(int x, int baseline, docstring const & s,
-	FontInfo const & font, Color back, Color frame, int offset)
+                            FontInfo const & font, Color const back, Color const frame,
+                            int const offset, double const lw)
 {
 	int width, ascent, descent;
 
 	FontMetrics const & fm = theFontMetrics(font);
 	fm.buttonText(s, offset, width, ascent, descent);
 
-	static int const d = offset / 2;
+	int const d = offset / 2;
 
-	fillRectangle(x + d + 1, baseline - ascent + 1, width - offset - 1,
-			      ascent + descent - 1, back);
-	rectangle(x + d, baseline - ascent, width - offset, ascent + descent, frame);
+	setRenderHint(Antialiasing, true);
+	QPainterPath path;
+	path.addRoundedRect(QRectF(x + d, baseline - ascent,
+	                           width - offset, ascent + descent),
+	                    3 * lw, 3 * lw);
+	setQPainterPen(computeColor(frame), line_solid, lw);
+	fillPath(path, guiApp->colorCache().get(back));
+	drawPath(path);
+	setRenderHint(Antialiasing, false);
 	text(x + offset, baseline, s, font);
 }
 

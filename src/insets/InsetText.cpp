@@ -65,6 +65,7 @@
 #include "support/RefChanger.h"
 
 #include <algorithm>
+#include <cmath>
 
 
 using namespace std;
@@ -141,9 +142,9 @@ Dimension const InsetText::dimensionHelper(BufferView const & bv) const
 {
 	TextMetrics const & tm = bv.textMetrics(&text_);
 	Dimension dim = tm.dimension();
-	dim.wid += 2 * TEXT_TO_INSET_OFFSET;
-	dim.des += TEXT_TO_INSET_OFFSET;
-	dim.asc += TEXT_TO_INSET_OFFSET;
+	dim.wid += 2 * bv.textToInsetOffset();
+	dim.des += bv.textToInsetOffset();
+	dim.asc += bv.textToInsetOffset();
 	return dim;
 }
 
@@ -192,7 +193,7 @@ void InsetText::metrics(MetricsInfo & mi, Dimension & dim) const
 
 	// Hand font through to contained lyxtext:
 	tm.font_.fontInfo() = mi.base.font;
-	mi.base.textwidth -= 2 * TEXT_TO_INSET_OFFSET;
+	mi.base.textwidth -= 2 * mi.base.textToInsetOffset();
 
 	// This can happen when a layout has a left and right margin,
 	// and the view is made very narrow. We can't do better than
@@ -204,21 +205,24 @@ void InsetText::metrics(MetricsInfo & mi, Dimension & dim) const
 		tm.metrics(mi, dim, mi.base.textwidth);
 	else
 		tm.metrics(mi, dim);
-	mi.base.textwidth += 2 * TEXT_TO_INSET_OFFSET;
-	dim.asc += TEXT_TO_INSET_OFFSET;
-	dim.des += TEXT_TO_INSET_OFFSET;
-	dim.wid += 2 * TEXT_TO_INSET_OFFSET;
+	mi.base.textwidth += 2 * mi.base.textToInsetOffset();
+	dim.asc += mi.base.textToInsetOffset();
+	dim.des += mi.base.textToInsetOffset();
+	dim.wid += 2 * mi.base.textToInsetOffset();
 }
 
 
 void InsetText::draw(PainterInfo & pi, int x, int y) const
 {
 	TextMetrics & tm = pi.base.bv->textMetrics(&text_);
+	int const t2i_offset = pi.base.textToInsetOffset();
+	// FIXME: rounding because of overpainting issues
+	int const t = (int) round(pi.base.thinLineThickness());
 
-	int const w = tm.width() + TEXT_TO_INSET_OFFSET;
-	int const yframe = y - TEXT_TO_INSET_OFFSET - tm.ascent();
-	int const h = tm.height() + 2 * TEXT_TO_INSET_OFFSET;
-	int const xframe = x + TEXT_TO_INSET_OFFSET / 2;
+	int const w = tm.width() + t2i_offset;
+	int const yframe = y - t2i_offset - tm.ascent();
+	int const h = tm.height() + 2 * t2i_offset - 0.5 * t;
+	int const xframe = x + t2i_offset / 2;
 	bool change_drawn = false;
 	if (drawFrame_ || pi.full_repaint) {
 		if (pi.full_repaint)
@@ -243,14 +247,14 @@ void InsetText::draw(PainterInfo & pi, int x, int y) const
 		} else
 			c = frameColor();
 		if (drawFrame_)
-			pi.pain.rectangle(xframe, yframe, w, h, c);
+			pi.pain.rectangleDouble(xframe, yframe, w, h, c, t);
 	}
 	{
 		Changer dummy = make_change(pi.background_color,
 		                            pi.backgroundColor(this, false));
 		// The change tracking cue must not be inherited
 		Changer dummy2 = make_change(pi.change_, Change());
-		tm.draw(pi, x + TEXT_TO_INSET_OFFSET, y);
+		tm.draw(pi, x + t2i_offset, y);
 	}
 	if (canPaintChange(*pi.base.bv) && (!change_drawn || pi.change_.deleted()))
 		// Do not draw the change tracking cue if already done by RowPainter and
@@ -674,7 +678,7 @@ void InsetText::getArgs(otexstream & os, OutputParams const & runparams_in,
 void InsetText::cursorPos(BufferView const & bv,
 		CursorSlice const & sl, bool boundary, int & x, int & y) const
 {
-	x = bv.textMetrics(&text_).cursorX(sl, boundary) + TEXT_TO_INSET_OFFSET;
+	x = bv.textMetrics(&text_).cursorX(sl, boundary) + bv.textToInsetOffset();
 	y = bv.textMetrics(&text_).cursorY(sl, boundary);
 }
 

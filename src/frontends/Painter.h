@@ -120,6 +120,9 @@ public:
 	/// draw a rectangle
 	virtual void rectangle(int x, int y, int w, int h, Color,
 		line_style = line_solid, int line_width = thin_line) = 0;
+	virtual void rectangleDouble(double x, double y, double w, double h, Color,
+	                             double line_width = thin_line,
+	                             line_style = line_solid) = 0;
 
 	/// draw a filled rectangle
 	virtual void fillRectangle(int x, int y, int w, int h, Color) = 0;
@@ -174,7 +177,8 @@ public:
 
 	/// draw a string and enclose it inside a button frame
 	virtual void buttonText(int x, int baseline, docstring const & s,
-		FontInfo const & font, Color back, Color frame, int offset) = 0;
+	                        FontInfo const & font, Color back, Color frame,
+	                        int offset, double line_width = thin_line) = 0;
 
 	/// draw a character of a preedit string for cjk support.
 	virtual int preeditText(int x, int y,

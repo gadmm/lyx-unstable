@@ -121,19 +121,19 @@ DocIterator bruteFind(Cursor const & c, int x, int y)
 
 CursorData::CursorData()
 	: DocIterator(), anchor_(), selection_(false), mark_(false),
-	  word_selection_(false), current_font(inherit_font), autocorrect_(false)
+	  word_selection_(false), autocorrect_(false), current_font(inherit_font)
 {}
 
 
 CursorData::CursorData(Buffer * buffer)
 	: DocIterator(buffer), anchor_(), selection_(false), mark_(false),
-	  word_selection_(false), current_font(inherit_font), autocorrect_(false)
+	  word_selection_(false), autocorrect_(false), current_font(inherit_font)
 {}
 
 
 CursorData::CursorData(DocIterator const & dit)
 	: DocIterator(dit), anchor_(), selection_(false), mark_(false),
-	  word_selection_(false), current_font(inherit_font), autocorrect_(false)
+	  word_selection_(false), autocorrect_(false), current_font(inherit_font)
 {}
 
 
@@ -457,34 +457,32 @@ void CursorData::checkNewWordPosition()
 {
 	if (!lyxrc.spellcheck_continuously || new_word_.empty())
 		return ;
-	if (!inTexted())
-		clearNewWordPosition();
+	// forget the position of the current new word if
+	// 1) or the remembered position was "broken"
+	// 2) or the count of nested insets changed
+	// 3) the top-level inset is not the same anymore
+	// 4) the cell index changed
+	// 5) or the paragraph changed
+	// 6) or the cursor pos is out of paragraph bound
+	if (new_word_.fixIfBroken()
+	    || depth() != new_word_.depth()
+	    || &inset() != &new_word_.inset()
+	    || pit() != new_word_.pit()
+	    || idx() != new_word_.idx()
+	    || new_word_.pos() > new_word_.lastpos())
+			clearNewWordPosition();
 	else {
-		// forget the position of the current new word if
-		// 1) the paragraph changes or
-		// 2) the count of nested insets changes or
-		// 3) the cursor pos is out of paragraph bound
-		if (pit() != new_word_.pit() ||
-			depth() != new_word_.depth() ||
-			new_word_.pos() > new_word_.lastpos()) {
-			clearNewWordPosition();
-		} else if (new_word_.fixIfBroken())
-			// 4) or the remembered position was "broken"
-			clearNewWordPosition();
-		else {
-			FontSpan nw = locateWord(WHOLE_WORD);
-			if (!nw.empty()) {
-				FontSpan ow = new_word_.locateWord(WHOLE_WORD);
-				if (nw.intersect(ow).empty())
-					clearNewWordPosition();
-				else
-					LYXERR(Debug::DEBUG, "new word: "
-						   << " par: " << pit()
-						   << " pos: " << nw.first << ".." << nw.last);
-			} else {
+		FontSpan nw = locateWord(WHOLE_WORD);
+		if (!nw.empty()) {
+			FontSpan ow = new_word_.locateWord(WHOLE_WORD);
+			if (nw.intersect(ow).empty())
 				clearNewWordPosition();
-			}
-		}
+			else
+				LYXERR(Debug::DEBUG, "new word: "
+					   << " par: " << pit()
+					   << " pos: " << nw.first << ".." << nw.last);
+		} else
+			clearNewWordPosition();
 	}
 }
 
@@ -515,6 +513,7 @@ bool CursorData::fixIfBroken()
 void CursorData::sanitize()
 {
 	DocIterator::sanitize();
+	new_word_.sanitize();
 	if (selection())
 		anchor_.sanitize();
 	else
@@ -1379,9 +1378,9 @@ bool Cursor::openable(MathAtom const & t) const
 		return true;
 
 	// we can't move into anything new during selection
-	if (depth() >= anchor_.depth())
+	if (depth() >= realAnchor().depth())
 		return false;
-	if (t.nucleus() != &anchor_[depth()].inset())
+	if (t.nucleus() != &realAnchor()[depth()].inset())
 		return false;
 
 	return true;
@@ -2284,9 +2283,8 @@ Font Cursor::getFont() const
 
 void Cursor::sanitize()
 {
-	setBuffer(buffer());
+	setBuffer(&bv_->buffer());
 	CursorData::sanitize();
-	new_word_.sanitize();
 }
 
 

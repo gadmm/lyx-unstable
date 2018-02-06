@@ -29,20 +29,22 @@ import sys, os
 #  find_token_backwards, is_in_inset, get_value, get_quoted_value, \
 #  del_token, check_token, get_option_value
 
-from lyx2lyx_tools import add_to_preamble, put_cmd_in_ert, get_ert, lyx2latex, \
-  lyx2verbatim, length_in_bp, convert_info_insets
-#  insert_to_preamble, latex_length, revert_flex_inset, \
-#  revert_font_attrs, hex2ratio, str2bool
+from lyx2lyx_tools import (add_to_preamble, put_cmd_in_ert, get_ert,
+    lyx2latex, lyx2verbatim, length_in_bp, convert_info_insets)
+#   insert_to_preamble, latex_length, revert_flex_inset,
+#   revert_font_attrs, hex2ratio, str2bool
 
-from parser_tools import find_token, find_token_backwards, find_re, \
-     find_end_of_inset, find_end_of_layout, find_nonempty_line, \
-     get_containing_layout, get_value, check_token
+from parser_tools import (check_token, del_complete_lines,
+    find_end_of_inset, find_end_of_layout, find_nonempty_line, find_re,
+    find_token, find_token_backwards, get_containing_layout,
+    get_containing_inset, get_value, is_in_inset)
+
 
 ####################################################################
 # Private helper functions
 
 def revert_Argument_to_TeX_brace(document, line, endline, n, nmax, environment, opt, nolastopt):
-    '''
+    """
     Reverts an InsetArgument to TeX-code
     usage:
     revert_Argument_to_TeX_brace(document, LineOfBegin, LineOfEnd, StartArgument, EndArgument, isEnvironment, isOpt, notLastOpt)
@@ -53,7 +55,7 @@ def revert_Argument_to_TeX_brace(document, line, endline, n, nmax, environment, 
     isEnvironment must be true, if the layout is for a LaTeX environment
     isOpt must be true, if the argument is an optional one
     notLastOpt must be true if the argument is mandatory and followed by optional ones
-    '''
+    """
     lineArg = 0
     wasOpt = False
     while lineArg != -1 and n < nmax + 1:
@@ -615,96 +617,104 @@ def convert_dashes(document):
     if document.backend != "latex":
         return
 
+    lines = document.body
     i = 0
-    while i < len(document.body):
-        words = document.body[i].split()
-        if (len(words) > 1 and words[0] == "\\begin_inset"
-            and (words[1] in ["CommandInset", "ERT", "External", "Formula",
-                              "FormulaMacro", "Graphics", "IPA", "listings"]
-                 or ' '.join(words[1:]) == "Flex Code")):
-            # must not replace anything in insets that store LaTeX contents in .lyx files
-            # (math and command insets without overridden read() and write() methods
-            # filtering out IPA makes Text::readParToken() more simple
-            # skip ERT as well since it is not needed there
-            # Flex Code is logical markup, typically rendered as typewriter
-            j = find_end_of_inset(document.body, i)
-            if j == -1:
-                document.warning("Malformed LyX document: Can't find end of " + words[1] + " inset at line " + str(i))
-                i += 1
-            else:
-                i = j
-            continue
-        if document.body[i] == "\\begin_layout LyX-Code":
-            j = find_end_of_layout(document.body, i)
-            if j == -1:
-                document.warning("Malformed LyX document: "
-                    "Can't find end of %s layout at line %d" % (words[1],i))
-                i += 1
-            else:
-                i = j
-            continue
-
-        if len(words) > 0 and words[0] in ["\\leftindent", "\\paragraph_spacing", "\\align", "\\labelwidthstring"]:
-            # skip paragraph parameters (bug 10243)
-            i += 1
-            continue
-        while True:
-            j = document.body[i].find("--")
-            if j == -1:
-                break
-            front = document.body[i][:j]
-            back = document.body[i][j+2:]
-            # We can have an arbitrary number of consecutive hyphens.
-            # These must be split into the corresponding number of two and three hyphens
-            # We must match what LaTeX does: First try emdash, then endash, then single hyphen
-            if back.find("-") == 0:
-                back = back[1:]
-                if len(back) > 0:
-                    document.body.insert(i+1, back)
-                document.body[i] = front + "\\threehyphens"
-            else:
-                if len(back) > 0:
-                    document.body.insert(i+1, back)
-                document.body[i] = front + "\\twohyphens"
+    while i+1 < len(lines):
         i += 1
+        line = lines[i]
+        if "--" not in line:
+            continue
+        # skip label width string (bug 10243):
+        if line.startswith("\\labelwidthstring"):
+            continue
+        # Do not touch hyphens in some insets:
+        try:
+            value, start, end = get_containing_inset(lines, i)
+        except TypeError:
+            # False means no (or malformed) containing inset
+            value, start, end = "no inset", -1, -1
+        # We must not replace anything in insets that store LaTeX contents in .lyx files
+        # (math and command insets without overridden read() and write() methods.
+        # Filtering out IPA and ERT makes Text::readParToken() more simple,
+        # Flex Code is logical markup, typically rendered as typewriter
+        if (value.split()[0] in ["CommandInset", "ERT", "External", "Formula",
+                                 "FormulaMacro", "Graphics", "IPA", "listings"]
+            or value in ["Flex Code", "Flex URL"]):
+            i = end
+            continue
+        try:
+            layout, start, end, j = get_containing_layout(lines, i)
+        except TypeError: # no (or malformed) containing layout
+            document.warning("Malformed LyX document: "
+                             "Can't find layout at line %d" % i)
+            continue
+        if layout == "LyX-Code":
+            i = end
+            continue
+        # We can have an arbitrary number of consecutive hyphens.
+        # Replace as LaTeX does: First try emdash, then endash
+        line = line.replace("---", "\\threehyphens\n")
+        line = line.replace("--", "\\twohyphens\n")
+        lines[i:i+1] = line.splitlines()
+
+    # remove ligature breaks between dashes
+    i = 1
+    while i < len(lines):
+        line = lines[i]
+        if (line.endswith(r"-\SpecialChar \textcompwordmark{}") and
+            lines[i+1].startswith("-")):
+            lines[i] = line.replace(r"\SpecialChar \textcompwordmark{}",
+                                    lines.pop(i+1))
+        else:
+            i += 1
 
 
 def revert_dashes(document):
-    "convert \\twohyphens and \\threehyphens to -- and ---"
+    """
+    Remove preamble code from 2.3->2.2 conversion.
+    Prevent ligatures of existing --- and --.
+    Revert \\twohyphens and \\threehyphens to -- and ---.
+    """
+    del_complete_lines(document.preamble,
+                       ['% Added by lyx2lyx',
+                        r'\renewcommand{\textendash}{--}',
+                        r'\renewcommand{\textemdash}{---}'])
 
-    # eventually remove preamble code from 2.3->2.2 conversion:
-    for i, line in enumerate(document.preamble):
-        if i > 1 and line == r'\renewcommand{\textemdash}{---}':
-            if (document.preamble[i-1] == r'\renewcommand{\textendash}{--}'
-                and document.preamble[i-2] == '% Added by lyx2lyx'):
-                del document.preamble[i-2:i+1]
+    # Insert ligature breaks to prevent ligation of hyphens to dashes:
+    lines = document.body
     i = 0
-    while i < len(document.body):
-        words = document.body[i].split()
-        if len(words) > 1 and words[0] == "\\begin_inset" and \
-           words[1] in ["CommandInset", "ERT", "External", "Formula", "Graphics", "IPA", "listings"]:
-            # see convert_dashes
-            j = find_end_of_inset(document.body, i)
-            if j == -1:
-                document.warning("Malformed LyX document: Can't find end of " + words[1] + " inset at line " + str(i))
-                i += 1
-            else:
-                i = j
+    while i+1 < len(lines):
+        i += 1
+        line = lines[i]
+        if "--" not in line:
             continue
-        replaced = False
-        if document.body[i].find("\\twohyphens") >= 0:
-            document.body[i] = document.body[i].replace("\\twohyphens", "--")
-            replaced = True
-        if document.body[i].find("\\threehyphens") >= 0:
-            document.body[i] = document.body[i].replace("\\threehyphens", "---")
-            replaced = True
-        if replaced and i+1 < len(document.body) and \
-           (document.body[i+1].find("\\") != 0 or \
-            document.body[i+1].find("\\twohyphens") == 0 or
-            document.body[i+1].find("\\threehyphens") == 0) and \
-           len(document.body[i]) + len(document.body[i+1]) <= 80:
-            document.body[i] = document.body[i] + document.body[i+1]
-            document.body[i+1:i+2] = []
+        # skip label width string (bug 10243):
+        if line.startswith("\\labelwidthstring"):
+            continue
+        # do not touch hyphens in some insets (cf. convert_dashes):
+        try:
+            value, start, end = get_containing_inset(lines, i)
+        except TypeError:
+            # False means no (or malformed) containing inset
+            value, start, end = "no inset", -1, -1
+        if (value.split()[0] in ["CommandInset", "ERT", "External", "Formula",
+                                 "FormulaMacro", "Graphics", "IPA", "listings"]
+            or value == "Flex URL"):
+            i = end
+            continue
+        line = line.replace("--", "-\\SpecialChar \\textcompwordmark{}\n-")
+        document.body[i:i+1] = line.split('\n')
+
+    # Revert \twohyphens and \threehyphens:
+    i = 1
+    while i < len(lines):
+        line = lines[i]
+        if not line.endswith("hyphens"):
+            i +=1
+        elif line.endswith("\\twohyphens") or line.endswith("\\threehyphens"):
+            line = line.replace("\\twohyphens", "--")
+            line = line.replace("\\threehyphens", "---")
+            lines[i] = line + lines.pop(i+1)
         else:
             i += 1
 
@@ -736,10 +746,10 @@ def convert_phrases(document):
             if len(words) > 1 and words[0] == "\\begin_inset" and \
                words[1] in ["CommandInset", "External", "Formula", "Graphics", "listings"]:
                 # must not replace anything in insets that store LaTeX contents in .lyx files
-                # (math and command insets withut overridden read() and write() methods
+                # (math and command insets without overridden read() and write() methods)
                 j = find_end_of_inset(document.body, i)
                 if j == -1:
-                    document.warning("Malformed LyX document: Can't find end of Formula inset at line " + str(i))
+                    document.warning("Malformed LyX document: Can't find end of inset at line " + str(i))
                     i += 1
                 else:
                     i = j
@@ -845,16 +855,16 @@ def revert_georgian(document):
         document.language = "english"
         i = find_token(document.header, "\\language georgian", 0)
         if i != -1:
-    	    document.header[i] = "\\language english"
+            document.header[i] = "\\language english"
         j = find_token(document.header, "\\language_package default", 0)
         if j != -1:
-    	    document.header[j] = "\\language_package babel"
+            document.header[j] = "\\language_package babel"
         k = find_token(document.header, "\\options", 0)
         if k != -1:
-    	    document.header[k] = document.header[k].replace("\\options", "\\options georgian,")
+            document.header[k] = document.header[k].replace("\\options", "\\options georgian,")
         else:
-    	    l = find_token(document.header, "\\use_default_options", 0)
-    	    document.header.insert(l + 1, "\\options georgian")
+            l = find_token(document.header, "\\use_default_options", 0)
+            document.header.insert(l + 1, "\\options georgian")
 
 
 def revert_sigplan_doi(document):
@@ -1243,20 +1253,26 @@ def revert_textcolor(document):
 
 
 def convert_colorbox(document):
-    " adds color settings for boxes "
-
-    i = 0
+    "Add color settings for boxes."
+    i = 1
     while True:
         i = find_token(document.body, "shadowsize", i)
         if i == -1:
             return
-        document.body[i+1:i+1] = ['framecolor "black"', 'backgroundcolor "none"']
-        i = i + 3
+        # check whether this is really a LyX Box setting
+        start, end = is_in_inset(document.body, i, "\\begin_inset Box")
+        if (end == -1 or
+            find_token(document.body, "\\begin_layout", start, i) != -1):
+            i += 1
+            continue
+        document.body[i+1:i+1] = ['framecolor "black"',
+                                  'backgroundcolor "none"']
+        i += 3
 
 
 def revert_colorbox(document):
     " outputs color settings for boxes as TeX code "
-    
+
     i = 0
     defaultframecolor = "black"
     defaultbackcolor = "none"

@@ -40,6 +40,10 @@ public:
 	/// This painter paints
 	virtual bool isNull() const { return false; }
 
+	// set the dash offset to make it absolute wrt the QPointF, for
+	// line_onoffdash_absolute
+	void setAbsoluteOffset(QPointF const & p, double lw);
+
 	/// draw a line from point to point
 	void line(int x1, int y1, int x2, int y2, Color, line_style ls = line_solid,
 	          int lw = thin_line) override;
@@ -81,12 +85,17 @@ public:
 		int line_width = thin_line);
 
 	/// draw a rectangle
-	virtual void rectangle(
-		int x, int y,
-		int w, int h,
-		Color,
-		line_style = line_solid,
-		int lw = thin_line);
+	void rectangle(int x, int y,
+	               int w, int h,
+	               Color,
+	               line_style ls = line_solid,
+	               int lw = thin_line) override;
+	void rectangleDouble(double x, double y,
+	                     double w, double h,
+	                     Color,
+	                     double lw = thin_line,
+	                     line_style ls = line_solid) override;
+
 
 	/// draw a filled rectangle
 	virtual void fillRectangle(
@@ -133,7 +142,8 @@ public:
 
 	/// draw a string and enclose it inside a button frame
 	virtual void buttonText(int x, int baseline, docstring const & s,
-		FontInfo const & font, Color back, Color frame, int offset);
+	                        FontInfo const & font, Color back, Color frame,
+	                        int offset, double lw = thin_line);
 
 	/// start monochrome painting mode, i.e. map every color into [min,max]
 	virtual void enterMonochromeMode(Color const & min,

@@ -65,8 +65,8 @@ public:
 	Changer changeScript();
 	///
 	double solidLineThickness() const { return solid_line_thickness_; }
-	///
-	double thinLineThickness() const;
+	double thinLineThickness() const { return thin_line_thickness_; }
+	int textToInsetOffset() const { return text_to_inset_offset_; }
 	/// length of len mu in pixels
 	int mu(double len) const;
 	/// length of len em in pixels
@@ -81,6 +81,8 @@ public:
 
 private:
 	double solid_line_thickness_ = 1;
+	double thin_line_thickness_ = 1;
+	int text_to_inset_offset_ = 4;
 };
 
 

@@ -610,10 +610,15 @@ void GuiPainter::buttonText(int x, int baseline, docstring const & s,
 
 	int const d = offset / 2;
 
-	fillRectangle(x + d + 1, baseline - ascent + 1, width - offset - 1,
-			      ascent + descent - 1, back);
-	rectangleDouble(x + d, baseline - ascent, width - offset, ascent + descent,
-	                frame, lw);
+	setRenderHint(Antialiasing, true);
+	QPainterPath path;
+	path.addRoundedRect(QRectF(x + d, baseline - ascent,
+	                           width - offset, ascent + descent),
+	                    3 * lw, 3 * lw);
+	setQPainterPen(computeColor(frame), line_solid, lw);
+	fillPath(path, guiApp->colorCache().get(back));
+	drawPath(path);
+	setRenderHint(Antialiasing, false);
 	text(x + offset, baseline, s, font);
 }
 

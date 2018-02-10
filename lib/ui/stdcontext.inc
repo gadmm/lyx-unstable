@@ -344,6 +344,7 @@ Menuset
 		Item "Move Paragraph Down|v" "paragraph-move-down"
 		Separator
 		EnvironmentSeparatorsContext
+		OptItem "Split inset|s" "inset-split"
 		Separator
 		OptItem "Promote Section|r" "outline-out"
 		OptItem "Demote Section|m" "outline-in"

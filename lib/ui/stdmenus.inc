@@ -135,6 +135,7 @@ Menuset
 		OptItem "Increase List Depth|I" "depth-increment"
 		OptItem "Decrease List Depth|D" "depth-decrement"
 		OptItem "Dissolve Inset" "inset-dissolve"
+		OptItem "Split Inset" "inset-split"
 		OptItem "TeX Code Settings...|C" "inset-settings ert"
 # 'a' shortcut to match Insert entry, shouldn't clash with Table Settings
 		OptItem "Float Settings...|a" "inset-settings float"

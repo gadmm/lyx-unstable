@@ -2017,6 +2017,15 @@ void LyXAction::init()
 		{ LFUN_INSET_DISSOLVE, "inset-dissolve", AtPoint, Edit },
 
 /*!
+ * \var lyx::FuncCode lyx::LFUN_INSET_SPLIT
+ * \li Action: Split the current inset in two.
+ * \li Syntax: inset-split
+ * \li Origin: gm, 10 Feb 2018
+ * \endvar
+ */
+		{ LFUN_INSET_SPLIT, "inset-split", Noop, Edit },
+
+/*!
  * \var lyx::FuncCode lyx::LFUN_INSET_EDIT
  * \li Action: Edit the inset at cursor with an external application,
                if one is attributed.

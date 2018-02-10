@@ -58,9 +58,10 @@ For a complete list of changes try
 * Beamer-flex: Layout and examples for beamer that uses flex insets instead of
   environments for frames and similar insets. (Also available from
   <https://github.com/gadmm/beamer-flex>.)
+* Custom insets are now available from the toolbar.
+* New command to split an inset (inset-split).
 * Layout and templates for easychair.cls. (Also available from
   <https://github.com/gadmm/easychair-lyx>.)
-* Custom insets are now available from the toolbar.
 * Improved default parameters and shortcuts.
 * Open hyperlinks in application from the contextual menu in a secure way.
   (#9906)
@@ -80,7 +81,6 @@ For a complete list of changes try
 * Fix automatically loaded packages with acmart.
 * Properly enforce scrolling boundaries.
 * Properly reset references and counters when updating citations.
-* Fix visual ambiguity between nested pars and continues environments. (#10978)
 * Properly reset selection when inputting a composed character.
 
 ## Minor enhancements

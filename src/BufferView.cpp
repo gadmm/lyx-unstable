@@ -2818,7 +2818,7 @@ void BufferView::updateMetrics(Update::flags & update_flags, bool const scroll)
 		d->anchor_ypos_ -= pm0.position() - pm0.ascent();
 		again();
 	} else if (scrollbar.min > 0) {
-		d->anchor_ypos_ += scrollbar.min;
+		d->anchor_ypos_ -= scrollbar.min;
 		again();
 	} else if (scrollbar.max < 0) {
 		d->anchor_ypos_ -= scrollbar.max;

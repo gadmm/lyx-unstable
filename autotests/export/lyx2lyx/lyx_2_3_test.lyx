@@ -14,9 +14,9 @@ logicalmkup
 \language_package default
 \inputencoding auto
 \fontencoding global
-\font_roman "lmodern" "default"
-\font_sans "default" "default"
-\font_typewriter "default" "default"
+\font_roman "NotoSerif-TLF" "default"
+\font_sans "NotoSans-TLF" "default"
+\font_typewriter "NotoMono-TLF" "default"
 \font_math "auto" "auto"
 \font_default_family default
 \use_non_tex_fonts false
@@ -73,8 +73,9 @@ logicalmkup
 \tocdepth 2
 \paragraph_separation skip
 \defskip medskip
-\is_math_indent 0
-\math_numbering_side default
+\is_math_indent 1
+\math_indentation 3em
+\math_numbering_side right
 \quotes_style english
 \dynamic_quotes 0
 \papercolumns 1
@@ -93,84 +94,12 @@ logicalmkup
 Test reversion/conversion between 2.3 and 2.2 formats with lyx2lyx.
 \end_layout
 
-\begin_layout Description
-allowbreak: 
-\bar under
-
-\begin_inset Box Boxed
-position "t"
-hor_pos "c"
-has_inner_box 1
-inner_pos "t"
-use_parbox 0
-use_makebox 0
-width "11em"
-special "none"
-height "1in"
-height_special "totalheight"
-thickness "0.4pt"
-separation "3pt"
-shadowsize "4pt"
-framecolor "black"
-backgroundcolor "none"
-status open
-
-\begin_layout Plain Layout
-
-\emph on
-simple
-\end_layout
-
-\begin_layout Plain Layout
-The em-dash is used—mainly in American english—without spaces.
-\end_layout
-
-\end_inset
-
-
-\bar default
- 
-\bar under
-
-\begin_inset Box Boxed
-position "t"
-hor_pos "c"
-has_inner_box 1
-inner_pos "t"
-use_parbox 0
-use_makebox 0
-width "11em"
-special "none"
-height "1in"
-height_special "totalheight"
-thickness "0.4pt"
-separation "3pt"
-shadowsize "4pt"
-framecolor "black"
-backgroundcolor "none"
-status open
-
-\begin_layout Plain Layout
-
-\emph on
-with optional line break
-\emph default
-:
-\end_layout
-
-\begin_layout Plain Layout
-The em-dash is used—\SpecialChar allowbreak
-mainly in American english—\SpecialChar allowbreak
-without spaces.
-\end_layout
-
-\end_inset
-
-
+\begin_layout Standard
+Part 1: Fonts: NoTo
 \end_layout
 
 \begin_layout Description
-baselineskip%: 
+baselineskip%: Box and rule with dimensions set to baselineskip% 
 \begin_inset Box Boxed
 position "t"
 hor_pos "c"
@@ -233,5 +162,136 @@ horizontal space insets using baselineskip.
 \end_layout
 
 \end_deeper
+\begin_layout Description
+rotated
+\begin_inset space ~
+\end_inset
+
+floats: (sideways environment)
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+sideways true at the beginning of a line must not confuse conversion
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement !ph
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+[figure 1 stub]
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+rotated float 1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Description
+rotated
+\begin_inset space ~
+\end_inset
+
+float insets can be defined in a list: 
+\begin_inset Float figure
+placement !ph
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+[figure 2 stub]
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+rotated float 2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+new
+\begin_inset space ~
+\end_inset
+
+Babel
+\begin_inset space ~
+\end_inset
+
+languages: text parts in 
+\lang bosnian
+Bosnian
+\lang english
+, 
+\lang friulan
+Friulian
+\lang english
+, 
+\lang macedonian
+Macedonian
+\lang english
+, 
+\lang piedmontese
+Piedmontese
+\lang english
+, 
+\lang romansh
+Romansh
+\lang english
+.
+\end_layout
+
+\begin_layout Description
+Indent
+\begin_inset space ~
+\end_inset
+
+Formulas/formula
+\begin_inset space ~
+\end_inset
+
+numbering: 3em/right
+\begin_inset Formula 
+\begin{equation}
+y=x^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
 \end_body
 \end_document

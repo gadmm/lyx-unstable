@@ -26,6 +26,7 @@
 
 #include "support/filetools.h"
 
+#include "support/convert.h"
 #include "support/debug.h"
 #include "support/environment.h"
 #include "support/gettext.h"
@@ -36,9 +37,9 @@
 #include "support/PathChanger.h"
 #include "support/Systemcall.h"
 #include "support/qstring_helpers.h"
+#include "support/TempFile.h"
 
 #include <QDir>
-#include <QTemporaryFile>
 
 #include "support/lassert.h"
 #include "support/regex.h"
@@ -458,25 +459,53 @@ string const commandPrep(string const & command_in)
 }
 
 
-static string createTempFile(QString const & mask)
+FileName const tempFileName(string const & mask, bool const dir)
 {
-	// FIXME: This is not safe. QTemporaryFile creates a file in open(),
-	//        but the file is deleted when qt_tmp goes out of scope.
-	//        Therefore the next call to createTempFile() may create the
-	//        same file again. To make this safe the QTemporaryFile object
-	//        needs to be kept for the whole life time of the temp file name.
-	//        This could be achieved by creating a class TempDir (like
-	//        TempFile, but using a currentlky non-existing
-	//        QTemporaryDirectory object).
-	QTemporaryFile qt_tmp(mask + ".XXXXXXXXXXXX");
-	if (qt_tmp.open()) {
-		string const temp_file = fromqstr(qt_tmp.fileName());
-		LYXERR(Debug::FILES, "Temporary file `" << temp_file << "' created.");
-		return temp_file;
+	FileName tempfile = TempFile(mask).name();
+	// Since the QTemporaryFile object is destroyed at function return
+	// (which is what is intended here), the next call to this function
+	// may return the same file name again.
+	// Thus, in order to prevent race conditions, we track returned names
+	// and create our own unique names if QTemporaryFile returns a name again.
+	if (tmp_names_.find(tempfile.absFileName()) == tmp_names_.end()) {
+		tmp_names_.insert(tempfile.absFileName());
+		return tempfile;
 	}
-	LYXERR(Debug::FILES, "Unable to create temporary file with following template: "
-			<< qt_tmp.fileTemplate());
-	return string();
+
+	// OK, we need another name. Simply append digits.
+	FileName tmp = tempfile;
+	string ext;
+	if (!dir) {
+		// Store and remove extensions
+		ext = "." + tempfile.extension();
+		tmp.changeExtension("");
+	}
+	for (int i = 1; i < INT_MAX ;++i) {
+		// Append digit to filename and re-add extension
+		string const new_fn =
+			tmp.absFileName() + convert<string>(i) + ext;
+		if (tmp_names_.find(new_fn) == tmp_names_.end()) {
+			tmp_names_.insert(new_fn);
+			tempfile.set(new_fn);
+			return tempfile;
+		}
+	}
+
+	// This should not happen!
+	LYXERR0("tempFileName(): Could not create unique temp file name!");
+	return tempfile;
+}
+
+
+void removeTempFile(FileName const & fn)
+{
+	if (!fn.exists())
+		return;
+
+	string const abs = fn.absFileName();
+	if (tmp_names_.find(abs) != tmp_names_.end())
+		tmp_names_.erase(abs);
+	fn.removeFile();
 }
 
 
@@ -486,7 +515,8 @@ static FileName createTmpDir(FileName const & tempdir, string const & mask)
 		<< "createTmpDir:    mask=`" << mask << '\'');
 
 	QFileInfo tmp_fi(QDir(toqstr(tempdir.absFileName())), toqstr(mask));
-	FileName const tmpfl(createTempFile(tmp_fi.absoluteFilePath()));
+	FileName const tmpfl =
+		tempFileName(fromqstr(tmp_fi.absoluteFilePath()) + ".XXXXXXXXXXXX", true);
 
 	if (tmpfl.empty() || !tmpfl.createDirectory(0700)) {
 		LYXERR0("LyX could not create temporary directory in " << tempdir

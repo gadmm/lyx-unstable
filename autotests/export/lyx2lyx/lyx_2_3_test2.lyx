@@ -1,0 +1,347 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass scrartcl
+\use_default_options false
+\begin_modules
+logicalmkup
+\end_modules
+\maintain_unincluded_children false
+\language bosnian
+\language_package default
+\inputencoding utf8
+\fontencoding global
+\font_roman "cochineal" "DejaVu Serif"
+\font_sans "lmss" "default"
+\font_typewriter "lmtt" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf true
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype true
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref true
+\pdf_bookmarks false
+\pdf_bookmarksnumbered true
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\branch branch1
+\selected 0
+\filename_suffix 0
+\color #faf0e6
+\end_branch
+\branch branch2
+\selected 1
+\filename_suffix 0
+\color #faf0e6
+\end_branch
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 2
+\paragraph_separation skip
+\defskip medskip
+\is_math_indent 0
+\math_numbering_side left
+\quotes_style polish
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Subsection*
+Test reversion/conversion between 2.3 and 2.2 formats with lyx2lyx.
+\end_layout
+
+\begin_layout Standard
+Part 2: 
+\end_layout
+
+\begin_layout Itemize
+Fonts: Crimson
+\end_layout
+
+\begin_layout Itemize
+microtype true
+\end_layout
+
+\begin_layout Description
+language
+\begin_inset space ~
+\end_inset
+
+bosnian: 
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+table caption with bosnian prefix
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+allowbreak: 
+\bar under
+
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "11em"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+
+\emph on
+literal dashes
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang english
+The em-dash is used—mainly in American english—without spaces.
+\end_layout
+
+\end_inset
+
+
+\bar default
+ 
+\bar under
+
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "11em"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
++ 
+\emph on
+optional line break
+\emph default
+:
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang english
+The em-dash is used—\SpecialChar allowbreak
+mainly in American english—\SpecialChar allowbreak
+without spaces.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+inverted
+\begin_inset space ~
+\end_inset
+
+branches: branch1 is off, branch 2 is active 
+\begin_inset Branch branch1
+inverted 0
+status open
+
+\begin_layout Standard
+normal branch1
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Branch branch1
+inverted 1
+status open
+
+\begin_layout Standard
+inverted branch1
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Branch branch2
+inverted 0
+status open
+
+\begin_layout Standard
+normal branch2
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Branch branch2
+inverted 1
+status open
+
+\begin_layout Standard
+inverted branch2
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Description
+Indent
+\begin_inset space ~
+\end_inset
+
+Formulas/formula
+\begin_inset space ~
+\end_inset
+
+numbering: false/left
+\begin_inset Formula 
+\begin{equation}
+y=x^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+Quote
+\begin_inset space ~
+\end_inset
+
+insets: Plain quote insets 
+\begin_inset Quotes qld
+\end_inset
+
+<file-
+\begin_inset Quotes qls
+\end_inset
+
+name
+\begin_inset Quotes qrs
+\end_inset
+
+>
+\begin_inset Quotes qrd
+\end_inset
+
+ vs.
+ literal quotes "<file-'name'>".
+\end_layout
+
+\begin_deeper
+\begin_layout Verbatim
+
+Quote insets in Verbatim: 
+\begin_inset Quotes cld
+\end_inset
+
+foo
+\begin_inset Quotes frd
+\end_inset
+
+ and 
+\begin_inset Quotes pls
+\end_inset
+
+bar
+\begin_inset Quotes prs
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_body
+\end_document

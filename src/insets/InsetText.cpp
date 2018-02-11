@@ -217,7 +217,7 @@ void InsetText::draw(PainterInfo & pi, int x, int y) const
 	TextMetrics & tm = pi.base.bv->textMetrics(&text_);
 	int const t2i_offset = pi.base.textToInsetOffset();
 	// FIXME: rounding because of overpainting issues
-	int const t = (int) round(pi.base.thinLineThickness());
+	int const t = (int) round(0.3 + pi.base.thinLineThickness());
 
 	int const w = tm.width() + t2i_offset;
 	int const yframe = y - t2i_offset - tm.ascent();

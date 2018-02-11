@@ -42,6 +42,7 @@
 #include <QLocale>
 #include <QPalette>
 #include <QSet>
+#include <QStandardItemModel>
 #include <QTextLayout>
 #include <QTextDocument>
 #include <QToolTip>
@@ -663,6 +664,55 @@ QString qtHtmlToPlainText(QString const & html)
 	td.setHtml(html);
 	return td.toPlainText();
 }
+
+#ifdef FILEFORMAT
+void disable_widget_if_ndef_FILEFORMAT(QWidget *) {}
+
+#else
+
+namespace {
+
+template <class ToolTipable>
+void set_tooltip_reason(ToolTipable * w)
+{
+	QString tooltip = w->toolTip();
+	QString ff_reason = qt_("Newer file format required.");
+	if (tooltip.isEmpty())
+		w->setToolTip(QString("<i>%1</i>").arg(ff_reason));
+	else if (!tooltip.contains(ff_reason))
+		w->setToolTip(QString("<i>(%1)</i> %2").arg(ff_reason).arg(tooltip));
+}
+
+} // anon namespace
+
+
+void disable_widget_if_ndef_FILEFORMAT(QWidget * w)
+{
+	w->setDisabled(true);
+	set_tooltip_reason(w);
+}
+
+
+void disable_item_if_ndef_FILEFORMAT(QAbstractItemModel * m, int row, int col)
+{
+	QStandardItemModel * model = qobject_cast<QStandardItemModel *>(m);
+	if (!model) {
+		LYXERR0("disable_item_if_ndef_FILEFORMAT only works with "
+		        "QStandardItemModel");
+		return;
+	}
+	QStandardItem * item = model->item(row, col);
+	item->setFlags(item->flags() & ~Qt::ItemIsSelectable & ~Qt::ItemIsEnabled);
+	item->setData(QApplication::palette().color(QPalette::Disabled,
+	                                            QPalette::Text),
+	              Qt::ForegroundRole);
+	item->setData(QApplication::palette().color(QPalette::Disabled,
+	                                            QPalette::Base),
+	              Qt::BackgroundRole);
+	set_tooltip_reason(item);
+}
+
+#endif
 
 
 } // namespace lyx

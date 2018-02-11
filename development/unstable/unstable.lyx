@@ -1,0 +1,648 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass scrartcl
+\use_default_options true
+\maintain_unincluded_children false
+\language british
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "lmodern" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 1
+\output_sync_macro "\synctex=-1"
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Developer's guide to LyX unstable 
+\end_layout
+
+\begin_layout Section
+What is LyX unstable
+\end_layout
+
+\begin_layout Standard
+LyX unstable is an experiment that tries to answer the following two questions:
+\end_layout
+
+\begin_layout Description
+A.
+ Is it possible to provide a test version of master that reads and writes
+ the latest stable format?
+\end_layout
+
+\begin_layout Description
+B.
+ Can the development of this version be made directly on the master branch
+ instead of a separate branch? (For two reasons: then the developer of a
+ file format change can be asked to encapsulate his changes directly, which
+ is safer; and it will ease the job of translating.)
+\end_layout
+
+\begin_layout Section
+How is LyX unstable developed?
+\end_layout
+
+\begin_layout Standard
+LyX unstable is a branch that evolves in parallel of master.
+ Master is routinely merged into it
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Cherry-pick does not work because master itself contains merges that cannot
+ be cherry-picked.
+\end_layout
+
+\end_inset
+
+.
+ After every merge introducing a file-format change, the modifications at
+ the interfaces are reverted using:
+\end_layout
+
+\begin_layout LyX-Code
+#ifdef FILEFORMAT
+\end_layout
+
+\begin_layout Standard
+in combination with helper functions such as:
+\end_layout
+
+\begin_layout LyX-Code
+disable_widget_if_ndef_FILEFORMAT(QWidget *)
+\end_layout
+
+\begin_layout Standard
+For the purpose of question B, the changes should be such that the behaviour
+ of master is restored if somebody were to define 
+\family typewriter
+FILEFORMAT 
+\family default
+in all headers (though no configure option has been programmed yet to do
+ that).
+\end_layout
+
+\begin_layout Section
+Risks for experiment A
+\end_layout
+
+\begin_layout Itemize
+Ninja file format changes that are not recorded by an incrementation of
+ 
+\family typewriter
+LYX_FORMAT_LYX
+\family default
+.
+ (No occurrence so far.)
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+There is a script that checks that LyX unstable writes the same files as
+ LyX stable in 
+\family typewriter
+development/unstable/check_fileformat.sh
+\family default
+ (see step 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "enu:Check-that-there"
+
+\end_inset
+
+ below).
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+(Update this section after such problems arise.)
+\end_layout
+
+\begin_layout Section
+Risks for experiment B
+\end_layout
+
+\begin_layout Itemize
+Updates to layout contents (not layout format) requires to keep the version
+ from before the change (e.g.
+ in a 
+\family typewriter
+(un)stable/
+\family default
+ subdirectory), when this corresponds to a file format change.
+ Then, an hypothetical 
+\family typewriter
+FILEFORMAT
+\family default
+ switch should also determine which version is used.
+ For now, only the version before the file format change is kept.
+\end_layout
+
+\begin_layout Standard
+(Update this section after such problems arise.)
+\end_layout
+
+\begin_layout Section
+How to update LyX unstable between master releases
+\end_layout
+
+\begin_layout Description
+TL;DR: merge the commit on master that introduces the file format change
+ into unstable, then introduce a commit that disables the changes only at
+ the interfaces: I/O, GUI (Qt & LFUNs).
+ The philosophy is to introduce the most minimal change in code possible.
+ For most of the items below, no change is necessary.
+\end_layout
+
+\begin_layout Enumerate
+Locate the next file-format-changing commit (X)
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+See which commits alter 
+\family typewriter
+src/version.h
+\family default
+, or change LFUNs, or sensitive files listed below.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Merge X into unstable (git merge X), or merge master if there is no new
+ file format change.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Check that the diff with X (resp.
+ master) is reasonable as a safety measure:
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+git diff X src/
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+When there is no file format change, go to 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "enu:Check-that-there"
+
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Introduce a commit disabling the file format change.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Use
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+git diff X~..X
+\end_layout
+
+\begin_layout Standard
+to locate sensitive changes.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Remove the offending code by enclosing it with:
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+#ifdef FILEFORMAT
+\end_layout
+
+\begin_layout Standard
+Do not simply delete them as this makes future merges more complicated.
+\end_layout
+
+\begin_layout Description
+I/O: Make minimal changes to read/write the stable file format, e.g.:
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
++#ifdef FILEFORMAT
+\end_layout
+
+\begin_layout LyX-Code
+ os << "
+\backslash
+
+\backslash
+use_microtype " << convert<string>(use_microtype) << '
+\backslash
+n';
+\end_layout
+
+\begin_layout LyX-Code
++#endif
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Qt
+\begin_inset space ~
+\end_inset
+
+GUI: Do not change Qt ui files.
+ Use the helper function
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+disable_widget_if_ndef_FILEFORMAT() 
+\end_layout
+
+\begin_layout Standard
+from 
+\family typewriter
+frontends/src/qt_helpers.h
+\family default
+.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+LFUN
+\begin_inset space ~
+\end_inset
+
+UI: Do not change LyX ui files.
+ Instead, use
+\family typewriter
+ #ifdef FILEFORMAT 
+\family default
+in
+\family typewriter
+ getStatus() 
+\family default
+so that new LFUNs or new uses of LFUNs are disabled.
+\end_layout
+
+\begin_layout Description
+InsetCommand
+\begin_inset space ~
+\end_inset
+
+parameter: Use the 
+\emph on
+ignore 
+\emph default
+and 
+\emph on
+default_value
+\emph default
+ arguments of 
+\family typewriter
+ParamsInfo::add
+\family default
+.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Layout changes.
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+Layout
+\begin_inset space ~
+\end_inset
+
+format
+\begin_inset space ~
+\end_inset
+
+changes
+\begin_inset space ~
+\end_inset
+
+(
+\family typewriter
+TextClass.cpp
+\family default
+,
+\family typewriter
+
+\begin_inset space ~
+\end_inset
+
+layout2layout.py
+\family default
+): LyX unstable must be able to read the latest layout format.
+ So, it is not necessary to update 
+\family typewriter
+lib/layout/
+\family default
+ when the change concerns an update to the latest layout format.
+\end_layout
+
+\begin_layout Description
+Layout
+\begin_inset space ~
+\end_inset
+
+content
+\begin_inset space ~
+\end_inset
+
+changes: when a layout change is concomitant with a file format change,
+ for instance, if the contents of the layout is modified, the layout must
+ be reverted to its prior state.
+ (This step breaks experiment B as reported above.)
+\end_layout
+
+\begin_layout Itemize
+The
+\family typewriter
+ LYXFILE_LAYOUT_FORMAT 
+\family default
+version in TextClass.cpp has been introduced so that the 
+\emph on
+Convert to latest layout
+\emph default
+ button in the Local Layout only converts up to the latest stable layout
+ version.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+The following require no change / Keep an eye open.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Do not alter lyx2lyx.
+ Unstable can read master lyx files via lyx2lyx.
+\end_layout
+
+\begin_layout Itemize
+Keep 
+\family typewriter
+lib/{doc,examples,templates}
+\family default
+ in the newer format.
+ They will be opened via lyx2lyx.
+\end_layout
+
+\begin_layout Itemize
+Keep an eye on
+\family typewriter
+ lib/Makefile.am 
+\family default
+(e.g.
+ scripts for External Insets),
+\family typewriter
+ lib/configure.py
+\family default
+.
+\end_layout
+
+\begin_layout Itemize
+LFUN format change (
+\family typewriter
+LyXAction.cpp
+\family default
+, prefs2prefs): no measure taken so far, but keep an eye open.
+\end_layout
+
+\begin_layout Itemize
+Prefs format (
+\family typewriter
+LYXRC.cpp
+\family default
+, prefs2prefs): no measure taken.
+ LyX unstable should read and write the latest preference format (it should
+ be compiled with an appropriate suffix to make its use possible in conjunction
+ with stable).
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Check that the diff with X / master is reasonable.
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+git diff X src/
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+\begin_inset CommandInset label
+LatexCommand label
+name "enu:Check-that-there"
+
+\end_inset
+
+Check that there is no change after opening and saving 
+\family typewriter
+lyx 
+\family default
+files written by LyX stable.
+ Use the script in 
+\family typewriter
+development/unstable/check_fileformat.sh
+\family default
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Syntax is 
+\family typewriter
+./check_fileformat.sh path/to/lyx
+\end_layout
+
+\begin_layout Itemize
+Ignored differences are determined by the multiline PCRE regex in
+\family typewriter
+ lib/doc/tests/expected.diff.regex
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+If X is different from master, goto 1.
+\end_layout
+
+\begin_layout Section
+How to update LyX unstable after the next master release
+\end_layout
+
+\begin_layout Enumerate
+Update LyX unstable to the master commit corresponding to the new stable
+ release following the previous guide.
+\end_layout
+
+\begin_layout Enumerate
+Use
+\family typewriter
+ git diff X 
+\family default
+to reset
+\family typewriter
+ #ifdef FILEFORMAT 
+\family default
+/
+\family typewriter
+ disable_widget_if_ndef_FILEFORMAT() 
+\family default
+occurrences and other changes (changed/deleted non-cpp files...).
+\end_layout
+
+\begin_layout Enumerate
+Set up the new unstable version:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\family typewriter
+configure.ac
+\family default
+: release name.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+src/version.h
+\family default
+ and 
+\family typewriter
+src/TextClass.cpp
+\family default
+: LYX_FORMAT_LYX, LYX_FORMAT_TEX2LYX, and LYXFILE_LAYOUT_FORMAT should match
+ the new stable formats.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Check that the diff with master is reasonable: only contains the helper
+ code and new lyx formats.
+\end_layout
+
+\begin_layout Enumerate
+Copy the documentation from 
+\family typewriter
+lib/doc/
+\family default
+ into 
+\family typewriter
+development/unstable/stable/
+\family default
+ and use the script
+\family typewriter
+ development/unstable/setup_fileformat_check.sh 
+\family default
+to ensure that all the lyx files in
+\family typewriter
+ stable/ 
+\family default
+are actually written by LyX stable and not lyx2lyx or an older lyx.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Syntax is: 
+\family typewriter
+./setup_fileformat_check.sh path/to/lyx-stable
+\family default
+.
+\end_layout
+
+\begin_layout Itemize
+This also should perform
+\family typewriter
+ 
+\backslash
+origin 
+\family default
+and
+\family typewriter
+ 
+\backslash
+filename 
+\family default
+changes.
+\end_layout
+
+\end_deeper
+\end_body
+\end_document

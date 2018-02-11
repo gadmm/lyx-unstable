@@ -135,6 +135,7 @@ Menuset
 		OptItem "Increase List Depth|I" "depth-increment"
 		OptItem "Decrease List Depth|D" "depth-decrement"
 		OptItem "Dissolve Inset" "inset-dissolve"
+		OptItem "Split Inset" "inset-split"
 		OptItem "TeX Code Settings...|C" "inset-settings ert"
 # 'a' shortcut to match Insert entry, shouldn't clash with Table Settings
 		OptItem "Float Settings...|a" "inset-settings float"
@@ -594,7 +595,7 @@ Menuset
 		Item "Spellchecker...|S" "dialog-show spellchecker"
 		OptItem "Thesaurus...|T" "thesaurus-entry"
 		Item "Statistics...|a" "statistics"
-		OptItem "Check TeX|h" "buffer-chktex"
+		Item "Check TeX|h" "buffer-chktex"
 		Item "TeX Information|I" "dialog-show texinfo"
 		Item "Compare...|C" "dialog-show compare"
 		Separator
@@ -625,7 +626,7 @@ Menuset
 	End
 
 	Menu "examples"
-		Item "Beamer Presentations|B" "help-open beamer"
+		Item "Beamer Presentations|B" "help-open Beamer-flex"
 		Item "Braille|a" "help-open Braille"
 		Item "Colored boxes|r" "help-open colored-boxes"
 		Item "Feynman-diagram|F" "help-open FeynmanDiagrams"

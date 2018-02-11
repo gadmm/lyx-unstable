@@ -1,5 +1,5 @@
 # Definition of flex insets for beamer-flex
-# Author: Guillaume Munch <gm@lyx.org>
+# Author: Guillaume Munch-Maccagnoni <gm@lyx.org>
 # Based on beamer.layout by Till Tantau and others.
 
 # This file is included by beamer-flex.layout and beamer-flex.module

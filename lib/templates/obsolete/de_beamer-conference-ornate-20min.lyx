@@ -1,31 +1,26 @@
-#LyX 2.3 created this file. For more info see http://www.lyx.org/
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
 \lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
-\origin /systemlyxdir/templates/
+\origin /systemlyxdir/templates/obsolete/
 \textclass beamer
 \begin_preamble
 \usetheme{Warsaw}
-% or ...
+% oder ...
 
 \setbeamercovered{transparent}
-% or whatever (possibly just delete it)
-
-\deftranslation[to=japanese]{Theorem}{定理}
-\deftranslation[to=japanese]{Corollary}{系}
-\deftranslation[to=japanese]{Example}{例}
-% there are useful to change heading texts to Japanese
+% oder auch nicht
 \end_preamble
 \use_default_options false
 \maintain_unincluded_children false
-\language japanese
+\language ngerman
 \language_package default
 \inputencoding auto
 \fontencoding global
-\font_roman "times" "default"
-\font_sans "default" "default"
-\font_typewriter "default" "default"
+\font_roman "lmodern" "default"
+\font_sans "lmss" "default"
+\font_typewriter "lmtt" "default"
 \font_math "auto" "auto"
 \font_default_family default
 \use_non_tex_fonts false
@@ -36,7 +31,7 @@
 \use_microtype false
 \use_dash_ligatures false
 \graphics default
-\default_output_format pdf
+\default_output_format default
 \output_sync 0
 \bibtex_command default
 \index_command default
@@ -65,7 +60,7 @@
 \justification true
 \use_refstyle 0
 \use_minted 0
-\index Index
+\index Stichwortverzeichnis
 \shortcut idx
 \color #008000
 \end_index
@@ -75,7 +70,7 @@
 \paragraph_indentation default
 \is_math_indent 0
 \math_numbering_side default
-\quotes_style english
+\quotes_style danish
 \dynamic_quotes 0
 \papercolumns 1
 \papersides 1
@@ -94,19 +89,36 @@
 status open
 
 \begin_layout Plain Layout
-このファイルは、下記の要請を満たすひな型です。
+
+\lang english
+Note: this template uses the old beamer layout.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Diese Datei enthält eine Lösungsvorlage für:
 \end_layout
 
 \begin_layout Itemize
-学会やセミナーでの発表
+Vorträge bei einer (deutschsprachigen) Konferenz/einem Kolloquium.
+ 
 \end_layout
 
 \begin_layout Itemize
-発表の長さはおよそ20分
+Vortragslänge von etwa 20 Minuten.
+ 
 \end_layout
 
 \begin_layout Itemize
-様式は装飾的
+Aussehen des Vortrags ist verschnörkelt/dekorativ.
 \end_layout
 
 \end_inset
@@ -141,17 +153,17 @@ In principle, this file can be redistributed and/or modified under the terms
 \end_layout
 
 \begin_layout Title
-学会報どおりのタイトル
+Titel wie im Tagungsband angegeben
 \begin_inset Argument 1
 status open
 
 \begin_layout Plain Layout
-短縮形の論文タイトル
+Kurzversion des Titels
 \begin_inset Note Note
 status collapsed
 
 \begin_layout Plain Layout
-非必須。論文タイトルが長過ぎるときのみ使います
+optional, nur bei langen Titeln nötig
 \end_layout
 
 \end_inset
@@ -165,7 +177,7 @@ status collapsed
 \end_layout
 
 \begin_layout Subtitle
-論文に副タイトルがあるときのみ入れます
+Untertitel nur angeben, wenn es einen im Tagungsband gibt
 \end_layout
 
 \begin_layout Author
@@ -173,7 +185,7 @@ F.
 \begin_inset space ~
 \end_inset
 
-Author
+Autor
 \begin_inset Flex InstituteMark
 status open
 
@@ -200,7 +212,7 @@ and
 \begin_inset space ~
 \end_inset
 
-Another
+Anders
 \begin_inset Flex InstituteMark
 status collapsed
 
@@ -212,16 +224,22 @@ status collapsed
 
 
 \begin_inset Note Note
-status open
+status collapsed
 
 \begin_layout Itemize
-名前を論文に現れるのと同じ順序で書きます
+Namen müssen in derselben Reihenfolge wie im Papier erscheinen.
+ 
 \end_layout
 
 \begin_layout Itemize
-著者が別々の肩書を持っている場合には、「所属機関マーク」差込枠(挿入\SpecialChar menuseparator
-任意設定差込枠\SpecialChar menuseparator
-所属機関マーク)を使ってください
+Die Institutsfußnotenmarke (
+\family sans
+Einfügen\SpecialChar menuseparator
+Benutzerdefinierte Einfügungen\SpecialChar menuseparator
+Institutsfußnotenmarke
+\family default
+) sollte nur verwendet werden, wenn die Autoren unterschiedlichen Instituten
+ angehören.
 \end_layout
 
 \end_inset
@@ -231,16 +249,24 @@ status open
 status open
 
 \begin_layout Plain Layout
-Author, Another
+Autor, Anders
 \begin_inset Note Note
 status collapsed
 
-\begin_layout Plain Layout
-- 非必須。著者が大勢いるときのみ使います
+\begin_layout Itemize
+optional, nur bei vielen Autoren
 \end_layout
 
-\begin_layout Plain Layout
-- ひじょうに多くの著者がいる場合には，「Author et al.」を使ってください
+\begin_layout Itemize
+wenn es sehr viele Autoren gibt, besser 
+\begin_inset Quotes ald
+\end_inset
+
+Autor et al.
+\begin_inset Quotes ard
+\end_inset
+
+ verwenden
 \end_layout
 
 \end_inset
@@ -263,11 +289,11 @@ status collapsed
 
 \end_inset
 
-計算機科学学部
+Institut für Informatik
 \begin_inset Newline newline
 \end_inset
 
-どこかの大学
+Universität Hier
 \begin_inset ERT
 status collapsed
 
@@ -290,22 +316,29 @@ status collapsed
 
 \end_inset
 
-理論物理学部
+Institut für Theoretische Philosophie
 \begin_inset Newline newline
 \end_inset
 
-別の大学
+Universität Da
 \begin_inset Note Note
 status collapsed
 
 \begin_layout Itemize
-複数の所属機関がある場合に限り、「所属機関マーク」差込枠(挿入\SpecialChar menuseparator
-任意設定差込枠\SpecialChar menuseparator
-所属機関マーク)を使ってください
+Die Institutsfußnotenmarke (
+\family sans
+Einfügen\SpecialChar menuseparator
+Benutzerdefinierte Einfügungen\SpecialChar menuseparator
+Institutsfußnotenmarke
+\family default
+) sollte nur verwendet werden, wenn die Autoren unterschiedlichen Instituten
+ angehören.
+ 
 \end_layout
 
 \begin_layout Itemize
-簡潔に。だれもあなたの番地には興味ありません。
+Haltn Sie es einfach, niemand interessiert sich für Ihre genau Adresse.
+ 
 \end_layout
 
 \end_inset
@@ -315,7 +348,17 @@ status collapsed
 status open
 
 \begin_layout Plain Layout
-どこかの大学及び別の大学
+Universitäten Hier und Da
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+optional, aber oft nötig
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -324,16 +367,18 @@ status open
 \end_layout
 
 \begin_layout Date
-2003年度素晴らしいプレゼ―テーション学会
+Konferenz über Präsentationstechniken 2004
 \begin_inset Note Note
 status collapsed
 
 \begin_layout Itemize
-学会名かその略称を使います
+Voller oder abgekürzter Name sind möglich.
+ 
 \end_layout
 
 \begin_layout Itemize
-聴衆にはあまり役に立つ情報ではありませんが，どちらかといえばスライドをオンラインで読む人々向けです
+Dieser Eintrag ist nicht für das Publikum gedacht (das weiß ja, bei welcher
+ Konferenz es ist), sondern für Leute, die die Folien später lesen.
 \end_layout
 
 \end_inset
@@ -343,12 +388,12 @@ status collapsed
 status open
 
 \begin_layout Plain Layout
-CFP 2003
+KüP 2004
 \begin_inset Note Note
 status collapsed
 
 \begin_layout Plain Layout
-非必須。学会の略称を置きます
+optional, möglichst Abkürzung des Konferenznamens verwenden
 \end_layout
 
 \end_inset
@@ -366,8 +411,27 @@ status collapsed
 status open
 
 \begin_layout Plain Layout
-「institution-logo-filename.xxx」というファイルがあれば (xxxはlatexもしくはpdflatexが処理できる画像形式)、下記のコ
-メントを外すことで，ロゴを追加することができます。
+Falls eine Logodatei namens 
+\begin_inset Quotes ald
+\end_inset
+
+institution-logo-filename.xxx
+\begin_inset Quotes ard
+\end_inset
+
+ vorhanden ist (wobei xxx ein von \SpecialChar LaTeX
+ bzw.
+ PDF\SpecialChar LaTeX
+ lesbares Grafikformat ist), können Sie ein Logo einfügen, indem Sie
+ das Folgende auskommentieren (
+\begin_inset Quotes ald
+\end_inset
+
+%
+\begin_inset Quotes ard
+\end_inset
+
+ am Anfang entfernen):
 \end_layout
 
 \end_inset
@@ -405,7 +469,9 @@ pgfuseimage{institution-logo}}
 status open
 
 \begin_layout Plain Layout
-下記は，各小節の冒頭に目次が表示されるようにするものです。これを望まない場合には、削除してください。
+Folgendes sollten Sie löschen, wenn nicht am Anfang jedes Unterabschnitts
+ die Gliederung gezeigt werdem soll.
+ 
 \end_layout
 
 \end_inset
@@ -435,7 +501,7 @@ frame<beamer>{
 
     
 \backslash
-frametitle{概要}
+frametitle{Gliederung}   
 \end_layout
 
 \begin_layout Plain Layout
@@ -465,7 +531,8 @@ tableofcontents[currentsection,currentsubsection]
 status open
 
 \begin_layout Plain Layout
-すべてを一段ずつ開示するようにしたい場合には、下記のコマンドのコメントを外してください。
+Falls Sie Aufzählungen immer schrittweise zeigen wollen, können Sie folgenden
+ Befehl auskommentieren:
 \end_layout
 
 \end_inset
@@ -494,7 +561,7 @@ beamerdefaultoverlayspecification{<+->}
 status open
 
 \begin_layout Plain Layout
-概要
+Gliederung
 \end_layout
 
 \end_inset
@@ -517,37 +584,47 @@ LatexCommand tableofcontents
 status open
 
 \begin_layout Plain Layout
-発表をどう構築するかは大変な仕事ですから、以下の構造は適切でないこともあります。ここでのソリューションに適用する法則は以下のとおりです。
+Einen Vortrag zu strukturieren, ist nicht immer einfach.
+ Die nachfolgende Struktur kann unangemessen sein.
+ Hier ein paar Regeln, die für diese Lösungsvorlage gelten:
 \end_layout
 
 \begin_layout Itemize
-ちょうど2〜3節に収める(要約を除く)
+Verwenden Sie zwei oder drei Abschnitte (neben der Zusammenfassung).
+ 
 \end_layout
 
 \begin_layout Itemize
-1節あたり
+
 \series bold
-最大でも
+Maximal
 \series default
-3小節に収める。
+ drei Unterabschnitte pro Abschnitt.
+ 
 \end_layout
 
 \begin_layout Itemize
-1フレームあたり30秒から2分で話すこと。したがって、発表すべてで15〜30フレームにすること。
+Pro Rahmen sollten Sie zwischen 30 Sekunden und zwei Minuten reden.
+ Die Präsentation sollte also 15 bis 30 Rahmen haben.
 \end_layout
 
 \begin_layout Itemize
-学会の聴衆は、あなたが話そうとすることについて、ほとんど知らない可能性が高いので、
-\series bold
-単純化すること!
+Konferenzteilnehmer wissen oft wenig von der Materie des Vortrags.
+ Also: Vereinfachen Sie! 
 \end_layout
 
 \begin_layout Itemize
-20分の発表で、中心となるアイディアを伝えるのは大変なことです。必要とされる水準よりも不正確になると思っても、細部は省略しましょう。
+In 20 Minuten ist es schon schwer genug, die Hauptbotschaft zu vermitteln.
+ Deshalb sollten Sie Details auslassen, selbst wenn die Darstellung dann
+ weniger genau ist, als Sie das gerne möchten.
+ 
 \end_layout
 
 \begin_layout Itemize
-証明や実装に不可欠な細部を省略する場合には、省略する旨を一度発言しましょう。皆それで満足です。
+Falls Sie Details weglassen, die eigentlich wichtig für einen Beweis/Umsetzung
+ sind, sagen Sie dies den Leuten einmal klar und deutlich.
+ Alle werden damit leben können.
+ 
 \end_layout
 
 \end_inset
@@ -557,21 +634,11 @@ status open
 
 \end_deeper
 \begin_layout Section
-動機
+Motivation
 \end_layout
 
 \begin_layout Subsection
-我々の研究した基本問題
-\begin_inset Argument 2
-status open
-
-\begin_layout Plain Layout
-基本問題
-\end_layout
-
-\end_inset
-
-
+Das behandelte Problem
 \end_layout
 
 \begin_layout Frame
@@ -579,7 +646,7 @@ status open
 status open
 
 \begin_layout Plain Layout
-よくわかる見出しを付けましょう。Use Uppercase Letters for English.
+Überschriften sollten informativ sein
 \end_layout
 
 \end_inset
@@ -589,12 +656,15 @@ status open
 
 \begin_deeper
 \begin_layout FrameSubtitle
-フレームの副見出しは必須ではありません。Use upper- or lowercase letters for English.
+Untertitel sind optional
 \begin_inset Note Note
-status collapsed
+status open
 
 \begin_layout Plain Layout
-タイトルは、スライド全部についていけない人にもわかるように、スライドを要約していなくてはなりません。
+Eine Überschrift fasst einen Rahmen verständlich zusammen.
+ Man muss sie verstehen können, selbst wenn man nicht den Rest des Rahmens
+ versteht.
+ 
 \end_layout
 
 \end_inset
@@ -603,7 +673,7 @@ status collapsed
 \end_layout
 
 \begin_layout Itemize
-記号箇条書きを多用しましょう。
+Häufig Auflistungen benutzen.
 \end_layout
 
 \begin_deeper
@@ -613,7 +683,7 @@ status collapsed
 
 \end_deeper
 \begin_layout Itemize
-非常に短い文や短い句を使用しましょう。
+Sehr kurze Sätze oder Phrasen verwenden.
 \end_layout
 
 \begin_deeper
@@ -623,7 +693,15 @@ status collapsed
 
 \end_deeper
 \begin_layout Itemize
-これらの重ね合わせは、一時停止様式を使えば、生成することができます。
+Diese Overlays werden mit dem Absatzstil 
+\begin_inset Quotes ald
+\end_inset
+
+Pause
+\begin_inset Quotes ard
+\end_inset
+
+ erzeugt.
 \end_layout
 
 \end_deeper
@@ -639,7 +717,7 @@ status collapsed
 status open
 
 \begin_layout Plain Layout
-よくわかる見出しを付けましょう。
+Überschriften müssen informativ sein
 \end_layout
 
 \end_inset
@@ -659,7 +737,7 @@ status open
 
 \end_inset
 
-重ね合わせを行うには，重ねあわせ指定を使うこともできます。
+Man kann auch Overlay-Spezifikationen benutzen, um Overlays zu erzeugen.
 \end_layout
 
 \begin_layout Itemize
@@ -673,7 +751,7 @@ status open
 
 \end_inset
 
-すると、任意の順序で項目を表示することができます。
+Hiermit können Punkte in beliebiger Reihenfolge präsentiert werden.
 \end_layout
 
 \begin_layout Itemize
@@ -687,7 +765,7 @@ status open
 
 \end_inset
 
-これは2番めに表示されます。
+Dies wird als Zweites gezeigt.
 \end_layout
 
 \end_deeper
@@ -703,7 +781,7 @@ status open
 status open
 
 \begin_layout Plain Layout
-よくわかる見出しを付けましょう。
+Überschriften müssen informativ sein
 \end_layout
 
 \end_inset
@@ -728,11 +806,11 @@ status open
 
 \begin_deeper
 \begin_layout Itemize
-タイトルのないブロック
+Block ohne Überschrift.
 \end_layout
 
 \begin_layout Itemize
-全スライドに表示されます。
+Wird auf allen Overlays angezeigt.
 \end_layout
 
 \end_deeper
@@ -752,7 +830,7 @@ status open
 status open
 
 \begin_layout Plain Layout
-用例ブロックのタイトル
+Ein Beispielblocktitel
 \end_layout
 
 \end_inset
@@ -778,7 +856,7 @@ status open
 \end_deeper
 \end_deeper
 \begin_layout Subsection
-先行研究
+Frühere Arbeiten
 \end_layout
 
 \begin_layout Frame
@@ -786,7 +864,7 @@ status open
 status open
 
 \begin_layout Plain Layout
-よくわかる見出しを付けましょう。
+Überschriften müssen informativ sein
 \end_layout
 
 \end_inset
@@ -806,7 +884,7 @@ status open
 
 \end_inset
 
-最初のスライドに表示。
+Auf dem ersten Overlay.
 \end_layout
 
 \begin_layout Standard
@@ -827,16 +905,16 @@ status open
 
 \end_inset
 
-2番めのスライドに表示。
+Auf dem zweiten Overlay.
 \end_layout
 
 \end_deeper
 \begin_layout Section
-我々の結果/貢献
+Unsere Resultate/Beitrag
 \end_layout
 
 \begin_layout Subsection
-主要な結果
+Hauptresultate
 \end_layout
 
 \begin_layout Frame
@@ -844,7 +922,7 @@ status open
 status open
 
 \begin_layout Plain Layout
-よくわかる見出しを付けましょう。
+Überschriften müssen informativ sein
 \end_layout
 
 \end_inset
@@ -854,7 +932,7 @@ status open
 
 \begin_deeper
 \begin_layout Theorem
-最初のスライドに表示。
+Auf dem ersten Overlay.
 \end_layout
 
 \begin_layout Pause
@@ -862,7 +940,7 @@ status open
 \end_layout
 
 \begin_layout Corollary
-2番めのスライドに表示。
+Auf dem zweiten Overlay.
 \end_layout
 
 \end_deeper
@@ -878,7 +956,7 @@ status open
 status open
 
 \begin_layout Plain Layout
-よくわかる見出しを付けましょう。
+Überschriften müssen informativ sein
 \end_layout
 
 \end_inset
@@ -907,7 +985,7 @@ status open
 
 \end_inset
 
-左列
+In der linken Spalte.
 \end_layout
 
 \begin_layout Column
@@ -925,21 +1003,21 @@ status open
 
 \end_inset
 
-右列
+In der rechten Spalte.
 \begin_inset Newline newline
 \end_inset
 
-新規行
+Neue Zeile.
 \end_layout
 
 \end_deeper
 \end_deeper
 \begin_layout Subsection
-証明/実装の基本アイディア
+Ideen für Beweise/Umsetzung
 \end_layout
 
 \begin_layout Section*
-要約
+Zusammenfassung
 \end_layout
 
 \begin_layout Frame
@@ -947,7 +1025,7 @@ status open
 status open
 
 \begin_layout Plain Layout
-要約
+Zusammenfassung
 \end_layout
 
 \end_inset
@@ -956,48 +1034,77 @@ status open
 \end_layout
 
 \begin_deeper
-\begin_layout Itemize
-発表の
-\begin_inset Flex Alert
+\begin_layout Standard
+\begin_inset Note Note
 status open
 
 \begin_layout Plain Layout
-最初の主要メッセージ
+Die Zusammenfassung sollte sehr kurz sein.
 \end_layout
 
 \end_inset
 
-を1〜2行で。
+
 \end_layout
 
 \begin_layout Itemize
-発表の
+Die
+\color none
+ 
+\color inherit
+
 \begin_inset Flex Alert
 status open
 
 \begin_layout Plain Layout
-2番めの主要メッセージ
-\end_layout
-
-\end_inset
-
-を1〜2行で。
-\end_layout
-
-\begin_layout Itemize
-場合によっては
-\begin_inset Flex Alert
-status open
-
-\begin_layout Plain Layout
-3番目のメッセージ
+erste Hauptbotschaft
 \end_layout
 
 \end_inset
 
 
 \color none
-。でもこれ以上はだめ。
+ des Vortrags in ein bis zwei Zeilen.
+\end_layout
+
+\begin_layout Itemize
+Die
+\color none
+ 
+\color inherit
+
+\begin_inset Flex Alert
+status open
+
+\begin_layout Plain Layout
+zweite Hauptbotschaft
+\end_layout
+
+\end_inset
+
+
+\color none
+ des Vortrags in ein bis zwei Zeilen.
+\end_layout
+
+\begin_layout Itemize
+Eventuell noch eine
+\color none
+ 
+\color inherit
+
+\begin_inset Flex Alert
+status open
+
+\begin_layout Plain Layout
+dritte Botschaft
+\end_layout
+
+\end_inset
+
+
+\color none
+, aber das reicht dann auch.
 \end_layout
 
 \begin_layout Standard
@@ -1005,12 +1112,15 @@ status open
 status open
 
 \begin_layout Plain Layout
-展望は必ずしも必要ではありません。
+Der folgende Ausblick ist optional.
 \end_layout
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
 \begin_inset VSpace defskip
 \end_inset
 
@@ -1018,16 +1128,16 @@ status open
 \end_layout
 
 \begin_layout Itemize
-展望
+Ausblick
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-まだやっていないこと。
+Etwas, was wir noch nicht lösen konnten.
 \end_layout
 
 \begin_layout Itemize
-さらに追加事項。
+Noch etwas, das wir noch nicht lösen konnten.
 \end_layout
 
 \end_deeper
@@ -1038,16 +1148,16 @@ status open
 status open
 
 \begin_layout Plain Layout
-下記は必須ではなく，通常必要ではありません。
+Alles Nachfolgende ist optional und üblicherweise nicht nötig.
 \end_layout
 
 \end_inset
 
-附録
+Anhang
 \end_layout
 
 \begin_layout Subsection*
-さらに読むには
+Weiterführende Literatur
 \end_layout
 
 \begin_layout Frame
@@ -1065,7 +1175,7 @@ allowframebreaks
 status open
 
 \begin_layout Plain Layout
-さらに読むには
+Weiterführende Literatur
 \end_layout
 
 \end_inset
@@ -1092,7 +1202,7 @@ beamertemplatebookbibitems
 status open
 
 \begin_layout Plain Layout
-総記書籍から始めます。
+Anfangen sollte man mit Übersichtswerken.
 \end_layout
 
 \end_inset
@@ -1103,13 +1213,13 @@ status open
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "Author1990"
+key "Autor1990"
 literal "true"
 
 \end_inset
 
 A.
- Author.
+ Autor.
  
 \begin_inset ERT
 status collapsed
@@ -1123,11 +1233,12 @@ newblock
 
 \end_inset
 
-
+ 
 \emph on
-Handbook of Everything
+Einführung in das Präsentationswesen
 \emph default
 .
+ 
 \begin_inset ERT
 status collapsed
 
@@ -1140,7 +1251,7 @@ newblock
 
 \end_inset
 
- Some Press, 1990.
+ Klein-Verlag, 1990.
 \begin_inset ERT
 status collapsed
 
@@ -1158,7 +1269,8 @@ beamertemplatearticlebibitems
 status open
 
 \begin_layout Plain Layout
-下記に面白い論文。一覧は短く収めること。
+Vertiefende Literatur kommt später.
+ Die Liste sollte kurz sein.
 \end_layout
 
 \end_inset
@@ -1169,13 +1281,13 @@ status open
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "Someone2002"
+key "Jemand2002"
 literal "true"
 
 \end_inset
 
 S.
- Someone.
+ Jemand.
 \begin_inset ERT
 status collapsed
 

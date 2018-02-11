@@ -1312,20 +1312,23 @@ void GuiWorkArea::inputMethodEvent(QInputMethodEvent * e)
 	LYXERR(Debug::KEY, "preeditString: " << e->preeditString()
 		   << " commitString: " << e->commitString());
 
-	// insert the processed text in the document (handles undo)
+	// insert the processed text in the document asynchronously
 	if (!e->commitString().isEmpty()) {
-		d->buffer_view_->cursor().beginUndoGroup();
-		d->buffer_view_->cursor().insert(qstring_to_ucs4(e->commitString()));
-		d->buffer_view_->updateMetrics();
-		d->buffer_view_->cursor().endUndoGroup();
-		viewport()->update();
+		QVector<uint> input = e->commitString().toUcs4();
+		for (int i = 0; i < input.size(); i++) {
+			QKeyEvent const ev(QEvent::KeyPress, 0, Qt::NoModifier,
+			                   QString::fromUcs4(input.data() + i, 1));
+			KeySymbol sym;
+			setKeySymbol(&sym, &ev);
+			Q_EMIT compressKeySym(sym, NoModifier, false);
+		}
+	} else {
+		// Hide the caret during the test transformation.
+		if (e->preeditString().isEmpty())
+			startBlinkingCaret();
+		else
+			stopBlinkingCaret();
 	}
-
-	// Hide the caret during the test transformation.
-	if (e->preeditString().isEmpty())
-		startBlinkingCaret();
-	else
-		stopBlinkingCaret();
 
 	if (d->preedit_string_.empty() && e->preeditString().isEmpty()) {
 		// Nothing to do

@@ -1,6 +1,6 @@
 #% Do not delete the line below; configure depends on this
-#  \DeclareLaTeXClass[beamer,beamerposter.sty]{Beamerposter}
-#  \DeclareCategory{Posters}
+#  \DeclareLaTeXClass[beamer,beamerposter.sty]{Beamerposter (obsolete)}
+#  \DeclareCategory{Obsolete}
 # Wrapper layout for the beamer class with beamerposter style
 #
 # Authors: Jürgen Spitzmüller (spitz@lyx.org)

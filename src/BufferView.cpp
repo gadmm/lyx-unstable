@@ -1146,6 +1146,10 @@ bool BufferView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 		flag.setEnabled(true);
 		break;
 
+	case LFUN_GRAPHICS_UNIFY:
+		flag.setEnabled(cur.selection());
+		break;
+
 	case LFUN_WORD_FINDADV: {
 		FindAndReplaceOptions opt;
 		istringstream iss(to_utf8(cmd.argument()));
@@ -1614,11 +1618,12 @@ void BufferView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 	}
 
 	case LFUN_BUFFER_ANONYMIZE: {
-		for(char c = '0'; c <='Z'; c++) {
-		  odocstringstream ss;
-		  ss << "a\n" << c << "\n0 0 1 1 0"; 
-		  lyx::dispatch(FuncRequest(LFUN_WORD_REPLACE, ss.str()));
+		for (char c = '0'; c <= 'Z'; c++) {
+			odocstringstream ss;
+			ss << "a\n" << c << "\n0 0 1 1 0";
+			lyx::dispatch(FuncRequest(LFUN_WORD_REPLACE, ss.str()));
 		}
+		break;
 	}
 
 	case LFUN_WORD_FINDADV: {
@@ -1688,6 +1693,45 @@ void BufferView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 			if (inset->delDatabase(cmd.argument()))
 				dr.forceBufferUpdate();
 		}
+		break;
+	}
+
+	case LFUN_GRAPHICS_UNIFY: {
+
+		cur.recordUndoFullBuffer();
+
+		DocIterator from, to;
+		from = cur.selectionBegin();
+		to = cur.selectionEnd();
+
+		string const newId = cmd.getArg(0);
+		bool fetchId = newId.empty(); //if we wait for groupId from first graphics inset
+
+		InsetGraphicsParams grp_par;
+		if (!fetchId)
+			InsetGraphics::string2params(graphics::getGroupParams(buffer_, newId), buffer_, grp_par);
+
+		if (!from.nextInset())	//move to closest inset
+			from.forwardInset();
+
+		while (!from.empty() && from < to) {
+			Inset * inset = from.nextInset();
+			if (!inset)
+				break;
+			InsetGraphics * ig = inset->asInsetGraphics();
+			if (ig) {
+				InsetGraphicsParams inspar = ig->getParams();
+				if (fetchId) {
+				        grp_par = inspar;
+					fetchId = false;
+				} else {
+					grp_par.filename = inspar.filename;
+					ig->setParams(grp_par);
+				}
+			}
+			from.forwardInset();
+		}
+		dr.screenUpdate(Update::Force); //needed if triggered from context menu
 		break;
 	}
 
@@ -2818,7 +2862,7 @@ void BufferView::updateMetrics(Update::flags & update_flags, bool const scroll)
 		d->anchor_ypos_ -= pm0.position() - pm0.ascent();
 		again();
 	} else if (scrollbar.min > 0) {
-		d->anchor_ypos_ += scrollbar.min;
+		d->anchor_ypos_ -= scrollbar.min;
 		again();
 	} else if (scrollbar.max < 0) {
 		d->anchor_ypos_ -= scrollbar.max;

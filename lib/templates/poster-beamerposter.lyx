@@ -1,10 +1,10 @@
-#LyX 2.3 created this file. For more info see http://www.lyx.org/
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
 \lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
 \origin /systemlyxdir/templates/
-\textclass beamerposter
+\textclass beamerposter-flex
 \begin_preamble
 % You can select your theme here. Any beamer theme without a sidebar should work:
 \usetheme{Berlin}
@@ -238,12 +238,11 @@ You can use any beamer element, especially the use of blocks is advisable.
 
 \end_layout
 
-\begin_layout Frame
-
-\end_layout
-
-\begin_deeper
 \begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Note Note
 status open
 
@@ -287,7 +286,7 @@ dedicated beamerposter theme*
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \noindent
 \begin_inset Box Frameless
 position "t"
@@ -442,14 +441,18 @@ inserttitlegraphic
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset VSpace 1.7cm
 \end_inset
 
 
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -462,11 +465,11 @@ The poster can be structured in blocks of different width
 
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
 This block spans the whole width of the poster.
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
  eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
  voluptua.
@@ -488,23 +491,30 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
  
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
 Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie
  consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et
  accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit
  augue duis dolore te feugait nulla facilisi.
 \end_layout
 
-\end_deeper
-\begin_layout Frame
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset VSpace vfill
 \end_inset
 
 
 \end_layout
 
-\begin_deeper
-\begin_layout Block
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -517,7 +527,7 @@ Get reasonable line lengths
 
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
 \begin_inset ERT
 status open
 
@@ -545,7 +555,7 @@ status open
 
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
 \begin_inset Flex Multiple Columns
 status open
 
@@ -667,8 +677,12 @@ Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit.
 
 \end_layout
 
-\end_deeper
-\begin_layout Frame
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset Note Note
 status open
 
@@ -692,8 +706,11 @@ totalwidth
 
 \end_layout
 
-\begin_deeper
-\begin_layout Columns
+\begin_layout Plain Layout
+\begin_inset Flex Columns
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 1
 status open
 
@@ -719,25 +736,18 @@ textwidth
 
 \end_layout
 
-\begin_deeper
 \begin_layout Column
+
 .49
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
 \backslash
 linewidth
 \end_layout
 
-\end_inset
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
 
-
-\end_layout
-
-\begin_layout Block
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -777,69 +787,68 @@ Text Style.
 
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
 \begin_inset VSpace defskip
 \end_inset
 
 
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \size tiny
 Tiny
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \size scriptsize
 Smallest
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \size footnotesize
 Smaller
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \size normal
 Normal
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \size large
 Large
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \size larger
 Larger
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \size largest
 Largest
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \size huge
 Huge
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \size giant
 Huger
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Flex Giant
 status open
 
@@ -852,7 +861,7 @@ Giant
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Flex More Giant
 status open
 
@@ -865,7 +874,7 @@ More Giant
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Flex Most Giant
 status open
 
@@ -878,8 +887,16 @@ Most Giant
 
 \end_layout
 
-\end_deeper
-\begin_layout AlertBlock
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex Alert Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status open
 
@@ -892,7 +909,7 @@ Blocks in different colors
 
 \end_layout
 
-\begin_layout AlertBlock
+\begin_layout Plain Layout
 Beamer provides special blocks with specific colors that can also be used
  for posters.
  This one is an 
@@ -907,7 +924,16 @@ alert
  Its main purpose is to highlight important things.
 \end_layout
 
-\begin_layout ExampleBlock
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex Example Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status open
 
@@ -920,7 +946,7 @@ Blocks in different colors
 
 \end_layout
 
-\begin_layout ExampleBlock
+\begin_layout Plain Layout
 This is an 
 \begin_inset Quotes eld
 \end_inset
@@ -932,20 +958,8 @@ example block
 .
 \end_layout
 
-\begin_layout ExampleBlock
-Yet another color.
-\end_layout
-
-\begin_layout Column
-.49
-\begin_inset ERT
-status collapsed
-
 \begin_layout Plain Layout
-
-
-\backslash
-linewidth
+Yet another color.
 \end_layout
 
 \end_inset
@@ -953,7 +967,18 @@ linewidth
 
 \end_layout
 
-\begin_layout Block
+\begin_layout Column
+
+.49
+\backslash
+linewidth
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -966,7 +991,6 @@ Enumerated Lists
 
 \end_layout
 
-\begin_deeper
 \begin_layout Enumerate
 some items 
 \end_layout
@@ -981,17 +1005,28 @@ some items
 
 \begin_layout Enumerate
 some items 
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Block
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -1004,7 +1039,6 @@ Some items and some math
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 some items and 
 \begin_inset Formula $\alpha=\gamma,\sum_{i}$
@@ -1021,7 +1055,7 @@ some items
 some items 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \alpha=\gamma,\sum_{i}
@@ -1032,15 +1066,16 @@ some items
 
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -1054,7 +1089,6 @@ More items \SpecialChar ldots
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 some items
 \end_layout
@@ -1075,15 +1109,16 @@ some items
 some items
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -1097,7 +1132,6 @@ status collapsed
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 some items 
 \end_layout
@@ -1114,15 +1148,16 @@ some items
 some items 
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status open
 
@@ -1149,8 +1184,7 @@ An example for displaying your address.
 
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Box Frameless
 position "t"
 hor_pos "c"
@@ -1255,12 +1289,20 @@ http://www.uon.edu/doe
 
 \end_layout
 
-\end_deeper
-\end_deeper
-\begin_layout Columns
+\end_inset
+
 
 \end_layout
 
-\end_deeper
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \end_body
 \end_document

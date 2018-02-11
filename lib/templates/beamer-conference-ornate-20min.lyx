@@ -1,10 +1,10 @@
-#LyX 2.3 created this file. For more info see http://www.lyx.org/
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
 \lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
 \origin /systemlyxdir/templates/
-\textclass beamer
+\textclass beamer-flex
 \begin_preamble
 \usetheme{Warsaw}
 % or ...
@@ -18,9 +18,9 @@
 \language_package default
 \inputencoding auto
 \fontencoding global
-\font_roman "lmodern" "default"
-\font_sans "lmss" "default"
-\font_typewriter "lmtt" "default"
+\font_roman "times" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
 \font_math "auto" "auto"
 \font_default_family default
 \use_non_tex_fonts false
@@ -42,14 +42,14 @@
 \use_geometry true
 \use_package amsmath 2
 \use_package amssymb 2
-\use_package cancel 1
-\use_package esint 1
+\use_package cancel 0
+\use_package esint 0
 \use_package mathdots 1
-\use_package mathtools 1
+\use_package mathtools 0
 \use_package mhchem 1
-\use_package stackrel 1
-\use_package stmaryrd 1
-\use_package undertilde 1
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
 \cite_engine basic
 \cite_engine_type default
 \biblio_style plain
@@ -113,7 +113,7 @@ Style is ornate.
 
 \begin_layout Standard
 \begin_inset Note Note
-status collapsed
+status open
 
 \begin_layout Plain Layout
 Copyright 2004 by Till Tantau <tantau@users.sourceforge.net>.
@@ -535,7 +535,11 @@ beamerdefaultoverlayspecification{<+->}
 
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -546,12 +550,13 @@ Outline
 \end_inset
 
 
-\end_layout
-
-\begin_deeper
-\begin_layout Standard
 \begin_inset CommandInset toc
 LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -607,7 +612,6 @@ If you omit details that are vital to the proof/implementation, just say
 
 \end_layout
 
-\end_deeper
 \begin_layout Section
 Motivation
 \end_layout
@@ -626,7 +630,11 @@ Basic Problem
 
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -640,7 +648,6 @@ Make Titles Informative.
 
 \end_layout
 
-\begin_deeper
 \begin_layout FrameSubtitle
 Frame subtitles are optional.
  Use upper- or lowercase letters.
@@ -682,21 +689,21 @@ Use very short sentences or short phrases.
 These overlays are created using the Pause style.
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
 \begin_layout Plain Layout
 Make Titles Informative.
- 
 \end_layout
 
 \end_inset
@@ -704,7 +711,6 @@ Make Titles Informative.
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 \begin_inset Argument item:2
 status open
@@ -747,15 +753,16 @@ status open
 This is shown second.
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -768,8 +775,11 @@ Make Titles Informative.
 
 \end_layout
 
-\begin_deeper
-\begin_layout Block
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 1
 status open
 
@@ -783,7 +793,6 @@ status open
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 Untitled block.
 \end_layout
@@ -792,8 +801,16 @@ Untitled block.
 Shown on all slides.
 \end_layout
 
-\end_deeper
-\begin_layout ExampleBlock
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex Example Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 1
 status open
 
@@ -817,7 +834,6 @@ Some Example Block Title
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 \begin_inset Formula $e^{i\pi}=-1$
 \end_inset
@@ -832,19 +848,9 @@ Some Example Block Title
 .
 \end_layout
 
-\end_deeper
-\end_deeper
-\begin_layout Subsection
-Previous Work
-\end_layout
+\end_inset
 
-\begin_layout Frame
-\begin_inset Argument 4
-status open
 
-\begin_layout Plain Layout
-Make Titles Informative.
- 
 \end_layout
 
 \end_inset
@@ -852,7 +858,27 @@ Make Titles Informative.
 
 \end_layout
 
-\begin_deeper
+\begin_layout Subsection
+Previous Work
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Make Titles Informative.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Example
 \begin_inset Argument 1
 status open
@@ -865,10 +891,9 @@ status open
 \end_inset
 
 On first slide.
- 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Separator plain
 \end_inset
 
@@ -889,7 +914,11 @@ status open
 On second slide.
 \end_layout
 
-\end_deeper
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Our Results/Contribution
 \end_layout
@@ -898,13 +927,16 @@ Our Results/Contribution
 Main Results
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
 \begin_layout Plain Layout
 Make Titles Informative.
- 
 \end_layout
 
 \end_inset
@@ -912,7 +944,6 @@ Make Titles Informative.
 
 \end_layout
 
-\begin_deeper
 \begin_layout Theorem
 On first slide.
 \end_layout
@@ -925,21 +956,21 @@ On first slide.
 On second slide.
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
 \begin_layout Plain Layout
 Make Titles Informative.
- 
 \end_layout
 
 \end_inset
@@ -947,14 +978,28 @@ Make Titles Informative.
 
 \end_layout
 
-\begin_deeper
-\begin_layout ColumnsTopAligned
+\begin_layout Plain Layout
+\begin_inset Flex Columns
+status open
+
+\begin_layout Plain Layout
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+T
+\end_layout
+
+\end_inset
+
 
 \end_layout
 
-\begin_deeper
 \begin_layout Column
-5cm
+
+0.5
+\backslash
+textwidth
 \end_layout
 
 \begin_layout Theorem
@@ -972,7 +1017,10 @@ In left column.
 \end_layout
 
 \begin_layout Column
-5cm
+
+0.5
+\backslash
+textwidth
 \end_layout
 
 \begin_layout Corollary
@@ -993,8 +1041,16 @@ In right column.
 New line
 \end_layout
 
-\end_deeper
-\end_deeper
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Basic Ideas for Proofs/Implementations
 \end_layout
@@ -1003,7 +1059,11 @@ Basic Ideas for Proofs/Implementations
 Summary
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -1016,7 +1076,6 @@ Summary
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 The
 \color none
@@ -1077,7 +1136,7 @@ third message
 , but not more than that.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Note Note
 status open
 
@@ -1108,7 +1167,11 @@ Even more stuff.
 \end_layout
 
 \end_deeper
-\end_deeper
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section*
 \start_of_appendix
 \begin_inset Note Note
@@ -1127,7 +1190,11 @@ Appendix
 For Further Reading
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 3
 status collapsed
 
@@ -1150,8 +1217,7 @@ For Further Reading
 
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset ERT
 status open
 
@@ -1219,7 +1285,7 @@ newblock
 
  Some Press, 1990.
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -1293,6 +1359,10 @@ Journal on This and That
  2(1):50–100, 2000.
 \end_layout
 
-\end_deeper
+\end_inset
+
+
+\end_layout
+
 \end_body
 \end_document

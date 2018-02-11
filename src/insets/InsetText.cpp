@@ -217,7 +217,7 @@ void InsetText::draw(PainterInfo & pi, int x, int y) const
 	TextMetrics & tm = pi.base.bv->textMetrics(&text_);
 	int const t2i_offset = pi.base.textToInsetOffset();
 	// FIXME: rounding because of overpainting issues
-	int const t = (int) round(pi.base.thinLineThickness());
+	int const t = (int) round(0.3 + pi.base.thinLineThickness());
 
 	int const w = tm.width() + t2i_offset;
 	int const yframe = y - t2i_offset - tm.ascent();
@@ -337,6 +337,61 @@ void InsetText::doDispatch(Cursor & cur, FuncRequest & cmd)
 		break;
 	}
 
+	case LFUN_INSET_SPLIT: {
+		Cursor new_cur = cur;
+		// Ensure we are directly in an InsetText but not the main one.
+		while (&new_cur.inset() != this && new_cur.depth() > 1)
+			new_cur.popBackward();
+		if (text_.isMainText() || &new_cur.inset() != this) {
+			cur.undispatched();
+			break;
+		}
+		cur.beginUndoGroup();
+		cur.recordUndoInset();
+		// Break paragraphs
+		FuncRequest par_break(LFUN_PARAGRAPH_BREAK);
+		FuncRequest depth_decrement(LFUN_DEPTH_DECREMENT);
+		bool enter_second = true;
+		if (new_cur.pos() == new_cur.lastpos()
+		    && new_cur.pit() != new_cur.lastpit())
+			// when at the end of a paragraph but not the last one
+			new_cur.top().forwardPos();
+		if (new_cur.pos())
+			// when not at the beginning of a paragraph
+			text_.dispatch(new_cur, par_break);
+		else if (!new_cur.pit()) {
+			// if at the beginning of the first paragraph
+			text_.dispatch(new_cur, par_break);
+			new_cur.top().forwardPos();
+			enter_second = false;
+		}
+		// set the location of the split to zero depth
+		while (new_cur.paragraph().params().depth() > 0)
+			text_.dispatch(new_cur, depth_decrement);
+		pit_type par = new_cur.pit();
+		// Go after the inset
+		new_cur.popForward();
+		// Clone the inset
+		InsetText * cloned = dynamic_cast<InsetText *>(clone());
+		LASSERT(cloned, break);
+		// Trim each inset
+		new_cur.recordUndo();
+		ParagraphList const & pars = text_.paragraphs();
+		cloned->text_.paragraphs().assign(pars.constIterator(par), pars.end());
+		text_.paragraphs().assign(pars.begin(), pars.constIterator(par));
+		// insert and enter the inset
+		new_cur.insert(cloned);
+		if (enter_second)
+			new_cur.forwardPos();
+		else
+			new_cur.backwardPos();
+		// finish up
+		cur.setCursor(new_cur);
+		cur.endUndoGroup();
+		cur.forceBufferUpdate();
+		break;
+	}
+
 	default:
 		text_.dispatch(cur, cmd);
 	}
@@ -361,6 +416,9 @@ bool InsetText::getStatus(Cursor & cur, FuncRequest const & cmd,
 			status.setEnabled(!main_inset && one_cell);
 		return target_inset;
 	}
+
+	case LFUN_INSET_SPLIT:
+		return !text_.isMainText();
 
 	case LFUN_ARGUMENT_INSERT: {
 		string const arg = cmd.getArg(0);

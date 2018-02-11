@@ -344,6 +344,7 @@ Menuset
 		Item "Move Paragraph Down|v" "paragraph-move-down"
 		Separator
 		EnvironmentSeparatorsContext
+		OptItem "Split inset|s" "inset-split"
 		Separator
 		OptItem "Promote Section|r" "outline-out"
 		OptItem "Demote Section|m" "outline-in"
@@ -358,6 +359,7 @@ Menuset
 		Item "Apply Last Text Style|A" "textstyle-apply"
 		Submenu "Text Style|x" "edit_textstyles"
 		Item "Paragraph Settings...|P" "layout-paragraph"
+		OptItem "Unify Graphics Groups|U" "graphics-unify"
 		LanguageSelector
 		Separator
 		Item "Fullscreen Mode" "ui-toggle fullscreen"

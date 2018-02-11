@@ -1,4 +1,4 @@
-#LyX 2.3 created this file. For more info see http://www.lyx.org/
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
 \lyxformat 544
 \begin_document
 \begin_header
@@ -1116,6 +1116,24 @@ Origin vermeer, 17 Aug 2003
 \end_layout
 
 \begin_layout Subsection*
+buffer-anonymize
+\end_layout
+
+\begin_layout Description
+Action For debug purposes only.
+ Convert all [a-zA-Z0-1] characters to single character.
+ Useful when submitting docs to list or bugzilla.
+\end_layout
+
+\begin_layout Description
+Syntax buffer-anonymize
+\end_layout
+
+\begin_layout Description
+Origin sanda, Feb 1 2018
+\end_layout
+
+\begin_layout Subsection*
 buffer-begin
 \end_layout
 
@@ -2227,6 +2245,50 @@ Origin vfr, 10 Aug 2009
 \end_layout
 
 \begin_layout Subsection*
+graphics-set-group
+\end_layout
+
+\begin_layout Description
+Action Set the group for the graphics inset on the cursor position.
+\end_layout
+
+\begin_layout Description
+Syntax graphics-set-group [<GROUP>]
+\end_layout
+
+\begin_layout Description
+Params <GROUP>: Id for an existing group.
+ In case the Id is an empty string, the graphics inset is removed from the
+ current group.
+\end_layout
+
+\begin_layout Description
+Origin sanda, 6 May 2008
+\end_layout
+
+\begin_layout Subsection*
+graphics-unify
+\end_layout
+
+\begin_layout Description
+Action Set the same group for all graphics insets in the marked block.
+\end_layout
+
+\begin_layout Description
+Syntax graphics-unify [<GROUP>]
+\end_layout
+
+\begin_layout Description
+Params <GROUP>: Id for an existing group.
+ In case the Id is an empty string, the group Id from the first graphics
+ inset will be used.
+\end_layout
+
+\begin_layout Description
+Origin sanda, 7 Feb 2018
+\end_layout
+
+\begin_layout Subsection*
 href-insert
 \end_layout
 
@@ -2801,6 +2863,22 @@ graphics|href|include|index|index_print|label|line|
 \end_inset
 
 listings|note|phantom|ref|space|tabular|vspace|wrap>.
+\end_layout
+
+\begin_layout Subsection*
+inset-split
+\end_layout
+
+\begin_layout Description
+Action Split the current inset in two.
+\end_layout
+
+\begin_layout Description
+Syntax inset-split
+\end_layout
+
+\begin_layout Description
+Origin gm, 10 Feb 2018
 \end_layout
 
 \begin_layout Subsection*
@@ -4019,28 +4097,6 @@ Origin ef, 2 May 2014
 \end_layout
 
 \begin_layout Subsection*
-set-graphics-group
-\end_layout
-
-\begin_layout Description
-Action Set the group for the graphics inset on the cursor position.
-\end_layout
-
-\begin_layout Description
-Syntax set-graphics-group [<GROUP>]
-\end_layout
-
-\begin_layout Description
-Params <GROUP>: Id for an existing group.
- In case the Id is an empty string, the graphics inset is removed from the
- current group.
-\end_layout
-
-\begin_layout Description
-Origin sanda, 6 May 2008
-\end_layout
-
-\begin_layout Subsection*
 space-insert
 \end_layout
 
@@ -4713,11 +4769,11 @@ Syntax word-replace [<DATA>]
 \end_layout
 
 \begin_layout Description
-Params <DATA>: data is of the form "<replace>
+Params <DATA>: data is of the form "<replacestring>
 \begin_inset Newline newline
 \end_inset
 
-<search>
+<searchstring>
 \begin_inset Newline newline
 \end_inset
 
@@ -6243,7 +6299,12 @@ Action Reverts opened document.
 \end_layout
 
 \begin_layout Description
-Syntax buffer-reload
+Syntax buffer-reload [dump]
+\end_layout
+
+\begin_layout Description
+Params dump: do not ask for any confirmation, just reload.
+ All changes will be lost.
 \end_layout
 
 \begin_layout Description

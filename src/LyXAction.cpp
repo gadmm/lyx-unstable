@@ -1855,15 +1855,6 @@ void LyXAction::init()
 		{ LFUN_FORWARD_SEARCH, "forward-search", ReadOnly, System },
 
 /*!
- * \var lyx::FuncCode lyx::LFUN_GRAPHICS_RELOAD
- * \li Action: Reloads the image if necessary.
- * \li Syntax: graphics-reload
- * \li Origin: vfr, 10 Aug 2009
- * \endvar
- */
-		{ LFUN_GRAPHICS_RELOAD, "graphics-reload", ReadOnly | AtPoint, Edit },
-
-/*!
  * \var lyx::FuncCode lyx::LFUN_HELP_OPEN
  * \li Action: Open the given help file according to the language setting.
  * \li Syntax: help-open <FILE>[.lyx]
@@ -3545,16 +3536,35 @@ void LyXAction::init()
 		{ LFUN_SET_COLOR, "set-color", ReadOnly | NoBuffer, System },
 
 /*!
- * \var lyx::FuncCode lyx::LFUN_SET_GRAPHICS_GROUP
+ * \var lyx::FuncCode lyx::LFUN_GRAPHICS_SET_GROUP
  * \li Action: Set the group for the graphics inset on the cursor position.
- * \li Syntax: set-graphics-group [<GROUP>]
+ * \li Syntax: graphics-set-group [<GROUP>]
  * \li Params: <GROUP>: Id for an existing group. In case the Id is an empty string,
                         the graphics inset is removed from the current group.
  * \li Origin: sanda, 6 May 2008
  * \endvar
  */
-		{ LFUN_SET_GRAPHICS_GROUP, "set-graphics-group", Noop, Edit },
+		{ LFUN_GRAPHICS_SET_GROUP, "graphics-set-group", Noop, Edit },
 
+/*!
+ * \var lyx::FuncCode lyx::LFUN_GRAPHICS_UNIFY
+ * \li Action: Set the same group for all graphics insets in the marked block.
+ * \li Syntax: graphics-unify [<GROUP>]
+ * \li Params: <GROUP>: Id for an existing group. In case the Id is an empty string,
+                        the group Id from the first graphics inset will be used.
+ * \li Origin: sanda, 7 Feb 2018
+ * \endvar
+ */
+		{ LFUN_GRAPHICS_UNIFY, "graphics-unify", Noop, Edit },
+
+/*!
+ * \var lyx::FuncCode lyx::LFUN_GRAPHICS_RELOAD
+ * \li Action: Reloads the image if necessary.
+ * \li Syntax: graphics-reload
+ * \li Origin: vfr, 10 Aug 2009
+ * \endvar
+ */
+		{ LFUN_GRAPHICS_RELOAD, "graphics-reload", ReadOnly | AtPoint, Edit },
 
 /*!
  * \var lyx::FuncCode lyx::LFUN_SPACE_INSERT

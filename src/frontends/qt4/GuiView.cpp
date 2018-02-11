@@ -1913,8 +1913,22 @@ bool GuiView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 		enable = doc_buffer && doc_buffer->notifiesExternalModification();
 		break;
 
-	case LFUN_BUFFER_WRITE_AS:
+	case LFUN_BUFFER_EXPORT: {
+		if (!doc_buffer || d.processing_thread_watcher_.isRunning()) {
+			enable = false;
+			break;
+		}
+		return doc_buffer->getStatus(cmd, flag);
+		break;
+	}
+
 	case LFUN_BUFFER_EXPORT_AS:
+		if (!doc_buffer || d.processing_thread_watcher_.isRunning()) {
+			enable = false;
+			break;
+		}
+		// fall through
+	case LFUN_BUFFER_WRITE_AS:
 		enable = doc_buffer != 0;
 		break;
 
@@ -1930,6 +1944,23 @@ bool GuiView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 	case LFUN_BUFFER_CLOSE_ALL:
 		enable = theBufferList().last() != theBufferList().first();
 		break;
+
+	case LFUN_BUFFER_CHKTEX: {
+		// hide if we have no checktex command
+		if (lyxrc.chktex_command.empty()) {
+			flag.setUnknown(true);
+			enable = false;
+			break;
+		}
+		if (!doc_buffer || !doc_buffer->params().isLatex()
+		    || d.processing_thread_watcher_.isRunning()) {
+			// grey out, don't hide
+			enable = false;
+			break;
+		}
+		enable = true;
+		break;
+	}
 
 	case LFUN_VIEW_SPLIT:
 		if (cmd.getArg(0) == "vertical")
@@ -3792,6 +3823,11 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 
 		case LFUN_BUFFER_MOVE_PREVIOUS:
 			gotoNextOrPreviousBuffer(PREVBUFFER, true);
+			break;
+
+		case LFUN_BUFFER_CHKTEX:
+			LASSERT(doc_buffer, break);
+			doc_buffer->runChktex();
 			break;
 
 		case LFUN_COMMAND_EXECUTE: {

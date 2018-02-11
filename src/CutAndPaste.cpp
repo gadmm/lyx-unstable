@@ -816,11 +816,11 @@ void switchBetweenClasses(DocumentClassConstPtr oldone,
 
 	// character styles and hidden table cells
 	InsetIterator const i_end = inset_iterator_end(in);
-	for (InsetIterator it = inset_iterator_begin(in); it != i_end; ++it) {
-		InsetCode const code = it->lyxCode();
+	for (InsetIterator iit = inset_iterator_begin(in); iit != i_end; ++iit) {
+		InsetCode const code = iit->lyxCode();
 		if (code == FLEX_CODE) {
 			// FIXME: Should we verify all InsetCollapsible?
-			docstring const layoutName = it->layoutName();
+			docstring const layoutName = iit->layoutName();
 			docstring const & n = newone->insetLayout(layoutName).name();
 			bool const is_undefined = n.empty() ||
 				n == DocumentClass::plainInsetLayout().name();
@@ -841,14 +841,14 @@ void switchBetweenClasses(DocumentClassConstPtr oldone,
 			// To warn the user that something had to be done.
 			errorlist.push_back(ErrorItem(
 			                              _("Undefined flex inset"), s,
-			                              {it.paragraph().id(), it.pos()},
-			                              {it.paragraph().id(), it.pos()+1}));
+						      {iit.paragraph().id(), iit.pos()},
+						      {iit.paragraph().id(), iit.pos() + 1}));
 		} else if (code == TABULAR_CODE) {
 			// The recursion above does not catch paragraphs in "hidden" cells,
 			// i.e., ones that are part of a multirow or multicolum. So we need
 			// to handle those separately.
 			// This is the cause of bug #9049.
-			InsetTabular * table = it->asInsetTabular();
+			InsetTabular * table = iit->asInsetTabular();
 			table->setLayoutForHiddenCells(newtc);
 		}
 	}
@@ -1048,7 +1048,10 @@ void copySelectionToStack(CursorData const & cur, CutStack & cutstack)
 		BufferParams const & bp = cur.buffer()->params();
 		// FIXME This should be the plain layout...right?
 		par.setLayout(bp.documentClass().plainLayout());
-		par.insert(0, grabSelection(cur), Font(), Change(Change::UNCHANGED));
+		// For pasting into text, we set the language to the paragraph language
+		// (rather than the default_language which is always English; see #2596)
+		par.insert(0, grabSelection(cur), Font(sane_font, par.getParLanguage(bp)),
+			   Change(Change::UNCHANGED));
 		pars.push_back(par);
 		cutstack.push(make_pair(pars, bp.documentClassPtr()));
 	}
@@ -1233,6 +1236,10 @@ bool pasteClipboardText(Cursor & cur, ErrorList & errorList, bool asParagraphs,
 				Buffer buffer("", false);
 				buffer.setUnnamed(true);
 				available = buffer.importString(names[i], text, errorList);
+				// TeX2lyx (also used in the HTML chain) assumes English as document language
+				// if no language is explicitly set (as is the case here).
+				// We thus reset the temp buffer's language to the context language
+				buffer.changeLanguage(buffer.language(), cur.getFont().language());
 				if (available)
 					available = !buffer.paragraphs().empty();
 				if (available && !buffer.paragraphs()[0].empty()) {

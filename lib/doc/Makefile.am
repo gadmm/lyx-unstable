@@ -5,6 +5,7 @@ EXTRA_DIST = README.Documentation
 docdir = $(pkgdatadir)/doc
 dist_doc_DATA = \
 	Additional.lyx \
+	Beamer-flex.lyx \
 	Customization.lyx \
 	Development.lyx \
 	DummyTextDocument.txt \

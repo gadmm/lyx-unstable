@@ -1,6 +1,6 @@
 #% Do not delete the line below; configure depends on this
-#  \DeclareLaTeXClass[beamer]{Beamer}
-#  \DeclareCategory{Presentations}
+#  \DeclareLaTeXClass[beamer]{Beamer (obsolete)}
+#  \DeclareCategory{Obsolete}
 # Original Author: Till Tantau <tantau@users.sourceforge.net>
 # Revised and extended by Jürgen Spitzmüller <spitz@lyx.org>, Uwe Stöhr <uwestoehr@lyx.org>,
 #   Richard Heck <rgheck@lyx.org>, Martin Vermeer <martin.vermeer@hut.fi> and probably others.

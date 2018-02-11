@@ -1,10 +1,10 @@
-#LyX 2.3 created this file. For more info see http://www.lyx.org/
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
 \lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
 \origin /systemlyxdir/examples/
-\textclass beamer
+\textclass beamer-flex
 \begin_preamble
 \beamertemplateshadingbackground{red!5}{structure!5}
 
@@ -257,7 +257,11 @@ ICSI
 January 30th, 2004
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -270,8 +274,7 @@ Outline
 
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset CommandInset toc
 LatexCommand tableofcontents
 
@@ -279,7 +282,7 @@ LatexCommand tableofcontents
 
 
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -291,7 +294,11 @@ status collapsed
 
 \end_layout
 
-\end_deeper
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 \begin_inset ERT
 status open
@@ -357,7 +364,11 @@ Introduction
 What are Tournaments?
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -370,17 +381,16 @@ Tournaments Consist of Jousts Between Knights
 
 \end_layout
 
-\begin_deeper
-\begin_layout Columns
+\begin_layout Plain Layout
+\begin_inset Flex Columns
+status open
 
-\end_layout
-
-\begin_deeper
 \begin_layout Column
+
 5.75cm
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset ERT
 status collapsed
 
@@ -547,10 +557,15 @@ end{pgfpicture}
 \end_layout
 
 \begin_layout Column
+
 6cm
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status open
 
@@ -563,7 +578,6 @@ What is a Tournament?
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 \begin_inset Argument item:2
 status open
@@ -606,17 +620,26 @@ status open
 In every joust one knight wins.
 \end_layout
 
-\end_deeper
-\end_deeper
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Frame
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -629,17 +652,16 @@ Tournaments are Complete Directed Graphs
 
 \end_layout
 
-\begin_deeper
-\begin_layout Columns
+\begin_layout Plain Layout
+\begin_inset Flex Columns
+status open
 
-\end_layout
-
-\begin_deeper
 \begin_layout Column
+
 5cm
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset ERT
 status collapsed
 
@@ -836,6 +858,7 @@ end{pgfpicture}
 \end_layout
 
 \begin_layout Column
+
 6cm
 \end_layout
 
@@ -872,19 +895,34 @@ with exactly one edge between
 \end_inset
 
 any two different vertices.
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
 \end_layout
 
-\end_deeper
-\end_deeper
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Frame
+\end_deeper
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -908,8 +946,11 @@ Tournaments Arise Naturally in Different Situations
 
 \end_layout
 
-\begin_deeper
-\begin_layout ExampleBlock
+\begin_layout Plain Layout
+\begin_inset Flex Example Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -922,8 +963,7 @@ Applications in Ordering Theory
 
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Plain Layout
 Elements in a set need to be sorted.
  
 \begin_inset Newline newline
@@ -932,15 +972,16 @@ Elements in a set need to be sorted.
 The comparison relation may be cyclic, however.
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout ExampleBlock
+\begin_layout Plain Layout
+\begin_inset Flex Example Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -953,8 +994,7 @@ Applications in Sociology
 
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Plain Layout
 Several candidates apply for a position.
 \begin_inset Newline newline
 \end_inset
@@ -963,15 +1003,16 @@ Reviewers decide for any two candidates whom they prefer.
  
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout ExampleBlock
+\begin_layout Plain Layout
+\begin_inset Flex Example Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -984,8 +1025,7 @@ Applications in Structural Complexity Theory
 
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Plain Layout
 A language 
 \begin_inset Formula $L$
 \end_inset
@@ -1005,13 +1045,25 @@ It chooses from any two words the one more likely to be in
 .
 \end_layout
 
-\end_deeper
-\end_deeper
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 What Does ``Finding Paths'' Mean?
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -1024,8 +1076,11 @@ status open
 
 \end_layout
 
-\begin_deeper
-\begin_layout Block
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status open
 
@@ -1166,7 +1221,6 @@ the Approximation Problem
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 A
 \color none
@@ -1274,10 +1328,14 @@ approximation ratio
 .
 \end_layout
 
-\end_deeper
-\begin_layout Standard
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -1303,10 +1361,10 @@ status open
 \end_inset
 
 
-\end_layout
+\begin_inset Flex Columns
+status open
 
-\begin_deeper
-\begin_layout Columns
+\begin_layout Plain Layout
 \begin_inset Argument 1
 status open
 
@@ -1319,8 +1377,7 @@ t,onlytextwidth
 
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Flex Alternative
 status open
 
@@ -1380,7 +1437,11 @@ column{5cm}
 
 \end_layout
 
-\begin_layout ExampleBlock
+\begin_layout Plain Layout
+\begin_inset Flex Example Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -1393,8 +1454,7 @@ Example Input
 
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset ERT
 status collapsed
 
@@ -1723,8 +1783,12 @@ end{pgfpicture}
 
 \end_layout
 
-\end_deeper
-\begin_layout Standard
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset Flex Only
 status open
 
@@ -1760,7 +1824,11 @@ column{5cm}
 
 \end_layout
 
-\begin_layout ExampleBlock
+\begin_layout Plain Layout
+\begin_inset Flex Example Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 1
 status collapsed
 
@@ -1784,8 +1852,7 @@ Example Output
 
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset ERT
 status collapsed
 
@@ -1994,9 +2061,16 @@ end{pgfpicture}
 
 \end_layout
 
-\end_deeper
-\end_deeper
-\end_deeper
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Overprint
 \begin_inset Argument item:1
 status open
@@ -2009,10 +2083,10 @@ status open
 \end_inset
 
 
-\end_layout
+\begin_inset Flex Block
+status open
 
-\begin_deeper
-\begin_layout Block
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -2025,7 +2099,6 @@ Variants of Path Finding Problems
 
 \end_layout
 
-\begin_deeper
 \begin_layout Description
 \begin_inset Argument item:1
 status open
@@ -2198,9 +2271,16 @@ Problem: Construct a path from
 approximately their distance.
 \end_layout
 
-\end_deeper
-\end_deeper
-\end_deeper
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Review
 \end_layout
@@ -2228,7 +2308,11 @@ pgfdeclareimage[height=2cm,mask=computer-mask,interpolate=true]{computer}{beamer
 
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -2245,8 +2329,7 @@ Logspace Turing Machines
 
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset ERT
 status collapsed
 
@@ -2409,15 +2492,16 @@ end{pgfpicture}
 
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -2430,8 +2514,11 @@ Logspace Turing Machines Are Quite Powerful
 
 \end_layout
 
-\begin_deeper
-\begin_layout Block
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -2444,7 +2531,6 @@ Deterministic logspace machines can compute
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 addition, multiplication, and even division
 \end_layout
@@ -2457,12 +2543,20 @@ reductions used in completeness proofs,
 reachability in forests.
 \end_layout
 
-\end_deeper
+\end_inset
+
+
+\end_layout
+
 \begin_layout Pause
 
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -2475,7 +2569,6 @@ Non-deterministic logspace machines can compute
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 reachability in graphs,
 \end_layout
@@ -2488,16 +2581,21 @@ non-reachability in graphs,
 satisfiability with two literals per clause.
 \end_layout
 
-\end_deeper
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Frame
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 1
 status collapsed
 
@@ -2531,8 +2629,7 @@ The Complexity Class Hierarchy
 
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset ERT
 status collapsed
 
@@ -2915,15 +3012,16 @@ end{pgfpicture}
 
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -2952,8 +3050,7 @@ Limit the Circuit Depth
 
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset ERT
 status collapsed
 
@@ -2978,7 +3075,11 @@ nointerlineskip
 
 \end_layout
 
-\begin_layout Columns
+\begin_layout Plain Layout
+\begin_inset Flex Columns
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 1
 status open
 
@@ -2991,12 +3092,16 @@ t
 
 \end_layout
 
-\begin_deeper
 \begin_layout Column
+
 3.6cm
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status open
 
@@ -3013,7 +3118,6 @@ Circuit Class
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 \begin_inset Formula $O(1)$
 \end_inset
@@ -3025,8 +3129,16 @@ Circuit Class
 unbounded fan-in
 \end_layout
 
-\end_deeper
 \begin_layout Examples
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
 
 \end_layout
 
@@ -3046,15 +3158,25 @@ unbounded fan-in
 \end_layout
 
 \end_deeper
+\end_inset
+
+
+\end_layout
+
 \begin_layout Pause
 
 \end_layout
 
 \begin_layout Column
+
 3.6cm
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status open
 
@@ -3071,7 +3193,6 @@ Circuit Class
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 \begin_inset Formula $O(\log n)$
 \end_inset
@@ -3083,12 +3204,6 @@ Circuit Class
 bounded fan-in
 \end_layout
 
-\end_deeper
-\begin_layout Examples
-
-\end_layout
-
-\begin_deeper
 \begin_layout Itemize
 \begin_inset Formula $\Lang{parity}\in\Class{NC}^{1}$
 \end_inset
@@ -3110,16 +3225,25 @@ bounded fan-in
 .
 \end_layout
 
-\end_deeper
+\end_inset
+
+
+\end_layout
+
 \begin_layout Pause
 
 \end_layout
 
 \begin_layout Column
+
 3.6cm
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status open
 
@@ -3136,7 +3260,6 @@ Circuit Class
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 \begin_inset Formula $O(\log^{2}n)$
 \end_inset
@@ -3148,8 +3271,16 @@ Circuit Class
 bounded fan-in
 \end_layout
 
-\end_deeper
 \begin_layout Examples
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
 
 \end_layout
 
@@ -3162,8 +3293,21 @@ bounded fan-in
 \end_layout
 
 \end_deeper
-\end_deeper
-\end_deeper
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout AgainFrame
 \begin_inset Argument 1
 status collapsed
@@ -3182,7 +3326,11 @@ hierarchy
 Standard Complexity Results on Finding Paths
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -3199,7 +3347,6 @@ Are Equally Difficult
 
 \end_layout
 
-\begin_deeper
 \begin_layout Fact
 \begin_inset Formula $\Lang{reach}$
 \end_inset
@@ -3258,7 +3405,11 @@ the approximation problem in logspace iff
 \end_layout
 
 \end_deeper
-\end_deeper
+\end_inset
+
+
+\end_layout
+
 \begin_layout AgainFrame
 \begin_inset Argument 1
 status collapsed
@@ -3273,7 +3424,11 @@ status collapsed
 hierarchy
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -3290,7 +3445,6 @@ But Not Trivial
 
 \end_layout
 
-\begin_deeper
 \begin_layout Fact
 \begin_inset Formula $\Lang{reach}_{\operatorname{forest}}$
 \end_inset
@@ -3306,7 +3460,7 @@ But Not Trivial
 -complete.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Separator plain
 \end_inset
 
@@ -3328,7 +3482,11 @@ But Not Trivial
 -complete.
 \end_layout
 
-\end_deeper
+\end_inset
+
+
+\end_layout
+
 \begin_layout AgainFrame
 \begin_inset Argument 1
 status collapsed
@@ -3351,7 +3509,11 @@ Finding Paths in Tournaments
 Complexity of: Does a Path Exist?
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -3364,7 +3526,6 @@ Definition of the Tournament Reachability Problem
 
 \end_layout
 
-\begin_deeper
 \begin_layout Definition
 Let
 \color none
@@ -3414,15 +3575,16 @@ there exists a path from
 \end_layout
 
 \end_deeper
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -3435,7 +3597,6 @@ The Tournament Reachability Problem is Very Easy
 
 \end_layout
 
-\begin_deeper
 \begin_layout Theorem
 \begin_inset Formula $\Lang{reach}_{\operatorname{tourn}}\in\Class{AC}^{0}$
 \end_inset
@@ -3447,7 +3608,11 @@ The Tournament Reachability Problem is Very Easy
 
 \end_layout
 
-\begin_layout AlertBlock
+\begin_layout Plain Layout
+\begin_inset Flex Alert Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -3460,7 +3625,6 @@ Implications
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 The problem is 
 \begin_inset Quotes eld
@@ -3488,8 +3652,16 @@ easier
 .
 \end_layout
 
-\end_deeper
-\end_deeper
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout AgainFrame
 \begin_inset Argument 1
 status open
@@ -3508,7 +3680,11 @@ hierarchy
 Complexity of: Construct a Shortest Path
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -3525,7 +3701,6 @@ the Distance Problem
 
 \end_layout
 
-\begin_deeper
 \begin_layout Definition
 Let
 \color none
@@ -3579,15 +3754,16 @@ the distance of
 \end_layout
 
 \end_deeper
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -3600,7 +3776,6 @@ The Tournament Distance Problem is Hard
 
 \end_layout
 
-\begin_deeper
 \begin_layout Theorem
 \begin_inset Formula $\Lang{distance}_{\operatorname{tourn}}$
 \end_inset
@@ -3612,13 +3787,13 @@ The Tournament Distance Problem is Hard
 -complete.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset space \hfill{}
 \end_inset
 
 
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -3661,15 +3836,16 @@ in logarithmic space, iff
 .
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -3686,8 +3862,7 @@ Proof That
 
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset ERT
 status collapsed
 
@@ -3703,7 +3878,11 @@ nointerlineskip
 
 \end_layout
 
-\begin_layout Columns
+\begin_layout Plain Layout
+\begin_inset Flex Columns
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 1
 status open
 
@@ -3716,12 +3895,12 @@ t,onlytextwidth
 
 \end_layout
 
-\begin_deeper
 \begin_layout Column
+
 5.7cm
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset ERT
 status collapsed
 
@@ -3739,7 +3918,11 @@ leftmargini{1.5em}
 
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status open
 
@@ -3760,7 +3943,6 @@ Reduce
 
 \end_layout
 
-\begin_deeper
 \begin_layout Enumerate
 \begin_inset Argument item:2
 status open
@@ -3825,17 +4007,28 @@ Query:
 \end_inset
 
 ?
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Block
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status open
 
@@ -3859,7 +4052,6 @@ status open
 
 \end_layout
 
-\begin_deeper
 \begin_layout Enumerate
 \begin_inset Argument item:2
 status open
@@ -3926,10 +4118,25 @@ a path in
 \end_inset
 
 .
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+
 \end_layout
 
-\end_deeper
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Column
+
 4.5cm
 \end_layout
 
@@ -4984,8 +5191,16 @@ end{pgfpicture}
 
 \end_layout
 
-\end_deeper
-\end_deeper
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout AgainFrame
 \begin_inset Argument 1
 status open
@@ -5004,7 +5219,11 @@ hierarchy
 Complexity of: Approximating the Shortest Path
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -5017,7 +5236,6 @@ Approximators Compute Paths that Are Nearly As Short As a Shortest Path
 
 \end_layout
 
-\begin_deeper
 \begin_layout Definition
 An
 \color none
@@ -5051,7 +5269,7 @@ a number
 .
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 It outputs
 \end_layout
 
@@ -5076,7 +5294,11 @@ a path from
 \end_layout
 
 \end_deeper
-\end_deeper
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 \begin_inset Separator plain
 \end_inset
@@ -5084,7 +5306,11 @@ a path from
 
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -5101,7 +5327,6 @@ the Tournament Shortest Path Problem
 
 \end_layout
 
-\begin_deeper
 \begin_layout Theorem
 There exists an approximation scheme for 
 \begin_inset Formula $\Lang{tournament-shortest-path}$
@@ -5130,7 +5355,7 @@ O\left(\log|V|\log\frac{1}{r-1}\right).
 In tournaments, paths can be constructed in logarithmic space.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset space \hfill{}
 \end_inset
 
@@ -5152,7 +5377,11 @@ beamergotobutton{More Details}}
 
 \end_layout
 
-\end_deeper
+\end_inset
+
+
+\end_layout
+
 \begin_layout AgainFrame
 \begin_inset Argument 1
 status collapsed
@@ -5182,7 +5411,7 @@ fragile
 
 .
  \SpecialChar LyX
- has the FragileFrame layout for this.
+ has the FragileFrame inset for this.
 \end_layout
 
 \end_inset
@@ -5190,7 +5419,11 @@ fragile
 
 \end_layout
 
-\begin_layout FragileFrame
+\begin_layout Standard
+\begin_inset Flex Frame (fragile)
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -5203,12 +5436,11 @@ Just a frame with a program code listing
 
 \end_layout
 
-\begin_layout FragileFrame
+\begin_layout Plain Layout
 This is some program code:
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset listings
 lstparams "extendedchars=true,language=Python,numbers=left,stepnumber=3,tabsize=4"
 inline false
@@ -5264,7 +5496,11 @@ pass
 
 \end_layout
 
-\end_deeper
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section*
 Summary
 \end_layout
@@ -5273,7 +5509,11 @@ Summary
 Summary
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -5286,8 +5526,11 @@ Summary
 
 \end_layout
 
-\begin_deeper
-\begin_layout Block
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -5300,7 +5543,6 @@ Summary
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 Tournament
 \color none
@@ -5366,15 +5608,16 @@ in tournaments is
 .
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Block
+\begin_layout Plain Layout
+\begin_inset Flex Block
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 2
 status collapsed
 
@@ -5387,7 +5630,6 @@ Outlook
 
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 The same results apply to graphs with
 \begin_inset Newline newline
@@ -5442,13 +5684,25 @@ beamergotobutton{More Details}}
 
 \end_layout
 
-\end_deeper
-\end_deeper
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection*
 For Further Reading
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -5461,8 +5715,7 @@ For Further Reading
 
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset ERT
 status open
 
@@ -5647,7 +5900,11 @@ newblock
  In press.
 \end_layout
 
-\end_deeper
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 \start_of_appendix
 \begin_inset ERT
@@ -5673,7 +5930,11 @@ Appendix
 Graphs With Bounded Independence Number
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 3
 status collapsed
 
@@ -5696,7 +5957,6 @@ Definition of Independence Number of a Graph
 
 \end_layout
 
-\begin_deeper
 \begin_layout Definition
 The
 \color none
@@ -5726,15 +5986,16 @@ Tournaments have independence number 1.
  
 \end_layout
 
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
 \end_inset
 
 
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 4
 status open
 
@@ -5751,7 +6012,6 @@ Graphs With Bounded Independence Number
 
 \end_layout
 
-\begin_deeper
 \begin_layout Theorem
 For each
 \begin_inset space ~
@@ -5788,7 +6048,7 @@ at most
 .
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Separator plain
 \end_inset
 
@@ -5824,7 +6084,7 @@ for approximating the shortest path in graphs with independence number at
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Separator plain
 \end_inset
 
@@ -5869,12 +6129,20 @@ in graphs with independence number at most
 .
 \end_layout
 
-\end_deeper
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Finding Paths in Undirected Graphs
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 1
 status collapsed
 
@@ -5912,7 +6180,6 @@ Is Party Unknown.
 
 \end_layout
 
-\begin_deeper
 \begin_layout Fact
 \begin_inset Formula $\Lang{reach}_{\operatorname{undirected}}$
 \end_inset
@@ -6033,16 +6300,23 @@ status open
 
 \begin_layout Itemize
 the approximation problem in logspace iff ?.
- 
 \end_layout
 
 \end_deeper
-\end_deeper
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 The Approximation Scheme is Optimal
 \end_layout
 
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Flex Frame
+status open
+
+\begin_layout Plain Layout
 \begin_inset Argument 3
 status collapsed
 
@@ -6065,7 +6339,6 @@ The Approximation Scheme is Optimal
 
 \end_layout
 
-\begin_deeper
 \begin_layout Theorem
 Suppose there exists an approximation scheme for 
 \begin_inset Formula $\Lang{tournament-shortest-path}$
@@ -6149,6 +6422,10 @@ qedhere
 \end_layout
 
 \end_deeper
-\end_deeper
+\end_inset
+
+
+\end_layout
+
 \end_body
 \end_document

@@ -11,8 +11,8 @@ For Ubuntu this is distributed as part of LyX unstable on the PPA:
 # What is LyX?
 
 LyX is a document processor and equation editor that encourages an approach to
-writing based on the structure of your documents, rather than their
-appearance. It is released under a Free Software / Open Source license.
+writing based on the structure of your documents, rather than their appearance.
+It is released under a Free Software / Open Source license.
 
 LyX is for people who write and want their writing to look great, right out of
 the box. No more endless tinkering with formatting details, “finger painting”
@@ -55,14 +55,17 @@ For a complete list of changes try
 * Better display for High-dpi screens: lines and drawings are now proportional
   to the zoom level.
 * Better display for Low-dpi screens: lines and drawings are now antialiased.
-* Beamer-flex: Layout and examples for beamer that uses flex insets instead of
-  environments for frames and similar insets. (Also available from
-  <https://github.com/gadmm/beamer-flex>.)
-* Custom insets are now available from the toolbar.
-* New command to split an inset (inset-split).
+* Beamer-flex: Layout for beamer that uses flex insets instead of environments
+  for frames and similar environments, complete with documentation, templates
+  and examples. This solves common issues reported by Beamer users. (The layout
+  is available from <https://github.com/gadmm/beamer-flex> for backwards-
+  compatibility.)
+* A new Custom insets menu is available from the toolbar, useful for Beamer-flex.
+  The button remembers which inset was entered last.
+* New command to split an inset (inset-split), useful for Beamer-flex.
 * Layout and templates for easychair.cls. (Also available from
   <https://github.com/gadmm/easychair-lyx>.)
-* Improved default parameters and shortcuts.
+* Improved default parameters and shortcuts, more beginner-friendly.
 * Open hyperlinks in application from the contextual menu in a secure way.
   (#9906)
 

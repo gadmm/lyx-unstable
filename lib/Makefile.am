@@ -311,7 +311,6 @@ dist_examples_DATA = \
 	examples/addressExample.adr \
 	examples/amsart-test.lyx \
 	examples/amsbook-test.lyx \
-	examples/beamer-flex.lyx \
 	examples/beamer-article.lyx \
 	examples/beamer-g4.jpg \
 	examples/beamer-g4-mask.jpg \
@@ -324,7 +323,7 @@ dist_examples_DATA = \
 	examples/beamer-knight3.png \
 	examples/beamer-knight4-mask.png \
 	examples/beamer-knight4.png \
-	examples/beamerlyxexample1.lyx \
+	examples/beamerlyxexample1-flex.lyx \
 	examples/beamerposter.lyx \
 	examples/biblioExample.bib \
 	examples/chess-article.lyx \
@@ -2141,11 +2140,13 @@ dist_layouts_DATA =\
 	layouts/arab-article.layout \
 	layouts/article.layout \
 	layouts/article-beamer.layout \
+	layouts/article-beamer-flex.layout \
 	layouts/beamer.layout \
 	layouts/beamer-flex.inc \
 	layouts/beamer-flex.layout \
 	layouts/beamer-flex.module \
 	layouts/beamerposter.layout \
+	layouts/beamerposter-flex.layout \
 	layouts/bicaption.module \
 	layouts/book.layout \
 	layouts/braille.module \
@@ -2267,6 +2268,7 @@ dist_layouts_DATA =\
 	layouts/sciposter.layout \
 	layouts/scrartcl.layout \
 	layouts/scrarticle-beamer.layout \
+	layouts/scrarticle-beamer-flex.layout \
 	layouts/scrbook.layout \
 	layouts/scrclass.inc \
 	layouts/scrlettr.layout \
@@ -2401,15 +2403,12 @@ dist_templates_DATA = \
 	templates/APA6.lyx \
 	templates/beamer-conference-ornate-20min.lyx \
 	templates/ctex.lyx \
-	templates/de_beamer-conference-ornate-20min.lyx \
 	templates/dinbrief.lyx \
 	templates/DocBook_article.lyx \
 	templates/easychair-article.lyx \
 	templates/ectaart.lyx \
 	templates/elsarticle.lyx \
 	templates/EPS-cropped.lyx \
-	templates/es_beamer-conference-ornate-20min.lyx \
-	templates/fr_beamer-conference-ornate-20min.lyx \
 	templates/frletter.lyx \
 	templates/g-brief2.lyx \
 	templates/hollywood.lyx \
@@ -2421,7 +2420,6 @@ dist_templates_DATA = \
 	templates/IJMPD.lyx \
 	templates/IOP-article.lyx \
 	templates/IUCr-article.lyx \
-	templates/ja_beamer-conference-ornate-20min.lyx \
 	templates/JASA.lyx \
 	templates/JSS-article.lyx \
 	templates/kluwer.lyx \
@@ -2444,8 +2442,13 @@ dist_obsoletetemplates_DATA = \
 	templates/obsolete/ACM-siggraph.lyx \
 	templates/obsolete/ACM-sigplan.lyx \
 	templates/obsolete/ACM-SIGS.lyx \
+	templates/obsolete/de_beamer-conference-ornate-20min.lyx \
+	templates/obsolete/es_beamer-conference-ornate-20min.lyx \
+	templates/obsolete/fr_beamer-conference-ornate-20min.lyx \
 	templates/obsolete/g-brief-de.lyx \
-	templates/obsolete/g-brief-en.lyx
+	templates/obsolete/g-brief-en.lyx \
+	templates/obsolete/ja_beamer-conference-ornate-20min.lyx
+
 
 springertemplatesdir = $(pkgdatadir)/templates/springer
 dist_springertemplates_DATA = \

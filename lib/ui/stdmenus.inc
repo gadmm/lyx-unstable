@@ -627,7 +627,7 @@ Menuset
 	End
 
 	Menu "examples"
-		Item "Beamer Presentations|B" "help-open beamer"
+		Item "Beamer Presentations|B" "help-open Beamer-flex"
 		Item "Braille|a" "help-open Braille"
 		Item "Colored boxes|r" "help-open colored-boxes"
 		Item "Feynman-diagram|F" "help-open FeynmanDiagrams"

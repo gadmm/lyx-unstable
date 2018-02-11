@@ -1,9 +1,9 @@
-#LyX 2.3 created this file. For more info see http://www.lyx.org/
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
 \lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
-\origin /systemlyxdir/templates/
+\origin /systemlyxdir/templates/obsolete/
 \textclass beamer
 \begin_preamble
 \usetheme{Warsaw}
@@ -14,7 +14,7 @@
 \end_preamble
 \use_default_options false
 \maintain_unincluded_children false
-\language french
+\language spanish
 \language_package default
 \inputencoding auto
 \fontencoding global
@@ -60,7 +60,7 @@
 \justification true
 \use_refstyle 0
 \use_minted 0
-\index Index
+\index Índice
 \shortcut idx
 \color #008000
 \end_index
@@ -70,7 +70,7 @@
 \paragraph_indentation default
 \is_math_indent 0
 \math_numbering_side default
-\quotes_style swiss
+\quotes_style english
 \dynamic_quotes 0
 \papercolumns 1
 \papersides 1
@@ -89,23 +89,9 @@
 status open
 
 \begin_layout Plain Layout
- Ce fichier est un exemple d'exposé:
-\end_layout
 
-\begin_layout Itemize
-pour des conférences, 
-\end_layout
-
-\begin_layout Itemize
-d'une durée approximative de 20 minutes, 
-\end_layout
-
-\begin_layout Itemize
-avec un style ornemental.
-\end_layout
-
-\begin_layout Plain Layout
-Pour afficher les explications, ouvrir les notes.
+\lang english
+Note: this template uses the old beamer layout.
 \end_layout
 
 \end_inset
@@ -115,7 +101,32 @@ Pour afficher les explications, ouvrir les notes.
 
 \begin_layout Standard
 \begin_inset Note Note
-status collapsed
+status open
+
+\begin_layout Plain Layout
+Este archivo es una plantilla para:
+\end_layout
+
+\begin_layout Itemize
+Presentar una conferencia-coloquio
+\end_layout
+
+\begin_layout Itemize
+Duración de unos 20min
+\end_layout
+
+\begin_layout Itemize
+En estilo ornamental
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
 
 \begin_layout Plain Layout
 Copyright 2004 by Till Tantau <tantau@users.sourceforge.net>.
@@ -123,29 +134,15 @@ Copyright 2004 by Till Tantau <tantau@users.sourceforge.net>.
 \end_layout
 
 \begin_layout Plain Layout
-Traduction de Philippe De Sousa <philippejjg@free.fr>.
+En principio, este archivo puede redistribuirse y/o modificarse bajo los
+ términos de GNU Public License, versión 2.
+ Sin embargo, se supone que este archivo es una plantilla para ser modificada
+ según las necesidades de cada cuál.
+ Por esta razón, si este archivo se utiliza como tal plantilla y no se distribuy
+e específicamente como parte de otro programa/paquete, el autor otorga permiso
+ extra para copiar y modificar libremente este archivo e incluso para suprimir
+ esta nota de copyright.
  
-\end_layout
-
-\begin_layout Plain Layout
-Adaptation à \SpecialChar LyX
- par Jean-Pierre Chrétien <chretien@cert.fr> 
-\end_layout
-
-\begin_layout Plain Layout
-En principe, ce fichier peut être redistribué et/ou modifié conformément
- aux termes de la GNU Public License, version 2.Cependant, ce fichier est
- un "exemple-type" qui peut être modifié selon vos propres besoins.
- Pour cette raison, si vous utilisez ce fichier en tant qu'"exemple-type"
- et non spécifiquement pour le distribuer en tant que partie d'un package
- ou programme, je vous donne la permission exceptionnelle de copier librement
- et de modifier ce fichier et même d'effacer ce message de copyright.
- 
-\end_layout
-
-\begin_layout Plain Layout
-Correction mineure (style Institute au lieu de style Date) des fichiers
- originaux le 12 jan 07 par Jean-Pierre Chrétien <chretien@cert.fr> 
 \end_layout
 
 \end_inset
@@ -154,17 +151,17 @@ Correction mineure (style Institute au lieu de style Date) des fichiers
 \end_layout
 
 \begin_layout Title
-Titre tel qu'il apparaît dans les actes
+Título tal como aparecerá en la presentación
 \begin_inset Argument 1
 status open
 
 \begin_layout Plain Layout
-Titre court
+Título breve alternativo 
 \begin_inset Note Note
-status collapsed
+status open
 
 \begin_layout Plain Layout
-(facultatif, à utiliser uniquement si le titre de l'article est trop long)
+opcional, sólo para títulos largos
 \end_layout
 
 \end_inset
@@ -178,7 +175,7 @@ status collapsed
 \end_layout
 
 \begin_layout Subtitle
-ne compléter que si l'article possède un sous-titre
+Entorno sólo para poner un subtítulo al artículo
 \end_layout
 
 \begin_layout Author
@@ -186,7 +183,7 @@ F.
 \begin_inset space ~
 \end_inset
 
-Auteur
+Autor
 \begin_inset Flex InstituteMark
 status open
 
@@ -213,7 +210,7 @@ and
 \begin_inset space ~
 \end_inset
 
-Lautre
+Otro
 \begin_inset Flex InstituteMark
 status collapsed
 
@@ -227,25 +224,19 @@ status collapsed
 \begin_inset Note Note
 status collapsed
 
-\begin_layout Itemize
-composer les noms dans l'ordre dans lequel ils apparaîtrons dans l'article;
+\begin_layout Plain Layout
+- Componer los nombres en el mismo orden en que aparecen en el artículo.
  
 \end_layout
 
-\begin_layout Itemize
-utiliser l'insert 
-\begin_inset Quotes cld
-\end_inset
-
-MarqueInstitution
-\begin_inset Quotes crd
-\end_inset
-
- (
-\family typewriter
-Insérer->Inserts personnalisables->MarqueInstitution
+\begin_layout Plain Layout
+- Usar el menú 
+\family sans
+Insertar\SpecialChar menuseparator
+Recuadro Personalizado\SpecialChar menuseparator
+Marca de Institución
 \family default
-) niquement si les auteurs ont des affiliations  différentes.
+ solo si los autores tienen distintas afiliaciones.
 \end_layout
 
 \end_inset
@@ -255,20 +246,20 @@ Insérer->Inserts personnalisables->MarqueInstitution
 status open
 
 \begin_layout Plain Layout
-Auteur, Lautre
+Autor, Otro
 \begin_inset Note Note
 status collapsed
 
-\begin_layout Itemize
-facultatif, à utiliser seulement avec plusieurs auteurs;
+\begin_layout Plain Layout
+- opcional, usar sólo con varios autores
 \end_layout
 
-\begin_layout Itemize
-s'il y a vraiment beaucoup d'auteurs, utiliser 
+\begin_layout Plain Layout
+- si realmente son muchos autores, usar 
 \begin_inset Quotes eld
 \end_inset
 
-Auteur et al.
+Autor et al.
 \begin_inset Quotes erd
 \end_inset
 
@@ -295,11 +286,11 @@ status collapsed
 
 \end_inset
 
-Département  d'Informatique
+Departamento de Informática
 \begin_inset Newline newline
 \end_inset
 
-Université de Quelque Part
+Universidad de Algún Sitio
 \begin_inset ERT
 status collapsed
 
@@ -322,22 +313,22 @@ status collapsed
 
 \end_inset
 
-Département de Philosophie Théorique
+Departamento de Filosofía Teórica
 \begin_inset Newline newline
 \end_inset
 
-Université d'Ailleurs
+Universidad de Otro Sitio
 \begin_inset Note Note
 status collapsed
 
 \begin_layout Plain Layout
-- utilisez la commande 
+- Usar el comando 
 \backslash
-inst uniquement s'il y a plusieurs affiliations.
+inst sólo si hay varias afiliaciones.
 \end_layout
 
 \begin_layout Plain Layout
-- faites quelque chose de simple, personne ne s'intéresse à votre adresse
+- Poner algo sencillo, nadie se interesa por la dirección.
 \end_layout
 
 \end_inset
@@ -347,12 +338,12 @@ inst uniquement s'il y a plusieurs affiliations.
 status open
 
 \begin_layout Plain Layout
-Universités de Quelque Part et d'Ailleurs
+Universidades de Algún Sitio y de Otro Sitio
 \begin_inset Note Note
 status collapsed
 
 \begin_layout Plain Layout
-optionnel, mais souvent nécessaire
+opcional, aunque generalmente necesario
 \end_layout
 
 \end_inset
@@ -366,75 +357,40 @@ optionnel, mais souvent nécessaire
 \end_layout
 
 \begin_layout Date
-Conférence sur les Présentations Fabuleuses, 2006
+Conferencia sobre Presentaciones Fabulosas, 2003
 \begin_inset Note Note
 status collapsed
 
-\begin_layout Itemize
-utilisez le nom de la conférence ou son abréviation; 
+\begin_layout Plain Layout
+- Usar el nombre de la conferencia o bien su abreviatura.
+ 
 \end_layout
 
-\begin_layout Itemize
-n'a pas réellement d'importance pour l'assistance qui sera présente lors
- de la conférence; mais en a pour les personnes (y compris vous-même) qui
- liront les transparents en ligne.
+\begin_layout Plain Layout
+- Realmente no es informativo para la audiencia, pero sí para quienes (incluyend
+o Vd.mismo) lean la presentación en línea.
 \end_layout
 
 \end_inset
 
 
 \begin_inset Argument 1
+status collapsed
+
+\begin_layout Plain Layout
+CFP 2003
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Note Note
 status open
 
 \begin_layout Plain Layout
-CPF 2006
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-facultatif, devrait être une abréviation du nom de la conférence
+opcional, debería ser una abreviatura del nombre de la conferencia
 \end_layout
 
 \end_inset
 
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-Si vous avez un fichier nommé "université-logo-nomfichier.xxx", où xxxest
- un format graphique accepté par \SpecialChar LyX
- (comme par exemple .png), alors vous pouvez
- insérer votre logo ainsi :
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-%
-\backslash
-logo{
-\backslash
-includegraphics[height=0.5cm]{institution-logo-filename}}
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -448,8 +404,9 @@ includegraphics[height=0.5cm]{institution-logo-filename}}
 status open
 
 \begin_layout Plain Layout
-Avec la syntaxe pgf, construction équivalente, mais format graphique compris
- par latex ou pdflatex:
+Si se dispone de un archivo como "institución-logo-nombrearchivo.xxx", donde
+ xxx es un formato gráfico aceptable por latex o pdflatex, entonces se puede
+ añadir un logotipo descomentando lo siguiente:
 \end_layout
 
 \end_inset
@@ -465,7 +422,7 @@ status open
 
 %
 \backslash
-pgfdeclareimage[height=0.5cm]{institution-logo}{institution-logo-filename}
+pgfdeclareimage[height=0.5cm]{institution-logo}{institución-logo-nombrearchivo}
 \end_layout
 
 \begin_layout Plain Layout
@@ -474,7 +431,7 @@ pgfdeclareimage[height=0.5cm]{institution-logo}{institution-logo-filename}
 \backslash
 logo{
 \backslash
-pgfuseimage{institution-logo}} 
+pgfuseimage{institution-logo}}
 \end_layout
 
 \end_inset
@@ -487,8 +444,8 @@ pgfuseimage{institution-logo}}
 status open
 
 \begin_layout Plain Layout
-À supprimer si vous ne voulez pas que la table des matières apparaisse au
- début de chaque sous-section :
+Lo siguiente hace que se muestre un índice al inicio de cada subsección.
+ Suprímelo si no lo quieres.
 \end_layout
 
 \end_inset
@@ -518,7 +475,7 @@ frame<beamer>{
 
     
 \backslash
-frametitle{Lignes directrices}   
+frametitle{Índice}   
 \end_layout
 
 \begin_layout Plain Layout
@@ -526,11 +483,6 @@ frametitle{Lignes directrices}
     
 \backslash
 tableofcontents[currentsection,currentsubsection] 
-\end_layout
-
-\begin_layout Plain Layout
-
-% Vous pouvez, si vous le souhaitez ajouter l'option [pausesections]
 \end_layout
 
 \begin_layout Plain Layout
@@ -553,9 +505,7 @@ tableofcontents[currentsection,currentsubsection]
 status open
 
 \begin_layout Plain Layout
-Si vous souhaitez recouvrir vos transparents un à un, utilisez la commande
- suivante (pour plus d'info, voir la page 74 du manuel d'utilisation de
- Beamer (version 3.06) par Till Tantau) :
+Si quieres descubrir todo en modo paso a paso, descomenta el siguiente comando:
 \end_layout
 
 \end_inset
@@ -584,7 +534,7 @@ beamerdefaultoverlayspecification{<+->}
 status open
 
 \begin_layout Plain Layout
-Sommaire
+Índice
 \end_layout
 
 \end_inset
@@ -607,45 +557,50 @@ LatexCommand tableofcontents
 status open
 
 \begin_layout Plain Layout
-Structurer l'exposé est une tâche difficile et la structure suivante pourrait
- ne pas convenir.
- Voici quelques règles à appliquer pour cet exemple ci :
+Estructurar una exposición es una tarea difícil y la siguiente estructura
+ podría no ser adecuada.
+ Aquí hay unas reglas aplicadas a este caso: 
 \end_layout
 
 \begin_layout Itemize
-avoir exactement deux ou trois sections (autre que le sommaire); 
-\end_layout
-
-\begin_layout Itemize
-tout au plus trois sous-sections par section; 
-\end_layout
-
-\begin_layout Itemize
-parler approximativement entre 30 secondes et 2 minutes par transparent.
- Il  devrait donc y avoir entre 15 et 30 transparents, pour tout dire;
-\end_layout
-
-\begin_layout Itemize
-le public d'une conférence connaîtra probablement peu de chose sur le sujet
-  que vous serez en train de traiter.
- Donc, *simplifier*
-\begin_inset space ~
-\end_inset
-
-!
-\end_layout
-
-\begin_layout Itemize
-dans un exposé de 20 minutes, garder à l'esprit les idées principales est
- largement  suffisant pour votre assistance.
- Laissez tomber certains détails, même s'ils vous  semblent nécessaires;
+Exactamente dos o tres secciones (además del sumario).
  
 \end_layout
 
 \begin_layout Itemize
-si un détail qui est vital pour une preuve/mise en oeuvre est omis,  le
- dire simplement une fois.
- Ce sera suffisant pour l'auditoire.
+Como máximo, tres subsecciones por sección.
+ 
+\end_layout
+
+\begin_layout Itemize
+Hablar entre 30
+\begin_inset space \thinspace{}
+\end_inset
+
+s y 2
+\begin_inset space \thinspace{}
+\end_inset
+
+min por diapositiva.
+ Así que debería haber entre 15 y 30 fotogramas para decirlo todo.
+\end_layout
+
+\begin_layout Itemize
+Es probable que la audiencia sepa bastante poco sobre el tema de la conferencia,
+ así pues, ¡*simplifique*!
+\end_layout
+
+\begin_layout Itemize
+En una exposición de 20min, conseguir transmitir las ideas principales es
+ bastante.
+ Deje fuera los detalles, aunque eso signifique ser menos preciso de lo
+ que podría parecer necesario.
+\end_layout
+
+\begin_layout Itemize
+Si se omiten detalles vitales para una demostración/implementación, dígalo
+ una vez.
+ Para la audiencia será suficiente.
  
 \end_layout
 
@@ -656,16 +611,16 @@ si un détail qui est vital pour une preuve/mise en oeuvre est omis,  le
 
 \end_deeper
 \begin_layout Section
-Motivation
+Motivación
 \end_layout
 
 \begin_layout Subsection
-Le problème étudié
+El problema básico que estudiamos
 \begin_inset Argument 2
 status open
 
 \begin_layout Plain Layout
-Problème central
+Problema básico
 \end_layout
 
 \end_inset
@@ -678,8 +633,31 @@ Problème central
 status open
 
 \begin_layout Plain Layout
-Faites des titres qui informent.
- Utilisez des lettres capitales (en Anglais).
+Poner títulos informativos
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+
+\emph on
+N.
+ del T.
+\emph default
+: En el título original pone además 
+\begin_inset Quotes eld
+\end_inset
+
+Usar Letras Capitales
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Esto es habitual en inglés pero no en español.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -689,13 +667,14 @@ Faites des titres qui informent.
 
 \begin_deeper
 \begin_layout FrameSubtitle
-Les sous-titres sont facultatifs.
+Los subtítulos de los fotogramas son opcionales.
 \begin_inset Note Note
 status collapsed
 
 \begin_layout Plain Layout
- - Un titre doit résumer le transparent dans un langage compréhensible 
-   par tous ceux qui ne suivront rien de ce qu'il y a sur ce transparent.
+- Un título debería resumir el contenido de la transparencia de modo comprensibl
+e para cualquiera que no conoce lo que ésta contiene.
+ 
 \end_layout
 
 \end_inset
@@ -704,7 +683,7 @@ status collapsed
 \end_layout
 
 \begin_layout Itemize
-Utilisez itemize à volonté.
+Usar Enumeración* a discreción.
 \end_layout
 
 \begin_deeper
@@ -714,7 +693,7 @@ Utilisez itemize à volonté.
 
 \end_deeper
 \begin_layout Itemize
-Utilisez des phrases très courtes et de courtes expressions.
+Usar oraciones muy cortas o frases cortas.
 \end_layout
 
 \begin_deeper
@@ -724,7 +703,7 @@ Utilisez des phrases très courtes et de courtes expressions.
 
 \end_deeper
 \begin_layout Itemize
-Ces recouvrements sont créés à l'aide du style «Pause».
+Estos solapados se crean usando el estilo Pausa.
 \end_layout
 
 \end_deeper
@@ -740,7 +719,7 @@ Ces recouvrements sont créés à l'aide du style «Pause».
 status open
 
 \begin_layout Plain Layout
-Faites des titres qui informent 
+Poner títulos informativos 
 \end_layout
 
 \end_inset
@@ -760,8 +739,7 @@ status open
 
 \end_inset
 
-Vous pouvez aussi utiliser des spécifications d'overlay pour créer des recouvrem
-ents
+También se pueden usar estas especificaciones para crear solapados 
 \end_layout
 
 \begin_layout Itemize
@@ -775,7 +753,7 @@ status open
 
 \end_inset
 
-Ceci vous permet d'afficher les lignes dans n'importe quel ordre
+Esto permite presentar cosas en cualquier orden
 \end_layout
 
 \begin_layout Itemize
@@ -789,7 +767,7 @@ status open
 
 \end_inset
 
-Ceci est affiché en second.
+Ésta se muestra en segundo lugar
 \end_layout
 
 \end_deeper
@@ -805,74 +783,7 @@ Ceci est affiché en second.
 status open
 
 \begin_layout Plain Layout
-Faites des titres qui informent 
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Standard
-Pour faire un recouvrement exact d'un transparent à l'autre (transparents
- dynamiques), utiliez le style overprint; attention à gérer le mode handout
- en choisissant quelle entrée sera retenue.
-\end_layout
-
-\begin_layout Standard
-\begin_inset VSpace bigskip
-\end_inset
-
-
-\end_layout
-
-\begin_layout Overprint
-\begin_inset Argument item:1
-status open
-
-\begin_layout Plain Layout
-
-1| handout:1
-\end_layout
-
-\end_inset
-
-Un texte sur la premier transparent,
-\begin_inset Newline newline
-\end_inset
-
-éventuellement sur plusieurs lignes
-\end_layout
-
-\begin_layout Overprint
-\begin_inset Argument item:1
-status open
-
-\begin_layout Plain Layout
-
-2| handout:0
-\end_layout
-
-\end_inset
-
-Remplacé sur le second transparent
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Faites des titres qui informent
+Poner títulos informativos
 \end_layout
 
 \end_inset
@@ -897,11 +808,11 @@ status open
 
 \begin_deeper
 \begin_layout Itemize
-Bloc sans titre
+Bloque sin título.
 \end_layout
 
 \begin_layout Itemize
-Affiché sur tous les transparents
+Mostrado en todas las diapositivas.
 \end_layout
 
 \end_deeper
@@ -921,7 +832,7 @@ status open
 status open
 
 \begin_layout Plain Layout
-Some Example Block Title
+Título de algún Bloque de ejemplo
 \end_layout
 
 \end_inset
@@ -947,7 +858,7 @@ Some Example Block Title
 \end_deeper
 \end_deeper
 \begin_layout Subsection
-Travaux antérieurs
+Trabajo previo
 \end_layout
 
 \begin_layout Frame
@@ -955,7 +866,7 @@ Travaux antérieurs
 status open
 
 \begin_layout Plain Layout
-Faites des titres qui informent 
+Poner títulos informativos
 \end_layout
 
 \end_inset
@@ -964,6 +875,60 @@ Faites des titres qui informent
 \end_layout
 
 \begin_deeper
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+N.
+ del T.: Para traducir en la salida las etiquetas AMS: ejemplo, teorema,
+ etc, se puede usar uno de estos métodos:
+\end_layout
+
+\begin_layout Itemize
+Preparar un archivo '.dict' en español para que lo use el paquete 'translator',
+ que es cargado automáticamente por beamer.
+\end_layout
+
+\begin_layout Itemize
+Añadir en el preámbulo \SpecialChar LaTeX
+ comandos como los descritos en 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+https://wiki.lyx.org/LyX/I18nLabels
+\end_layout
+
+\end_inset
+
+, por ej.:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+
+\backslash
+newtheorem{eje}{Ejemplo}
+\begin_inset Newline newline
+\end_inset
+
+
+\backslash
+renewenvironment{example}{
+\backslash
+begin{eje}}{
+\backslash
+end{eje}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Example
 \begin_inset Argument 1
 status open
@@ -975,7 +940,7 @@ status open
 
 \end_inset
 
-Sur le premier transparent 
+En la primera diapositiva.
 \end_layout
 
 \begin_layout Standard
@@ -996,16 +961,16 @@ status open
 
 \end_inset
 
-Sur le second transparent
+En la segunda diapositiva.
 \end_layout
 
 \end_deeper
 \begin_layout Section
-Nos résultats/contribution
+Nuestros resultados/Contribución
 \end_layout
 
 \begin_layout Subsection
-Principaux résultats
+Resultados principales
 \end_layout
 
 \begin_layout Frame
@@ -1013,7 +978,7 @@ Principaux résultats
 status open
 
 \begin_layout Plain Layout
-Faites des titres qui informent 
+Poner títulos informativos
 \end_layout
 
 \end_inset
@@ -1023,7 +988,7 @@ Faites des titres qui informent
 
 \begin_deeper
 \begin_layout Theorem
-Sur le premier transparent
+En la primera diapositiva.
 \end_layout
 
 \begin_layout Pause
@@ -1031,7 +996,7 @@ Sur le premier transparent
 \end_layout
 
 \begin_layout Corollary
-Sur le second transparent
+En la segunda diapositiva.
 \end_layout
 
 \end_deeper
@@ -1047,7 +1012,7 @@ Sur le second transparent
 status open
 
 \begin_layout Plain Layout
-Faites des titres qui informent 
+Poner títulos informativos 
 \end_layout
 
 \end_inset
@@ -1076,7 +1041,7 @@ status open
 
 \end_inset
 
-Dans la colonne de gauche
+En la columna de la izquierda.
 \end_layout
 
 \begin_layout Column
@@ -1094,21 +1059,21 @@ status open
 
 \end_inset
 
-Dans la colonne de droite
+En la columna de la derecha.
 \begin_inset Newline newline
 \end_inset
 
-Nouvelle ligne
+Nueva línea
 \end_layout
 
 \end_deeper
 \end_deeper
 \begin_layout Subsection
-Idées de base pour la preuve/l'implantation
+Ideas básicas para demostraciones/implementaciones
 \end_layout
 
 \begin_layout Section*
-Résumé
+Sumario
 \end_layout
 
 \begin_layout Frame
@@ -1116,7 +1081,7 @@ Résumé
 status open
 
 \begin_layout Plain Layout
-Résumé
+Sumario
 \end_layout
 
 \end_inset
@@ -1126,7 +1091,7 @@ Résumé
 
 \begin_deeper
 \begin_layout Itemize
-Le
+El
 \color none
  
 \color inherit
@@ -1135,18 +1100,18 @@ Le
 status open
 
 \begin_layout Plain Layout
-premier message principal
+primer mensaje principal 
 \end_layout
 
 \end_inset
 
 
 \color none
- de l'exposé en une ligne ou    deux.
+de la exposición en una o dos líneas.
 \end_layout
 
 \begin_layout Itemize
-Le
+El
 \color none
  
 \color inherit
@@ -1155,18 +1120,18 @@ Le
 status open
 
 \begin_layout Plain Layout
-deuxième message principal
+segundo mensaje principal
 \end_layout
 
 \end_inset
 
 
 \color none
- de l'exposé en une ligne ou deux.
+ de la exposición en una o dos líneas.
 \end_layout
 
 \begin_layout Itemize
-Peut-être un
+Quizás un
 \color none
  
 \color inherit
@@ -1175,14 +1140,14 @@ Peut-être un
 status open
 
 \begin_layout Plain Layout
-troisième message
+tercer mensaje
 \end_layout
 
 \end_inset
 
 
 \color none
-, mais pas plus.
+, pero no más.
 \end_layout
 
 \begin_layout Standard
@@ -1190,7 +1155,7 @@ troisième message
 status open
 
 \begin_layout Plain Layout
-  Les perspectives sont toujours facultatives.
+La perspectiva siempre es opcional.
 \end_layout
 
 \end_inset
@@ -1206,16 +1171,16 @@ status open
 \end_layout
 
 \begin_layout Itemize
-Perspectives
+Perspectiva
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-Problème non résolu
+Lo que no hemos hecho todavía.
 \end_layout
 
 \begin_layout Itemize
-Autre problème non résolu
+Otras cosas pendientes.
 \end_layout
 
 \end_deeper
@@ -1223,24 +1188,24 @@ Autre problème non résolu
 \begin_layout Section*
 \start_of_appendix
 \begin_inset Note Note
-status collapsed
+status open
 
 \begin_layout Plain Layout
-Tout ce qui suit est facultatif et n'est typiquement pas nécessaire.
+Todo lo siguiente es opcional y generalmente no es necesario.
 \end_layout
 
 \end_inset
 
-Appendix
+Apéndice
 \end_layout
 
 \begin_layout Subsection*
-Lectures complémentaires
+Lecturas complementarias
 \end_layout
 
 \begin_layout Frame
 \begin_inset Argument 3
-status collapsed
+status open
 
 \begin_layout Plain Layout
 allowframebreaks
@@ -1253,7 +1218,7 @@ allowframebreaks
 status open
 
 \begin_layout Plain Layout
-Lectures complémentaires
+Lecturas complementarias
 \end_layout
 
 \end_inset
@@ -1277,10 +1242,10 @@ beamertemplatebookbibitems
 
 
 \begin_inset Note Note
-status collapsed
+status open
 
 \begin_layout Plain Layout
-  Commencer avec des livres (image d'un livre insérée)
+Empezar con libros generales.
 \end_layout
 
 \end_inset
@@ -1291,13 +1256,13 @@ status collapsed
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "Auteur1990"
+key "Autor1990"
 literal "true"
 
 \end_inset
 
 A.
- Auteur.
+ Autor.
  
 \begin_inset ERT
 status collapsed
@@ -1311,9 +1276,9 @@ newblock
 
 \end_inset
 
- 
+
 \emph on
-Livre sur quelque chose
+Manual de Lo que sea
 \emph default
 .
 \begin_inset ERT
@@ -1328,7 +1293,7 @@ newblock
 
 \end_inset
 
- Une Edition, 1990.
+ Editorial, 1990.
 \begin_inset ERT
 status collapsed
 
@@ -1343,11 +1308,10 @@ beamertemplatearticlebibitems
 
 
 \begin_inset Note Note
-status collapsed
+status open
 
 \begin_layout Plain Layout
-  Et continuer avec les articles (image d'un article incluse).
- Faites une liste brève.
+Y seguir con artículos, una lista breve.
  
 \end_layout
 
@@ -1359,13 +1323,13 @@ status collapsed
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "Quelqun2000"
+key "Alguien2002"
 literal "true"
 
 \end_inset
 
 S.
- Quelqu'un.
+ Alguien.
 \begin_inset ERT
 status collapsed
 
@@ -1378,7 +1342,7 @@ newblock
 
 \end_inset
 
- Et ceci et cela
+ Sobre esto y aquello
 \emph on
 .
 
@@ -1396,9 +1360,9 @@ newblock
 
 \end_inset
 
- 
+
 \emph on
-Journal de ceci et cela
+Revista Esto y Aquello
 \emph default
 .
  2(1):50–100, 2000.

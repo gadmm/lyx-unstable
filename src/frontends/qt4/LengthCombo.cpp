@@ -32,10 +32,6 @@ LengthCombo::LengthCombo(QWidget * parent)
 		// so it must be added manually, if needed
 		if (QLatin1String(lyx::unit_name[i]) == "mu")
 			continue;
-#ifndef FILEFORMAT
-		if (std::string(lyx::unit_name[i]) == "baselineskip%")
-			continue;
-#endif
 		QComboBox::addItem(lyx::qt_(lyx::unit_name_gui[i]),
 			lyx::toqstr(lyx::unit_name[i]));
 	}

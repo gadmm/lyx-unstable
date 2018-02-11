@@ -74,20 +74,11 @@ ParamInfo const & InsetCitation::findInfo(string const & /* cmdName */)
 		param_info_.add("before", ParamInfo::LATEX_OPTIONAL,
 				ParamInfo::HANDLING_LATEXIFY);
 		param_info_.add("key", ParamInfo::LATEX_REQUIRED);
-#ifdef FILEFORMAT
 		param_info_.add("pretextlist", ParamInfo::LATEX_OPTIONAL,
 				ParamInfo::HANDLING_LATEXIFY);
 		param_info_.add("posttextlist", ParamInfo::LATEX_OPTIONAL,
 				ParamInfo::HANDLING_LATEXIFY);
 		param_info_.add("literal", ParamInfo::LYX_INTERNAL);
-#else
-		param_info_.add("pretextlist", ParamInfo::LATEX_OPTIONAL,
-		                ParamInfo::HANDLING_LATEXIFY, true);
-		param_info_.add("posttextlist", ParamInfo::LATEX_OPTIONAL,
-		                ParamInfo::HANDLING_LATEXIFY, true);
-		param_info_.add("literal", ParamInfo::LYX_INTERNAL,
-		                ParamInfo::HANDLING_NONE, true, from_ascii("true"));
-#endif
 	}
 	return param_info_;
 }

@@ -44,7 +44,6 @@ GuiPrintindex::GuiPrintindex(GuiView & lv)
 	connect(indicesCO, SIGNAL(activated(int)), this, SLOT(change_adaptor()));
 	connect(subindexCB, SIGNAL(clicked()), this, SLOT(change_adaptor()));
 	connect(literalCB, SIGNAL(clicked()), this, SLOT(change_adaptor()));
-	disable_widget_if_ndef_FILEFORMAT(literalCB);
 
 	bc().setPolicy(ButtonPolicy::NoRepeatedApplyReadOnlyPolicy);
 	bc().setOK(okPB);

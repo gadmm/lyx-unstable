@@ -6,6 +6,7 @@
 Format 66
 
 # Includes
+Input scrartcl.layout
 Input beamer.layout
 
 # override settings inherited from beamer.layout

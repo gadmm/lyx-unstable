@@ -71,11 +71,7 @@ namespace {
  * x    dynamic style (inherits document settings)
  */
 
-#ifdef FILEFORMAT
 char const * const style_char = "esgpcaqbwfirjkx";
-#else
-char const * const style_char = "esgpfa";
-#endif
 char const * const side_char = "lr" ;
 char const * const level_char = "sd";
 
@@ -687,15 +683,10 @@ InsetQuotesParams::QuoteStyle InsetQuotes::getStyle(string const & s)
 		qs = InsetQuotesParams::GermanQuotes;
 	else if (s == "polish")
 		qs = InsetQuotesParams::PolishQuotes;
-#ifdef FILEFORMAT
 	else if (s == "swiss")
-#else
-	else if (s == "french")
-#endif
 		qs = InsetQuotesParams::SwissQuotes;
 	else if (s == "danish")
 		qs = InsetQuotesParams::DanishQuotes;
-#ifdef FILEFORMAT
 	else if (s == "plain")
 		qs = InsetQuotesParams::PlainQuotes;
 	else if (s == "british")
@@ -714,7 +705,6 @@ InsetQuotesParams::QuoteStyle InsetQuotes::getStyle(string const & s)
 		qs = InsetQuotesParams::CJKAngleQuotes;
 	else if (s == "dynamic")
 		qs = InsetQuotesParams::DynamicQuotes;
-#endif
 
 	return qs;
 }

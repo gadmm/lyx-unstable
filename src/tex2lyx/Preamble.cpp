@@ -45,7 +45,6 @@ namespace {
 
 // CJK languages are handled in text.cpp, polyglossia languages are listed
 // further down.
-#ifdef FILEFORMAT
 /**
  * known babel language names (including synonyms)
  * not in standard babel: arabic, arabtex, armenian, belarusian, serbian-latin, thai
@@ -68,26 +67,6 @@ const char * const known_languages[] = {"acadian", "afrikaans", "albanian",
 "vietnam", "welsh",
 0};
 
-#else
-const char * const known_languages[] = {"acadian", "afrikaans", "albanian",
-"american", "arabic", "arabtex", "australian", "austrian", "bahasa", "bahasai",
-"bahasam", "basque", "belarusian", "brazil", "brazilian", "breton", "british",
-"bulgarian", "canadian", "canadien", "catalan", "croatian", "czech", "danish",
-"dutch", "english", "esperanto", "estonian", "farsi", "finnish", "francais",
-"french", "frenchb", "frenchle", "frenchpro", "galician", "german", "germanb",
-"georgian", "greek", "hebrew", "hungarian", "icelandic", "indon", "indonesian",
-"interlingua", "irish", "italian", "japanese", "kazakh", "kurmanji", "latin",
-"latvian", "lithuanian", "lowersorbian", "lsorbian", "magyar", "malay", "meyalu",
-"mongolian", "naustrian", "newzealand", "ngerman", "ngermanb", "norsk", "nswissgerman",
-"nynorsk", "polutonikogreek", "polish", "portuges", "portuguese", "romanian", "russian",
-"russianb", "samin", "scottish", "serbian", "serbian-latin", "slovak",
-"slovene", "spanish", "swedish", "swissgerman", "thai", "turkish", "turkmen",
-"ukraineb", "ukrainian", "uppersorbian", "UKenglish", "USenglish", "usorbian",
-"vietnam", "welsh",
-0};
-#endif
-
-#ifdef FILEFORMAT
 /**
  * the same as known_languages with .lyx names
  * please keep this in sync with known_languages line by line!
@@ -109,25 +88,6 @@ const char * const known_coded_languages[] = {"french", "afrikaans", "albanian",
 "vietnamese", "welsh",
 0};
 
-#else
-const char * const known_coded_languages[] = {"french", "afrikaans", "albanian",
-"american", "arabic_arabi", "arabic_arabtex", "australian", "austrian", "bahasa", "bahasa",
-"bahasam", "basque", "belarusian", "brazilian", "brazilian", "breton", "british",
-"bulgarian", "canadian", "canadien", "catalan", "croatian", "czech", "danish",
-"dutch", "english", "esperanto", "estonian", "farsi", "finnish", "french",
-"french", "french", "french", "french", "galician", "german", "german",
-"georgian", "greek", "hebrew", "magyar", "icelandic", "bahasa", "bahasa",
-"interlingua", "irish", "italian", "japanese", "kazakh", "kurmanji", "latin",
-"latvian", "lithuanian", "lowersorbian", "lowersorbian", "magyar", "bahasam", "bahasam",
-"mongolian", "naustrian", "newzealand", "ngerman", "ngerman", "norsk", "german-ch",
-"nynorsk", "polutonikogreek", "polish", "portuguese", "portuguese", "romanian", "russian",
-"russian", "samin", "scottish", "serbian", "serbian-latin", "slovak",
-"slovene", "spanish", "swedish", "german-ch-old", "thai", "turkish", "turkmen",
-"ukrainian", "ukrainian", "uppersorbian", "english", "english", "uppersorbian",
-"vietnamese", "welsh",
-0};
-#endif
-
 /// languages with danish quotes (.lyx names)
 const char * const known_danish_quotes_languages[] = {"danish", 0};
 
@@ -137,7 +97,6 @@ const char * const known_english_quotes_languages[] = {"american", "australian",
 "esperanto", "hebrew", "irish", "korean", "newzealand", "portuguese", "scottish",
 "thai", 0};
 
-#ifdef FILEFORMAT
 /// languages with french quotes (.lyx names)
 const char * const known_french_quotes_languages[] = {"albanian",
 "arabic_arabi", "arabic_arabtex", "asturian", "basque", "canadien", "catalan",
@@ -145,36 +104,15 @@ const char * const known_french_quotes_languages[] = {"albanian",
 "piedmontese", "polutonikogreek", "russian", "spanish", "spanish-mexico",
 "turkish", "turkmen", "ukrainian", "vietnamese", 0};
 
-#else
-const char * const known_french_quotes_languages[] = {"albanian",
-"arabic_arabi", "arabic_arabtex", "basque", "canadien", "catalan", "french",
-"galician", "greek", "italian", "norsk", "nynorsk", "polutonikogreek",
-"russian", "spanish", "spanish-mexico", "turkish", "turkmen", "ukrainian",
-"vietnamese", 0};
-#endif
-
-#ifdef FILEFORMAT
 /// languages with german quotes (.lyx names)
 const char * const known_german_quotes_languages[] = {"austrian", "bulgarian",
 "czech", "german", "georgian", "icelandic", "lithuanian", "lowersorbian", "macedonian",
 "naustrian", "ngerman", "romansh", "serbian", "serbian-latin", "slovak", "slovene",
 "uppersorbian", 0};
 
-#else
-const char * const known_german_quotes_languages[] = {"austrian", "bulgarian",
-"czech", "german", "georgian", "icelandic", "lithuanian", "lowersorbian", "naustrian",
-"ngerman", "serbian", "serbian-latin", "slovak", "slovene", "uppersorbian", 0};
-#endif
-
-#ifdef FILEFORMAT
 /// languages with polish quotes (.lyx names)
 const char * const known_polish_quotes_languages[] = {"afrikaans", "bosnian", "croatian",
 "dutch", "estonian", "magyar", "polish", "romanian", 0};
-
-#else
-const char * const known_polish_quotes_languages[] = {"afrikaans", "croatian",
-"dutch", "estonian", "magyar", "polish", "romanian", 0};
-#endif
 
 /// languages with swedish quotes (.lyx names)
 const char * const known_swedish_quotes_languages[] = {"finnish",
@@ -186,7 +124,6 @@ const char * const known_old_language_packages[] = {"french", "frenchle",
 
 char const * const known_fontsizes[] = { "10pt", "11pt", "12pt", 0 };
 
-#ifdef FILEFORMAT
 const char * const known_roman_fonts[] = { "ae", "beraserif", "bookman",
 "ccfonts", "chancery", "charter", "cmr", "cochineal", "crimson", "fourier",
 "garamondx", "libertine", "libertine-type1", "lmodern", "mathdesign", "mathpazo",
@@ -200,22 +137,6 @@ const char * const known_sans_fonts[] = { "avant", "berasans", "biolinum-type1",
 const char * const known_typewriter_fonts[] = { "beramono", "cmtl", "cmtt",
 "courier", "lmtt", "luximono", "fourier", "libertineMono-type1", "lmodern",
 "mathpazo", "mathptmx", "newcent", "NotoMono-TLF", "tgcursor", "txtt", 0};
-
-#else
-const char * const known_roman_fonts[] = { "ae", "beraserif", "bookman",
-"ccfonts", "chancery", "charter", "cmr", "cochineal", "crimson", "fourier",
-"garamondx", "libertine", "libertine-type1", "lmodern", "mathdesign", "mathpazo",
-"mathptmx", "newcent", "tgbonum", "tgchorus", "tgpagella", "tgschola", "tgtermes",
-"utopia", 0};
-
-const char * const known_sans_fonts[] = { "avant", "berasans", "biolinum-type1",
-"cmbr", "cmss", "helvet", "iwona", "iwonac", "iwonal", "iwonalc", "kurier",
-"kurierc", "kurierl", "kurierlc", "lmss", "tgadventor", "tgheros", 0};
-
-const char * const known_typewriter_fonts[] = { "beramono", "cmtl", "cmtt",
-"courier", "lmtt", "luximono", "fourier", "libertineMono-type1", "lmodern",
-"mathpazo", "mathptmx", "newcent", "tgcursor", "txtt", 0};
-#endif
 
 const char * const known_math_fonts[] = { "eulervm", "newtxmath", 0};
 
@@ -373,7 +294,6 @@ string process_keyval_opt(vector<string> & options, string name)
 } // anonymous namespace
 
 
-#ifdef FILEFORMAT
 /**
  * known polyglossia language names (including variants)
  * FIXME: support spelling=old for german variants (german vs. ngerman LyX names etc)
@@ -393,25 +313,6 @@ const char * const Preamble::polyglossia_languages[] = {
 "ukrainian", "urdu", "usorbian", "vietnamese", "welsh", 0};
 // not yet supported by LyX: "korean", "nko"
 
-#else
-const char * const Preamble::polyglossia_languages[] = {
-"albanian", "american", "amharic", "ancient", "arabic", "armenian", "asturian", "australian",
-"bahasai", "bahasam", "basque", "bengali", "brazil", "brazilian", "breton", "british", "bulgarian",
-"catalan", "coptic", "croatian", "czech", "danish", "divehi", "dutch",
-"english", "esperanto", "estonian", "farsi", "finnish", "french", "friulan",
-"galician", "greek", "monotonic", "hebrew", "hindi",
-"icelandic", "interlingua", "irish", "italian", "kannada", "khmer",
-"lao", "latin", "latvian", "lithuanian", "lsorbian", "magyar", "malayalam", "marathi",
-"austrian", "newzealand", "german", "norsk", "nynorsk", "occitan",
-"piedmontese", "polish", "polytonic", "portuges", "romanian", "romansh", "russian",
-"samin", "sanskrit", "scottish", "serbian", "slovak", "slovenian", "spanish", "swedish",
-"tamil", "telugu", "thai", "tibetan", "turkish", "turkmen",
-"ukrainian", "usorbian", "vietnamese", "welsh", 0};
-// not yet supported by LyX: "korean", "nko", "syriac", "urdu"
-#endif
-
-
-#ifdef FILEFORMAT
 /**
  * the same as polyglossia_languages with .lyx names
  * please keep this in sync with polyglossia_languages line by line!
@@ -430,23 +331,6 @@ const char * const Preamble::coded_polyglossia_languages[] = {
 "tamil", "telugu", "thai", "tibetan", "turkish", "turkmen",
 "ukrainian", "urdu", "uppersorbian", "vietnamese", "welsh", 0};
 // not yet supported by LyX: "korean-polyglossia", "nko"
-
-#else
-const char * const Preamble::coded_polyglossia_languages[] = {
-"albanian", "american", "amharic", "ancientgreek", "arabic_arabi", "armenian", "asturian", "australian",
-"bahasa", "bahasam", "basque", "bengali", "brazilian", "brazilian", "breton", "british", "bulgarian",
-"catalan", "coptic", "croatian", "czech", "danish", "divehi", "dutch",
-"english", "esperanto", "estonian", "farsi", "finnish", "french", "friulan",
-"galician", "greek", "greek", "hebrew", "hindi",
-"icelandic", "interlingua", "irish", "italian", "kannada", "khmer",
-"lao", "latin", "latvian", "lithuanian", "lowersorbian", "magyar", "malayalam", "marathi",
-"naustrian","newzealand", "ngerman", "norsk", "nynorsk", "occitan",
-"piedmontese", "polish", "polutonikogreek", "portuges", "romanian", "romansh", "russian",
-"samin", "sanskrit", "scottish", "serbian", "slovak", "slovene", "spanish", "swedish",
-"tamil", "telugu", "thai", "tibetan", "turkish", "turkmen",
-"ukrainian", "uppersorbian", "vietnamese", "welsh", 0};
-// not yet supported by LyX: "korean-polyglossia", "nko", "syriac", "urdu"
-#endif
 
 
 bool Preamble::usePolyglossia() const
@@ -881,7 +765,6 @@ void Preamble::handle_package(Parser &p, string const & name,
 			h_font_osf = "true";
 	}
 
-#ifdef FILEFORMAT
 	if (name == "noto") {
 		// noto can have several options
 		if (opts.empty())
@@ -900,7 +783,6 @@ void Preamble::handle_package(Parser &p, string const & name,
 		// noto as typewriter is handled in handling of \ttdefault
 		// special cases are handled in handling of \rmdefault and \sfdefault
 	}
-#endif
 
 	// sansserif fonts
 	if (is_known(name, known_sans_fonts)) {
@@ -1176,7 +1058,6 @@ void Preamble::handle_package(Parser &p, string const & name,
 				h_options += ',' + join(options, ",");
 		}
 	}
-#ifdef FILEFORMAT
 	else if (name == "microtype") {
 		//we internally support only microtype without params
 		if (options.empty())
@@ -1184,7 +1065,6 @@ void Preamble::handle_package(Parser &p, string const & name,
 		else
 			h_preamble << "\\usepackage[" << opts << "]{microtype}";
 	}
-#endif
 
 	else if (!in_lyx_preamble) {
 		if (options.empty())
@@ -1415,15 +1295,11 @@ bool Preamble::writeLyXHeader(ostream & os, bool subdoc, string const & outfiled
 		os << "\\defskip " << h_defskip << "\n";
 	else
 		os << "\\paragraph_indentation " << h_paragraph_indentation << "\n";
-#ifdef FILEFORMAT
 	os << "\\is_math_indent " << h_is_mathindent << "\n";
 	if (!h_mathindentation.empty())
 		os << "\\math_indentation " << h_mathindentation << "\n";
 	os << "\\math_numbering_side " << h_math_numbering_side << "\n";
 	os << "\\quotes_style " << h_quotes_style << "\n"
-#else
-	os << "\\quotes_language " << h_quotes_style << "\n"
-#endif
 	   << "\\dynamic_quotes " << h_dynamic_quotes << "\n"
 	   << "\\papercolumns " << h_papercolumns << "\n"
 	   << "\\papersides " << h_papersides << "\n"

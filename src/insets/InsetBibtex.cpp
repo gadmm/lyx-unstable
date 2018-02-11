@@ -69,12 +69,7 @@ ParamInfo const & InsetBibtex::findInfo(string const & /* cmdName */)
 		param_info_.add("btprint", ParamInfo::LATEX_OPTIONAL);
 		param_info_.add("bibfiles", ParamInfo::LATEX_REQUIRED);
 		param_info_.add("options", ParamInfo::LYX_INTERNAL);
-#ifdef FILEFORMAT
 		param_info_.add("biblatexopts", ParamInfo::LATEX_OPTIONAL);
-#else
-		param_info_.add("biblatexopts", ParamInfo::LATEX_OPTIONAL,
-		                ParamInfo::HANDLING_NONE, true);
-#endif
 	}
 	return param_info_;
 }

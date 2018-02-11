@@ -646,7 +646,6 @@ def checkFormatEntries(dtl_tools):
     #
     checkViewerEditor('a text editor', texteditors,
         rc_entry = [r'''\Format asciichess asc    "Plain text (chess output)"  "" ""	"%%"	""	""
-\Format dateout    tmp    "date (output)"         "" ""	"%%"	""	""
 \Format docbook    sgml    DocBook                B  ""	"%%"	"document,menu=export"	""
 \Format docbook-xml xml   "DocBook (XML)"         "" ""	"%%"	"document,menu=export"	"application/docbook+xml"
 \Format dot        dot    "Graphviz Dot"          "" ""	"%%"	"vector"	"text/vnd.graphviz"
@@ -746,8 +745,7 @@ def checkFormatEntries(dtl_tools):
 \Format word2      docx    "MS Word Office Open XML"               O  "%%"	"%%"	"document,vector,menu=export"	"application/vnd.openxmlformats-officedocument.wordprocessingml.document"'''])
     #
     # entries that do not need checkProg
-    addToRC(r'''\Format date       ""     "date command"          "" ""	""	""	""
-\Format csv        csv    "Table (CSV)"           "" ""	""	"document"	"text/csv"
+    addToRC(r'''\Format csv        csv    "Table (CSV)"           "" ""	""	"document"	"text/csv"
 \Format fax        ""      Fax                    "" ""	""	"document"	""
 \Format lyx        lyx     LyX                    "" ""	""	""	"application/x-lyx"
 \Format lyx13x     13.lyx "LyX 1.3.x"             "" ""	""	"document"	""
@@ -1177,7 +1175,6 @@ def checkConverterEntries():
     # Entries that do not need checkProg
     addToRC(r'''
 \converter csv        lyx        "python -tt $$s/scripts/csv2lyx.py $$i $$o"	""
-\converter date       dateout    "python -tt $$s/scripts/date.py %d-%m-%Y > $$o"	""
 \converter docbook    docbook-xml "cp $$i $$o"	"xml"
 \converter fen        asciichess "python -tt $$s/scripts/fen2ascii.py $$i $$o"	""
 \converter lyx        lyx13x     "python -tt $$s/lyx2lyx/lyx2lyx -V 1.3 -o $$o $$i"	""

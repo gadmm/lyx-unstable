@@ -42,7 +42,6 @@ GuiHyperlink::GuiHyperlink(QWidget * parent) : InsetParamsWidget(parent)
 		this, SIGNAL(changed()));
 	connect(literalCB, SIGNAL(clicked()),
 		this, SIGNAL(changed()));
-	disable_widget_if_ndef_FILEFORMAT(literalCB);
 	connect(webRB, SIGNAL(clicked()),
 		this, SIGNAL(changed()));
 	connect(emailRB, SIGNAL(clicked()),

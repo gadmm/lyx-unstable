@@ -1349,10 +1349,8 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 		string const name = to_utf8(cmd.argument());
 		if (name == "hyphenation")
 			specialChar(cur, InsetSpecialChar::HYPHENATION);
-#ifdef FILEFORMAT
 		else if (name == "allowbreak")
 			specialChar(cur, InsetSpecialChar::ALLOWBREAK);
-#endif
 		else if (name == "ligature-break")
 			specialChar(cur, InsetSpecialChar::LIGATURE_BREAK);
 		else if (name == "slash")
@@ -3054,9 +3052,7 @@ bool Text::getStatus(Cursor & cur, FuncRequest const & cmd,
 	case LFUN_QUOTE_INSERT:
 		// always allow this, since we will inset a raw quote
 		// if an inset is not allowed.
-#ifdef FILEFORMAT
 		allow_in_passthru = true;
-#endif
 		break;
 	case LFUN_SPECIALCHAR_INSERT:
 		code = SPECIALCHAR_CODE;
@@ -3386,9 +3382,7 @@ bool Text::getStatus(Cursor & cur, FuncRequest const & cmd,
 	case LFUN_FONT_STATE:
 	case LFUN_FONT_UNDERLINE:
 	case LFUN_FONT_STRIKEOUT:
-#ifdef FILEFORMAT
 	case LFUN_FONT_CROSSOUT:
-#endif
 	case LFUN_FONT_UNDERUNDERLINE:
 	case LFUN_FONT_UNDERWAVE:
 	case LFUN_TEXTSTYLE_APPLY:

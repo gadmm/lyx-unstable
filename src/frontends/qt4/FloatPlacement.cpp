@@ -242,7 +242,6 @@ void FloatPlacement::checkAllowed() const
 
 	// float or document dialog?
 	if (spanCB->isVisible()) {
-#ifdef FILEFORMAT
 		bool const span = spanCB->isChecked();
 		bool const sideways = sidewaysCB->isChecked();
 		topCB->setEnabled(!sideways && !defaults && !heredefinitely
@@ -275,25 +274,6 @@ void FloatPlacement::checkAllowed() const
 		spanCB->setEnabled(allows_wide_ && (!sideways || standardfloat_));
 		sidewaysCB->setEnabled(allows_sideways_);
 		defaultsCB->setEnabled(!(sideways && span));
-#else
-		bool const span = spanCB->isChecked();
-		bool const sideways = sidewaysCB->isChecked();
-		defaultsCB->setEnabled(!sideways);
-		topCB->setEnabled(!sideways && !defaults && !heredefinitely
-				  && contains(allowed_placement_, 't'));
-		bottomCB->setEnabled(!sideways && !defaults && !span && !heredefinitely
-				     && contains(allowed_placement_, 'b'));
-		pageCB->setEnabled(!sideways && !defaults && !heredefinitely
-				   && contains(allowed_placement_, 'p'));
-		herepossiblyCB->setEnabled(!sideways && !defaults && !span && !heredefinitely
-					   && contains(allowed_placement_, 'h'));
-		heredefinitelyCB->setEnabled(!sideways && !defaults && !span
-					     && contains(allowed_placement_, 'H'));
-		ignoreCB->setEnabled(!sideways && !defaults && ignore && !heredefinitely
-				     && contains(allowed_placement_, '!'));
-		spanCB->setEnabled(allows_wide_ && (!sideways || standardfloat_));
-		sidewaysCB->setEnabled(allows_sideways_);
-#endif
 	} else {
 		topCB->setEnabled(!defaults && !heredefinitely);
 		bottomCB->setEnabled(!defaults && !heredefinitely);

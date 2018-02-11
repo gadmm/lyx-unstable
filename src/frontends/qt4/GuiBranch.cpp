@@ -71,7 +71,6 @@ bool GuiBranch::checkWidgets(bool readonly) const
 {
 	branchCO->setEnabled(!readonly);
 	invertedCB->setEnabled(!readonly);
-	disable_widget_if_ndef_FILEFORMAT(invertedCB);
 	return InsetParamsWidget::checkWidgets();
 }
 

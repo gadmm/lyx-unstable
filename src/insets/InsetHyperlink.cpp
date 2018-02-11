@@ -52,12 +52,7 @@ ParamInfo const & InsetHyperlink::findInfo(string const & /* cmdName */)
 		                ParamInfo::HANDLING_LATEXIFY);
 		param_info_.add("target", ParamInfo::LATEX_REQUIRED);
 		param_info_.add("type", ParamInfo::LATEX_REQUIRED);
-#ifdef FILEFORMAT
 		param_info_.add("literal", ParamInfo::LYX_INTERNAL);
-#else
-		param_info_.add("literal", ParamInfo::LYX_INTERNAL,
-		                ParamInfo::HANDLING_NONE, true, from_ascii("false"));
-#endif
 	}
 	return param_info_;
 }

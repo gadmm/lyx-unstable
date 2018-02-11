@@ -73,12 +73,8 @@ static char const * const string_paragraph_separation[] = {
 
 
 static char const * const string_quotes_style[] = {
-#ifdef FILEFORMAT
 	"english", "swedish", "german", "polish", "swiss", "danish", "plain",
 	"british", "swedishg", "french", "frenchin", "russian", "cjk", "cjkangle", ""
-#else
-	"english", "swedish", "german", "polish", "french", "danish", "",
-#endif
 };
 
 
@@ -146,7 +142,6 @@ QuotesStyleTranslator const init_quotesstyletranslator()
 	translator.addPair(string_quotes_style[3], InsetQuotesParams::PolishQuotes);
 	translator.addPair(string_quotes_style[4], InsetQuotesParams::SwissQuotes);
 	translator.addPair(string_quotes_style[5], InsetQuotesParams::DanishQuotes);
-#ifdef FILEFORMAT
 	translator.addPair(string_quotes_style[6], InsetQuotesParams::PlainQuotes);
 	translator.addPair(string_quotes_style[7], InsetQuotesParams::BritishQuotes);
 	translator.addPair(string_quotes_style[8], InsetQuotesParams::SwedishGQuotes);
@@ -155,7 +150,6 @@ QuotesStyleTranslator const init_quotesstyletranslator()
 	translator.addPair(string_quotes_style[11], InsetQuotesParams::RussianQuotes);
 	translator.addPair(string_quotes_style[12], InsetQuotesParams::CJKQuotes);
 	translator.addPair(string_quotes_style[13], InsetQuotesParams::CJKAngleQuotes);
-#endif
 	return translator;
 }
 
@@ -424,11 +418,7 @@ BufferParams::BufferParams()
 	fonts_default_family = "default";
 	useNonTeXFonts = false;
 	use_microtype = false;
-#ifdef FILEFORMAT
 	use_dash_ligatures = true;
-#else
-	use_dash_ligatures = false;
-#endif
 	fonts_expert_sc = false;
 	fonts_old_figures = false;
 	fonts_sans_scale[0] = 100;
@@ -853,10 +843,8 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 		lex >> fonts_cjk;
 	} else if (token == "\\use_microtype") {
 		lex >> use_microtype;
-#ifdef FILEFORMAT
 	} else if (token == "\\use_dash_ligatures") {
 		lex >> use_dash_ligatures;
-#endif
 	} else if (token == "\\paragraph_separation") {
 		string parsep;
 		lex >> parsep;
@@ -893,11 +881,7 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 			math_numbering_side = RIGHT;
 		else
 			math_numbering_side = DEFAULT;
-#ifdef FILEFORMAT
 	} else if (token == "\\quotes_style") {
-#else
-	} else if (token == "\\quotes_language") {
-#endif
 		string qstyle;
 		lex >> qstyle;
 		quotes_style = quotesstyletranslator().find(qstyle);
@@ -926,9 +910,7 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 	} else if (token == "\\biblio_style") {
 		lex.eatLine();
 		biblio_style = lex.getString();
-	}
-#ifdef FILEFORMAT
-	else if (token == "\\biblio_options") {
+	} else if (token == "\\biblio_options") {
 		lex.eatLine();
 		biblio_opts = trim(lex.getString());
 	} else if (token == "\\biblatex_bibstyle") {
@@ -937,17 +919,11 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 	} else if (token == "\\biblatex_citestyle") {
 		lex.eatLine();
 		biblatex_citestyle = trim(lex.getString());
-	}
-#endif
-	else if (token == "\\use_bibtopic") {
+	} else if (token == "\\use_bibtopic") {
 		lex >> use_bibtopic;
-	}
-#ifdef FILEFORMAT
-	else if (token == "\\multibib") {
+	} else if (token == "\\multibib") {
 		lex >> multibib;
-	}
-#endif
-	else if (token == "\\use_indices") {
+	} else if (token == "\\use_indices") {
 		lex >> use_indices;
 	} else if (token == "\\tracking_changes") {
 		lex >> track_changes;
@@ -1275,10 +1251,8 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 	if (!fonts_cjk.empty()) {
 		os << "\\font_cjk " << fonts_cjk << '\n';
 	}
-#ifdef FILEFORMAT
 	os << "\\use_microtype " << convert<string>(use_microtype) << '\n';
 	os << "\\use_dash_ligatures " << convert<string>(use_dash_ligatures) << '\n';
-#endif
 	os << "\\graphics " << graphics_driver << '\n';
 	os << "\\default_output_format " << default_output_format << '\n';
 	os << "\\output_sync " << output_sync << '\n';
@@ -1319,7 +1293,6 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 
 	os << "\n\\cite_engine_type " << theCiteEnginesList.getTypeAsString(cite_engine_type_);
 
-#ifdef FILEFORMAT
 	if (!biblio_style.empty())
 		os << "\n\\biblio_style " << biblio_style;
 	if (!biblio_opts.empty())
@@ -1330,9 +1303,6 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 		os << "\n\\biblatex_citestyle " << biblatex_citestyle;
 	if (!multibib.empty())
 		os << "\n\\multibib " << multibib;
-#else
-	os << "\n\\biblio_style " << biblio_style;
-#endif
 
 	os << "\n\\use_bibtopic " << convert<string>(use_bibtopic)
 	   << "\n\\use_indices " << convert<string>(use_indices)
@@ -1340,9 +1310,7 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 	   << "\n\\suppress_date " << convert<string>(suppress_date)
 	   << "\n\\justification " << convert<string>(justification)
 	   << "\n\\use_refstyle " << use_refstyle
-#ifdef FILEFORMAT
 	   << "\n\\use_minted " << use_minted
-#endif
 	   << '\n';
 	if (isbackgroundcolor == true)
 		os << "\\backgroundcolor " << lyx::X11hexname(backgroundcolor) << '\n';
@@ -1413,7 +1381,6 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 		   << (getParIndent().empty() ? "default" : getParIndent().asString());
 	else
 		os << "\n\\defskip " << getDefSkip().asLyXCommand();
-#ifdef FILEFORMAT
 	os << "\n\\is_math_indent " << is_math_indent;
 	if (is_math_indent)
 		os << "\n\\math_indentation "
@@ -1430,13 +1397,8 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 		os << "default";
 	}
 	os << "\n\\quotes_style "
-#else
-	os << "\n\\quotes_language "
-#endif
 	   << string_quotes_style[quotes_style]
-#ifdef FILEFORMAT
 	   << "\n\\dynamic_quotes " << dynamic_quotes
-#endif
 	   << "\n\\papercolumns " << columns
 	   << "\n\\papersides " << sides
 	   << "\n\\paperpagestyle " << pagestyle << '\n';

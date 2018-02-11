@@ -2350,6 +2350,8 @@ dist_layouts_DATA =\
 citeenginesdir = $(pkgdatadir)/citeengines
 dist_citeengines_DATA = \
 	citeengines/basic.citeengine \
+        citeengines/biblatex.citeengine \
+        citeengines/biblatex-natbib.citeengine \
         citeengines/jurabib.citeengine \
         citeengines/natbib.citeengine
 
@@ -2366,7 +2368,6 @@ dist_scripts_DATA += \
 	scripts/convert_pdf.py \
 	scripts/convertDefault.py \
 	scripts/csv2lyx.py \
-	scripts/date.py \
 	scripts/ext_copy.py \
 	scripts/fen2ascii.py \
 	scripts/fig2pdftex.py \

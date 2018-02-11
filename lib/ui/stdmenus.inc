@@ -408,8 +408,8 @@ Menuset
 		Item "Symbols...|b" "dialog-show symbols"
 		Item "Ellipsis|i" "specialchar-insert dots"
 		Item "End of Sentence|E" "specialchar-insert end-of-sentence"
-		Item "Ordinary Quote|Q" "self-insert \""
-		Item "Single Quote|S" "quote-insert single"
+		Item "Plain Quotation Mark|Q" "quote-insert outer auto plain"
+		Item "Inner Quotation Mark|n" "quote-insert inner"
 		Item "Protected Hyphen|y" "specialchar-insert nobreakdash"
 		Item "Breakable Slash|a" "specialchar-insert slash"
 		Item "Visible Space|V" "space-insert visible"
@@ -439,6 +439,7 @@ Menuset
 		Separator
 		Item "Hyphenation Point|H" "specialchar-insert hyphenation"
 		Item "Ligature Break|k" "specialchar-insert ligature-break"
+		Item "Optional Line Break|B" "specialchar-insert allowbreak"
 		Item "Ragged Line Break|R" "newline-insert newline"
 		Item "Justified Line Break|J" "newline-insert linebreak"
 		Separator

@@ -124,6 +124,20 @@ Font charter
 	Package          charter
 EndFont
 
+Font cochineal
+	GuiName          "Crimson (Cochineal)"
+	Family           rm
+	OsfOption        "proportional,osf"
+	Package          cochineal
+	AltFonts         crimson
+EndFont
+
+AltFont crimson
+	GuiName          "Crimson"
+	Family           rm
+	Package          crimson
+EndFont
+
 Font cmr
 	GuiName          "Computer Modern Roman"
 	Family           rm
@@ -281,6 +295,20 @@ Font newcent
 	GuiName          "New Century Schoolbook"
 	Family           rm
 	Package          newcent
+EndFont
+
+Font NotoSerif-TLF
+	GuiName          "Noto Serif"
+	Family           rm
+	SwitchDefault    1
+	Requires         noto
+	CompleteFont     noto
+EndFont
+
+AltFont noto
+	GuiName          "Noto Serif"
+	Family           rm
+	Package          noto
 EndFont
 
 Font palatino
@@ -540,6 +568,13 @@ Font lmss
 	Requires         lmodern
 EndFont
 
+Font NotoSans-TLF
+	GuiName          "Noto Sans"
+	Family           sf
+	SwitchDefault    1
+	Requires         noto
+EndFont
+
 Font tgadventor
 	GuiName          "TeX Gyre Adventor"
 	Family           sf
@@ -621,6 +656,13 @@ Font luximono
 	Package          luximono
 EndFont
 
+Font NotoMono-TLF
+	GuiName          "Noto Mono"
+	Family           tt
+	SwitchDefault    1
+	Requires         noto
+EndFont
+
 Font tgcursor
 	GuiName          "TeX Gyre Cursor"
 	Family           tt
@@ -638,6 +680,14 @@ EndFont
 #
 # MATH FONTS
 #
+
+Font cochineal-ntxm
+	GuiName          "Crimson (New TX)"
+	Family           math
+	Package          newtxmath
+	PackageOption    cochineal
+	Provides         amssymb,amsfonts
+EndFont
 
 Font eulervm
 	GuiName          "Euler VM"

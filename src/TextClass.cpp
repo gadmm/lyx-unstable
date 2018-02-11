@@ -71,8 +71,8 @@ int const LAYOUT_FORMAT = 66; //spitz: New layout tag AutoNests
 // targeted by Local Layout > Convert. In master, equal to LAYOUT_FORMAT.
 int const LYXFILE_LAYOUT_FORMAT = LAYOUT_FORMAT;
 #else
-// LAYOUT_FORMAT of the current stable LyX format (2.2)
-int const LYXFILE_LAYOUT_FORMAT = 60;
+// LAYOUT_FORMAT of the current stable LyX format (2.3)
+int const LYXFILE_LAYOUT_FORMAT = 66;
 #endif
 
 

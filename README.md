@@ -3,15 +3,15 @@
 LyX unstable is a branch of LyX master that reads, edits and writes the current
 LyX stable file format. See the documentation at
 `development/unstable/unstable.lyx` for more information on the why and how. LyX
-*2.3unstable* edits LyX files with the 2.2 file format and follows the current
-master branch (2.4dev). When LyX 2.3 releases, unstable will be reset to the LyX
-2.3 format.
+*2.4unstable* edits LyX files with the 2.3 file format and follows the current
+master branch (2.4dev). When LyX 2.4 releases, unstable will be reset to the LyX
+2.4 format.
 
-* Current LyX format: 508. LyX unstable also reads files with a more recent
+* Current LyX format: 544. LyX unstable also reads files with a more recent
   format thanks to the up-to-date `lyx2lyx` conversion script.
-* Current local layout format: 60. LyX unstable will accept to read and write
-  local layouts with a more recent format, but Format 60 has to be used if the
-  file has to remain readable by LyX 2.2.
+* Current local layout format: 66. LyX unstable will accept to read and write
+  local layouts with a more recent format, but Format 66 has to be used if the
+  file has to remain readable by LyX 2.3 stable.
 
 This branch contains bug fixes and new features on top of LyX master (2.4dev),
 detailed at the end of this file. We try to catch and fix showstopping bugs from
@@ -48,7 +48,7 @@ and modern Windows platforms.
 
 # Bug fixes and new features
 
-LyX unstable contains bug fixes and new features from LyX master
+LyX unstable contains bug fixes and new features from LyX 2.3 and 2.4dev
 * <https://wiki.lyx.org/LyX/NewInLyX23>
 * <https://wiki.lyx.org/LyX/NewInLyX24>
 
@@ -60,8 +60,6 @@ try <https://github.com/gadmm/lyx-unstable/compare/master...staging>.
 
 ## Important bug fixes
 
-* Buggy event compressor causing from slowness to deadlock and dataloss on
-  repeated key presses with iBus (Ubuntu in particular). (#9362, #9790, #10516)
 * Crash with segfault when exiting or dissolving math insets.
 * Scrolling issues with keyboard across large insets.
 * Fix flicker due to changing metrics while selecting with the mouse. (#8951)

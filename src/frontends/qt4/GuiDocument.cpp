@@ -138,11 +138,7 @@ char const * backref_opts_gui[] =
 
 char const * lst_packages[] =
 {
-#ifdef FILEFORMAT
 	"Listings", "Minted", ""
-#else
-	"Listings", ""
-#endif
 };
 
 
@@ -817,8 +813,6 @@ GuiDocument::GuiDocument(GuiView & lv)
 
 	// fonts
 	fontModule = new FontModule(this);
-	disable_widget_if_ndef_FILEFORMAT(fontModule->microtypeCB);
-	disable_widget_if_ndef_FILEFORMAT(fontModule->dashesCB);
 	connect(fontModule->osFontsCB, SIGNAL(clicked()),
 		this, SLOT(change_adaptor()));
 	connect(fontModule->osFontsCB, SIGNAL(toggled(bool)),
@@ -1049,7 +1043,6 @@ GuiDocument::GuiDocument(GuiView & lv)
 
 	// language & quote
 	langModule = new UiWidget<Ui::LanguageUi>(this);
-	disable_widget_if_ndef_FILEFORMAT(langModule->dynamicQuotesCB);
 	connect(langModule->languageCO, SIGNAL(activated(int)),
 		this, SLOT(change_adaptor()));
 	connect(langModule->languageCO, SIGNAL(activated(int)),
@@ -1148,7 +1141,6 @@ GuiDocument::GuiDocument(GuiView & lv)
 		this, SLOT(biblioChanged()));
 	connect(biblioModule->bibunitsCO, SIGNAL(activated(int)),
 		this, SLOT(biblioChanged()));
-	disable_widget_if_ndef_FILEFORMAT(biblioModule->bibunitsCO);
 	connect(biblioModule->bibtexCO, SIGNAL(activated(int)),
 		this, SLOT(bibtexChanged(int)));
 	connect(biblioModule->bibtexOptionsLE, SIGNAL(textChanged(QString)),
@@ -1298,7 +1290,7 @@ GuiDocument::GuiDocument(GuiView & lv)
 		this, SLOT(change_adaptor()));
 	connect(mathsModule->MathIndentLengthCO, SIGNAL(activated(int)),
 		this, SLOT(change_adaptor()));
-	disable_widget_if_ndef_FILEFORMAT(mathsModule->MathIndentCB);
+
 
 	mathsModule->MathIndentCO->addItem(qt_("Default"));
 	mathsModule->MathIndentCO->addItem(qt_("Custom"));
@@ -1310,7 +1302,6 @@ GuiDocument::GuiDocument(GuiView & lv)
 	mathsModule->MathNumberingPosCO->addItem(qt_("Default"));
 	mathsModule->MathNumberingPosCO->addItem(qt_("Right"));
 	mathsModule->MathNumberingPosCO->setCurrentIndex(1);
-	disable_widget_if_ndef_FILEFORMAT(mathsModule->MathNumberingPosCO);
 
 
 	// latex class
@@ -2085,7 +2076,6 @@ void GuiDocument::updateFontOptions()
 				fontModule->fontsRomanCO->currentIndex()).toString();
 	fontModule->fontScCB->setEnabled(providesSC(font));
 	fontModule->fontOsfCB->setEnabled(providesOSF(font));
-	disable_widget_if_ndef_FILEFORMAT(fontModule->dashesCB);
 	updateMathFonts(font);
 }
 
@@ -2556,8 +2546,6 @@ void GuiDocument::updateEngineDependends()
 			|| ce->requires("natbib.sty");
 	biblioModule->citePackageOptionsLE->setEnabled(citepack);
 	biblioModule->citePackageOptionsL->setEnabled(citepack);
-	disable_widget_if_ndef_FILEFORMAT(biblioModule->citePackageOptionsLE);
-	disable_widget_if_ndef_FILEFORMAT(biblioModule->citePackageOptionsL);
 }
 
 

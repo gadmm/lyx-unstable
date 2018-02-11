@@ -110,7 +110,6 @@ public:
 	ParamData const & operator[](std::string const & name) const;
 	///
 	bool operator==(ParamInfo const &) const;
-
 private:
 	///
 	std::vector<ParamData> info_;

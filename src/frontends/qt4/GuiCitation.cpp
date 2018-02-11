@@ -133,7 +133,6 @@ GuiCitation::GuiCitation(GuiView & lv)
 		this, SLOT(updateStyles()));
 	connect(literalCB, SIGNAL(clicked()),
 		this, SLOT(changed()));
-	disable_widget_if_ndef_FILEFORMAT(literalCB);
 	connect(forceuppercaseCB, SIGNAL(clicked()),
 		this, SLOT(updateStyles()));
 	connect(textBeforeED, SIGNAL(textChanged(QString)),
@@ -327,7 +326,6 @@ void GuiCitation::updateFormatting(CitationStyle const & currentStyle)
 	textAfterED->setEnabled(textafter && haveSelection);
 	textAfterLA->setEnabled(textafter && haveSelection);
 	literalCB->setEnabled(textbefore || textafter);
-	disable_widget_if_ndef_FILEFORMAT(literalCB);
 	citationStyleCO->setEnabled(haveSelection);
 	citationStyleLA->setEnabled(haveSelection);
 

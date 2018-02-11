@@ -37,9 +37,9 @@ extern char const * const lyx_version_info;
 #define LYX_FORMAT_TEX2LYX 544
 
 #else
-// LyX 2.2 format
-#define LYX_FORMAT_LYX 508
-#define LYX_FORMAT_TEX2LYX 508
+// LyX 2.3 format
+#define LYX_FORMAT_LYX 544
+#define LYX_FORMAT_TEX2LYX 544
 
 #endif
 

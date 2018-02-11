@@ -58,11 +58,7 @@ bool InsetRef::isCompatibleCommand(string const & s) {
 		|| s == "formatted"
 		|| s == "eqref"
 		|| s == "nameref"
-#ifdef FILEFORMAT
 		|| s == "labelonly";
-#else
-		;
-#endif
 }
 
 
@@ -73,21 +69,9 @@ ParamInfo const & InsetRef::findInfo(string const & /* cmdName */)
 		param_info_.add("name", ParamInfo::LATEX_OPTIONAL);
 		param_info_.add("reference", ParamInfo::LATEX_REQUIRED,
 				ParamInfo::HANDLING_ESCAPE);
-#ifdef FILEFORMAT
 		param_info_.add("plural", ParamInfo::LYX_INTERNAL);
 		param_info_.add("caps", ParamInfo::LYX_INTERNAL);
 		param_info_.add("noprefix", ParamInfo::LYX_INTERNAL);
-#else
-		param_info_.add("plural", ParamInfo::LYX_INTERNAL,
-		                ParamInfo::HANDLING_NONE, true,
-		                from_ascii("false"));
-		param_info_.add("caps", ParamInfo::LYX_INTERNAL,
-		                ParamInfo::HANDLING_NONE, true,
-		                from_ascii("false"));
-		param_info_.add("noprefix", ParamInfo::LYX_INTERNAL,
-		                ParamInfo::HANDLING_NONE, true,
-		                from_ascii("false"));
-#endif
 	}
 	return param_info_;
 }

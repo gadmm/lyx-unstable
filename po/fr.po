@@ -35089,3 +35089,371 @@ msgstr "Utilisateur inconnu"
 
 #~ msgid "&First:"
 #~ msgstr "&Première :"
+
+
+##################################
+# Start LyX unstable translation #
+##################################
+
+#: src/frontends/qt4/ui/PrefColorsUi.ui:102
+msgid "&Invert colors"
+msgstr "&Inverser les couleurs"
+
+#: lib/layouts/InStar.module:22
+msgid "In Preamble:"
+msgstr "Dans le préambule:"
+
+#: lib/layouts/InStar.module:38
+msgid "In Title:"
+msgstr "Dans le titre:"
+
+#: lib/layouts/article-beamer-flex.layout:3
+msgid "Beamer-flex Article (Standard Class)"
+msgstr "Article Beamer-flex (classe standard)"
+
+#: lib/layouts/article-beamer.layout:3
+msgid "Beamer Article (Standard Class, obsolete)"
+msgstr "Article Beamer (classe standard, obsolète)"
+
+#: lib/layouts/beamer-flex.inc:121
+msgid "Start column, width:"
+msgstr "Début colonne, largeur :"
+
+#: lib/layouts/beamer-flex.inc:176 lib/layouts/beamer-flex.inc:179
+msgid "Example Block"
+msgstr "Bloc d'exemple"
+
+#: lib/layouts/beamer-flex.layout:3
+msgid "Beamer (flex insets)"
+msgstr "Beamer (flex)"
+
+msgid "Beamer (flex)"
+msgstr "Beamer (flex)"
+
+#: lib/layouts/beamer-flex.module:9
+msgid ""
+"Adds flex insets to replace the following styles: Frame, PlainFrame, FragileFrame, "
+"Columns, ColumnsTopAligned, ColumnsCenterAligned, Block, AlertBlock, ExampleBlock. "
+"This module can be used to convert a lyx document from the Beamer layout to the "
+"Beamer-flex layout (which must be done by hand)."
+msgstr ""
+"Ajoute des inserts flexibles pour remplacer les styles suivantes: Cadre, CadreSimple, "
+"CadreFragile, Colonnes, Bloc, BlocAlerte, BlocExemple. Ce module peut être utilisé "
+"pour convertir un document lyx du style Beamer au style Beamer-flex (ce qui doit être "
+"accompli à la main)."
+
+#: lib/layouts/beamer.layout:3
+msgid "Beamer (obsolete)"
+msgstr "Beamer (obsolète)"
+
+#: lib/layouts/beamerposter-flex.layout:3
+msgid "Beamerposter (flex insets)"
+msgstr "Poster Beamer (flex)"
+
+#: lib/layouts/beamerposter.layout:3
+msgid "Beamerposter (obsolete)"
+msgstr "Poster Beamer (obsolète)"
+
+#: lib/layouts/easychair.inc:54
+msgid "inst (for Author)"
+msgstr "inst (pour auteur)"
+
+#: lib/layouts/easychair.inc:91
+msgid "Author \\theauthor "
+msgstr "Auteur \\theauthor "
+
+#: lib/layouts/easychair-thesis.layout:3
+msgid "EasyChair thesis"
+msgstr "Thèse EasyChair"
+
+#: lib/layouts/easychair.inc:58
+msgid "inst"
+msgstr "inst"
+
+#: lib/layouts/easychair.inc:106
+msgid "Institute \\theinstitute "
+msgstr "Institut \\theinstitute "
+
+#: lib/layouts/easychair.layout:3
+msgid "EasyChair article"
+msgstr "Article EasyChair"
+
+#: lib/layouts/scrarticle-beamer-flex.layout:3
+msgid "Beamer-flex Article (KOMA-Script)"
+msgstr "Article Beamer-flex (KOMA-Script)"
+
+#: lib/layouts/scrarticle-beamer.layout:3
+msgid "Beamer Article (KOMA-Script, obsolete)"
+msgstr "Article Beamer (KOMA-Script, obsolète)"
+
+#: lib/ui/stdcontext.inc:347
+msgid "Split inset|s"
+msgstr "Diviser l'insert|i"
+
+#: lib/ui/stdcontext.inc:672
+msgid "Open Target...|O"
+msgstr "Ouvrir la cible...|O"
+
+#: lib/ui/stdmenus.inc:138
+msgid "Split Inset"
+msgstr "Diviser l'insert"
+
+#: lib/ui/stdtoolbars.inc:517
+msgid "xRightarrow"
+msgstr "xRightarrow"
+
+#: lib/ui/stdtoolbars.inc:518
+msgid "xLeftrightarrow"
+msgstr "xLeftrightarrow"
+
+#: lib/ui/stdtoolbars.inc:519
+msgid "xleftharpoonup"
+msgstr "xleftharpoonup"
+
+#: lib/ui/stdtoolbars.inc:520
+msgid "xrightharpoonup"
+msgstr "xrightharpoonup"
+
+#: lib/ui/stdtoolbars.inc:515
+msgid "xleftrightarrow"
+msgstr "xleftrightarrow"
+
+#: lib/ui/stdtoolbars.inc:516
+msgid "xLeftarrow"
+msgstr "xLeftarrow"
+
+#: lib/ui/stdtoolbars.inc:521
+msgid "xleftharpoondown"
+msgstr "xleftharpoondown"
+
+#: lib/ui/stdtoolbars.inc:522
+msgid "xrightharpoondown"
+msgstr "xrightharpoondown"
+
+#: lib/ui/stdtoolbars.inc:523
+msgid "xhookleftarrow"
+msgstr "xhookleftarrow"
+
+#: lib/ui/stdtoolbars.inc:524
+msgid "xhookrightarrow"
+msgstr "xhookrightarrow"
+
+#: lib/ui/stdtoolbars.inc:525
+msgid "xmapsto"
+msgstr "xmapsto"
+
+#: src/frontends/qt4/GuiAbout.cpp:93
+msgid "ERROR: LyX wasn't able to find the README.md file\n"
+msgstr "ERREUR : LyX n'a pas pu trouver le fichier README.md\n"
+
+#: src/frontends/qt4/GuiAbout.cpp:99
+msgid "ERROR: LyX wasn't able to read the README.md file\n"
+msgstr "ERREUR : LyX n'a pas pu lire le fichier README.md\n"
+
+#: src/frontends/qt4/GuiAlert.cpp:363
+msgid "Invalid URL"
+msgstr "URL invalide"
+
+#: src/frontends/qt4/GuiAlert.cpp:364
+msgid "Unable to open invalid URL:"
+msgstr "Impossible d'ouvrir l'URL :"
+
+#: src/frontends/qt4/GuiAlert.cpp:369
+msgid "Invalid file"
+msgstr "Fichier invalide"
+
+#: src/frontends/qt4/GuiAlert.cpp:370
+msgid "Unable to open invalid file:"
+msgstr "Impossible d'ouvrir le fichier invalide :"
+
+#: src/frontends/qt4/GuiAlert.cpp:376
+msgid "Unsupported format"
+msgstr "Format non géré"
+
+#: src/frontends/qt4/GuiAlert.cpp:377
+msgid "Unable to find a valid format for file:"
+msgstr "Impossible de trouver un format valide pour le fichier :"
+
+#: src/frontends/qt4/GuiAlert.cpp:382
+msgid "Open file?"
+msgstr "Ouvrir le fichier ?"
+
+#: src/frontends/qt4/GuiAlert.cpp:383
+msgid "Would you like to open the file:"
+msgstr "Voulez-vous ouvrir le fichier :"
+
+#: src/frontends/qt4/GuiAlert.cpp:385
+msgid "of the following detected format:"
+msgstr "dont le format détecté est le suivant :"
+
+#: src/frontends/qt4/GuiAlert.cpp:387 src/frontends/qt4/GuiAlert.cpp:398
+msgid "&Open"
+msgstr "&Ouvrir"
+
+#: src/frontends/qt4/GuiAlert.cpp:395
+msgid "Open URL?"
+msgstr "Ouvrir l'URL ?"
+
+#: src/frontends/qt4/GuiAlert.cpp:396
+msgid "Would you like to open the URL:"
+msgstr "Voulez-vous ouvrir l'URL :"
+
+#: src/frontends/qt4/qt_helpers.cpp:679
+msgid "Newer file format required."
+msgstr "Requiert un format de fichier plus récent."
+
+#: lib/layouts/beamer-flex.inc:185 lib/layouts/beamer-flex.inc:188
+msgid "Alert Block"
+msgstr "Bloc d'alerte"
+
+#: lib/ui/stdcontext.inc:362
+msgid "Unify Graphics Groups|U"
+msgstr "Unifier les groupes de graphiques|U"
+
+#: lib/ui/stdmenus.inc:548
+msgid "Cancel Background Process|P"
+msgstr "Annuler la tâche d'arrière-plan|P"
+
+#: src/Converter.cpp:427 src/Converter.cpp:668 src/Converter.cpp:697
+msgid "Converter killed"
+msgstr "Convertisseur arrêté"
+
+#: src/Converter.cpp:428 src/Converter.cpp:669 src/Converter.cpp:698
+#, c-format
+msgid ""
+"The running converter\n"
+" %1$s\n"
+"was killed by the user."
+msgstr ""
+"Le convertisseur actif\n"
+" %1$s\n"
+"a été arrêté par l'utilisateur."
+
+#: src/Converter.cpp:709
+msgid "Process Killed"
+msgstr "Tâche arrêtée"
+
+#: src/Converter.cpp:710
+#, c-format
+msgid ""
+"The conversion process was killed while running:\n"
+"%1$s"
+msgstr ""
+"La tâche de conversion a été arrêté durant son exécution :\n"
+"%1$s."
+
+#: src/Converter.cpp:713
+msgid "Process Timed Out"
+msgstr "Délai écoulé pour la tâche"
+
+#: src/Converter.cpp:714
+#, c-format
+msgid ""
+"The conversion process:\n"
+"%1$s\n"
+"timed out before completing."
+msgstr ""
+"Le processus de conversion:\n"
+"%1$s\n"
+"a vu son délai s'écouler avant sa complétion."
+
+#: src/Converter.cpp:852
+msgid "Export canceled"
+msgstr "Exportation arrêtée"
+
+#: src/Converter.cpp:853
+msgid "The export process was terminated by the user."
+msgstr "La tâche d'exportation a été arrêtée par l'utilisateur."
+
+#: src/LyXRC.cpp:3447
+msgid "Invert colors in the buffer view."
+msgstr "Inverser les couleurs dans la vue du document."
+
+#: src/frontends/qt4/GuiView.cpp:2254 src/frontends/qt4/GuiView.cpp:2622
+msgid "&Templates"
+msgstr "&Modèles"
+
+#: src/frontends/qt4/GuiView.cpp:2311 src/frontends/qt4/GuiView.cpp:2449
+#: src/frontends/qt4/GuiView.cpp:2582
+msgid "&Examples"
+msgstr "&Exemples"
+
+#: src/frontends/qt4/ui/GraphicsUi.ui:313
+msgid "&Coordinates and Clipping"
+msgstr "&Coordonnées et rognage"
+
+#: src/frontends/qt4/ui/GraphicsUi.ui:347
+msgid ""
+"Clip to the coordinates specified below (bounding box for DVI/PS output, "
+"viewport for PDF output)"
+msgstr ""
+"Rogner selon les coordonnées indiquées ci-après (boîte d'encombrement pour "
+"la sortie DVI/PS, vue pour la sortie PDF)"
+
+#: src/frontends/qt4/ui/GraphicsUi.ui:350
+msgid "Clip to c&oordinates"
+msgstr "Rogner aux coordonnées"
+
+#: src/frontends/qt4/ui/GraphicsUi.ui:680
+msgid "Assigned &to group:"
+msgstr "A&ssocier au groupe :"
+
+#: lib/ui/stdtoolbars.inc:470
+msgid "Insert left/right side scripts (sideset)"
+msgstr "Insérer des indices/exposants latéraux droits/gauches (sideset)"
+
+#: lib/ui/stdtoolbars.inc:471
+msgid "Insert right side scripts (sidesetr)"
+msgstr "Insérer des indices/exposants latéraux droits (sidesetr)"
+
+#: lib/ui/stdtoolbars.inc:472
+msgid "Insert left side scripts (sidesetl)"
+msgstr "Insérer des indices/exposants latéraux gauches (sidesetl)"
+
+#: lib/ui/stdtoolbars.inc:473
+msgid "Insert side scripts (sidesetn)"
+msgstr "Insérer des indices/exposants latéraux (sidesetn)"
+
+#: src/Buffer.cpp:1715
+#, c-format
+msgid "Uncodable character '%1$s' (code point %2$s)"
+msgstr "Caractère '%1$s' non-encodable (point %2$s du code)"
+
+#: src/Buffer.cpp:1718
+msgid ""
+"Some characters of your document are not representable in specific verbatim "
+"contexts.\n"
+"Changing the document encoding to utf8 could help."
+msgstr ""
+"Certains caractères de votre document ne sont pas représentables dans"
+"certains contextes verbatim.\n"
+"Changer l'encodage du document pour utf8 devrait améliorer les choses."
+
+#: src/frontends/qt4/GuiView.cpp:2253 src/frontends/qt4/GuiView.cpp:2310
+#: src/frontends/qt4/GuiView.cpp:2448 src/frontends/qt4/GuiView.cpp:2581
+#: src/frontends/qt4/GuiView.cpp:2621 src/frontends/qt4/GuiView.cpp:2739
+msgid "D&ocuments"
+msgstr "Doc&ument"
+
+#: src/frontends/qt4/GuiDocument.cpp:2312
+msgid "Lay&outs"
+msgstr "Forma&t"
+
+#: src/frontends/qt4/GuiGraphics.cpp:792
+msgid "&Clipart"
+msgstr "&Clipart"
+
+#: src/frontends/qt4/GuiPrefs.cpp:141
+msgid "&System files"
+msgstr "Fichiers &système"
+
+#: src/frontends/qt4/GuiPrefs.cpp:145
+msgid "&User files"
+msgstr "Fichiers &utilisateur"
+
+#: src/frontends/qt4/ui/GraphicsUi.ui:482
+msgid ""
+"Read coordinates from the file (bounding box value in case of PostScript "
+"files, graphic dimensions in case of other file types)"
+msgstr "Rogner selon les coordonnées indiquées ci-après (boîte d'encombrement pour "
+"la sortie DVI/PS, vue pour la sortie PDF"

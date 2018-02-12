@@ -1,0 +1,829 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin /systemlyxdir/templates/obsolete/
+\textclass acmsiggraph-0-92
+\options annual
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 92 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+This is a template \SpecialChar LyX
+ file for articles to be submitted to the Special Interest
+ Group on Computer Graphics and Interactive Techniques (SIGGRAPH).
+ How to install the SIGGRAPH \SpecialChar LaTeX
+ class to your \SpecialChar LaTeX
+ system is explained in 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://wiki.lyx.org/Examples/AcmSiggraph
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+
+\series bold
+Note: 
+\series default
+use one of these document class options:
+\end_layout
+
+\begin_layout Plain Layout
+
+\family sans
+annual
+\family default
+ - Technical paper accepted for presentation at the ACM SIGGRAPH or SIGGRAPH
+ Asia annual conference.
+\end_layout
+
+\begin_layout Plain Layout
+
+\family sans
+sponsored
+\family default
+ - Short or full-length technical paper accepted for presentation at an
+ event sponsored by ACM SIGGRAPH (but not the annual conference Technical
+ Papers program).
+\end_layout
+
+\begin_layout Plain Layout
+
+\family sans
+abstract
+\family default
+ - A one-page abstract of your accepted content (Technical Sketches, Posters,
+ Emerging Technologies, etc.).
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset space \hspace*{}
+\length 1.5cm
+\end_inset
+
+Content greater than one page in length should use the document class option
+ 
+\family sans
+sponsored
+\family default
+.
+\end_layout
+
+\begin_layout Plain Layout
+
+\family sans
+preprint
+\family default
+ - A preprint version of your final content.
+\end_layout
+
+\begin_layout Plain Layout
+
+\family sans
+review
+\family default
+ - A technical paper submitted for review.
+ Includes line numbers and anonymization of author and affiliation information.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout TOG volume
+0
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Optional.
+\end_layout
+
+\begin_layout Plain Layout
+Should your technical paper be accepted, you will be given three pieces
+ of information: the volume and number of the issue of the ACM Transactions
+ on Graphics journal in which your paper will be published, and the ``article
+ DOI'' value, which is unique to your paper and provides the link to your
+ paper's page in the ACM Digital Library.
+ Fill in the volume, number' and article DOI with the three pieces of informatio
+n you receive.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout TOG number
+0
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Optional.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+The Title of Your Paper Goes Here
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Use capital letters as appropriate.
+ Setting the entire title in upper-case letters is not correct, nor is capitaliz
+ing only the first letter of the title.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Author
+Roy Giv
+\begin_inset Flex Thanks
+status open
+
+\begin_layout Plain Layout
+e-mail: roybiv@aol.com
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Star Research 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+and 
+\end_layout
+
+\end_inset
+
+ Ed Grim
+\begin_inset Flex Thanks
+status open
+
+\begin_layout Plain Layout
+e-mail: ed.grim@aol.com
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Nigel Mall
+\begin_inset Flex Thanks
+status open
+
+\begin_layout Plain Layout
+e-mail: nigelmall@msn.com
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Grim, Inc.
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+and 
+\end_layout
+
+\end_inset
+
+ Robert A.
+ Smith
+\begin_inset Flex Thanks
+status open
+
+\begin_layout Plain Layout
+e-mail: rsmith@gmail.com
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Smith Research
+\begin_inset Newline newline
+\end_inset
+
+Star Research
+\end_layout
+
+\begin_layout PDF author
+Roy Giv, Ed Grim, Nigel Mall, Robert A.
+ Smith
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+the authors of the work, comma-delimited, are added to the PDF metadata
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout TOG online ID
+45678
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Should be filled with the online ID value you received when you submitted
+ your technical paper.
+ It will be printed out if you prepare a 
+\family sans
+review
+\family default
+ version of your paper.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Keywords
+radiosity, global illumination, constant time
+\end_layout
+
+\begin_layout Set copyright
+rightsretained
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+You can choose between the copyright types 
+\family sans
+none
+\family default
+, 
+\family sans
+acmcopyright
+\family default
+, 
+\family sans
+acmlicensed
+\family default
+, 
+\family sans
+rightsretained
+\family default
+, 
+\family sans
+usgov
+\family default
+, 
+\family sans
+usgovmixed
+\family default
+, 
+\family sans
+cagov
+\family default
+ and 
+\family sans
+cagovmixed
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Copyright year
+2016
+\end_layout
+
+\begin_layout Conference info
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+SIGGRAPH 2016 Posters
+\end_layout
+
+\end_inset
+
+July 24-28, 2016, Anaheim, CA
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+conference date and location
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout ISBN
+978-1-4503-ABCD-E/16/07
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+includes the year and month after the article ISBN
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout DOI
+1111111.2222222
+\end_layout
+
+\begin_layout Teaser
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "40col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+remove this box by an image
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Optional.
+ If not used, you must use this:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+maketitle 
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+instead of the Teaser image style.
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+You can ignore that \SpecialChar LyX
+ writes here 
+\begin_inset Quotes eld
+\end_inset
+
+Senseless!!!
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+Lookit! Lookit!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+Citations can be done this way
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "proceedings-full"
+literal "true"
+
+\end_inset
+
+ or this more concise way
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Flex ShortCite
+status open
+
+\begin_layout Plain Layout
+proceedings-full
+\end_layout
+
+\end_inset
+
+, depending upon the application.
+\end_layout
+
+\begin_layout Abstract
+Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit
+ lobortis nisl ut aliquip ex ea commodo consequat.
+ Duis autem vel eum iriure dolor in hendrerit
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "incollection-full"
+literal "true"
+
+\end_inset
+
+ in vulputate velit esse molestie
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "booklet-full"
+literal "true"
+
+\end_inset
+
+ consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et
+ accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit
+ augue duis dolore te feugait nulla facilisi.
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "whole-set"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+The content of the following \SpecialChar TeX
+ code must be generated by the tool at 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://dl.acm.org/ccs.cfm
+\end_layout
+
+\end_inset
+
+.
+ Please copy and paste the code you created there instead of the example
+ code below.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{CCSXML}
+\end_layout
+
+\begin_layout Plain Layout
+
+<ccs2012> <concept> <concept_id>10010147.10010371.10010382</concept_id> <concept_d
+esc>Computing methodologies~Image manipulation</concept_desc> <concept_significa
+nce>500</concept_significance> </concept> <concept> <concept_id>10010147.10010371.
+10010382.10010236</concept_id> <concept_desc>Computing methodologies~Computationa
+l photography</concept_desc> <concept_significance>300</concept_significance>
+ </concept> </ccs2012>
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{CCSXML}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+ccsdesc[500]{Computing methodologies~Image manipulation}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+ccsdesc[300]{Computing methodologies~Computational photography}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Keyword list
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Prints the keywords, keep it empty!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Concept list
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Prints the CCS concepts list, keep it empty!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Print copyright
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Prints the copyright info, keep it empty!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+bla
+\end_layout
+
+\begin_layout Section
+Exposition
+\end_layout
+
+\begin_layout Standard
+blabla
+\end_layout
+
+\begin_layout Section
+A New Section
+\end_layout
+
+\begin_layout Subsection
+A New Subsection
+\end_layout
+
+\begin_layout Standard
+Subsection test
+\end_layout
+
+\begin_layout Subsection
+A Second Subsection
+\end_layout
+
+\begin_layout Subsubsection
+A Subsubsection
+\end_layout
+
+\begin_layout Standard
+Bla.
+\end_layout
+
+\begin_layout Subsubsection
+Another Subsubsection
+\end_layout
+
+\begin_layout Standard
+Bla.
+\end_layout
+
+\begin_layout Subsection
+A Final Subsection
+\end_layout
+
+\begin_layout Standard
+Bla.
+\end_layout
+
+\begin_layout Section
+Back to the Section
+\end_layout
+
+\begin_layout Standard
+Bla.
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+Bla.
+\end_layout
+
+\begin_layout Section*
+Acknowledgements
+\end_layout
+
+\begin_layout Standard
+To Robert, for all the bagels.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "xampl"
+options "acmsiggraph"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

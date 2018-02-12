@@ -1,0 +1,262 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin /systemlyxdir/templates/obsolete/
+\textclass g-brief
+\begin_preamble
+%%\lochermarke
+\faltmarken
+\fenstermarken
+\trennlinien
+%% \klassisch
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding iso8859-2
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style polish
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Name
+Thomas Hartkens
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+
+\series bold
+Important note:
+\series default
+ This template uses the old 
+\begin_inset Quotes pld
+\end_inset
+
+g-brief
+\begin_inset Quotes prd
+\end_inset
+
+ class that is replaced by the new class version 
+\begin_inset Quotes pld
+\end_inset
+
+g-brief2
+\begin_inset Quotes prd
+\end_inset
+
+.
+ Therefore, it is recommended that you use template 
+\begin_inset Quotes pld
+\end_inset
+
+g-brief2
+\begin_inset Quotes prd
+\end_inset
+
+ instead.
+ This template is available for compatibility reasons only.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Signature
+Thomas Hartkens
+\end_layout
+
+\begin_layout Street
+Edmund-Siemers-Allee 25
+\end_layout
+
+\begin_layout Addition
+
+\end_layout
+
+\begin_layout Town
+22761 Hamburg
+\end_layout
+
+\begin_layout State
+Germany
+\end_layout
+
+\begin_layout ReturnAddress
+
+\end_layout
+
+\begin_layout Phone
++49 40 3333333
+\end_layout
+
+\begin_layout Telefax
+
+\end_layout
+
+\begin_layout Telex
+
+\end_layout
+
+\begin_layout EMail
+thomas@hartkens.de
+\end_layout
+
+\begin_layout HTTP
+www.hartkens.de/thomas
+\end_layout
+
+\begin_layout Bank
+
+\end_layout
+
+\begin_layout BankCode
+
+\end_layout
+
+\begin_layout BankAccount
+
+\end_layout
+
+\begin_layout Address
+Hans Beispiel
+\begin_inset Newline newline
+\end_inset
+
+Teststrasse 34
+\begin_inset Newline newline
+\end_inset
+
+26871 Musterberg
+\end_layout
+
+\begin_layout Reference
+Musterbrief
+\end_layout
+
+\begin_layout PostalComment
+REGISTERED LETTER
+\end_layout
+
+\begin_layout MyRef
+TH
+\end_layout
+
+\begin_layout YourRef
+
+\end_layout
+
+\begin_layout YourMail
+
+\end_layout
+
+\begin_layout Encl.
+
+\end_layout
+
+\begin_layout cc
+
+\end_layout
+
+\begin_layout Date
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+today
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Opening
+Dear Mr.
+ Beispiel,
+\end_layout
+
+\begin_layout Closing
+Yours sincerely,
+\end_layout
+
+\begin_layout Letter
+I am writing to ask whether you could send me any information about possibility
+ of ...
+\end_layout
+
+\begin_layout Letter
+I would be very pleased if you could send me these informations.
+\end_layout
+
+\end_body
+\end_document

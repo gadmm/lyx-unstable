@@ -1,0 +1,595 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass achemso
+\begin_preamble
+% If issues arise when submitting your manuscript, you may want to
+% un-comment the next line. This provides information on the
+% version of every file you have used.
+%\listfiles
+\end_preamble
+\options journal=jacsat,manuscript=article
+\use_default_options false
+\begin_modules
+theorems-ams
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+This is an example \SpecialChar LyX
+ file for articles to be submitted to journals of the
+ American Chemistry Society (ACS).
+ For general infos see 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://wiki.lyx.org/Layouts/Achemso
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+
+\series bold
+Note:
+\series default
+ The journal where you want to submit is specified in the document class
+ options of this file.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+A demonstration of the achemso \SpecialChar LaTeX
+ class
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+
+\family sans
+achemso
+\family default
+ demonstration
+\end_layout
+
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+A footnote for the title
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Author
+Andrew N.
+ Other
+\end_layout
+
+\begin_layout Alt Affiliation
+A shared footnote
+\end_layout
+
+\begin_layout Author
+Fred T.
+ Secondauthor
+\end_layout
+
+\begin_layout Affiliation
+Current address: Some other place, Othertöwn, Germany
+\end_layout
+
+\begin_layout Author
+I.
+ Ken Groupleader
+\end_layout
+
+\begin_layout Affiliation
+A shared footnote
+\end_layout
+
+\begin_layout Email
+i.k.groupleader@unknown.uu
+\end_layout
+
+\begin_layout Phone
++123 (0)123 4445556
+\end_layout
+
+\begin_layout Fax
++123 (0)123 4445557
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+The affiliation of authors is given after the authors; each 
+\family sans
+Affiliation
+\family default
+ applies to all preceding authors not already assigned an affiliation.
+\end_layout
+
+\begin_layout Plain Layout
+
+\family sans
+Altaffiliation
+\family default
+ should be used for new address, etc.
+\end_layout
+
+\begin_layout Plain Layout
+
+\family sans
+Alsoaffiliation
+\family default
+ is used on a per author basis when authors are associated with multiple
+ institutions.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Affiliation
+Department of Chemistry, Unknown University, Unknown Town
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Unknown University
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Also Affiliation
+Department of Chemistry, Second University, Nearby Town
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Second University
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abbreviations
+IR,NMR,UV
+\end_layout
+
+\begin_layout Keywords
+American Chemical Society, \SpecialChar LaTeX
+
+\end_layout
+
+\begin_layout Abstract
+This is the abstract.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+This is a paragraph of text.
+\end_layout
+
+\begin_layout Section
+Results and discussion
+\end_layout
+
+\begin_layout Subsection
+Outline
+\end_layout
+
+\begin_layout Subsection
+References
+\end_layout
+
+\begin_layout Standard
+The class makes various changes to the way that references are handled.
+ The class loads 
+\family sans
+natbib
+\family default
+, and also the appropriate bibliography style.
+ References can be made using the normal method; the citation should be
+ placed before any punctuation, as the class will move it if using a superscript
+ citation style 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Mena2000,Abernethy2003"
+literal "true"
+
+\end_inset
+
+.
+ The use of 
+\family sans
+natbib
+\family default
+ allows the use of the various citation commands of that package: 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+citeauthor{
+\end_layout
+
+\end_inset
+
+Abernethy2003
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ have shown something, or in 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+citeyear{
+\end_layout
+
+\end_inset
+
+Cotton1999
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+.
+ Long lists of authors will be automatically truncated in most article formats,
+ but not in supplementary information or reviews 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Pople2003"
+literal "true"
+
+\end_inset
+
+.
+ Notice that 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Flex Latin
+status open
+
+\begin_layout Plain Layout
+et al.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+ is auto-formatted.
+\end_layout
+
+\begin_layout Standard
+Multiple citations to be combined into a list can be given as a single citation.
+ This uses the 
+\family sans
+mciteplus
+\family default
+ package 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Arduengo1992,*Eisenstein2005,*Arduengo1994"
+literal "true"
+
+\end_inset
+
+.
+ Citations other than the first of the list should be indicated with a star.
+\end_layout
+
+\begin_layout Standard
+The class also handles notes to be added to the bibliography.
+ These should be given in place in the document
+\begin_inset Flex Bibnote
+status open
+
+\begin_layout Plain Layout
+This is a bibnote; its text will be moved the the references section.
+ Bibnotes are inserted with the menu 
+\family sans
+Insert\SpecialChar menuseparator
+Custom Insets
+\family default
+.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+As with citations, the text should be placed before punctuation.
+ A note is also generated if a citation has an optional note.
+ This assumes that the whole work has already been cited: odd numbering
+ will result if this is not the case 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Cotton1999"
+literal "true"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Some Infos
+\end_layout
+
+\begin_layout Standard
+Besides the standard figure and table floats, the achemso \SpecialChar LaTeX
+-class provides
+ scheme, chart, and graph floats.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float scheme
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+An example scheme
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float chart
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+An example chart
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float graph
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+An example graph
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Chemical symbols can easily be input: 
+\begin_inset Flex Chemistry
+status open
+
+\begin_layout Plain Layout
+H2SO4
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Acknowledgement
+Acknowledgments go here.
+\end_layout
+
+\begin_layout SupplementalInfo
+Supplemental informations go here.
+\end_layout
+
+\begin_layout TOC entry
+Some journals require a graphical entry for the Table of Contents.
+ This should be laid out ``print ready'' so that the sizing of the text
+ is correct.
+\end_layout
+
+\begin_layout TOC entry
+The surrounding frame is 9
+\begin_inset space \thinspace{}
+\end_inset
+
+cm by 3.5
+\begin_inset space \thinspace{}
+\end_inset
+
+cm, which is the maximum permitted for 
+\emph on
+Journal of the American Chemical Society
+\emph default
+ graphical table of content entries.
+ The box will not resize if the content is too big: instead it will overflow
+ the edge of the box.
+\end_layout
+
+\begin_layout TOC entry
+This box and the associated title will always be printed on a separate page
+ at the end of the document.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "biblioExample"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

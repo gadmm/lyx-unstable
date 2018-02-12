@@ -1,0 +1,458 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass dinbrief
+\begin_preamble
+% Erzeugen von Adressaufklebern
+%\makelabels
+
+%% Layout-Schalter (\no* = aus, \* = an) 
+% Fenster um Adressfeld
+% \nowindowrules
+% Trennstrich zwischen Absender und Anschrift
+% \nobackaddressrule
+% Faltmarkierung
+% \nowindowtics
+
+% Hochgestellte vs. Standardanschrift
+% \addresshigh
+% \addressstd (default)
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language ngerman
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Stichwortverzeichnis
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style german
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle empty
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Die Datenfelder (
+\emph on
+Briefkopf
+\emph default
+, 
+\emph on
+Absender
+\emph default
+, 
+\emph on
+Betreff
+\emph default
+, 
+\emph on
+Empfängeradresse
+\emph default
+, 
+\emph on
+Datum
+\emph default
+, 
+\emph on
+Unterschrift
+\emph default
+, 
+\emph on
+Fußzeile
+\emph default
+, \SpecialChar ldots
+) müssen vor der 
+\emph on
+Anrede
+\emph default
+ definiert werden!
+\begin_inset Newline newline
+\end_inset
+
+Bei mehrfacher Verwendung in einem Dokument ersetzt die letzte Definition
+ die jeweils vorhergehende.
+\end_layout
+
+\begin_layout Plain Layout
+Vgl.
+ für weitere Einstellungsmöglichkeiten auch 
+\family sans
+Dokument\SpecialChar menuseparator
+Einstellungen\SpecialChar menuseparator
+\SpecialChar LaTeX
+-Vorspann
+\family default
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout My Address
+Mein Name
+\begin_inset space \hfill{}
+\end_inset
+
+ggf.
+\begin_inset space ~
+\end_inset
+
+Firmenlogo
+\begin_inset Newline newline
+\end_inset
+
+Meine Straße
+\begin_inset Newline newline
+\end_inset
+
+Meine Stadt
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+oder individuell gestalteter Briefkopf (z.
+\begin_inset space \thinspace{}
+\end_inset
+
+B.
+ Tabelle oder eingebundene Grafik)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Return address
+Mein Name, Meine Straße, Meine Stadt
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Absenderzeile im Adressfenster
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Send To Address
+Name
+\begin_inset Newline newline
+\end_inset
+
+Straße
+\begin_inset Newline newline
+\end_inset
+
+Stadt
+\end_layout
+
+\begin_layout Postal comment
+Einschreiben/Luftpost
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+optional
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Handling
+Eilt/Persönlich
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+optional
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout YourRef
+20.10.2010
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+optional
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout MyRef
+HGK
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+optional
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Writer
+Müller
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+optional
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+wenn hier etwas engetragen ist, wird auf die DIN 676 von Mai 1991 umgeschaltet
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Area code
+0800
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+optional
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Telephone
+1231231
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+optional
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Erscheint nur, wenn auch 
+\emph on
+Ihr Zeichen
+\emph default
+ oder 
+\emph on
+Unser Zeichen
+\emph default
+ definiert ist (ggf.
+ mit geschütztem Leerzeichen erzwingen).
+\begin_inset Newline newline
+\end_inset
+
+Kann auch als Teil der Nummer formatiert werden (z.
+\begin_inset space \thinspace{}
+\end_inset
+
+B.
+ 0351/12312312).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Signature
+Müller
+\end_layout
+
+\begin_layout Bottomtext
+Fußzeile: Besucheradresse, Konto, Telefon/-fax, Mail, Webseite, o.
+\begin_inset space \thinspace{}
+\end_inset
+
+Ä.
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+optional
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Location
+Beispielstadt
+\end_layout
+
+\begin_layout Date
+20.10.2010
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Wenn das Datum fehlt, wird automatisch das aktuelle Datum eingesetzt.
+\begin_inset Newline newline
+\end_inset
+
+Ein leeres 
+\emph on
+Datum
+\emph default
+-Feld unterdrückt die Ausgabe.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subject
+Betreff
+\end_layout
+
+\begin_layout Opening
+Sehr geehrte(r)
+\end_layout
+
+\begin_layout Standard
+Brieftext
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Der Brieftext steht zwischen Anrede und Gruß.
+ Es sind alle Schriftstile möglich.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Closing
+Mit freundlichen Grüßen
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+optionale, alternative Unterschrift
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout PS
+PS-Text
+\end_layout
+
+\begin_layout encl
+1
+\begin_inset space \thinspace{}
+\end_inset
+
+Fotokopie der Akte
+\end_layout
+
+\begin_layout cc
+AS, V, C
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,366 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass RJournal
+\use_default_options true
+\begin_modules
+knitr
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package none
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<setup, include=FALSE>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+render_sweave() # use Schunk, Sinput and Soutput environments defined by
+ RJournal
+\end_layout
+
+\begin_layout Plain Layout
+
+set_header(highlight = '') # no need for 
+\backslash
+usepackage{Sweave}
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+Capitalized Title Here
+\end_layout
+
+\begin_layout Author
+by Author A and Author B
+\end_layout
+
+\begin_layout Abstract
+An abstract of less than 150 words.
+\end_layout
+
+\begin_layout Section
+Section title in sentence case
+\end_layout
+
+\begin_layout Standard
+Write something here.
+ A sample citation is 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "article-minimal"
+literal "true"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+R code chunks
+\end_layout
+
+\begin_layout Standard
+Press 
+\begin_inset Info
+type  "shortcut"
+arg   "ert-insert"
+\end_inset
+
+ and input R code chunks which will be compiled with the 
+\series bold
+knitr
+\series default
+ package (
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://yihui.name/knitr/
+\end_layout
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<sample-chunk, echo=TRUE>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+x=1:10
+\end_layout
+
+\begin_layout Plain Layout
+
+rev(x)
+\end_layout
+
+\begin_layout Plain Layout
+
+summary(x)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can also plot your data; see Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:sample-figure"
+
+\end_inset
+
+ for example.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement tbph
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<sample-figure, fig.width=5, fig.height=3, out.width='.4
+\backslash
+
+\backslash
+linewidth', fig.align='center', dev=c('pdf','postscript')>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+par(mar = c(4,4,.1,.1))
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(x, pch=19, col=1:10)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+A sample figure.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:sample-figure"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+When you insert a Bib\SpecialChar TeX
+ bibliography here, do not use any bib styles.
+ The R Journal has declared the style to be 
+\begin_inset Quotes eld
+\end_inset
+
+abbrvnat
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "xampl"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Address
+Author A
+\begin_inset Newline newline
+\end_inset
+
+Press 
+\begin_inset Info
+type  "shortcut"
+arg   "newline-insert newline"
+\end_inset
+
+ to input
+\begin_inset Newline newline
+\end_inset
+
+address here
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Email
+status open
+
+\begin_layout Plain Layout
+author.a@email
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Address
+Author B
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Email
+status open
+
+\begin_layout Plain Layout
+author.b@email
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,656 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass AEA
+\begin_preamble
+% Uncomment the line below if you wish to use the mathtime package:
+%\usepackage[cmbold]{mathtime}
+
+% The harvard package is required with bibtex
+\usepackage[abbr]{harvard}
+
+\draftSpacing{1.5}
+\end_preamble
+\options AER
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package none
+\inputencoding auto
+\fontencoding default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 2
+\tocdepth 2
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+This is a template \SpecialChar LyX
+ file for articles to be submitted to Journals of the
+ American Economic Association (AEA).
+ How to install the AEA \SpecialChar LaTeX
+ class to your \SpecialChar LaTeX
+ system is explained in 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://wiki.lyx.org/Examples/AEA
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Enumerate
+A journal name must be provided in 
+\family sans
+Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+Document Class\SpecialChar menuseparator
+Class options\SpecialChar menuseparator
+Custom
+\family default
+.
+ Available options are:
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+AER American Economic Review (default)
+\end_layout
+
+\begin_layout Description
+PP Papers and Proceedings
+\end_layout
+
+\begin_layout Description
+JEL Journal of Economic Literature
+\end_layout
+
+\begin_layout Description
+JEP Journal of Economic Perspectives
+\end_layout
+
+\begin_layout Description
+AEJ American Economics Journal
+\end_layout
+
+\begin_layout Plain Layout
+If one of these is not explicitly given to the class option, the default
+ AER is used.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Also, choose typesetting mode as the class option.
+ Available options are:
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+finalmode to typeset the manuscript for submission for publication
+\end_layout
+
+\begin_layout Description
+reviewmode to typeset a blind review copy
+\end_layout
+
+\begin_layout Description
+draftmode to typeset a draft copy with 1.5-line spacing (or your own choice
+ of spacing).
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+If your system has the 
+\family sans
+mathtime
+\family default
+ package installed, uncomment the line about mathtime
+\family typewriter
+ 
+\family default
+in 
+\family sans
+Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+\SpecialChar LaTeX
+ Preamble
+\family default
+.
+\end_layout
+
+\begin_layout Enumerate
+Set 
+\family sans
+\SpecialChar LaTeX
+ font encoding
+\family default
+ to 
+\begin_inset Quotes eld
+\end_inset
+
+None (no fontenc)
+\begin_inset Quotes erd
+\end_inset
+
+ in menu 
+\family sans
+Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+Fonts
+\family default
+.
+ (Because the default encoding 
+\begin_inset Quotes eld
+\end_inset
+
+T1
+\begin_inset Quotes erd
+\end_inset
+
+ may cause font problems in \SpecialChar LaTeX
+ export.)
+\end_layout
+
+\begin_layout Enumerate
+When you finalize your manuscript for submission, clean up unnecessary preambles
+ in the exported \SpecialChar LaTeX
+ file.
+ You need to minimize the usage of packages.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+Title
+\end_layout
+
+\begin_layout ShortTitle
+Short title for running head
+\end_layout
+
+\begin_layout Author
+Author1 and Author2
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Surname1: affiliation1, address1, email1.
+ Surname2: affiliation2, address2, email2.
+ Acknowledgements
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Publication Month
+Month
+\end_layout
+
+\begin_layout Publication Year
+Year
+\end_layout
+
+\begin_layout Publication Volume
+Vol
+\end_layout
+
+\begin_layout Publication Issue
+Issue
+\end_layout
+
+\begin_layout JEL
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+only necessary for the JEL journal
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Keywords
+keywords
+\end_layout
+
+\begin_layout Abstract
+Your abstract here.
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+except for JEP/PP
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Acknowledgement
+Acknowledgement (valid only for JEP).
+ For other journals, please use foot note in the author environment.
+\end_layout
+
+\begin_layout Standard
+American Economic Review Pointers:
+\end_layout
+
+\begin_layout Itemize
+Do not use an 
+\begin_inset Quotes eld
+\end_inset
+
+Introduction
+\begin_inset Quotes erd
+\end_inset
+
+ heading.
+ Begin your introductory material before the first section heading.
+\end_layout
+
+\begin_layout Itemize
+Avoid style markup (except sparingly for emphasis).
+\end_layout
+
+\begin_layout Itemize
+Avoid using explicit vertical or horizontal space.
+\end_layout
+
+\begin_layout Itemize
+Captions are short and go below figures but above tables.
+\end_layout
+
+\begin_layout Itemize
+The tablenotes or figurenotes environments may be used below tables or figures,
+ respectively, as demonstrated below.
+\end_layout
+
+\begin_layout Itemize
+If you have difficulties with the mathtime package, adjust the package options
+ appropriately for your platform.
+ If you can't get it to work, just remove the package or see our technical
+ support document online (please refer to the author instructions).
+\end_layout
+
+\begin_layout Itemize
+If you are using an appendix, it goes last, after the bibliography.
+ Use regular section headings to make the appendix headings.
+\end_layout
+
+\begin_layout Itemize
+If you are not using an appendix, you may delete the appendix command and
+ sample appendix section heading.
+\end_layout
+
+\begin_layout Itemize
+Either the natbib package or the harvard package may be used with bibtex.
+ To include one of these packages, uncomment the appropriate usepackage
+ command above.
+ Note: you can't use both packages at once or compile-time errors will result.
+\end_layout
+
+\begin_layout Section
+First Section in Body
+\end_layout
+
+\begin_layout Standard
+Sample figure:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+Figure here.
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Caption for figure below.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Figure Notes
+Figure notes without optional leadin.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Figure Notes
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Source
+\end_layout
+
+\end_inset
+
+Figure notes with optional leadin (Source, in this case).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Sample table:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Caption for table above.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="3">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Heading 1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Heading 2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Row 1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Row 2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Table Notes
+Table notes environment without optional leadin.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Table Notes
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Source
+\end_layout
+
+\end_inset
+
+Table notes environment with optional leadin (Source, in this case).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Algorithm
+An example Algorithm
+\end_layout
+
+\begin_layout Standard
+References here (manual or Bib\SpecialChar TeX
+).
+ If you are using Bib\SpecialChar TeX
+ you must use the bibliography style 
+\series bold
+aea
+\series default
+.
+ If 
+\begin_inset Quotes eld
+\end_inset
+
+all cited references
+\begin_inset Quotes erd
+\end_inset
+
+ is selected for the Bib\SpecialChar TeX
+ bibliography, then Bib\SpecialChar TeX
+ will complain if there is
+ no citation in the document so let
+\begin_inset Quotes ers
+\end_inset
+
+s put one in: 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "book-full"
+literal "true"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "xampl"
+options "aea"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+\start_of_appendix
+Mathematical Appendix
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+the appendix is optional
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

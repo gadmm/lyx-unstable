@@ -1,0 +1,657 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass amsart
+\use_default_options false
+\begin_modules
+theorems-ams
+eqs-within-sections
+figs-within-sections
+theorems-ams-extended
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding default
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Test of AMS-Art Style
+\end_layout
+
+\begin_layout Author
+David L.
+ Johnson
+\end_layout
+
+\begin_layout Address
+Department of Mathematics
+\begin_inset Newline newline
+\end_inset
+
+Lehigh University
+\begin_inset Newline newline
+\end_inset
+
+Bethlehem, PA 18015
+\end_layout
+
+\begin_layout Current Address
+Home
+\end_layout
+
+\begin_layout Email
+dlj0@lehigh.edu
+\end_layout
+
+\begin_layout URL
+http://www.lehigh.edu/~dlj0/dlj0.html
+\end_layout
+
+\begin_layout Keywords
+Test
+\end_layout
+
+\begin_layout Thanks
+To Emmanuel, for forcing me to fix this, and Jean-Marc, for making it possible,
+ and necessary.
+ Also to Mate, who suggested numerous improvements.
+\end_layout
+
+\begin_layout Dedicatory
+To my wife.
+\end_layout
+
+\begin_layout Translator
+Joe
+\end_layout
+
+\begin_layout Subjectclass
+Primary: 12G34, Secondary: 09G87
+\end_layout
+
+\begin_layout Abstract
+This is not very abstract.
+ Note that the abstract must be part of the title stuff for AMS.
+ \SpecialChar LyX
+ is aware of that since version 0.12.1.
+ Good.
+ 
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+This file, and any amsart-* \SpecialChar LyX
+ file, can be converted to either of the numbering
+ schemes by simply changing the document class in the 
+\family sans
+\bar under
+L
+\bar default
+ayout-
+\bar under
+D
+\bar default
+ocument
+\family default
+ popup.
+ The styles are:
+\end_layout
+
+\begin_layout Enumerate
+amsart - The standard AMS-article format.
+ All results and similar statements are numbered as 
+\begin_inset Formula $(n.m)$
+\end_inset
+
+, where the first number refers to the section, and the second refers to
+ the total number of results (Theorems, Corollaries, Propositions, Definitions
+ and Remarks, etc.) in that section.
+ There are also many (but not all) environments available unnumbered, which
+ is occasionally needed.
+ Unnumbered environments indicated by an asterisk at the end.
+\end_layout
+
+\begin_layout Enumerate
+amsart-seq - Here, numbering for each type of statement is in its own sequence,
+ with no reference to the section number.
+ There are also many (but not all) environments available unnumbered, which
+ is occasionally needed.
+\end_layout
+
+\begin_layout Theorem
+This is a numbered theorem
+\end_layout
+
+\begin_layout Proof
+Here is its proof.
+ Here is its proof.
+ Here is its proof.
+ Here is its proof.
+ Here is its proof.
+ Here is its proof.
+ 
+\end_layout
+
+\begin_layout Standard
+More text.
+ Note that two occurrences of the same environment, like two definitions,
+ need to be separated somehow.
+ For the moment, the best way is to include a paragraph with a %, in the
+ \SpecialChar LaTeX
+ environment, if you really want two definitions (or whatever) together,
+ with no intervening text of another sort.
+\end_layout
+
+\begin_layout Theorem*
+This is an unnumbered theorem
+\end_layout
+
+\begin_layout Proof
+Here is its proof.
+ Here is its proof.
+ Here is its proof.
+ Here is its proof.
+ Here is its proof.
+ Here is its proof.
+\end_layout
+
+\begin_layout Corollary
+First corollary.
+\end_layout
+
+\begin_layout Proof
+Its proof.
+\end_layout
+
+\begin_layout Corollary*
+Unnumbered corollary.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Corollary*
+A second, with no intervening text.
+ Note the % to force a separation.
+\end_layout
+
+\begin_layout Lemma
+Lemma number 1
+\end_layout
+
+\begin_layout Proposition
+First proposition.
+\end_layout
+
+\begin_layout Proposition*
+Unnumbered version.
+\end_layout
+
+\begin_layout Conjecture
+A wild guess.
+\end_layout
+
+\begin_layout Conjecture*
+So wild I didn't number it.
+\end_layout
+
+\begin_layout Criterion
+Need some criteria
+\end_layout
+
+\begin_layout Algorithm
+first this, then the next
+\end_layout
+
+\begin_layout Fact
+Not fiction.
+\end_layout
+
+\begin_layout Fact*
+Bald statement of fact.
+ Unnumbered environments are often used for emphasis, or in a short presentation
+ that doesn't require numbered results.
+ 
+\end_layout
+
+\begin_layout Axiom
+It stands to reason.
+\end_layout
+
+\begin_layout Definition
+a word means exactly what I say it means.
+\end_layout
+
+\begin_layout Definition*
+Unnumbered.
+\end_layout
+
+\begin_layout Standard
+Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ 
+\end_layout
+
+\begin_layout Example
+This should be an example.
+\end_layout
+
+\begin_layout Standard
+Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ Plain text.
+ 
+\end_layout
+
+\begin_layout Condition
+If you say so.
+\end_layout
+
+\begin_layout Problem
+I don't know what to write is the problem.
+\end_layout
+
+\begin_layout Remark
+I think this will be useful.
+\end_layout
+
+\begin_layout Claim
+I did it the way the documentation said to.
+\end_layout
+
+\begin_layout Note
+It may need more work yet.
+\end_layout
+
+\begin_layout Standard
+More plain text, in standard format.
+\end_layout
+
+\begin_layout Theorem
+This is a second numbered theorem
+\end_layout
+
+\begin_layout Proof
+Here is its proof.
+\end_layout
+
+\begin_layout Standard
+More text.
+\end_layout
+
+\begin_layout Corollary
+Second corollary.
+\end_layout
+
+\begin_layout Proof
+Its proof.
+\end_layout
+
+\begin_layout Lemma
+Lemma number 2
+\end_layout
+
+\begin_layout Proposition
+Second proposition.
+\end_layout
+
+\begin_layout Conjecture
+A wild guess.
+\end_layout
+
+\begin_layout Criterion
+Need some criteria
+\end_layout
+
+\begin_layout Notation
+\begin_inset Formula $S=\mathbb{R}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Summary
+In the end, will it matter?
+\end_layout
+
+\begin_layout Acknowledgement
+Thanks to Mattias Ettrich.
+ Without him I never would have learned \SpecialChar LaTeX
+.
+\end_layout
+
+\begin_layout Case
+If this works, then the rest will.
+\end_layout
+
+\begin_layout Conclusion
+It seems to work.
+\end_layout
+
+\begin_layout Proof
+Here goes another proof.
+\end_layout
+
+\begin_layout Standard
+Plain text.
+\end_layout
+
+\begin_layout Section
+Next try.
+\end_layout
+
+\begin_layout Standard
+This tries out the section environments.
+\end_layout
+
+\begin_layout Theorem
+This is a theorem
+\end_layout
+
+\begin_layout Proof
+Here is its proof.
+\end_layout
+
+\begin_layout Standard
+More text.
+\end_layout
+
+\begin_layout Corollary
+Third corollary.
+ First one of this section.
+\end_layout
+
+\begin_layout Proof
+Its proof.
+\end_layout
+
+\begin_layout Lemma
+Lemma number 3
+\end_layout
+
+\begin_layout Proposition
+Third proposition.
+\end_layout
+
+\begin_layout Conjecture
+A wild guess.
+\end_layout
+
+\begin_layout Criterion
+Need some criteria
+\end_layout
+
+\begin_layout Subsection
+This is a subsection
+\end_layout
+
+\begin_layout Standard
+With more results therein.
+\end_layout
+
+\begin_layout Theorem
+This is a theorem, maybe the fourth one.
+\end_layout
+
+\begin_layout Proof
+Here is its proof.
+\end_layout
+
+\begin_layout Standard
+More text.
+\end_layout
+
+\begin_layout Corollary
+Fourth corollary.
+\end_layout
+
+\begin_layout Proof
+Its proof.
+\end_layout
+
+\begin_layout Lemma
+Lemma number 4
+\end_layout
+
+\begin_layout Proposition
+Fourth proposition.
+\end_layout
+
+\begin_layout Conjecture
+A wild guess.
+\end_layout
+
+\begin_layout Criterion
+Need some criteria
+\end_layout
+
+\begin_layout Standard
+More random text.
+\end_layout
+
+\begin_layout Theorem
+This is a theorem
+\end_layout
+
+\begin_layout Proof
+Here is its proof.
+\end_layout
+
+\begin_layout Standard
+More text.
+\end_layout
+
+\begin_layout Claim
+I believe this is true.
+\end_layout
+
+\begin_layout Proof
+Its proof.
+\end_layout
+
+\begin_layout Lemma
+Lemma number 5
+\end_layout
+
+\begin_layout Proposition
+Fifth proposition.
+\end_layout
+
+\begin_layout Conjecture
+A wild guess.
+\end_layout
+
+\begin_layout Criterion
+Need some criteria
+\end_layout
+
+\begin_layout Subsubsection
+This is the subsection with results.
+\end_layout
+
+\begin_layout Standard
+The quick, brown fox jumped over the lazy dog.
+\end_layout
+
+\begin_layout Theorem
+This is a theorem - sixth in the series
+\end_layout
+
+\begin_layout Proof
+Here is its proof.
+\end_layout
+
+\begin_layout Standard
+More text.
+\end_layout
+
+\begin_layout Corollary
+Sixth corollary.
+\end_layout
+
+\begin_layout Proof
+Its proof.
+\end_layout
+
+\begin_layout Lemma
+Lemma number 6
+\end_layout
+
+\begin_layout Proposition
+Sixth proposition.
+\end_layout
+
+\begin_layout Conjecture
+A wild guess.
+\end_layout
+
+\begin_layout Criterion
+Need some criteria
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "1"
+literal "true"
+
+\end_inset
+
+Johnson, D.
+ L.
+ 
+\emph on
+Out of my head
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "2"
+literal "true"
+
+\end_inset
+
+American Mathematical Society, 
+\emph on
+Instructions for preparation of papers and monographs: AMS-\SpecialChar LaTeX
+
+\emph default
+, (1997).
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "3"
+literal "true"
+
+\end_inset
+
+American Mathematical Society, 
+\end_layout
+
+\end_body
+\end_document

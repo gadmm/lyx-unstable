@@ -1,0 +1,2427 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+%% Uncomment the following for Tableaux captions on top:
+%\floatstyle{plaintop}
+%\restylefloat{tableau}
+
+% Backwards compatibility for forest 1.x
+% If you use forest 2.0.1 or later, you can delete this
+\@ifpackageloaded{forest}{%
+  \@ifpackagelater{forest}{2016/02/20}{}{%
+    \forestset{
+      roof/.style={edge path={\noexpand\path[\forestoption{edge}]%
+          (.north west)--(!u.south)--(.north east)--cycle
+          \forestoption{edge label};
+        }
+      },
+      sn edges/.style={
+        for tree={parent anchor=south, child anchor=north},
+      },
+      linguistics preamble/.style={sn edges, baseline, for tree={align=center}}
+    }
+    \preto\forest@do{%
+      \forestOpreto{\forest@root}{given options}{linguistics preamble,}%
+    }
+  }
+}{}
+\end_preamble
+\use_default_options false
+\begin_modules
+linguistics
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "lmodern" "FreeSerif"
+\font_sans "default" "FreeSans"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder true
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Writing linguistic papers with \SpecialChar LyX
+
+\end_layout
+
+\begin_layout Author
+Jürgen Spitzmüller
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset CommandInset href
+LatexCommand href
+target "spitz@lyx.org"
+type "mailto:"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Date
+21/04/2015
+\end_layout
+
+\begin_layout Abstract
+This paper describes some features that \SpecialChar LyX
+ provides to linguists.
+ It demonstrates how to use some native support in order to produce numbered
+ examples, glosses, OT tableaux, semantic markup, structure trees, and phonetic
+ symbols (IPA).
+\end_layout
+
+\begin_layout Section
+Aims and prerequisites
+\end_layout
+
+\begin_layout Standard
+Basically, this paper describes the features of the 
+\begin_inset Quotes eld
+\end_inset
+
+Linguistics
+\begin_inset Quotes erd
+\end_inset
+
+ module that ships with \SpecialChar LyX
+ as of version 1.6.0.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Modules
+\begin_inset Quotes erd
+\end_inset
+
+ are support files (introduced with \SpecialChar LyX
+ 1.6.0) that can easily be selected for
+ any document.
+ In order to use the Linguistics module, go to 
+\family sans
+Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+Modules
+\family default
+, select 
+\begin_inset Quotes eld
+\end_inset
+
+Linguistics
+\begin_inset Quotes erd
+\end_inset
+
+ from the list of available modules, and hit the 
+\family sans
+Add
+\family default
+ button to select it for your document (as already done for this document).
+\end_layout
+
+\begin_layout Standard
+You should be able to use the module with any document class (please inform
+ me, if not).
+ However, in order to use all the features, you need to have the following
+ \SpecialChar LaTeX
+ packages installed:
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+covington.sty
+\emph default
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "covington"
+literal "true"
+
+\end_inset
+
+: This is the base package used for numbered examples and glosses.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Installed on your system: 
+\begin_inset Info
+type  "package"
+arg   "covington"
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+
+\emph on
+enumitem.sty
+\emph default
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "enumitem"
+literal "true"
+
+\end_inset
+
+: This package is used for the Subexamples style.
+ It is generally useful to alter the appearance of lists (such as 
+\emph on
+enumerate
+\emph default
+, 
+\emph on
+itemize
+\emph default
+, 
+\emph on
+description
+\emph default
+).
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Installed on your system: 
+\begin_inset Info
+type  "package"
+arg   "enumitem"
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+
+\emph on
+csquotes.sty
+\emph default
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "csquotes"
+literal "true"
+
+\end_inset
+
+: Needed for the 
+\emph on
+Meaning
+\emph default
+ character style.
+ The package provides context sensitive quotation marks, depending on the
+ language in use.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Installed on your system: 
+\begin_inset Info
+type  "package"
+arg   "csquotes"
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+
+\emph on
+float.sty
+\emph default
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "float"
+literal "true"
+
+\end_inset
+
+: Needed for the OT tableaux floats and list of floats.
+ This package should be part of any \SpecialChar LaTeX
+ distribution.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Installed on your system: 
+\begin_inset Info
+type  "package"
+arg   "float"
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+
+\emph on
+forest.sty
+\emph default
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "forest"
+literal "true"
+
+\end_inset
+
+: This package is used to generate structure trees.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Installed on your system: 
+\begin_inset Info
+type  "package"
+arg   "forest"
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Numbered examples
+\end_layout
+
+\begin_layout Standard
+Numbered examples are inserted via the layout drop-down box in the toolbar.
+ There are three variants:
+\end_layout
+
+\begin_layout Numbered Example (multiline)
+This is a multiline example [Style 
+\emph on
+Numbered Example (multiline)
+\emph default
+]
+\end_layout
+
+\begin_layout Numbered Example (multiline)
+it can have several paragraphs
+\end_layout
+
+\begin_layout Numbered Examples (consecutive)
+This is a single example
+\begin_inset CommandInset label
+LatexCommand label
+name "exa:single-example"
+
+\end_inset
+
+ [Style 
+\emph on
+Numbered Example (consecutive)
+\emph default
+]
+\end_layout
+
+\begin_layout Numbered Examples (consecutive)
+Consecutive single examples get their own numbers
+\end_layout
+
+\begin_layout Subexample
+This is a subexample
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:subexample"
+
+\end_inset
+
+ [Style 
+\emph on
+Subexample
+\emph default
+]
+\end_layout
+
+\begin_layout Subexample
+And another one
+\end_layout
+
+\begin_layout Standard
+References to examples are produced as usual: insert a label to the example
+ and a cross-reference via 
+\family sans
+Insert\SpecialChar menuseparator
+Cross references
+\family default
+.
+ We refer here, just for the sake of demonstrating this, to 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "exa:single-example"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:subexample"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+If you want to modify the numbering of an individual example, you can use
+ 
+\family sans
+Insert\SpecialChar menuseparator
+Custom Numbering 
+\family default
+.
+\end_layout
+
+\begin_layout Section
+Glosses
+\end_layout
+
+\begin_layout Standard
+The Linguistics module provides two kinds of glosses, which can be inserted
+ via 
+\family sans
+Insert\SpecialChar menuseparator
+Custom Insets
+\family default
+: The standard 
+\emph on
+Glosse
+\emph default
+ provides a gloss that consists of two lines (a gloss pair) and a translation,
+ the 
+\emph on
+Tri-Glosse
+\emph default
+ insets consists of three lines and a translation (the third line is usually
+ needed to give morphological or phonological information next to the gloss
+ pair).
+ Each translation line might span multiple lines in the output, i.
+\begin_inset space \thinspace{}
+\end_inset
+
+e., the paragraphs are automatically broken if they exceed the text width.
+ The translation line is inserted by means of 
+\family sans
+Insert\SpecialChar menuseparator
+Glosse Translation
+\family default
+.
+ It does not matter where you insert the translation, it is always printed
+ as the last line.
+\end_layout
+
+\begin_layout Standard
+Here is a simple example for a 
+\emph on
+Glosse
+\emph default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Glosse
+status open
+
+\begin_layout Plain Layout
+C'est     un exemple simple
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex GroupGlossedWords
+status open
+
+\begin_layout Plain Layout
+This is
+\end_layout
+
+\end_inset
+
+ an example simple
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+\begin_inset Quotes els
+\end_inset
+
+This is a simple example
+\begin_inset Quotes ers
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Use 
+\family sans
+Edit\SpecialChar menuseparator
+Text Style\SpecialChar menuseparator
+GroupGlossedWords
+\family default
+ in order to hold together multi-word expressions (or alternatively just
+ put braces in TeX mode 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+around those words
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+).
+ Note that you can enter multiple spaces to align the glosses in the \SpecialChar LyX
+ work
+ area; this will not affect the output.
+\end_layout
+
+\begin_layout Standard
+Here is a three-line gloss (
+\emph on
+Tri-Glosse
+\emph default
+); the procedure is the same:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Tri-Glosse
+status open
+
+\begin_layout Plain Layout
+C'est      un exemple simple
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex GroupGlossedWords
+status open
+
+\begin_layout Plain Layout
+Das ist
+\end_layout
+
+\end_inset
+
+ ein Beispiel einfach
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex GroupGlossedWords
+status open
+
+\begin_layout Plain Layout
+This is
+\end_layout
+
+\end_inset
+
+ an  example simple
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+\begin_inset Quotes els
+\end_inset
+
+This is a simple example
+\begin_inset Quotes ers
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+If you want to have numbered glosses, simply insert the gloss inset to a
+ numbered examples paragraph, as follows:
+\end_layout
+
+\begin_layout Numbered Examples (consecutive)
+\begin_inset Flex Tri-Glosse
+status open
+
+\begin_layout Plain Layout
+Mein Luftkissenfahrzeug ist voller  Aale
+\end_layout
+
+\begin_layout Plain Layout
+My    skeertuig                   is  vol       palings
+\end_layout
+
+\begin_layout Plain Layout
+My    hovercraft                 is 
+\begin_inset Flex GroupGlossedWords
+status open
+
+\begin_layout Plain Layout
+full of
+\end_layout
+
+\end_inset
+
+ eels
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+\begin_inset Quotes els
+\end_inset
+
+Do you have matches?
+\begin_inset Quotes ers
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Tips & Tricks
+\end_layout
+
+\begin_layout Subsubsection*
+Avoiding Page Breaks within Glosses
+\end_layout
+
+\begin_layout Standard
+Page breaks might occur within glosses, which is not desirable.
+ A workaround is to wrap glosses into boxes (via 
+\family sans
+Insert\SpecialChar menuseparator
+Box\SpecialChar menuseparator
+Frameless
+\family default
+).
+ If you want to automate this for all glosses, you can copy the following
+ code to 
+\family sans
+Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+LaTeX Preamble
+\family default
+:
+\end_layout
+
+\begin_layout Quote
+\begin_inset listings
+lstparams "language={[LaTeX]TeX},basicstyle={\footnotesize\ttfamily}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% Do not break pages at two-line glosses
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+AtBeginDocument{%
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewenvironment{linggloss}[2][]{%
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+def
+\backslash
+glosstr{
+\backslash
+glt #1}%
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{minipage}{.7
+\backslash
+textwidth}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+gll #2}{
+\backslash
+glosstr
+\backslash
+glend
+\backslash
+end{minipage}}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quote
+\begin_inset listings
+lstparams "language={[LaTeX]TeX},basicstyle={\footnotesize\ttfamily}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% Do not break pages at three-line glosses
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+AtBeginDocument{%
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewenvironment{lingglosss}[2][]{%
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+def
+\backslash
+glosstr{
+\backslash
+glt #1}%
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{minipage}{.7
+\backslash
+textwidth}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+glll #2}{
+\backslash
+glosstr
+\backslash
+glend
+\backslash
+end{minipage}}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You might have to adapt the minipage width (
+\family typewriter
+.7
+\backslash
+textwidth
+\family default
+ in the example code) to fit the glosses to your actual page width.
+\end_layout
+
+\begin_layout Subsubsection*
+Footnotes in Glosses
+\end_layout
+
+\begin_layout Standard
+Although you can insert a footnote in a 
+\emph on
+Glosse
+\emph default
+ inset, LaTeX compilation will not succeed.
+ If you need footnotes, put 
+\family typewriter
+
+\backslash
+footnotemark
+\family default
+ in TeX mode in the glosse at the point where the footnote number should
+ appear, and
+\family typewriter
+ 
+\backslash
+footnotetext{Actual footnote ...}
+\family default
+, also in TeX mode, right behind the 
+\emph on
+Glosse
+\emph default
+ inset.
+ If you need several footnotes, just insert multiple of these constructs.
+\end_layout
+
+\begin_layout Subsubsection*
+Using Glosses (and Examples) in a Beamer Presentation
+\end_layout
+
+\begin_layout Standard
+If you use the linguistics module with 
+\emph on
+beamer
+\emph default
+ presentations, there are some caveats:
+\end_layout
+
+\begin_layout Itemize
+If you want to use glosses in 
+\emph on
+beamer
+\emph default
+, you need to put it in a 
+\begin_inset Quotes eld
+\end_inset
+
+fragile
+\begin_inset Quotes erd
+\end_inset
+
+ frame.
+ 
+\end_layout
+
+\begin_layout Itemize
+Older versions of the 
+\emph on
+covington
+\emph default
+ package (before version 1.1) do not play with the 
+\emph on
+beamer
+\emph default
+ class out of the box, since both 
+\emph on
+beamer
+\emph default
+ and 
+\emph on
+covington
+\emph default
+ try to define the commands 
+\family typewriter
+
+\backslash
+example
+\family default
+ and 
+\family typewriter
+
+\backslash
+examples
+\family default
+.
+ In these older versions of 
+\emph on
+covington
+\emph default
+, this results in a \SpecialChar LaTeX
+ error.
+ You can work around this problem by inserting the following code in 
+\family sans
+Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+Local Layout
+\family default
+:
+\end_layout
+
+\begin_deeper
+\begin_layout Quote
+\begin_inset listings
+lstparams "basicstyle={\footnotesize\ttfamily},tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Provides covington 1
+\end_layout
+
+\begin_layout Plain Layout
+
+AddToPreamble
+\end_layout
+
+\begin_layout Plain Layout
+
+		
+\backslash
+let
+\backslash
+example
+\backslash
+relax
+\end_layout
+
+\begin_layout Plain Layout
+
+		
+\backslash
+let
+\backslash
+endexample
+\backslash
+relax
+\end_layout
+
+\begin_layout Plain Layout
+
+		
+\backslash
+let
+\backslash
+examples
+\backslash
+relax
+\end_layout
+
+\begin_layout Plain Layout
+
+		
+\backslash
+let
+\backslash
+endexamples
+\backslash
+relax
+\end_layout
+
+\begin_layout Plain Layout
+
+		
+\backslash
+usepackage{covington}
+\end_layout
+
+\begin_layout Plain Layout
+
+EndPreamble
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Press 
+\begin_inset Quotes eld
+\end_inset
+
+validate
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+OK
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This effectively defuncts 
+\emph on
+beamer's
+\emph default
+ example(s) environment in favor of 
+\emph on
+covington's
+\emph default
+ (i.
+\begin_inset space \thinspace{}
+\end_inset
+
+e., you can use the 
+\family sans
+Numbered Example
+\family default
+ styles, but not 
+\emph on
+beamer's
+\emph default
+ 
+\family sans
+Example
+\family default
+ and 
+\family sans
+Examples
+\family default
+).
+\end_layout
+
+\begin_layout Standard
+As of v.
+ 1.1 of 
+\emph on
+covington
+\emph default
+, this problem is solved.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Optimality Theory Tableaux
+\end_layout
+
+\begin_layout Standard
+OT tableaux itself can of course simply be inserted as ordinary tables (for
+ specific features such as dashed lines and shaded cells, cf.
+ the 
+\emph on
+EmbeddedObjects
+\emph default
+ manual).
+ However, you might want to have the tableaux numbered throughout the document,
+ and you might want to have a 
+\emph on
+List of Tableaux
+\emph default
+, similar to the 
+\emph on
+List of Tables
+\emph default
+.
+ 
+\end_layout
+
+\begin_layout Standard
+The Linguistics module provides support for both.
+ In 
+\family sans
+Insert\SpecialChar menuseparator
+Floats
+\family default
+, you will find a Tableaux float:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float tableau
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features tabularvalignment="middle">
+<column alignment="right" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top" special="|c">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+/atikap/
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\noun on
+Onset
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\noun on
+NoCoda
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\noun on
+Dep
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\noun on
+Max
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mbox{☞}$
+\end_inset
+
+ 
+\begin_inset Formula $\mbox{\textipa{P}}$
+\end_inset
+
+a.ti.ka
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+*
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+a.ti.ka
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+*!
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+*
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mbox{\textipa{P}}$
+\end_inset
+
+a.ti.kap
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+*!
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+a.ti.kap
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+*!
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+*!
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Example Tableau
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that by default, the caption is always placed below the tableaux in
+ the output, no matter where you put it in the \SpecialChar LyX
+ window.
+ To get the Tableau captions on top, put the following code in 
+\family sans
+Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+Preamble
+\family default
+:
+\end_layout
+
+\begin_layout Quote
+\begin_inset listings
+lstparams "language={[LaTeX]TeX},basicstyle={\footnotesize\ttfamily}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+floatstyle{plaintop}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+restylefloat{tableau}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you use a KOMA class, use the following code instead:
+\end_layout
+
+\begin_layout Quote
+\begin_inset listings
+lstparams "language={[LaTeX]TeX},basicstyle={\footnotesize\ttfamily}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+floatstyle{komaabove}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+restylefloat{tableau}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A List of Tableaux inset can be found in 
+\family sans
+Insert\SpecialChar menuseparator
+Lists & TOC
+\family default
+.
+ It looks like this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset FloatList tableau
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Semantic Markup (Character Styles)
+\end_layout
+
+\begin_layout Standard
+The Linguistics module comes with some character styles that are common
+ in linguistics:
+\end_layout
+
+\begin_layout Enumerate
+Concept (in small caps): 
+\begin_inset Flex Concepts
+status collapsed
+
+\begin_layout Plain Layout
+concept
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Enumerate
+Expression (emphasized): 
+\begin_inset Flex Expression
+status collapsed
+
+\begin_layout Plain Layout
+expression
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Meaning (in single quotes): 
+\begin_inset Flex Meaning
+status collapsed
+
+\begin_layout Plain Layout
+meaning
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can insert the character styles via the 
+\family sans
+Edit\SpecialChar menuseparator
+Text Style
+\family default
+ submenu.
+ If you need to change the appearance of these styles later, you can redefine
+ them in the preamble.
+ To make expressions bold, for instance, insert:
+\end_layout
+
+\begin_layout Quote
+\begin_inset listings
+lstparams "language={[LaTeX]TeX},basicstyle={\footnotesize\ttfamily}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand
+\backslash
+lingexpr[1]{
+\backslash
+textbf{#1}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Similarly, concept (
+\family typewriter
+
+\backslash
+lingconcept
+\family default
+) and meaning (
+\family typewriter
+
+\backslash
+lingmeaning
+\family default
+) can be modified.
+\end_layout
+
+\begin_layout Section
+Linguistic structure trees
+\end_layout
+
+\begin_layout Standard
+Meanwhile, many \SpecialChar LaTeX
+ are available which help producing structure trees.
+ \SpecialChar LyX
+ supports the 
+\family sans
+forest
+\family default
+ package, which combines high flexibility and power with a comfortable input
+ syntax.
+ The Linguistics module provides a Structure Tree inset, which can be inserted
+ via 
+\family sans
+Insert\SpecialChar menuseparator
+Custom Insets
+\family default
+.
+ Within this inset, you can insert the bracket notation used by 
+\family sans
+forest
+\family default
+ (and also by other similar packages such as 
+\family sans
+qtree
+\family default
+).
+\end_layout
+
+\begin_layout Standard
+Here is a simple example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Structure Tree
+status open
+
+\begin_layout Plain Layout
+[VP [DP[John]] [V' [V[sent]] [DP[Mary]] [DP[D[a]][NP[letter]]] ] ]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+If you view the PDF output, you will see that the input
+\end_layout
+
+\begin_layout Quote
+
+\family typewriter
+\size small
+[VP [DP[John]] [V' [V[sent]] [DP[Mary]] [DP[D[a]][NP[letter]]]]]
+\end_layout
+
+\begin_layout Standard
+expands to a real structure tree.
+ To view the result within the \SpecialChar LyX
+ work area, you can simply embed the Structure
+ Tree inset into a Preview inset (
+\family sans
+Insert\SpecialChar menuseparator
+Preview
+\family default
+).
+ If instant preview is correctly installed and activated, you should see
+ the tree immediately (just click on the image in order to edit):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Preview
+
+\begin_layout Standard
+\begin_inset Flex Structure Tree
+status open
+
+\begin_layout Plain Layout
+[VP [DP[Mary]] [V' [V[sent]] [DP[John]] [DP[D[a]][NP[response]]] ] ]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Roofs can be easily generated by means of the 
+\begin_inset Quotes eld
+\end_inset
+
+roof
+\begin_inset Quotes erd
+\end_inset
+
+ option
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+Note that the 
+\begin_inset Quotes eld
+\end_inset
+
+roof
+\begin_inset Quotes erd
+\end_inset
+
+ option only exists as of 
+\family sans
+forest
+\family default
+ version 2.0.
+ We have added some code to the preamble of this manual to support previous
+ versions.
+ If you use a 
+\family sans
+forest
+\family default
+ version < 2.0, you either need to copy this code to your preamble or use
+ the old option 
+\begin_inset Quotes eld
+\end_inset
+
+triangle
+\begin_inset Quotes erd
+\end_inset
+
+ instead of 
+\begin_inset Quotes eld
+\end_inset
+
+roof
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+ (note that the comma has special meaning, as it marks options):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Structure Tree
+status open
+
+\begin_layout Plain Layout
+[VP [DP[John]] [V' [V[sent]] [DP[Mary]] [DP[another letter, roof]] ] ]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+In order to align nodes of the tree more elegantly, use the 
+\begin_inset Quotes eld
+\end_inset
+
+tier
+\begin_inset Quotes erd
+\end_inset
+
+ option.
+ All nodes which have the same 
+\begin_inset Quotes eld
+\end_inset
+
+tier
+\begin_inset Quotes erd
+\end_inset
+
+ allocated get aligned.
+ Here is an example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Structure Tree
+status open
+
+\begin_layout Plain Layout
+[VP [DP[John,tier=word]] [V' [V[sent,tier=word]] [DP[Mary,tier=word]] [DP[D[a,ti
+er=word]][NP[letter,tier=word]]] ] ]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+The package supports many additional features, such as movement arrows and
+ decorations, that cannot documented here (please refer to the detailed
+ package documentation 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "forest"
+literal "true"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Section
+Phonetic Symbols (IPA)
+\end_layout
+
+\begin_layout Standard
+You do not need the Linguistics module to insert phonetic symbols, this
+ is a base functionality of \SpecialChar LyX
+.
+ However, since this is frequently used by linguists, we will describe it
+ (briefly) in this manual nevertheless.
+\end_layout
+
+\begin_layout Standard
+If you use traditional \SpecialChar LaTeX
+ or PDF\SpecialChar LaTeX
+, a prerequisite to use \SpecialChar LyX
+'s IPA support is
+ the \SpecialChar LaTeX
+ package 
+\emph on
+tipa
+\emph default
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "tipa"
+literal "true"
+
+\end_inset
+
+, which is automatically loaded by \SpecialChar LyX
+ if you follow the procedure described
+ below.
+ If you use Unicode fonts (i.
+\begin_inset space \thinspace{}
+\end_inset
+
+e., if you have clicked 
+\begin_inset Quotes eld
+\end_inset
+
+Use non-\SpecialChar TeX
+ fonts
+\begin_inset Quotes erd
+\end_inset
+
+ in 
+\family sans
+Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+Fonts
+\family default
+), the package 
+\emph on
+xunicode
+\emph default
+ is loaded instead (since 
+\emph on
+tipa
+\emph default
+ does not work in this context).
+ 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+See also https://github.com/wspr/fontspec/issues/280 and the discussion in
+ docutils-devel (https://www.mail-archive.com/search?l=mid&q=1487664738.2405.6.camel%
+40lyx.org).
+\end_layout
+
+\end_inset
+
+ The 
+\emph on
+xunicode
+\emph default
+ package emulates the 
+\emph on
+tipa
+\emph default
+ output, but is not perfect at that, so some things might not look as expected.
+ Furthermore, you need to take care in this case to use a font that includes
+ the IPA glyphs (such as 
+\emph on
+CMU Serif
+\emph default
+ or 
+\emph on
+SIL Doulos
+\emph default
+).
+ You can also specify an extra font only for IPA by adding the following
+ to 
+\family sans
+Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+LaTeX Preamble
+\family default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language={[LaTeX]TeX},basicstyle={\footnotesize\ttfamily}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+AtBeginDocument{%
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+newfontfamily{
+\backslash
+ipafont}{CMU Serif}% or another font
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+def
+\backslash
+useTIPAfont{
+\backslash
+ipafont}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+Additionally, and independent from which of the above approaches you use,
+ if you want to have instant preview, you should have the 
+\emph on
+preview-latex
+\emph default
+ package 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "preview"
+literal "true"
+
+\end_inset
+
+ installed.
+\end_layout
+
+\begin_layout Standard
+The recommended way to insert phonetic symbols is via 
+\family sans
+Insert\SpecialChar menuseparator
+Special characters\SpecialChar menuseparator
+Phonetic symbols.
+ 
+\family default
+This gives you an input box (
+\begin_inset Quotes eld
+\end_inset
+
+inset
+\begin_inset Quotes erd
+\end_inset
+
+ in \SpecialChar LyX
+ speak), where you can insert the symbols.
+ Note that this box can be used both for the insertion of small snippets
+ (inline) and multiple paragraphs of phonetic notation.
+ While the cursor is inside the box, a toolbar opens, which provides the
+ basic set of phonetic symbols (sorted by the IPA categories).
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Currently, there is one symbol missing: the labiodental flap (added to the
+ IPA in 2005).
+ This symbol is not yet supported by the 
+\emph on
+tipa
+\emph default
+ package and thus cannot be supported by LyX.
+\end_layout
+
+\end_inset
+
+ Each of the toolbar's panels can be torn off the bar by clicking on the
+ dashed line on its top.
+ This way, you can insert most symbols quite comfortably: 
+\begin_inset IPA
+
+\begin_layout Standard
+[l
+\begin_inset IPADeco bottomtiebar
+status open
+
+\begin_layout Plain Layout
+ai
+\end_layout
+
+\end_inset
+
+k ðɪs]
+\end_layout
+
+\end_inset
+
+.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Note that, if you want to insert diacritics, the diacritics are inserted
+ 
+\emph on
+after
+\emph default
+ the base character.
+ That is to say, for 
+\begin_inset IPA
+
+\begin_layout Standard
+[d̥]
+\end_layout
+
+\end_inset
+
+ you need to insert 
+\family typewriter
+<d>
+\family default
+ and then the 
+\family typewriter
+<voiceless>
+\family default
+ subring diacritic from the toolbar immediately after the 
+\family typewriter
+<d>
+\family default
+.
+ If you need a diacritic alone, you can achieve this by inserting a blank
+ and then the diacritic, as in 
+\begin_inset IPA
+
+\begin_layout Standard
+ ̼
+\end_layout
+
+\end_inset
+
+ (
+\family typewriter
+=
+\begin_inset space ~
+\end_inset
+
+<space>+<Linguolabial from the IPA toolbar>
+\family default
+).
+\end_layout
+
+\end_inset
+
+ Given that
+\emph on
+ preview-latex
+\emph default
+ is installed and you have switched on instant preview (in
+\family sans
+ Tools\SpecialChar menuseparator
+Preferences\SpecialChar menuseparator
+Look
+\begin_inset space ~
+\end_inset
+
+&
+\begin_inset space ~
+\end_inset
+
+Feel\SpecialChar menuseparator
+Display
+\family default
+), you'll get a nice WYSIWYG preview as soon as the cursor leaves the box.
+ Alternatively to the toolbar, you can also insert the symbols directly
+ via the shortcut notation which is described in the 
+\emph on
+tipa
+\emph default
+ manual: here's 
+\begin_inset IPA
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+[@n Ig"zA:mpl]
+\end_layout
+
+\end_inset
+
+ (
+\emph on
+tipa
+\emph default
+ shortcut notation: 
+\family typewriter
+[@n Ig"zA:mpl
+\family default
+]).
+ Furthermore, you can insert symbols via 
+\family sans
+Insert\SpecialChar menuseparator
+Special characters\SpecialChar menuseparator
+Symbols\SpecialChar ldots
+
+\family default
+ (which might be useful for symbols that are not yet covered by the toolbar),
+ or you can simply paste unicode-encoded text (e.
+\begin_inset space \thinspace{}
+\end_inset
+
+g., from other applications) into the box.
+ The output should be equal, no matter what input method you chose.
+\end_layout
+
+\begin_layout Standard
+Note that you can also insert or paste most IPA glyphs outside the specific
+ IPA input box: [əz ʃəʊn hɪə].
+ In the output, they will be automatically transformed into the correct
+ 
+\emph on
+tipa
+\emph default
+ macro (if not, please inform us).
+ However, please note that this method produces inferior output quality,
+ since it will most likely result in a mix of fonts (the latin characters
+ are taken from the base document font, the IPA glyphs from the IPA font).
+ Within the IPA input box, on the other hand, the IPA font is used for all
+ characters.
+ So unless you only need to insert single IPA characters, using the IPA
+ input box is highly recommended.
+\end_layout
+
+\begin_layout Section
+Further information
+\end_layout
+
+\begin_layout Standard
+For a detailed description of specific possibilities for linguists, please
+ refer to the Linguist\SpecialChar LyX
+ page on the \SpecialChar LyX
+ wiki 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "linguistlyx"
+literal "true"
+
+\end_inset
+
+ (feel free to enter your own hints there).
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "covington"
+literal "true"
+
+\end_inset
+
+The covington package: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.ctan.org/tex-archive/macros/latex/contrib/covington/
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "csquotes"
+literal "true"
+
+\end_inset
+
+The csquotes package: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.ctan.org/tex-archive/macros/latex/contrib/csquotes/
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "enumitem"
+literal "true"
+
+\end_inset
+
+The enumitem package: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.ctan.org/tex-archive/macros/latex/contrib/enumitem/
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "float"
+literal "true"
+
+\end_inset
+
+The float package: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.ctan.org/tex-archive/macros/latex/contrib/float/
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "forest"
+literal "true"
+
+\end_inset
+
+The forest package: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.ctan.org/tex-archive/graphics/pgf/contrib/forest
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "linguistlyx"
+literal "true"
+
+\end_inset
+
+Maria Gouskova, Stacia Hartleben and Jürgen Spitzmüller: Using \SpecialChar LyX
+ for Linguistic
+ Papers.
+ 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+https://wiki.lyx.org/LyX/LinguistLyX
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "preview"
+literal "true"
+
+\end_inset
+
+The preview-latex package: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.ctan.org/tex-archive/macros/latex/contrib/preview/
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "tipa"
+literal "true"
+
+\end_inset
+
+The tipa package and fonts: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.ctan.org/tex-archive/fonts/tipa/
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\end_body
+\end_document

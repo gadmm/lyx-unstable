@@ -1,0 +1,1398 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass beamer
+\begin_preamble
+\usetheme{Warsaw}
+% or ...
+
+\setbeamercovered{transparent}
+% or whatever (possibly just delete it)
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language french
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "lmodern" "default"
+\font_sans "lmss" "default"
+\font_typewriter "lmtt" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 2
+\use_package amssymb 2
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 2
+\tocdepth 2
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style swiss
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+ Ce fichier est un exemple d'exposé:
+\end_layout
+
+\begin_layout Itemize
+pour des conférences, 
+\end_layout
+
+\begin_layout Itemize
+d'une durée approximative de 20 minutes, 
+\end_layout
+
+\begin_layout Itemize
+avec un style ornemental.
+\end_layout
+
+\begin_layout Plain Layout
+Pour afficher les explications, ouvrir les notes.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Copyright 2004 by Till Tantau <tantau@users.sourceforge.net>.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+Traduction de Philippe De Sousa <philippejjg@free.fr>.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+Adaptation à \SpecialChar LyX
+ par Jean-Pierre Chrétien <chretien@cert.fr> 
+\end_layout
+
+\begin_layout Plain Layout
+En principe, ce fichier peut être redistribué et/ou modifié conformément
+ aux termes de la GNU Public License, version 2.Cependant, ce fichier est
+ un "exemple-type" qui peut être modifié selon vos propres besoins.
+ Pour cette raison, si vous utilisez ce fichier en tant qu'"exemple-type"
+ et non spécifiquement pour le distribuer en tant que partie d'un package
+ ou programme, je vous donne la permission exceptionnelle de copier librement
+ et de modifier ce fichier et même d'effacer ce message de copyright.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+Correction mineure (style Institute au lieu de style Date) des fichiers
+ originaux le 12 jan 07 par Jean-Pierre Chrétien <chretien@cert.fr> 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+Titre tel qu'il apparaît dans les actes
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Titre court
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+(facultatif, à utiliser uniquement si le titre de l'article est trop long)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subtitle
+ne compléter que si l'article possède un sous-titre
+\end_layout
+
+\begin_layout Author
+F.
+\begin_inset space ~
+\end_inset
+
+Auteur
+\begin_inset Flex InstituteMark
+status open
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+and
+\end_layout
+
+\end_inset
+
+ S.
+\begin_inset space ~
+\end_inset
+
+Lautre
+\begin_inset Flex InstituteMark
+status collapsed
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Itemize
+composer les noms dans l'ordre dans lequel ils apparaîtrons dans l'article;
+ 
+\end_layout
+
+\begin_layout Itemize
+utiliser l'insert 
+\begin_inset Quotes cld
+\end_inset
+
+MarqueInstitution
+\begin_inset Quotes crd
+\end_inset
+
+ (
+\family typewriter
+Insérer->Inserts personnalisables->MarqueInstitution
+\family default
+) niquement si les auteurs ont des affiliations  différentes.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Auteur, Lautre
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Itemize
+facultatif, à utiliser seulement avec plusieurs auteurs;
+\end_layout
+
+\begin_layout Itemize
+s'il y a vraiment beaucoup d'auteurs, utiliser 
+\begin_inset Quotes eld
+\end_inset
+
+Auteur et al.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Institute
+\begin_inset Flex InstituteMark
+status collapsed
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+
+Département  d'Informatique
+\begin_inset Newline newline
+\end_inset
+
+Université de Quelque Part
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+and
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Flex InstituteMark
+status collapsed
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+
+Département de Philosophie Théorique
+\begin_inset Newline newline
+\end_inset
+
+Université d'Ailleurs
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+- utilisez la commande 
+\backslash
+inst uniquement s'il y a plusieurs affiliations.
+\end_layout
+
+\begin_layout Plain Layout
+- faites quelque chose de simple, personne ne s'intéresse à votre adresse
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Universités de Quelque Part et d'Ailleurs
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+optionnel, mais souvent nécessaire
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Date
+Conférence sur les Présentations Fabuleuses, 2006
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Itemize
+utilisez le nom de la conférence ou son abréviation; 
+\end_layout
+
+\begin_layout Itemize
+n'a pas réellement d'importance pour l'assistance qui sera présente lors
+ de la conférence; mais en a pour les personnes (y compris vous-même) qui
+ liront les transparents en ligne.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+CPF 2006
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+facultatif, devrait être une abréviation du nom de la conférence
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Si vous avez un fichier nommé "université-logo-nomfichier.xxx", où xxxest
+ un format graphique accepté par \SpecialChar LyX
+ (comme par exemple .png), alors vous pouvez
+ insérer votre logo ainsi :
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%
+\backslash
+logo{
+\backslash
+includegraphics[height=0.5cm]{institution-logo-filename}}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Avec la syntaxe pgf, construction équivalente, mais format graphique compris
+ par latex ou pdflatex:
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%
+\backslash
+pgfdeclareimage[height=0.5cm]{institution-logo}{institution-logo-filename}
+\end_layout
+
+\begin_layout Plain Layout
+
+%
+\backslash
+logo{
+\backslash
+pgfuseimage{institution-logo}} 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+À supprimer si vous ne voulez pas que la table des matières apparaisse au
+ début de chaque sous-section :
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+AtBeginSubsection[]{%
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+frame<beamer>{ 
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+frametitle{Lignes directrices}   
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+tableofcontents[currentsection,currentsubsection] 
+\end_layout
+
+\begin_layout Plain Layout
+
+% Vous pouvez, si vous le souhaitez ajouter l'option [pausesections]
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Si vous souhaitez recouvrir vos transparents un à un, utilisez la commande
+ suivante (pour plus d'info, voir la page 74 du manuel d'utilisation de
+ Beamer (version 3.06) par Till Tantau) :
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%
+\backslash
+beamerdefaultoverlayspecification{<+->}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Sommaire
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Structurer l'exposé est une tâche difficile et la structure suivante pourrait
+ ne pas convenir.
+ Voici quelques règles à appliquer pour cet exemple ci :
+\end_layout
+
+\begin_layout Itemize
+avoir exactement deux ou trois sections (autre que le sommaire); 
+\end_layout
+
+\begin_layout Itemize
+tout au plus trois sous-sections par section; 
+\end_layout
+
+\begin_layout Itemize
+parler approximativement entre 30 secondes et 2 minutes par transparent.
+ Il  devrait donc y avoir entre 15 et 30 transparents, pour tout dire;
+\end_layout
+
+\begin_layout Itemize
+le public d'une conférence connaîtra probablement peu de chose sur le sujet
+  que vous serez en train de traiter.
+ Donc, *simplifier*
+\begin_inset space ~
+\end_inset
+
+!
+\end_layout
+
+\begin_layout Itemize
+dans un exposé de 20 minutes, garder à l'esprit les idées principales est
+ largement  suffisant pour votre assistance.
+ Laissez tomber certains détails, même s'ils vous  semblent nécessaires;
+ 
+\end_layout
+
+\begin_layout Itemize
+si un détail qui est vital pour une preuve/mise en oeuvre est omis,  le
+ dire simplement une fois.
+ Ce sera suffisant pour l'auditoire.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Motivation
+\end_layout
+
+\begin_layout Subsection
+Le problème étudié
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+Problème central
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Faites des titres qui informent.
+ Utilisez des lettres capitales (en Anglais).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+Les sous-titres sont facultatifs.
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+ - Un titre doit résumer le transparent dans un langage compréhensible 
+   par tous ceux qui ne suivront rien de ce qu'il y a sur ce transparent.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Utilisez itemize à volonté.
+\end_layout
+
+\begin_deeper
+\begin_layout Pause
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Utilisez des phrases très courtes et de courtes expressions.
+\end_layout
+
+\begin_deeper
+\begin_layout Pause
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Ces recouvrements sont créés à l'aide du style «Pause».
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Faites des titres qui informent 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Argument item:2
+status open
+
+\begin_layout Plain Layout
+1-
+\end_layout
+
+\end_inset
+
+Vous pouvez aussi utiliser des spécifications d'overlay pour créer des recouvrem
+ents
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Argument item:2
+status open
+
+\begin_layout Plain Layout
+3-
+\end_layout
+
+\end_inset
+
+Ceci vous permet d'afficher les lignes dans n'importe quel ordre
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Argument item:2
+status open
+
+\begin_layout Plain Layout
+2-
+\end_layout
+
+\end_inset
+
+Ceci est affiché en second.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Faites des titres qui informent 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Pour faire un recouvrement exact d'un transparent à l'autre (transparents
+ dynamiques), utiliez le style overprint; attention à gérer le mode handout
+ en choisissant quelle entrée sera retenue.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Overprint
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+1| handout:1
+\end_layout
+
+\end_inset
+
+Un texte sur la premier transparent,
+\begin_inset Newline newline
+\end_inset
+
+éventuellement sur plusieurs lignes
+\end_layout
+
+\begin_layout Overprint
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+2| handout:0
+\end_layout
+
+\end_inset
+
+Remplacé sur le second transparent
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Faites des titres qui informent
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Block
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+1-
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Bloc sans titre
+\end_layout
+
+\begin_layout Itemize
+Affiché sur tous les transparents
+\end_layout
+
+\end_deeper
+\begin_layout ExampleBlock
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+2-
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+Some Example Block Title
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $e^{i\pi}=-1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $e^{i\pi/2}=i$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Subsection
+Travaux antérieurs
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Faites des titres qui informent 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Example
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+1-
+\end_layout
+
+\end_inset
+
+Sur le premier transparent 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+2-
+\end_layout
+
+\end_inset
+
+Sur le second transparent
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Nos résultats/contribution
+\end_layout
+
+\begin_layout Subsection
+Principaux résultats
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Faites des titres qui informent 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Theorem
+Sur le premier transparent
+\end_layout
+
+\begin_layout Pause
+
+\end_layout
+
+\begin_layout Corollary
+Sur le second transparent
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Faites des titres qui informent 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout ColumnsTopAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+5cm
+\end_layout
+
+\begin_layout Theorem
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+1-
+\end_layout
+
+\end_inset
+
+Dans la colonne de gauche
+\end_layout
+
+\begin_layout Column
+5cm
+\end_layout
+
+\begin_layout Corollary
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+2-
+\end_layout
+
+\end_inset
+
+Dans la colonne de droite
+\begin_inset Newline newline
+\end_inset
+
+Nouvelle ligne
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Subsection
+Idées de base pour la preuve/l'implantation
+\end_layout
+
+\begin_layout Section*
+Résumé
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Résumé
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Le
+\color none
+ 
+\color inherit
+
+\begin_inset Flex Alert
+status open
+
+\begin_layout Plain Layout
+premier message principal
+\end_layout
+
+\end_inset
+
+
+\color none
+ de l'exposé en une ligne ou    deux.
+\end_layout
+
+\begin_layout Itemize
+Le
+\color none
+ 
+\color inherit
+
+\begin_inset Flex Alert
+status open
+
+\begin_layout Plain Layout
+deuxième message principal
+\end_layout
+
+\end_inset
+
+
+\color none
+ de l'exposé en une ligne ou deux.
+\end_layout
+
+\begin_layout Itemize
+Peut-être un
+\color none
+ 
+\color inherit
+
+\begin_inset Flex Alert
+status open
+
+\begin_layout Plain Layout
+troisième message
+\end_layout
+
+\end_inset
+
+
+\color none
+, mais pas plus.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+  Les perspectives sont toujours facultatives.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Perspectives
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Problème non résolu
+\end_layout
+
+\begin_layout Itemize
+Autre problème non résolu
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Section*
+\start_of_appendix
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Tout ce qui suit est facultatif et n'est typiquement pas nécessaire.
+\end_layout
+
+\end_inset
+
+Appendix
+\end_layout
+
+\begin_layout Subsection*
+Lectures complémentaires
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status collapsed
+
+\begin_layout Plain Layout
+allowframebreaks
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Lectures complémentaires
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+beamertemplatebookbibitems
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+  Commencer avec des livres (image d'un livre insérée)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Auteur1990"
+literal "true"
+
+\end_inset
+
+A.
+ Auteur.
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ 
+\emph on
+Livre sur quelque chose
+\emph default
+.
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ Une Edition, 1990.
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+beamertemplatearticlebibitems
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+  Et continuer avec les articles (image d'un article incluse).
+ Faites une liste brève.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Quelqun2000"
+literal "true"
+
+\end_inset
+
+S.
+ Quelqu'un.
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ Et ceci et cela
+\emph on
+.
+
+\emph default
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+newblock
+\end_layout
+
+\end_inset
+
+ 
+\emph on
+Journal de ceci et cela
+\emph default
+.
+ 2(1):50–100, 2000.
+\end_layout
+
+\end_deeper
+\end_body
+\end_document

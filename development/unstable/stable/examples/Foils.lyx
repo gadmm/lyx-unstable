@@ -1,0 +1,892 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass foils
+\begin_preamble
+\raggedright
+\MyLogo{-\LyX{} and \FoilTeX{}: What a team!-}
+\end_preamble
+\options dvips
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding default
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics dvips
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\paperwidth 0cm
+\paperheight 0cm
+\leftmargin 0cm
+\topmargin 0cm
+\rightmargin 0cm
+\bottommargin 0cm
+\headheight 0cm
+\headsep 0cm
+\footskip 0cm
+\secnumdepth 0
+\tocdepth 1
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\bullet 0 5 2 -1
+\bullet 1 5 4 -1
+\bullet 2 4 8 -1
+\bullet 3 1 3 -1
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Foils Class 
+\end_layout
+
+\begin_layout Author
+
+\noun on
+Allan Rae 
+\end_layout
+
+\begin_layout Date
+November 19 1997
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 7pt
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0ex"
+width "100col%"
+height "7pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+\SpecialChar LyX
+ and Foil\SpecialChar TeX
+ combine to provide a powerful presentation package for creating
+ 
+\begin_inset Quotes eld
+\end_inset
+
+foils
+\begin_inset Quotes erd
+\end_inset
+
+ also known as slides and overhead transparencies.
+\end_layout
+
+\begin_layout Foilhead
+This is a Foilhead
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0ex"
+width "100col%"
+height "3pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A Foilhead starts a new foil.
+ A 
+\emph on
+short
+\emph default
+ version is also provided that reduces the separation between the Foilhead
+ and the body of the foil.
+ Almost all the environments found in other classes are also supported.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+zerolistvertdimens{}
+\end_layout
+
+\end_inset
+
+The new Itemize Bullet Selection popup
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+is tailor-made for use with the foils class
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+allowing you to select the bullet used
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+at each of the four levels of the Itemize environment
+\end_layout
+
+\end_deeper
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+NOTE: to get the full capabilities of the Itemize Bullet Selection popup
+ read the Special Tools manual and the ItemizeBullets.lyx file included with
+ the examples.
+\end_layout
+
+\begin_layout Itemize
+NOTE 2: To get your list spacing small like this use the Foil\SpecialChar TeX
+ command: 
+\family typewriter
+
+\backslash
+zerolistvertdimens{}
+\family default
+ set as \SpecialChar TeX
+ at the start of the first item.
+\end_layout
+
+\begin_layout ShortFoilhead
+This is a ShortFoilhead
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0ex"
+width "100col%"
+height "3pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The foils class has been extended to provide two additional bullet-lists.
+ These lists are namely:
+\end_layout
+
+\begin_layout TickList
+TickList
+\end_layout
+
+\begin_layout Standard
+and
+\end_layout
+
+\begin_layout CrossList
+CrossList
+\end_layout
+
+\begin_layout Standard
+These two lists were added because the listing of do's and don'ts or good
+ and bad are relatively common in foils.
+ Providing a dedicated paragraph style for these occasions should allow
+ faster entry and simplify interaction with \SpecialChar LyX
+.
+\end_layout
+
+\begin_layout Rotatefoilhead
+Rotatefoilhead
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+hrule height 3pt
+\end_layout
+
+\begin_layout Itemize
+Create landscape foils by using Rotatefoilhead
+\end_layout
+
+\begin_layout Itemize
+Note that if you are viewing this with xdvi the page will appear to overrun
+ the page dimensions because it xdvi doesn't rotate the text
+\end_layout
+
+\begin_layout Itemize
+If you view this document using ghostview or something similar then the
+ page should appear rotated.
+ If not then you probably don't have the necessary dvips driver.
+\end_layout
+
+\begin_layout Definition*
+There are also several environments specially designed for presenting Theorems,
+ Lemmas, Corollaries, Propositions, Proofs and Definitions.
+ These are available as numbered or unnumbered environments.
+\end_layout
+
+\begin_layout ShortRotatefoilhead
+ShortRotateFoilhead
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0ex"
+width "100col%"
+height "3pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Again the short version reduces the space below the heading
+\end_layout
+
+\begin_layout Itemize
+Another way to control the amount of separation is to adjust the length
+ in the preamble.
+ This will affect both the normal and short versions of foilhead and rotatefoilh
+ead.
+ For example,
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+
+\backslash
+setlength{
+\backslash
+foilheadskip}{-0.5in}
+\family default
+ 
+\begin_inset Newline newline
+\end_inset
+
+will reduce the spacing by 0.5 inches.
+ Other units include mm (millimeters) and pt (points).
+\end_layout
+
+\begin_layout Itemize
+The 
+\emph on
+short
+\emph default
+ versions of the foilheads reduce the separation by 0.5 inches (approximately
+ 12.5mm).
+\end_layout
+
+\begin_layout ShortFoilhead
+Tricky Proofs
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0ex"
+width "100col%"
+height "3pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Lemma*
+Several consecutive paragraphs of type 
+\emph on
+Theorem
+\emph default
+, 
+\emph on
+Lemma
+\emph default
+, 
+\emph on
+Corollary
+\emph default
+, 
+\emph on
+Proposition
+\emph default
+, 
+\emph on
+Definition
+\emph default
+, 
+\emph on
+Proof
+\emph default
+ or the starred versions of these are part of the same environment.
+\end_layout
+
+\begin_layout Lemma*
+As you can see, we are still in the same lemma.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Lemma*
+To force this second Lemma straight after the first it's necessary to add
+ some dividing text or as I've done in this case separate the two by inserting
+ a 
+\emph on
+\SpecialChar TeX
+
+\emph default
+ inset that simply contains a 
+\begin_inset Quotes eld
+\end_inset
+
+%
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This is simply a comment character in \SpecialChar LaTeX
+ but the insertion of the \SpecialChar LaTeX
+ paragraph
+ is sufficient to fool \SpecialChar LyX
+ into correctly handling the multiple environments.
+\end_layout
+
+\begin_layout Lemma*
+NOTE: You only have this problem with multiple paragraphs of the same type
+ 
+\emph on
+not
+\emph default
+ with different types such as a Proof followed by a Theorem.
+\end_layout
+
+\begin_layout ShortFoilhead
+Tables and Figures
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0ex"
+width "100col%"
+height "3pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 0.3cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0pt">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Column1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Column2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Column3
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+A
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+simple
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+table
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\bar under
+example
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+with
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+foils
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 0.3cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Both tables and figures are supported in Foils however floats don't float
+ instead they appear exactly where they appear in the text.
+ Any placement parameters you set will be ignored.
+\begin_inset Float table
+placement htbp
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+This is a non-floating 
+\begin_inset Quotes eld
+\end_inset
+
+float
+\begin_inset Quotes erd
+\end_inset
+
+ table
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0pt">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Row1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+Another
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+simple
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Row2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\bar under
+table
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+example
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Row3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+with
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+foils
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout ShortFoilhead
+Headers and Footers
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0ex"
+width "100col%"
+height "3pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Foil\SpecialChar TeX
+ provides some powerful header and footer capabilities
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+You can also use the standard footnotes like this one.
+\end_layout
+
+\end_inset
+
+ that are best set in the preamble although they may be set at any point
+ in a document.
+ If you want to change these settings in the document the best place to
+ do so is at the very top of a foil ie.
+ straight after the foilhead.
+\end_layout
+
+\begin_layout Standard
+The left-footer is controlled by two commands: 
+\family typewriter
+
+\backslash
+MyLogo{}
+\family default
+ and 
+\family typewriter
+
+\backslash
+Restriction{}
+\family default
+.
+ The first is meant to allow you to include a graphic logo on your foils
+ and defaults to 
+\begin_inset Quotes eld
+\end_inset
+
+-Typeset by Foil\SpecialChar TeX
+-
+\begin_inset Quotes erd
+\end_inset
+
+.
+ While the second is meant to provide a classification for the audience
+ e.
+\begin_inset space \thinspace{}
+\end_inset
+
+g.
+\begin_inset space \space{}
+\end_inset
+
+Confidential.
+\end_layout
+
+\begin_layout Standard
+The remaining corners are controlled by:
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+
+\backslash
+rightfooter{}
+\family default
+ – which defaults to page numbers
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+
+\backslash
+rightheader{}
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+
+\backslash
+leftheader{}
+\end_layout
+
+\begin_layout Foilhead
+Further Reading
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0ex"
+width "100col%"
+height "3pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Your \SpecialChar LaTeX
+ distribution should include some documentation on Foil\SpecialChar TeX
+.
+ There are many more features in Foil\SpecialChar TeX
+ than those described here.
+ For example, Foil\SpecialChar TeX
+ can automatically place a horizontal rule between the
+ headers and all foilheads, and between the body and the footers.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "2"
+literal "true"
+
+\end_inset
+
+Jim Hafner, 
+\begin_inset Quotes eld
+\end_inset
+
+The Foil\SpecialChar TeX
+ Class Package
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\family typewriter
+.../texmf/texmf/doc/latex/foiltex/foiltex.dvi
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "2"
+literal "true"
+
+\end_inset
+
+\SpecialChar LyX
+ Documentation Team, 
+\begin_inset Quotes eld
+\end_inset
+
+Advanced Editing Tools
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\end_body
+\end_document

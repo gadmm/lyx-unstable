@@ -1,0 +1,381 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass kluwer
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement t
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 4
+\tocdepth 0
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{article}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{opening}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+<Title of the article>
+\end_layout
+
+\begin_layout Subtitle
+<Subtitle of the article(if needed)>
+\end_layout
+
+\begin_layout Author
+<First-1>.<Middle-1>.
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+surname{
+\end_layout
+
+\end_inset
+
+<Surname-1>
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\backslash
+email{
+\end_layout
+
+\end_inset
+
+<e-mail-1>
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+,
+\begin_inset Newline newline
+\end_inset
+
+<First-2>.<Middle-2>.
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+surname{
+\end_layout
+
+\end_inset
+
+<Surname-2>
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\backslash
+email{
+\end_layout
+
+\end_inset
+
+<e-mail-2>
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ and
+\begin_inset Newline newline
+\end_inset
+
+<First-3>.<Middle-3>.
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+surname{
+\end_layout
+
+\end_inset
+
+<Surname-3>
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\backslash
+email{
+\end_layout
+
+\end_inset
+
+<e-mail-3>
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Address
+<Institution and Address>
+\end_layout
+
+\begin_layout RunningTitle
+<Running title of the article (printed on top of odd pages)>
+\end_layout
+
+\begin_layout RunningAuthor
+<Running author (printed on top of even pages)>
+\end_layout
+
+\begin_layout Abstract
+<abstract text>
+\end_layout
+
+\begin_layout Keywords
+<Journal approved keywords>
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{opening}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+<intro text>
+\end_layout
+
+\begin_layout Section
+The theory
+\end_layout
+
+\begin_layout Standard
+<theory text; a citation reference is included 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "PaperI"
+literal "true"
+
+\end_inset
+
+>
+\end_layout
+
+\begin_layout Section
+The numerical method
+\end_layout
+
+\begin_layout Standard
+<numerical method text>
+\end_layout
+
+\begin_layout Section
+Results and discussion
+\end_layout
+
+\begin_layout Standard
+<results and discussion text>
+\end_layout
+
+\begin_layout Acknowledgements
+<acknowledgment text>
+\end_layout
+
+\begin_layout Appendix
+
+\end_layout
+
+\begin_layout Section
+An appendix section
+\end_layout
+
+\begin_layout Standard
+<appendix text>
+\end_layout
+
+\begin_layout Section
+Another appendix section
+\end_layout
+
+\begin_layout Standard
+<another appendix text>
+\end_layout
+
+\begin_layout References
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "\\protect\\citeauthoryear{Surname-1 et al.}{year}"
+key "PaperI"
+literal "true"
+
+\end_inset
+
+Surname-1, First-1, Middle-1., Surname-2, First-2, Middle-2.
+ and Surname-3, First-3, Middle-3.: year, 
+\emph on
+Journal abbreviation
+\emph default
+ 
+\series bold
+volume
+\series default
+, page.
+\end_layout
+
+\begin_layout AddressForOffprints
+<Address for offprints, printed at the end of the article>
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{article}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

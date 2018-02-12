@@ -1,0 +1,422 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass chess
+\begin_preamble
+\usepackage{multicol}
+\usepackage{chess-workshop-symbols}
+\smallboard
+\columnsep 0.25in
+\columnseprule 0.4pt
+\hyphenpenalty 10000
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format pdf3
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 0.5in
+\topmargin 0.5in
+\rightmargin 0.5in
+\bottommargin 0.5in
+\headheight 0cm
+\headsep 0cm
+\footskip 0in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle empty
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\align center
+
+\series bold
+\size larger
+Email Chess Game analyzed
+\size large
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Kayvan A.
+ Sylvan
+\begin_inset Newline newline
+\end_inset
+
+<kayvan@sylvan.com>
+\size default
+\emph on
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Game start 05/29/2001
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+
+\series bold
+Note:
+\series default
+ This document does not compile with pdflatex.
+ For viewing and exporting this as PDF, use in the PDF (ps2pdf) or PDF (dvipdfm).
+ The latter is set as default output format.
+\end_layout
+
+\begin_layout Plain Layout
+
+\series bold
+Note:
+\series default
+ Depending on your \SpecialChar LaTeX
+-system you might have to add the option 
+\begin_inset Quotes cld
+\end_inset
+
+dvips
+\begin_inset Quotes crd
+\end_inset
+
+ to the document class options to get proper DVI output.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{multicols}{2}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following game was played at the IECC (International Email Chess Club).
+ It is presented as an example of the fun you can have with \SpecialChar LyX
+'s new chess
+ layout (based on the 
+\begin_inset Quotes eld
+\end_inset
+
+skak.sty
+\begin_inset Quotes erd
+\end_inset
+
+ package from CTAN).
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace medskip
+\end_inset
+
+
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "100line%"
+height "1pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\noun on
+Sylvan, Kayvan
+\begin_inset space \hfill{}
+\end_inset
+
+Wakeham, Marc 
+\noun default
+
+\begin_inset Newline newline
+\end_inset
+
+(1623)
+\begin_inset space \hfill{}
+\end_inset
+
+ (1639)
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "100line%"
+height "1pt"
+
+\end_inset
+
+
+\begin_inset VSpace smallskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Mainline
+1.
+ e4 c5 2.
+ Nc3 d6 3.
+ g3 Nc6 4.
+ Bg2 e6 5.
+ Nge2
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout BoardCentered
+
+\end_layout
+
+\begin_layout HighLight
+d4,f4
+\end_layout
+
+\begin_layout Arrow
+d2->d4
+\end_layout
+
+\begin_layout KnightMove
+g1->e2
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace -0.75in*
+\end_inset
+
+
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+This vertical space is a hack
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So far, so good.
+ The e2 knight controls the d4 and f4 squares, preparing an eventual d4
+ push.
+ The diagrammed position has been reached before in hundreds of GM games.
+\end_layout
+
+\begin_layout Mainline
+5...
+ Be7?! 
+\end_layout
+
+\begin_layout Variation
+5...
+ Nge7 [ 
+\backslash
+equal{} was better.
+ ]
+\end_layout
+
+\begin_layout Mainline
+6.
+ d4 cxd4 7.
+ Nxd4 a6
+\end_layout
+
+\begin_layout Standard
+With 7...
+ a6, we are back in the well-trodden theory of this opening.
+\end_layout
+
+\begin_layout BoardCentered
+
+\end_layout
+
+\begin_layout Mainline
+8.
+ Nxc6 bxc6 9.
+ O-O Bb7 10.
+ Qg4 Bf6 11.
+ Bf4 Ne7 12.
+ Rad1
+\end_layout
+
+\begin_layout BoardCentered
+
+\end_layout
+
+\begin_layout Arrow
+a1->d1
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace -0.5in*
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+White continues to develop pieces and also sets a trap for Black.
+\end_layout
+
+\begin_layout Mainline
+12...
+ O-O? [ This move loses instantly.
+ ]
+\end_layout
+
+\begin_layout Standard
+The following was better, even though white retains the upper hand.
+\end_layout
+
+\begin_layout Variation
+12...
+ e5 13.
+ Be3 Qc7 14.
+ Na4 O-O [ 
+\backslash
+wbetter ]
+\end_layout
+
+\begin_layout Mainline
+13.
+ e5!
+\end_layout
+
+\begin_layout Standard
+Black's knight and bishop form a bumbling pair here.
+ The bishop is doomed.
+\end_layout
+
+\begin_layout Mainline
+13...
+ Nd5!? 14.
+ Bxd5 cxd5 15.
+ exf6 Qxf6 16.
+ Bxd6 Rfd8 17.
+ Bc7 Rd7 18.
+ Bf4 1-0
+\end_layout
+
+\begin_layout BoardCentered
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{multicols}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

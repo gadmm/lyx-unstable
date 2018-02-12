@@ -1,0 +1,2541 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+%
+% This relaxes the noweb constraint that chunks are
+% never broken across pages.
+%
+% This is from the noweb FAQ
+%
+\def\nwendcode{\endtrivlist \endgroup}
+\let\nwdocspar=\smallbreak
+\end_preamble
+\use_default_options false
+\begin_modules
+noweb
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding default
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+
+\noun on
+noweb2lyx
+\end_layout
+
+\begin_layout Author
+Kayvan A.
+ Sylvan <kayvan@sylvan.com>
+\end_layout
+
+\begin_layout Date
+May 6, 1999
+\end_layout
+
+\begin_layout Abstract
+This document describes and implements a perl script for importing noweb
+ files into \SpecialChar LyX
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Since version 1.0.1, \SpecialChar LyX
+ now supports Literate Programming using 
+\noun on
+noweb
+\noun default
+.
+ This addition to \SpecialChar LyX
+ made it very pleasant to write programs in the literate
+ style (like this one).
+ In addition to being able to write new literate programs, it would be quite
+ useful if old 
+\noun on
+noweb
+\noun default
+ code could be imported into \SpecialChar LyX
+ in some fashion.
+ That's where this program comes in.
+\end_layout
+
+\begin_layout Standard
+The purpose of 
+\noun on
+noweb2lyx
+\noun default
+ is to convert a 
+\noun on
+noweb
+\noun default
+ file to \SpecialChar LyX
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+noweb2lyx.in
+\end_layout
+
+\end_inset
+
+#!@PERL@
+\end_layout
+
+\begin_layout Plain Layout
+
+# 
+\end_layout
+
+\begin_layout Plain Layout
+
+# Copyright (C) 1999 Kayvan A.
+ Sylvan <kayvan@sylvan.com>
+\end_layout
+
+\begin_layout Plain Layout
+
+# You are free to use and modify this code under the terms of
+\end_layout
+
+\begin_layout Plain Layout
+
+# the GNU General Public Licence version 2 or later.
+\end_layout
+
+\begin_layout Plain Layout
+
+#
+\end_layout
+
+\begin_layout Plain Layout
+
+# Written with assistance from:
+\end_layout
+
+\begin_layout Plain Layout
+
+#   Edmar Wienskoski Jr.
+ <edmar-w-jr@technologist.com>
+\end_layout
+
+\begin_layout Plain Layout
+
+#   Amir Karger <karger@post.harvard.edu>
+\end_layout
+
+\begin_layout Plain Layout
+
+#
+\end_layout
+
+\begin_layout Plain Layout
+
+# $Id: noweb2lyx.lyx,v 1.5 2005/07/18 09:42:27 jamatos Exp $
+\end_layout
+
+\begin_layout Plain Layout
+
+#
+\end_layout
+
+\begin_layout Plain Layout
+
+# NOTE: This file was automatically generated from noweb2lyx.lyx using noweb.
+\end_layout
+
+\begin_layout Plain Layout
+
+#
+\end_layout
+
+\begin_layout Plain Layout
+
+<<Setup variables from user supplied args>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<Subroutines>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<Convert noweb to LyX>>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+The Noweb file defined
+\end_layout
+
+\begin_layout Standard
+A 
+\noun on
+noweb
+\noun default
+ file is a collection of documentation and code chunks.
+ Documentation chunks simply start with an ``@'' and have no name:
+\end_layout
+
+\begin_layout LyX-Code
+@ Here is some documentation.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+We can do arbitrary LaTeX code here.
+\end_layout
+
+\begin_layout Plain Layout
+
+[...
+ blah blah blah ...]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Code chunks look like this:
+\end_layout
+
+\begin_layout LyX-Code
+<
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+<Name of chunk here>
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+>=
+\begin_inset Newline newline
+\end_inset
+
+{...
+ code for the chunk goes here ...}
+\begin_inset Newline newline
+\end_inset
+
+@ 
+\end_layout
+
+\begin_layout Standard
+The ``@'' is a necessary delimiter to end the code chunk.
+ The other form that the ``@'' line takes is as follows:
+\end_layout
+
+\begin_layout LyX-Code
+<
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+<Name of chunk here>
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+>=
+\begin_inset Newline newline
+\end_inset
+
+{...
+ code for the chunk ...}
+\begin_inset Newline newline
+\end_inset
+
+@ %def identifier1 identifier2
+\end_layout
+
+\begin_layout Standard
+In the latter form, we are declaring to 
+\noun on
+noweb
+\noun default
+ that this code chunk defines identifier1, identifier2, etc.
+\end_layout
+
+\begin_layout Standard
+When first tackling this problem, I spoke with members of the \SpecialChar LyX
+ team that
+ knew about the literate programming extensions and re\SpecialChar LyX
+ (the \SpecialChar LaTeX
+ importing code).
+\end_layout
+
+\begin_layout Standard
+One of the first ideas was to extend the re\SpecialChar LyX
+ code to understand the 
+\noun on
+noweb
+\noun default
+ code chunks.
+ This proved to be too hard and presents other problems
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Not the least of these problems is the fact that << is a quote in French.
+\end_layout
+
+\end_inset
+
+.
+ On the other hand, it turns out that re\SpecialChar LyX
+ contains a very useful literal
+ quoting mechanism.
+ If the input file contains the construct
+\end_layout
+
+\begin_layout LyX-Code
+
+\backslash
+begin{re\SpecialChar LyX
+skip}
+\begin_inset Newline newline
+\end_inset
+
+{...
+ \SpecialChar LaTeX
+ stuff ...}
+\begin_inset Newline newline
+\end_inset
+
+
+\backslash
+end{re\SpecialChar LyX
+skip}
+\end_layout
+
+\begin_layout Standard
+then re\SpecialChar LyX
+ will copy the surrounded code to the output file verbatim.
+ Given this, the first part of the translation is easy; we simply have to
+ copy the code chunks into an intermediate file that surrounds them with
+ 
+\family typewriter
+
+\backslash
+begin{re\SpecialChar LyX
+skip}
+\family default
+ and 
+\family typewriter
+
+\backslash
+end{re\SpecialChar LyX
+skip}
+\family default
+.
+\end_layout
+
+\begin_layout Standard
+Once re\SpecialChar LyX
+ is done with the input file, the problem is reduced to changing
+ the code chunks from \SpecialChar LyX
+'s \SpecialChar LaTeX
+ layout to the Chunk layout.
+\end_layout
+
+\begin_layout Standard
+There is one final constraint on 
+\noun on
+noweb2lyx
+\noun default
+.
+ We want to be able to run it as a simple pre-processor and post-processor
+ from within re\SpecialChar LyX
+.
+ We can accomplish this by setting the flags 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+[[pre_only]]
+\end_layout
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+ 
+\color inherit
+and
+\color none
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+[[post_only]]
+\end_layout
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+ 
+\color inherit
+before we reach the main conversion code.
+\end_layout
+
+\begin_layout Standard
+With all that preamble out of the way, we now have the basic high-level
+ outline for our code:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Convert noweb to \SpecialChar LyX
+
+\end_layout
+
+\end_inset
+
+if (!$post_only) {
+\end_layout
+
+\begin_layout Plain Layout
+
+  <<Transform noweb for reLyX>>
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+if ((!$pre_only) && (!$post_only)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+  <<Run reLyX on intermediate file>>
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+if (!$pre_only) {
+\end_layout
+
+\begin_layout Plain Layout
+
+  <<Fix up LyX file>>
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+<<Clean up>>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Making a file that re\SpecialChar LyX
+ can process
+\end_layout
+
+\begin_layout Standard
+In this section, we present the code that performs the task of creating
+ the intermediate file that re\SpecialChar LyX
+ can process, using the algorithm that we
+ just outlined.
+ This algorithm is outlined in the code that follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+<<Transform noweb for reLyX>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+<<Setup INPUT and OUTPUT>>
+\end_layout
+
+\begin_layout Plain Layout
+
+inputline: while(<INPUT>)
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  if (/^
+\backslash
+s*
+\backslash
+<
+\backslash
+<.*
+\backslash
+>
+\backslash
+>=/) { # Beginning of a noweb chunk
+\end_layout
+
+\begin_layout Plain Layout
+
+    <<Read in and output the noweb code chunk>>
+\end_layout
+
+\begin_layout Plain Layout
+
+  } elsif (/^@
+\backslash
+s+(.*)/) { # Beginning of a documentation chunk
+\end_layout
+
+\begin_layout Plain Layout
+
+    print OUTPUT $1; # We do not need the ``@'' part
+\end_layout
+
+\begin_layout Plain Layout
+
+  } elsif (/
+\backslash
+[
+\backslash
+[.+
+\backslash
+]
+\backslash
+]/) { # noweb quoted code
+\end_layout
+
+\begin_layout Plain Layout
+
+    <<Perform special input quoting of [[var]]>>
+\end_layout
+
+\begin_layout Plain Layout
+
+  } else {
+\end_layout
+
+\begin_layout Plain Layout
+
+    print OUTPUT; # Just let the line pass through
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+<<Close INPUT and OUTPUT>>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the code above, we do some pre-processing of the noweb ``[[...]]'' construct.
+ This avoids some problems with re\SpecialChar LyX
+ confusing lists composed of ``[[...]]''
+ constructs.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<Perform special input quoting of [[var]]>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+s/
+\backslash
+[
+\backslash
+[.+?
+\backslash
+]{2,}/{$&}/g;
+\end_layout
+
+\begin_layout Plain Layout
+
+print OUTPUT;
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+While reading in the 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+[[INPUT]]
+\end_layout
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+ 
+\color inherit
+file, once we have identified a 
+\noun on
+noweb
+\noun default
+ code chunk, we transform it into a form that is usable by re\SpecialChar LyX
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Read in and output the noweb code chunk
+\end_layout
+
+\end_inset
+
+<<Save the beginning of the chunk to savedchunk>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<Concatenate the rest of the chunk>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<print out the chunk in a reLyXskip block>>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+File input and output for the pre-processing step
+\end_layout
+
+\begin_layout Standard
+In 
+\noun on
+noweb2lyx
+\noun default
+, we will use 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+[[INPUT]]
+\end_layout
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+ 
+\color inherit
+and
+\color none
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+[[OUTPUT]]
+\end_layout
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+ 
+\color inherit
+to read and write files.
+ In the code fragment above, we need to read from the input file and write
+ to a file that will be later transformed by re\SpecialChar LyX
+.
+ If we are being called only to pre-process the input file, then there is
+ no need to create a temporary file.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Setup INPUT and OUTPUT
+\end_layout
+
+\end_inset
+
+if ($pre_only) {
+\end_layout
+
+\begin_layout Plain Layout
+
+  &setup_files($input_file, $output_file);
+\end_layout
+
+\begin_layout Plain Layout
+
+} else {
+\end_layout
+
+\begin_layout Plain Layout
+
+  $relyx_file = "temp$$";
+\end_layout
+
+\begin_layout Plain Layout
+
+  &setup_files($input_file, $relyx_file);
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This code uses a small perl subroutine, 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+[[setup_files]]
+\end_layout
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+, which we define below:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<Subroutines>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+sub setup_files {
+\end_layout
+
+\begin_layout Plain Layout
+
+  my($in, $out) = @_;
+\end_layout
+
+\begin_layout Plain Layout
+
+  open(INPUT, "<$in") || die "Cannot read $in: $!
+\backslash
+n";
+\end_layout
+
+\begin_layout Plain Layout
+
+  open(OUTPUT, ">$out") || die "Cannot write $out: $!
+\backslash
+n";
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+@ %def setup_files
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Reading in the 
+\noun on
+noweb
+\noun default
+ chunk
+\end_layout
+
+\begin_layout Standard
+After we see the beginning of the chunk, we need to read in and save the
+ rest of the chunk for output.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Save the beginning of the chunk to savedchunk
+\end_layout
+
+\end_inset
+
+$savedchunk = $_;
+\end_layout
+
+\begin_layout Plain Layout
+
+$endLine = "";
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<Concatenate the rest of the chunk>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+chunkline: while (<INPUT>) {
+\end_layout
+
+\begin_layout Plain Layout
+
+ last chunkline if /^@
+\backslash
+s+/;
+\end_layout
+
+\begin_layout Plain Layout
+
+ $savedchunk .= $_;
+\end_layout
+
+\begin_layout Plain Layout
+
+};
+\end_layout
+
+\begin_layout Plain Layout
+
+switch: {
+\end_layout
+
+\begin_layout Plain Layout
+
+ if (/^@
+\backslash
+s+$/) {$savedchunk .= $_; last switch; }
+\end_layout
+
+\begin_layout Plain Layout
+
+ if (/^@
+\backslash
+s+%def.*$/) {$savedchunk .= $_; last switch; }
+\end_layout
+
+\begin_layout Plain Layout
+
+ if (/^@
+\backslash
+s+(.*)$/) {$savedchunk .= "@
+\backslash
+n"; $endLine = "$1
+\backslash
+n"; }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Printing out the chunk
+\end_layout
+
+\begin_layout Standard
+The final piece of the first pass of the conversion is done by this code.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+print out the chunk in a re\SpecialChar LyX
+skip block
+\end_layout
+
+\end_inset
+
+print OUTPUT "
+\backslash
+
+\backslash
+begin{reLyXskip}
+\backslash
+n";
+\end_layout
+
+\begin_layout Plain Layout
+
+print OUTPUT $savedchunk;
+\end_layout
+
+\begin_layout Plain Layout
+
+print OUTPUT "
+\backslash
+
+\backslash
+end{reLyXskip}
+\backslash
+n
+\backslash
+n";
+\end_layout
+
+\begin_layout Plain Layout
+
+print OUTPUT "$endLine";
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, we need to close the 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+[[INPUT]]
+\end_layout
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+ 
+\color inherit
+and
+\color none
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+[[OUTPUT]]
+\end_layout
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+ 
+\color inherit
+files.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Close INPUT and OUTPUT
+\end_layout
+
+\end_inset
+
+close(INPUT);
+\end_layout
+
+\begin_layout Plain Layout
+
+close(OUTPUT);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Running re\SpecialChar LyX
+
+\end_layout
+
+\begin_layout Standard
+In this section, we describe and implement the code that runs re\SpecialChar LyX
+ on the
+ intermediate file 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+[[relyx_file]]
+\end_layout
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+.
+ 
+\end_layout
+
+\begin_layout Subsection
+Selecting the document class
+\end_layout
+
+\begin_layout Standard
+In order to run re\SpecialChar LyX
+, we need to know the article class of the input document
+ (to choose the corresponding literate document layout).
+ For this, we need to parse the intermediate file.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Run re\SpecialChar LyX
+ on intermediate file
+\end_layout
+
+\end_inset
+
+<<Parse for document class>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<Run reLyX with document class>>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the code below, you'll see a strange regular expression to search for
+ the document class.
+ The reason for this kludge is that without it, we can't run 
+\noun on
+noweb2lyx
+\noun default
+ on the 
+\emph on
+noweb2lyx.nw
+\emph default
+ file that is generated by \SpecialChar LyX
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+re\SpecialChar LyX
+ searches for 
+\backslash
+
+\backslash
+doc
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ument
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+class and gets confused, so we have to obfuscate it slightly.
+\end_layout
+
+\end_inset
+
+.
+ With the regular expression as it is, we can actually run 
+\noun on
+noweb2lyx
+\noun default
+ on itself and a produce a quite reasonable \SpecialChar LyX
+ file.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Parse for document class
+\end_layout
+
+\end_inset
+
+open(INPUT, "<$relyx_file") ||
+\end_layout
+
+\begin_layout Plain Layout
+
+  die "Cannot read $relyx_file: $!
+\backslash
+n";
+\end_layout
+
+\begin_layout Plain Layout
+
+$class = "article"; # default if none found
+\end_layout
+
+\begin_layout Plain Layout
+
+parse: while(<INPUT>) {
+\end_layout
+
+\begin_layout Plain Layout
+
+  if (/
+\backslash
+
+\backslash
+docu[m]entclass{(.*)}/) {
+\end_layout
+
+\begin_layout Plain Layout
+
+    $class = $1;
+\end_layout
+
+\begin_layout Plain Layout
+
+    last parse;
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+close(INPUT);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Running re\SpecialChar LyX
+ with the corresponding literate document layout
+\end_layout
+
+\begin_layout Standard
+Now that we know what the document class ought to be, we do:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<Run reLyX with document class>>= 
+\end_layout
+
+\begin_layout Plain Layout
+
+$doc_class = "literate-" .
+ $class;
+\end_layout
+
+\begin_layout Plain Layout
+
+die "reLyX returned non-zero: $!
+\backslash
+n"
+\end_layout
+
+\begin_layout Plain Layout
+
+  if (system("reLyX -c $doc_class $relyx_file"));
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+re\SpecialChar LyX
+ performs the main bulk of the translation work.
+ Note that if the ``literate-
+\emph on
+class
+\emph default
+'' document layout is not found, then re\SpecialChar LyX
+ will fail with an error.
+ In that case, you may need to modify your 
+\noun on
+noweb
+\noun default
+ input file to a supported document type.
+\end_layout
+
+\begin_layout Section
+Fixing the re\SpecialChar LyX
+ output
+\end_layout
+
+\begin_layout Standard
+We need to perform some post-processing of what re\SpecialChar LyX
+ produces in order to
+ have the best output for our literate document.
+ The outline of the post-processing steps are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Fix up \SpecialChar LyX
+ file
+\end_layout
+
+\end_inset
+
+<<Setup INPUT and OUTPUT for the final output>>
+\end_layout
+
+\begin_layout Plain Layout
+
+line: while(<INPUT>)
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  <<Fix code chunks in latex layout>>
+\end_layout
+
+\begin_layout Plain Layout
+
+  <<Fix [[var]] noweb construct>>
+\end_layout
+
+\begin_layout Plain Layout
+
+  print OUTPUT; # default
+\end_layout
+
+\begin_layout Plain Layout
+
+} 
+\end_layout
+
+\begin_layout Plain Layout
+
+<<Close INPUT and OUTPUT>>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that in the perl code that is contained in the 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+[[while(<INPUT>)]]
+\end_layout
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+ 
+\color inherit
+loop above, the perl construct
+\color none
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+[[next line]]
+\end_layout
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+ 
+\color inherit
+is sufficient to restart the loop.
+ We can use this construct to do some relatively complex parsing of the
+ re\SpecialChar LyX
+ generated file.
+\end_layout
+
+\begin_layout Subsection
+File input and output for the post-processing
+\end_layout
+
+\begin_layout Standard
+Setting up the 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+[[INPUT]]
+\end_layout
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+ 
+\color inherit
+and
+\color none
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+[[OUTPUT]]
+\end_layout
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+ 
+\color inherit
+is taken care of by this code:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Setup INPUT and OUTPUT for the final output
+\end_layout
+
+\end_inset
+
+if ($post_only) {
+\end_layout
+
+\begin_layout Plain Layout
+
+  &setup_files("$input_file", "$output_file");
+\end_layout
+
+\begin_layout Plain Layout
+
+} else {
+\end_layout
+
+\begin_layout Plain Layout
+
+  &setup_files("$relyx_file.lyx", "$output_file");
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Making sure the code chunks are in the Chunk layout
+\end_layout
+
+\begin_layout Standard
+Now, as we outlined before, the final step is transforming the code-chunks
+ which have been put into a \SpecialChar LaTeX
+ layout by \SpecialChar LyX
+ into the Chunk layout.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Fix code chunks in latex layout
+\end_layout
+
+\end_inset
+
+if (/
+\backslash
+
+\backslash
+latex latex/) { # Beginning of some latex code
+\end_layout
+
+\begin_layout Plain Layout
+
+  if (($line = <INPUT>) =~ /^
+\backslash
+s*<</) { # code chunk
+\end_layout
+
+\begin_layout Plain Layout
+
+    <<Transform this chunk into layout chunk>>
+\end_layout
+
+\begin_layout Plain Layout
+
+  } else {
+\end_layout
+
+\begin_layout Plain Layout
+
+    # print the 
+\backslash
+latex latex line + next line
+\end_layout
+
+\begin_layout Plain Layout
+
+    print OUTPUT "$_$line";
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  next line;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When we are sure that we are in a code chunk, we must read in the rest of
+ the code chunk and output a chunk layout for it:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<Transform this chunk into layout chunk>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$savedchunk = "
+\backslash
+
+\backslash
+layout Chunk
+\backslash
+n
+\backslash
+n$line";
+\end_layout
+
+\begin_layout Plain Layout
+
+codeline: while (<INPUT>) {
+\end_layout
+
+\begin_layout Plain Layout
+
+ $savedchunk .= $_;
+\end_layout
+
+\begin_layout Plain Layout
+
+ last codeline if /^@
+\backslash
+s+/;
+\end_layout
+
+\begin_layout Plain Layout
+
+};
+\end_layout
+
+\begin_layout Plain Layout
+
+print OUTPUT $savedchunk;
+\end_layout
+
+\begin_layout Plain Layout
+
+<<Slurp up to the end of the latex layout>>
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Okay, now we just need to eat the rest of the latex layout.
+ There should only be a few different types of lines for us to match:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Slurp up to the end of the latex layout
+\end_layout
+
+\end_inset
+
+slurp: while (<INPUT>) {
+\end_layout
+
+\begin_layout Plain Layout
+
+  last slurp if /
+\backslash
+
+\backslash
+latex /;
+\end_layout
+
+\begin_layout Plain Layout
+
+  next slurp if /
+\backslash
+
+\backslash
+newline/;
+\end_layout
+
+\begin_layout Plain Layout
+
+  next slurp if /^
+\backslash
+s*$/;
+\end_layout
+
+\begin_layout Plain Layout
+
+  warn "confused by line: $_";
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Taking care of the 
+\noun on
+noweb
+\noun default
+ 
+\emph on
+[[quoted code]]
+\emph default
+ construct
+\end_layout
+
+\begin_layout Standard
+
+\noun on
+noweb
+\noun default
+ allows the user to use a special code quoting mechanism in documentation
+ chunks.
+ Fixing this ``[[quoted-code]]'' 
+\noun on
+noweb
+\noun default
+ syntax means putting the ``[[quoted-code]]'' in a \SpecialChar LaTeX
+ layout in the \SpecialChar LyX
+ file.
+ Otherwise, \SpecialChar LyX
+ will backslash-quote the brackets, creating ugly output.
+ The quoted-code is transformed by 
+\noun on
+noweb
+\noun default
+ when it generates the final \SpecialChar LaTeX
+ code.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Fix [[var]] noweb construct
+\end_layout
+
+\end_inset
+
+if (/
+\backslash
+[
+\backslash
+[.+
+\backslash
+]
+\backslash
+]/) { # special code for [[var]]
+\end_layout
+
+\begin_layout Plain Layout
+
+  s/
+\backslash
+[
+\backslash
+[.+?
+\backslash
+]{2,}/
+\backslash
+n
+\backslash
+
+\backslash
+latex latex
+\backslash
+n$&
+\backslash
+n
+\backslash
+
+\backslash
+latex default
+\backslash
+n/g;
+\end_layout
+
+\begin_layout Plain Layout
+
+  print OUTPUT;
+\end_layout
+
+\begin_layout Plain Layout
+
+  next line;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Cleaning up intermediate files
+\end_layout
+
+\begin_layout Standard
+The cleanup code is very simple:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Clean up
+\end_layout
+
+\end_inset
+
+system("rm -f $relyx_file*") unless ($post_only || $pre_only);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+User supplied arguments
+\end_layout
+
+\begin_layout Standard
+The 
+\noun on
+noweb2lyx
+\noun default
+ script understands two arguments, input-file and output-file.
+ It is also set up to be used internally by re\SpecialChar LyX
+ to pre-process or postprocess
+ files in the import pipeline.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<Setup variables from user supplied args>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+&usage() if ($#ARGV < 1); # zero or one argument 
+\end_layout
+
+\begin_layout Plain Layout
+
+if ($ARGV[0] eq "-pre") {
+\end_layout
+
+\begin_layout Plain Layout
+
+  &usage unless ($#ARGV == 2);
+\end_layout
+
+\begin_layout Plain Layout
+
+  $input_file = $ARGV[1]; $output_file = $ARGV[2]; $pre_only = 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+} elsif ($ARGV[0] eq "-post") {
+\end_layout
+
+\begin_layout Plain Layout
+
+  &usage unless ($#ARGV == 2);
+\end_layout
+
+\begin_layout Plain Layout
+
+  $input_file = $ARGV[1]; $output_file = $ARGV[2]; $post_only = 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+} else {
+\end_layout
+
+\begin_layout Plain Layout
+
+  &usage unless ($#ARGV == 1);
+\end_layout
+
+\begin_layout Plain Layout
+
+  $input_file = $ARGV[0]; $output_file = $ARGV[1];
+\end_layout
+
+\begin_layout Plain Layout
+
+  $pre_only = 0; $post_only = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+@ %def input_file output_file pre_only post_only
+\end_layout
+
+\begin_layout Plain Layout
+
+<<Subroutines>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+sub usage() {
+\end_layout
+
+\begin_layout Plain Layout
+
+  print "Usage: noweb2lyx [-pre | -post] input-file output-file
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+If -pre is specified, only pre-processes the input-file for reLyX.
+\end_layout
+
+\begin_layout Plain Layout
+
+Similarly, in the case of -post, post-processes reLyX output.
+\end_layout
+
+\begin_layout Plain Layout
+
+In case of bugs, Email Kayvan Sylvan <kayvan
+\backslash
+@sylvan.com>.
+\backslash
+n";
+\end_layout
+
+\begin_layout Plain Layout
+
+  exit;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+@ %def usage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Generating the 
+\noun on
+noweb2lyx
+\noun default
+ script
+\end_layout
+
+\begin_layout Standard
+The noweb2lyx script can be tangled from \SpecialChar LyX
+ if you set 
+\family typewriter
+
+\backslash
+build_command
+\family default
+ to call a generic script that always extracts a chunk named 
+\family typewriter
+build-script
+\family default
+ and executes it.
+ Here is an example of such a script:
+\end_layout
+
+\begin_layout LyX-Code
+#!/bin/sh
+\begin_inset Newline newline
+\end_inset
+
+notangle -Rbuild-script $1 | env NOWEB_SOURCE=$1 NOWEB_OUTPUT_DIR=$2 sh
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+build-script
+\end_layout
+
+\end_inset
+
+PREFIX=/usr
+\end_layout
+
+\begin_layout Plain Layout
+
+notangle -Rnoweb2lyx.in noweb2lyx.nw > noweb2lyx.in
+\end_layout
+
+\begin_layout Plain Layout
+
+sed -e "s=@PERL@=$PREFIX/bin/perl=" noweb2lyx.in > noweb2lyx
+\end_layout
+
+\begin_layout Plain Layout
+
+chmod +x noweb2lyx
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Macros
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+nowebchunks
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Identifiers
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+nowebindex
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

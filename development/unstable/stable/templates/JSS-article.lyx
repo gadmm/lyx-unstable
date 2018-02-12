@@ -1,0 +1,686 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass jss
+\begin_preamble
+%the following commands are used only for book or software reviews
+
+%\Reviewer{Some Author\\University of Somewhere}
+%\Plainreviewer{Some Author}
+
+%the following commands are used for articles, codesnippets, book reviews and software reviews
+
+%publication information
+%do not use these commands before the article has been accepted
+%\Volume{00}
+%\Issue{0}
+%\Month{Month}
+%\Year{2000}
+%\Submitdate{2000-00-00}
+%\Acceptdate{2000-00-00}
+
+%if you use Sweave,  include the following line (with % symbols):
+%% need no \usepackage{Sweave.sty}
+\end_preamble
+\options article
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format pdf2
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+This is a template \SpecialChar LyX
+ file for articles to be submitted to the Journal of
+ Statistical Software (JSS).
+ How to install the JSS \SpecialChar LaTeX
+ class to your \SpecialChar LaTeX
+ system is explained in 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://wiki.lyx.org/Layouts/JSS
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+To use the JSS codesnippet, bookreview or softwarereview styles, replace
+ the option 
+\begin_inset Quotes eld
+\end_inset
+
+article
+\begin_inset Quotes erd
+\end_inset
+
+ in Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+Document Class\SpecialChar menuseparator
+Options with 
+\begin_inset Quotes eld
+\end_inset
+
+codesnippet
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+bookreview
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+softwarereview
+\begin_inset Quotes erd
+\end_inset
+
+ and remove/uncomment the relevant parts in the \SpecialChar LaTeX
+ Preamble.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+If you want to use this JSS article style for a non-JSS article, replace
+ the option 
+\begin_inset Quotes eld
+\end_inset
+
+article
+\begin_inset Quotes erd
+\end_inset
+
+ with 
+\begin_inset Quotes eld
+\end_inset
+
+nojss
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This will suppress the JSS-specific parts of the layout.
+\end_layout
+
+\begin_layout Plain Layout
+To include the JSS-specific parts of the layout, the article has to be processed
+ with PDF, i.
+\begin_inset space \thinspace{}
+\end_inset
+
+e.
+\begin_inset space ~
+\end_inset
+
+you cannot process it with DVI or PS.
+ However, if the option 
+\begin_inset Quotes eld
+\end_inset
+
+nojss
+\begin_inset Quotes erd
+\end_inset
+
+ is used, it can be processed with DVI or PS.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+A Capitalized Title: Something about a Package 
+\begin_inset Flex Pkg
+status open
+
+\begin_layout Plain Layout
+foo
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Title
+A Capitalized Title: Something about a Package foo
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+optional
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Author
+Achim Zeileis
+\begin_inset Newline newline
+\end_inset
+
+Universität Innsbruck 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+And 
+\end_layout
+
+\end_inset
+
+Second Author
+\begin_inset Newline newline
+\end_inset
+
+Plus Affiliation
+\end_layout
+
+\begin_layout Plain Author
+Achim Zeileis, Second Author
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+optional
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Short Title
+\begin_inset Flex Pkg
+status open
+
+\begin_layout Plain Layout
+foo
+\end_layout
+
+\end_inset
+
+: A Capitalized Title
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+only if necessary
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+\noindent
+The abstract of the article.
+ The abstract of the article.The abstract of the article.The abstract of the
+ article.The abstract of the article.The abstract of the article.The abstract
+ of the article.The abstract of the article.The abstract of the article.The
+ abstract of the article.The abstract of the article.The abstract of the article.Th
+e abstract of the article.The abstract of the article.The abstract of the
+ article.The abstract of the article.The abstract of the article.
+\end_layout
+
+\begin_layout Keywords
+keywords, comma-separated, not capitalized, 
+\begin_inset Flex Proglang
+status open
+
+\begin_layout Plain Layout
+Java
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+at least one keyword must be supplied
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Keywords
+keyword 1, keyword 2, foo, R
+\end_layout
+
+\begin_layout Address
+Achim Zeileis
+\begin_inset Newline newline
+\end_inset
+
+Department of Statistics and Mathematics
+\begin_inset Newline newline
+\end_inset
+
+Faculty of Economics and Statistics
+\begin_inset Newline newline
+\end_inset
+
+Universität Innsbruck
+\begin_inset Newline newline
+\end_inset
+
+6020 Innsbruck, Austria
+\begin_inset Newline newline
+\end_inset
+
+E-mail: 
+\begin_inset Flex E-mail
+status open
+
+\begin_layout Plain Layout
+
+Achim.Zeileis@uibk.ac.at
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://eeecon.uibk.ac.at/~zeileis/
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+It is also possible to add a telephone and fax number before the e-mail
+ in the following format:
+\begin_inset Newline newline
+\end_inset
+
+Telephone: +43/512/507-7103
+\end_layout
+
+\begin_layout Plain Layout
+Fax: +43/512/507-2851
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+About package 
+\begin_inset Flex Pkg
+status open
+
+\begin_layout Plain Layout
+foo
+\end_layout
+
+\end_inset
+
+ in 
+\begin_inset Flex Proglang
+status open
+
+\begin_layout Plain Layout
+R
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+About package foo in R
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+The short title provides bookmarks for PDF files
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The special JSS style commands related to software and mathematical formulas
+ are written as follows in \SpecialChar LyX
+: 
+\begin_inset Flex Proglang
+status open
+
+\begin_layout Plain Layout
+R
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset Flex Proglang
+status open
+
+\begin_layout Plain Layout
+R
+\end_layout
+
+\end_inset
+
+ for the names of programming languages, 
+\begin_inset Flex Pkg
+status open
+
+\begin_layout Plain Layout
+foo
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset Flex Pkg
+status open
+
+\begin_layout Plain Layout
+foo
+\end_layout
+
+\end_inset
+
+ for software packages, and 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+some code
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset Flex Pkg
+status open
+
+\begin_layout Plain Layout
+some code
+\end_layout
+
+\end_inset
+
+ for code; 
+\begin_inset Formula $\E$
+\end_inset
+
+ 
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+written as 
+\backslash
+E
+\end_layout
+
+\end_inset
+
+ for expectations, 
+\begin_inset Formula $\VAR$
+\end_inset
+
+ 
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+written as 
+\backslash
+VAR
+\end_layout
+
+\end_inset
+
+ for variances, 
+\begin_inset Formula $\COV$
+\end_inset
+
+ 
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+written as 
+\backslash
+COV
+\end_layout
+
+\end_inset
+
+ for covariances, and 
+\begin_inset Formula $\Prob$
+\end_inset
+
+ 
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+written as 
+\backslash
+Prob
+\end_layout
+
+\end_inset
+
+ for probabilities.
+\end_layout
+
+\begin_layout Standard
+Writing several lines of code:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Code Chunk
+status open
+
+\begin_layout Code
+
+first line of code
+\end_layout
+
+\begin_layout Code
+
+second line of code
+\end_layout
+
+\begin_layout Code
+
+third line of code
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Alternatively, you can distinguish between input and output code:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Code Chunk
+status open
+
+\begin_layout Code Input
+
+first line of input code
+\end_layout
+
+\begin_layout Code Input
+
+second line of input code
+\end_layout
+
+\begin_layout Code Output
+
+first line of output code
+\end_layout
+
+\begin_layout Code Output
+
+second line of output code
+\end_layout
+
+\begin_layout Code Output
+
+third line of output code
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Acknowledgments
+\end_layout
+
+\begin_layout Standard
+Here you can write some acknowledgments.
+\end_layout
+
+\begin_layout Section
+\start_of_appendix
+This is the first appendix section
+\end_layout
+
+\begin_layout Subsection
+A subsection
+\end_layout
+
+\begin_layout Subsubsection
+A subsubsection
+\end_layout
+
+\begin_layout Standard
+some text
+\end_layout
+
+\end_body
+\end_document

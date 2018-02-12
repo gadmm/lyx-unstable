@@ -1,0 +1,436 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass apa
+\begin_preamble
+%% uncomment the following line to get this information
+% below the tile
+%\note{Draft of \today}
+
+%% Some information on the journal. This will be
+%% printed on the headline of the first page
+%% Just uncomment wir a '%' if you don't want this
+% Journal name
+\journal{The Test Journal}
+% volume, number, pages
+\volume{Vol. 0 (2007), pp.~1--22}
+% copyright notice
+\ccoppy{\textcopyright\ The Author}
+% Serial number or other reference
+\copnum{ISSN XXX-XXXX-XXXX}
+
+%% The usual ...
+\acknowledgements{Author notes, acknowledgements, contact information go here \ldots}
+
+\note{This is a note}
+\end_preamble
+\options jou
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Note that the APA class provides three different 
+\begin_inset Quotes eld
+\end_inset
+
+modes
+\begin_inset Quotes erd
+\end_inset
+
+ that generate different looks: 
+\emph on
+Manuscript mode (man)
+\emph default
+, 
+\emph on
+Printed Journal mode (jou)
+\emph default
+ and 
+\emph on
+Regular \SpecialChar LaTeX
+ mode (doc)
+\emph default
+.
+ The modes can be switched by entering the class options 
+\emph on
+man
+\emph default
+, 
+\emph on
+jou
+\emph default
+ or 
+\emph on
+doc
+\emph default
+ to Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+Options.
+ This template uses the Printed Journal mode.
+\end_layout
+
+\begin_layout Plain Layout
+Have a look at Document\SpecialChar menuseparator
+Settings\SpecialChar menuseparator
+Preamble for further settings like acknowledgemen
+ts.
+ A brief documentation can be found at 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+https://ctan.org/tex-archive/macros/latex/contrib/apa/apacls.html
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+Title
+\end_layout
+
+\begin_layout RightHeader
+Running Head for Journal and \SpecialChar LaTeX
+ Mode
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+for manuscript mode, use 
+\emph on
+ShortTitle
+\emph default
+ instead
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Author
+Author's Name
+\end_layout
+
+\begin_layout Affiliation
+Department of Psychology
+\begin_inset Newline newline
+\end_inset
+
+Your university
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+If your paper is written by multiple authors from the same affiliation,
+ just enter them as 
+\begin_inset Quotes eld
+\end_inset
+
+Author1 and Author2
+\begin_inset Quotes erd
+\end_inset
+
+.
+ However, if there are multiple authors from different affiliations involved,
+ chose 
+\emph on
+TwoAuthors
+\emph default
+, 
+\emph on
+ThreeAuthors
+\emph default
+ or 
+\emph on
+FourAuthors
+\emph default
+ instead auf 
+\emph on
+Author
+\emph default
+.
+ Note that in this case, authors have to be separated by 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}{
+\end_layout
+
+\end_inset
+
+ in \SpecialChar TeX
+ mode, e.
+\begin_inset space \thinspace{}
+\end_inset
+
+g.
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset Quotes eld
+\end_inset
+
+My name
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}{
+\end_layout
+
+\end_inset
+
+My colleague's name
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Note further that you must use the corresponding Affiliation style, i.
+\begin_inset space \thinspace{}
+\end_inset
+
+g.
+\begin_inset space \space{}
+\end_inset
+
+
+\emph on
+TwoAffiliations
+\emph default
+ for 
+\emph on
+TwoAuthors
+\emph default
+, etc.
+ (using again the 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}{
+\end_layout
+
+\end_inset
+
+ separator).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+Stuff we did.
+\end_layout
+
+\begin_layout Standard
+Article starts here.
+ 
+\end_layout
+
+\begin_layout Standard
+Just to test the bibliography, we are citing some fake authors here: 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "article-full"
+literal "true"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "booklet-full"
+literal "true"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "misc-full"
+literal "true"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Methods
+\end_layout
+
+\begin_layout Standard
+Descibing our methods \SpecialChar ldots
+
+\end_layout
+
+\begin_layout Subsection
+Participants
+\end_layout
+
+\begin_layout Standard
+Involved participants \SpecialChar ldots
+
+\end_layout
+
+\begin_layout Subsection
+Procedures
+\end_layout
+
+\begin_layout Standard
+\SpecialChar ldots
+ and procedures
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Standard
+And what came out \SpecialChar ldots
+
+\end_layout
+
+\begin_layout Subsection
+Descriptives
+\end_layout
+
+\begin_layout Standard
+This \SpecialChar ldots
+
+\end_layout
+
+\begin_layout Subsection
+Analysis
+\end_layout
+
+\begin_layout Standard
+\SpecialChar ldots
+ and that.
+\end_layout
+
+\begin_layout Section
+Discussion
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+The APA class has a hardcoded bibliography style (apacite).
+ So whatever you chose below in the Bib\SpecialChar TeX
+ setting as a bibliography style,
+ it will be ignored.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "xampl"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

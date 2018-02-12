@@ -1,0 +1,284 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date true
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip bigskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Spreadsheets External Inset
+\end_layout
+
+\begin_layout Author
+Helge Hafting
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Test of spreadsheet external inset in \SpecialChar LyX
+.
+ Spreadsheets (created with Gnumeric, LibreOffice, OpenOffice.org, or Excel)
+ gets converted to .tex with the 
+\family typewriter
+ssconvert
+\family default
+ program that is distributed together with Gnumeric.
+ They are then imported as longtables.
+ As the spreadsheet is 
+\begin_inset Quotes eld
+\end_inset
+
+External material
+\begin_inset Quotes erd
+\end_inset
+
+, any changes to the spreadsheet will be reflected in \SpecialChar LyX
+'s output too.
+ Thus, the \SpecialChar LyX
+ document is always up to date.
+\end_layout
+
+\begin_layout Section
+How to do it
+\end_layout
+
+\begin_layout Enumerate
+Make a spreadsheet.
+\end_layout
+
+\begin_layout Enumerate
+In \SpecialChar LyX
+ use the menu Insert\SpecialChar menuseparator
+File\SpecialChar menuseparator
+External Material.
+\end_layout
+
+\begin_layout Enumerate
+In the dialog, set template to 
+\family sans
+GnumericSpreadsheet
+\family default
+ and select your spreadsheet file.
+\end_layout
+
+\begin_layout Section
+Simple examples
+\end_layout
+
+\begin_layout Standard
+First, the file 
+\emph on
+sheet1.gnumeric, 
+\emph default
+a spreadsheet created with Gnumeric:
+\end_layout
+
+\begin_layout Standard
+\begin_inset External
+	template GnumericSpreadsheet
+	filename ../../../../lib/examples/sheet1.gnumeric
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then 
+\emph on
+sheet2.ods, 
+\emph default
+which was made with LibreOffice:
+\end_layout
+
+\begin_layout Standard
+\begin_inset External
+	template GnumericSpreadsheet
+	filename ../../../../lib/examples/sheet2.ods
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally 
+\emph on
+sheet3.xls 
+\emph default
+which was made for Excel.
+\end_layout
+
+\begin_layout Standard
+\begin_inset External
+	template GnumericSpreadsheet
+	filename ../../../../lib/examples/sheet3.xls
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Long spreadsheets
+\end_layout
+
+\begin_layout Standard
+A multi-page spreadsheet called 
+\emph on
+longsheet.gnumeric
+\emph default
+.
+ Notice that page breaking works fine:
+\end_layout
+
+\begin_layout Standard
+\begin_inset External
+	template GnumericSpreadsheet
+	filename ../../../../lib/examples/longsheet.gnumeric
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Necessary software
+\end_layout
+
+\begin_layout Standard
+\SpecialChar LyX
+ needs the converter program 
+\family typewriter
+ssconvert
+\family default
+ that is distributed with Gnumeric.
+ It is therefore necessary to install Gnumeric, even if other software is
+ used to create and edit the spreadsheets.
+\end_layout
+
+\begin_layout Section
+Limitations
+\end_layout
+
+\begin_layout Standard
+Spreadsheet inclusion have some limitations.
+ I don't know all of them, but have seen problem with this:
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring Wide~spreadsheets
+\noindent
+Wide
+\begin_inset space ~
+\end_inset
+
+spreadsheets Unlike long spreadsheets, a spreadsheet wider than the margins
+ doesn't work well.
+ There is no attempt at breaking up such spreadsheets.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring Wide~spreadsheets
+\noindent
+Some
+\begin_inset space ~
+\end_inset
+
+formatting Some types of formatting doesn't work.
+ The red and green texts in the long spreadsheet are underlined.
+ The underlining doesn't show, but the texts is otherwise printed correctly.
+\end_layout
+
+\begin_layout Standard
+These limitations come from 
+\family typewriter
+ssconvert
+\family default
+.
+ Feature requests for better spreadsheet conversions should therefore go
+ to the Gnumeric developers.
+\end_layout
+
+\end_body
+\end_document

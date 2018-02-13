@@ -583,20 +583,20 @@ GuiView::GuiView(int id)
 	int const iconheight = max(int(d.normalIconSize), fm.height());
 	QSize const iconsize(iconheight, iconheight);
 
-	QPixmap shellescape = QIcon(getPixmap("images/", "emblem-shellescape", "svgz,png")).pixmap(iconsize);
-	shell_escape_ = new QLabel(statusBar());
-	shell_escape_->setPixmap(shellescape);
-	shell_escape_->setScaledContents(true);
-	shell_escape_->setAlignment(Qt::AlignCenter);
-	shell_escape_->setContextMenuPolicy(Qt::CustomContextMenu);
-	shell_escape_->setToolTip(qt_("WARNING: LaTeX is allowed to execute "
-	                              "external commands for this document. "
-	                              "Right click to change."));
+	QPixmap auth = QIcon(getPixmap("images/",
+	                               "emblem-auth", "svgz,png")).pixmap(iconsize);
+	auth_ = new QLabel(statusBar());
+	auth_->setPixmap(auth);
+	auth_->setScaledContents(true);
+	auth_->setAlignment(Qt::AlignCenter);
+	auth_->setContextMenuPolicy(Qt::CustomContextMenu);
+	auth_->setToolTip(qt_("<b>Warning:</b> unsafe converters are allowed "
+	                      "for this document. Right-click to change."));
 	SEMenu * menu = new SEMenu(this);
-	connect(shell_escape_, SIGNAL(customContextMenuRequested(QPoint)),
-		menu, SLOT(showMenu(QPoint)));
-	shell_escape_->hide();
-	statusBar()->addPermanentWidget(shell_escape_);
+	connect(auth_, SIGNAL(customContextMenuRequested(QPoint)),
+	        menu, SLOT(showMenu(QPoint)));
+	auth_->hide();
+	statusBar()->addPermanentWidget(auth_);
 
 	QPixmap readonly = QIcon(getPixmap("images/", "emblem-readonly", "svgz,png")).pixmap(iconsize);
 	read_only_ = new QLabel(statusBar());
@@ -657,14 +657,12 @@ GuiView::~GuiView()
 }
 
 
-void GuiView::disableShellEscape()
+void GuiView::disableAuth()
 {
 	BufferView * bv = documentBufferView();
 	if (!bv)
 		return;
-	theSession().shellescapeFiles().remove(bv->buffer().absFileName());
-	bv->buffer().params().shell_escape = false;
-	bv->processUpdateFlags(Update::Force);
+	bv->buffer().setAuth(false);
 }
 
 
@@ -1196,15 +1194,8 @@ void GuiView::updateWindowTitle(GuiWorkArea * wa)
 	// Tell Qt whether the current document is changed
 	setWindowModified(!buf.isClean());
 
-	if (buf.params().shell_escape)
-		shell_escape_->show();
-	else
-		shell_escape_->hide();
-
-	if (buf.hasReadonlyFlag())
-		read_only_->show();
-	else
-		read_only_->hide();
+	auth_->setVisible(buf.auth());
+	read_only_->setVisible(buf.hasReadonlyFlag());
 
 	if (buf.lyxvc().inUse()) {
 		version_control_->show();
@@ -4764,10 +4755,11 @@ Dialog * GuiView::build(string const & name)
 
 SEMenu::SEMenu(QWidget * parent)
 {
-	QAction * action = addAction(qt_("Disable Shell Escape"));
+	QAction * action = addAction(qt_("Unauthorize Unsafe Converters"));
 	connect(action, SIGNAL(triggered()),
-		parent, SLOT(disableShellEscape()));
+	        parent, SLOT(disableAuth()));
 }
+
 
 } // namespace frontend
 } // namespace lyx

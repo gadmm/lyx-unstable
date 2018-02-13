@@ -482,6 +482,13 @@ public:
 	/// Set buffer read-only flag
 	void setReadonly(bool flag = true);
 
+	/// Are unsafe converters authorized?
+	bool auth() const;
+
+	/// Change the authorization of unsafe converters
+	/// This only changes the session, not the file
+	void setAuth(bool authorize) const;
+
 	/** Validate a buffer for LaTeX.
 	    This validates the buffer, and returns a struct for use by
 	    #makeLaTeX# and others. Its main use is to figure out what

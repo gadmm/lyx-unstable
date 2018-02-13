@@ -862,6 +862,22 @@ void Buffer::setReadonly(bool const flag)
 }
 
 
+bool Buffer::auth() const
+{
+	return theSession().authFiles().find(absFileName());
+}
+
+
+void Buffer::setAuth(bool authorize) const
+{
+	if (authorize)
+		theSession().authFiles().insert(absFileName());
+	else
+		theSession().authFiles().remove(absFileName());
+	workAreaManager().updateTitles();
+}
+
+
 void Buffer::setFileName(FileName const & fname)
 {
 	bool const changed = fname != d->filename;
@@ -966,8 +982,6 @@ int Buffer::readHeader(Lexer & lex)
 		docstring const s = _("\\begin_header is missing");
 		errorList.push_back(ErrorItem(_("Document header error"), s));
 	}
-
-	params().shell_escape = theSession().shellescapeFiles().find(absFileName());
 
 	params().makeDocumentClass();
 

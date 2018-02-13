@@ -471,7 +471,7 @@ dist_images_DATA1X = \
 	images/down.svgz \
 	images/editclear.svgz \
 	images/emblem-readonly.svgz \
-	images/emblem-shellescape.svgz \
+	images/emblem-auth.svgz \
 	images/ert-insert.svgz \
 	images/file-open.svgz \
 	images/float-insert_figure.svgz \

@@ -87,6 +87,8 @@ try <https://github.com/gadmm/lyx-unstable/compare/master...staging>.
 * Improved default parameters and shortcuts, more beginner-friendly.
 * Open hyperlinks in application from the contextual menu in a secure way.
   (#9906)
+* Add visibility and revocability to the new “needauth” feature, according to
+  recommended practices in secure usability.
 
 ## Minor bug fixes
 

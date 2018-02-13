@@ -97,7 +97,7 @@ void InsetTOC::doDispatch(Cursor & cur, FuncRequest & cmd) {
 docstring InsetTOC::layoutName() const
 {
 	if (getCmdName() == "lstlistoflistings") {
-		if (buffer().params().use_minted)
+		if (false/*buffer().params().use_minted*/)
 			return from_ascii("TOC:MintedListings");
 		else
 			return from_ascii("TOC:Listings");
@@ -111,7 +111,7 @@ void InsetTOC::validate(LaTeXFeatures & features) const
 	InsetCommand::validate(features);
 	features.useInsetLayout(getLayout());
 	if (getCmdName() == "lstlistoflistings") {
-		if (buffer().params().use_minted)
+		if (false/*buffer().params().use_minted*/)
 			features.require("minted");
 		else
 			features.require("listings");

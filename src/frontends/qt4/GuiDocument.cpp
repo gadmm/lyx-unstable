@@ -794,8 +794,8 @@ GuiDocument::GuiDocument(GuiView & lv)
 	connect(outputModule->mathoutCB, SIGNAL(currentIndexChanged(int)),
 		this, SLOT(change_adaptor()));
 
-	connect(outputModule->shellescapeCB, SIGNAL(stateChanged(int)),
-		this, SLOT(shellescapeChanged()));
+	connect(outputModule->authCB, SIGNAL(stateChanged(int)),
+		this, SLOT(authChanged()));
 	connect(outputModule->outputsyncCB, SIGNAL(clicked()),
 		this, SLOT(change_adaptor()));
 	connect(outputModule->synccustomCB, SIGNAL(editTextChanged(QString)),
@@ -1487,6 +1487,9 @@ GuiDocument::GuiDocument(GuiView & lv)
 
 	for (int i = 0; lst_packages[i][0]; ++i)
             listingsModule->packageCO->addItem(lst_packages[i]);
+#ifndef MINTED
+	listingsModule->packageGB->hide();
+#endif
 
 
 	// add the panels
@@ -1546,32 +1549,12 @@ void GuiDocument::change_adaptor()
 }
 
 
-void GuiDocument::shellescapeChanged()
+void GuiDocument::authChanged()
 {
-	shellescapeChanged_ = true;
-	changed();
-}
-
-
-void GuiDocument::slotApply()
-{
-	bool only_shellescape_changed = !nonModuleChanged_ && !modulesChanged_;
-	bool wasclean = buffer().isClean();
-	GuiDialog::slotApply();
-	if (wasclean && only_shellescape_changed)
-		buffer().markClean();
-	modulesChanged_ = false;
-}
-
-
-void GuiDocument::slotOK()
-{
-	bool only_shellescape_changed = !nonModuleChanged_ && !modulesChanged_;
-	bool wasclean = buffer().isClean();
-	GuiDialog::slotOK();
-	if (wasclean && only_shellescape_changed)
-		buffer().markClean();
-	modulesChanged_ = false;
+	// This is treated specially as the change is automatically applied
+	// and the document isn't marked as dirty. Visual feedback is given
+	// by the appearance/disappearance of a red icon in the status bar.
+	bufferview()->buffer().setAuth(outputModule->authCB->isChecked());
 }
 
 
@@ -3173,14 +3156,6 @@ void GuiDocument::applyView()
 	bool const nontexfonts = fontModule->osFontsCB->isChecked();
 	bp_.useNonTeXFonts = nontexfonts;
 
-	bp_.shell_escape = outputModule->shellescapeCB->isChecked();
-	if (!bp_.shell_escape)
-	    theSession().shellescapeFiles().remove(buffer().absFileName());
-	else if (!theSession().shellescapeFiles().find(buffer().absFileName()))
-	    theSession().shellescapeFiles().insert(buffer().absFileName());
-	Buffer & buf = const_cast<Buffer &>(buffer());
-	buf.params().shell_escape = bp_.shell_escape;
-
 	bp_.output_sync = outputModule->outputsyncCB->isChecked();
 
 	bp_.output_sync_macro = fromqstr(outputModule->synccustomCB->currentText());
@@ -3691,7 +3666,7 @@ void GuiDocument::paramsToDialog()
 	string lstparams =
 		InsetListingsParams(bp_.listings_params).separatedParams();
 	listingsModule->listingsED->setPlainText(toqstr(lstparams));
-	int nn = findToken(lst_packages, bp_.use_minted ? "Minted" : "Listings");
+	int nn = findToken(lst_packages, /*bp_.use_minted ? "Minted" :*/ "Listings");
 	if (nn >= 0)
 		listingsModule->packageCO->setCurrentIndex(nn);
 
@@ -3802,7 +3777,7 @@ void GuiDocument::paramsToDialog()
 		index = 0;
 	outputModule->defaultFormatCO->setCurrentIndex(index);
 
-	outputModule->shellescapeCB->setChecked(bp_.shell_escape);
+	outputModule->authCB->setChecked(buffer().auth());
 	outputModule->outputsyncCB->setChecked(bp_.output_sync);
 	outputModule->synccustomCB->setEditText(toqstr(bp_.output_sync_macro));
 

@@ -239,7 +239,7 @@ GuiWorkArea::Private::Private(GuiWorkArea * parent)
   caret_(0), caret_visible_(false),
   need_resize_(false), preedit_lines_(1),
   last_pixel_ratio_(1.0),
-  completer_(new GuiCompleter(p, p)), dialog_mode_(false), shell_escape_(false),
+  completer_(new GuiCompleter(p, p)), dialog_mode_(false), auth_(false),
   read_only_(false), clean_(true), externally_modified_(false)
 {
 	int const time = QApplication::cursorFlashTime() / 2;
@@ -1381,14 +1381,15 @@ QVariant GuiWorkArea::inputMethodQuery(Qt::InputMethodQuery query) const
 void GuiWorkArea::updateWindowTitle()
 {
 	Buffer const & buf = bufferView().buffer();
+	bool const auth = buf.auth();
 	if (buf.fileName() != d->file_name_
-	    || buf.params().shell_escape != d->shell_escape_
+	    || auth != d->auth_
 	    || buf.hasReadonlyFlag() != d->read_only_
 	    || buf.lyxvc().vcstatus() != d->vc_status_
 	    || buf.isClean() != d->clean_
 	    || buf.notifiesExternalModification() != d->externally_modified_) {
 		d->file_name_ = buf.fileName();
-		d->shell_escape_ = buf.params().shell_escape;
+		d->auth_ = auth;
 		d->read_only_ = buf.hasReadonlyFlag();
 		d->vc_status_ = buf.lyxvc().vcstatus();
 		d->clean_ = buf.isClean();

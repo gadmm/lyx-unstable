@@ -339,6 +339,7 @@ void InsetText::doDispatch(Cursor & cur, FuncRequest & cmd)
 
 	case LFUN_INSET_SPLIT: {
 		Cursor new_cur = cur;
+		new_cur.clearSelection();
 		// Ensure we are directly in an InsetText but not the main one.
 		while (&new_cur.inset() != this && new_cur.depth() > 1)
 			new_cur.popBackward();
@@ -387,6 +388,8 @@ void InsetText::doDispatch(Cursor & cur, FuncRequest & cmd)
 			new_cur.backwardPos();
 		// finish up
 		cur.setCursor(new_cur);
+		cur.clearSelection();
+		cur.sanitize();
 		cur.endUndoGroup();
 		cur.forceBufferUpdate();
 		break;

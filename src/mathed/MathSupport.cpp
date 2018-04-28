@@ -31,10 +31,10 @@
 #include "support/debug.h"
 #include "support/docstream.h"
 #include "support/lassert.h"
-#include "support/lyxlib.h"
 
 #include <map>
 #include <algorithm>
+#include <cmath>
 
 using namespace std;
 
@@ -88,7 +88,6 @@ namespace {
  * 0 = end, 1 = line, 2 = polyline, 3 = square line, 4 = square polyline
  * 6 = square polyline (moved to the other end)
  * 5 = square line (second point is in the second square)
- * 7 = rounded thick line (i.e. dot for short line)
  */
 
 double const parenthHigh[] = {
@@ -333,34 +332,121 @@ double const hline[] = {
 
 
 double const dot[] = {
-//	1, 0.5, 0.2, 0.5, 0.2,
-//	1, 0.4, 0.4, 0.6, 0.4,
-//	1, 0.5, 0.5, 0.5, 0.5,
-	7, 0.4, 0.4, 0.6, 0.4,
+	2, 9,
+	0.4,  0.6,
+	0.47, 0.57,
+	0.5,  0.5,
+	0.47, 0.43,
+	0.4,  0.4,
+	0.33, 0.43,
+	0.3,  0.5,
+	0.33, 0.57,
+	0.4,  0.6,
 	0
 };
 
 
 double const ddot[] = {
-	7, 0.0, 0.4, 0.3, 0.4,
-	7, 0.6, 0.4, 1.0, 0.4,
+	2, 9,
+	0.6,  0.6,
+	0.67, 0.57,
+	0.7,  0.5,
+	0.67, 0.43,
+	0.6,  0.4,
+	0.53, 0.43,
+	0.5,  0.5,
+	0.53, 0.57,
+	0.6,  0.6,
+	2, 9,
+	0.1,  0.6,
+	0.17, 0.57,
+	0.2,  0.5,
+	0.17, 0.43,
+	0.1,  0.4,
+	0.03, 0.43,
+	0.0,  0.5,
+	0.03, 0.57,
+	0.1,  0.6,
 	0
 };
 
 
 double const dddot[] = {
-	1, 0.1,  0.5, 0.2,  0.5,
-	1, 0.45, 0.5, 0.55, 0.5,
-	1, 0.8,  0.5, 0.9,  0.5,
+	2, 9,
+	0.4,  0.6,
+	0.47, 0.57,
+	0.5,  0.5,
+	0.47, 0.43,
+	0.4,  0.4,
+	0.33, 0.43,
+	0.3,  0.5,
+	0.33, 0.57,
+	0.4,  0.6,
+	2, 9,
+	-0.1,  0.6,
+	-0.03, 0.57,
+	0.0,  0.5,
+	-0.03, 0.43,
+	-0.1,  0.4,
+	-0.17, 0.43,
+	-0.2,  0.5,
+	-0.17, 0.57,
+	-0.1,  0.6,
+	2, 9,
+	0.9,  0.6,
+	0.97, 0.57,
+	1.0,  0.5,
+	0.97, 0.43,
+	0.9,  0.4,
+	0.83, 0.43,
+	0.8,  0.5,
+	0.83, 0.57,
+	0.9,  0.6,
 	0
 };
 
 
 double const ddddot[] = {
-	1, 0.1,  0.5, 0.2,  0.5,
-	1, 0.45, 0.5, 0.55, 0.5,
-	1, 0.8,  0.5, 0.9,  0.5,
-	1, 1.15, 0.5, 1.25, 0.5,
+	2, 9,
+	0.6,  0.6,
+	0.67, 0.57,
+	0.7,  0.5,
+	0.67, 0.43,
+	0.6,  0.4,
+	0.53, 0.43,
+	0.5,  0.5,
+	0.53, 0.57,
+	0.6,  0.6,
+	2, 9,
+	0.1,  0.6,
+	0.17, 0.57,
+	0.2,  0.5,
+	0.17, 0.43,
+	0.1,  0.4,
+	0.03, 0.43,
+	0.0,  0.5,
+	0.03, 0.57,
+	0.1,  0.6,
+	2, 9,
+	-0.4,  0.6,
+	-0.33, 0.57,
+	-0.3,  0.5,
+	-0.33, 0.43,
+	-0.4,  0.4,
+	-0.47, 0.43,
+	-0.5,  0.5,
+	-0.47, 0.57,
+	-0.4,  0.6,
+	2, 9,
+	1.1,  0.6,
+	1.17, 0.57,
+	1.2,  0.5,
+	1.17, 0.43,
+	1.1,  0.4,
+	1.03, 0.43,
+	1.0,  0.5,
+	1.03, 0.57,
+	1.1,  0.6,
 	0
 };
 
@@ -746,7 +832,7 @@ void mathed_draw_deco(PainterInfo const & pi, double x, double y,
 	double const t = pi.base.solidLineThickness();
 	for (int i = 0; d[i]; ) {
 		int code = int(d[i++]);
-		if (code & 1) {  // code == 1 || code == 3 || code == 5 || code == 7
+		if (code & 1) {  // code == 1 || code == 3 || code == 5
 			double xx = d[i++];
 			double yy = d[i++];
 			double x2 = d[i++];
@@ -762,16 +848,6 @@ void mathed_draw_deco(PainterInfo const & pi, double x, double y,
 				mt.transform(x2, y2);
 			pi.pain.lineDouble(x + xx, y + yy, x + x2, y + y2,
 			                   pi.base.font.color(), t);
-			if (code == 5) {  // thicker, but rounded
-				pi.pain.line(
-					int(x + xx + 0.5+1), int(y + yy + 0.5-1),
-					int(x + x2 + 0.5-1), int(y + y2 + 0.5-1),
-				pi.base.font.color());
-				pi.pain.line(
-					int(x + xx + 0.5+1), int(y + yy + 0.5+1),
-					int(x + x2 + 0.5-1), int(y + y2 + 0.5+1),
-				pi.base.font.color());
-			}
 		} else {
 			double xp[32];
 			double yp[32];

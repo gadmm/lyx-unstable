@@ -16,6 +16,7 @@
 #include "Language.h"
 
 #include "Encoding.h"
+#include "LaTeXFonts.h"
 #include "Lexer.h"
 #include "LyXRC.h"
 
@@ -71,6 +72,32 @@ docstring const Language::translateLayout(string const & m) const
 }
 
 
+string Language::fontenc(BufferParams const & params) const
+{
+	// Determine optimal font encoding
+	// We check whether the used rm font supports an encoding our language supports
+	LaTeXFont const & lf =
+		theLaTeXFonts().getLaTeXFont(from_ascii(params.fontsRoman()));
+	vector<string> const lfe = lf.fontencs();
+	for (auto & fe : fontenc_) {
+		// ASCII means: support all T* encodings plus OT1
+		if (fe == "ASCII") {
+			for (auto & afe : lfe) {
+				if (afe == "OT1" || prefixIs(afe, "T"))
+					// we found a suitable one; return that.
+					return afe;
+			}
+		}
+		// For other encodings, just check whether the font supports it
+		if (lf.hasFontenc(fe))
+			return fe;
+	}
+	// We did not find a suitable one; just take the first in the list,
+	// the priorized one (which is "T1" for ASCII).
+	return fontenc_.front() == "ASCII" ? "T1" : fontenc_.front();
+}
+
+
 bool Language::readLanguage(Lexer & lex)
 {
 	enum LanguageTags {
@@ -87,9 +114,10 @@ bool Language::readLanguage(Lexer & lex)
 		LA_POLYGLOSSIANAME,
 		LA_POLYGLOSSIAOPTS,
 		LA_POSTBABELPREAMBLE,
-		LA_QUOTESTYLE,
 		LA_PREBABELPREAMBLE,
+		LA_PROVIDES,
 		LA_REQUIRES,
+		LA_QUOTESTYLE,
 		LA_RTL
 	};
 
@@ -109,6 +137,7 @@ bool Language::readLanguage(Lexer & lex)
 		{ "polyglossiaopts",      LA_POLYGLOSSIAOPTS },
 		{ "postbabelpreamble",    LA_POSTBABELPREAMBLE },
 		{ "prebabelpreamble",     LA_PREBABELPREAMBLE },
+		{ "provides",             LA_PROVIDES },
 		{ "quotestyle",           LA_QUOTESTYLE },
 		{ "requires",             LA_REQUIRES },
 		{ "rtl",                  LA_RTL }
@@ -155,9 +184,13 @@ bool Language::readLanguage(Lexer & lex)
 		case LA_ENCODING:
 			lex >> encodingStr_;
 			break;
-		case LA_FONTENC:
-			lex >> fontenc_;
+		case LA_FONTENC: {
+			lex.eatLine();
+			vector<string> const fe =
+				getVectorFromString(lex.getString(true), "|");
+			fontenc_.insert(fontenc_.end(), fe.begin(), fe.end());
 			break;
+		}
 		case LA_GUINAME:
 			lex >> display_;
 			break;
@@ -183,6 +216,9 @@ bool Language::readLanguage(Lexer & lex)
 			break;
 		case LA_REQUIRES:
 			lex >> requires_;
+			break;
+		case LA_PROVIDES:
+			lex >> provides_;
 			break;
 		case LA_RTL:
 			lex >> rightToLeft_;
@@ -218,6 +254,8 @@ bool Language::read(Lexer & lex)
 		encoding_ = encodings.fromLyXName("iso8859-1");
 		LYXERR0("Unknown encoding " << encodingStr_);
 	}
+	if (fontenc_.empty())
+		fontenc_.push_back("ASCII");
 	return true;
 }
 

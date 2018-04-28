@@ -197,6 +197,7 @@ InsetLayout Note:Greyedout
 	HTMLIsBlock           false
 	AddToToc              note
 	IsTocCaption          true
+	NeedCProtect          true
 End
 
 InsetLayout ERT
@@ -360,6 +361,8 @@ InsetLayout Listings
 	KeepEmpty             true
 	FreeSpacing           true
 	ForceLTR              true
+	ForcePlain            true
+	NeedCProtect          true
 	RefPrefix             lst
 	HTMLTag               pre
 	HTMLStyle

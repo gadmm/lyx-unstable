@@ -588,14 +588,30 @@ bool Encodings::isKnownScriptChar(char_type const c, string & preamble)
 	if (it == unicodesymbols.end())
 		return false;
 
-	if (it->second.textpreamble() != "textgreek" && it->second.textpreamble() != "textcyr")
+	if (it->second.textpreamble() != "textgreek"
+	    && it->second.textpreamble() != "textcyrillic"
+	    && it->second.textpreamble() != "textbaltic")
 		return false;
 
-	if (preamble.empty()) {
+	if (preamble.empty() && it->second.textpreamble() != "textbaltic") {
 		preamble = it->second.textpreamble();
 		return true;
 	}
 	return it->second.textpreamble() == preamble;
+}
+
+
+bool Encodings::needsScriptWrapper(string const & script, string const & fontenc)
+{
+	if (script == "textgreek")
+		return (fontenc != "LGR");
+	if (script == "textcyrillic") {
+		return (fontenc != "T2A" && fontenc != "T2B"
+			&& fontenc != "T2C" && fontenc != "X2");
+	}
+	if (script == "textbaltic")
+		return (fontenc != "L7x");
+	return false;
 }
 
 

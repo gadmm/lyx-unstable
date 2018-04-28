@@ -484,13 +484,17 @@ public:
 	string processing_format;
 
 	static QSet<Buffer const *> busyBuffers;
-	static Buffer::ExportStatus previewAndDestroy(Buffer const * orig, Buffer * buffer, string const & format);
-	static Buffer::ExportStatus exportAndDestroy(Buffer const * orig, Buffer * buffer, string const & format);
-	static Buffer::ExportStatus compileAndDestroy(Buffer const * orig, Buffer * buffer, string const & format);
+	static Buffer::ExportStatus previewAndDestroy(Buffer const * orig,
+			Buffer * buffer, string const & format);
+	static Buffer::ExportStatus exportAndDestroy(Buffer const * orig,
+			Buffer * buffer, string const & format);
+	static Buffer::ExportStatus compileAndDestroy(Buffer const * orig,
+			Buffer * buffer, string const & format);
 	static docstring autosaveAndDestroy(Buffer const * orig, Buffer * buffer);
 
 	template<class T>
-	static Buffer::ExportStatus runAndDestroy(const T& func, Buffer const * orig, Buffer * buffer, string const & format);
+	static Buffer::ExportStatus runAndDestroy(const T& func,
+			Buffer const * orig, Buffer * buffer, string const & format);
 
 	// TODO syncFunc/previewFunc: use bind
 	bool asyncBufferProcessing(string const & argument,
@@ -498,7 +502,8 @@ public:
 				   docstring const & msg,
 				   Buffer::ExportStatus (*asyncFunc)(Buffer const *, Buffer *, string const &),
 				   Buffer::ExportStatus (Buffer::*syncFunc)(string const &, bool) const,
-				   Buffer::ExportStatus (Buffer::*previewFunc)(string const &) const);
+				   Buffer::ExportStatus (Buffer::*previewFunc)(string const &) const,
+				   bool allow_async);
 
 	QVector<GuiWorkArea*> guiWorkAreas();
 };
@@ -508,7 +513,8 @@ QSet<Buffer const *> GuiView::GuiViewPrivate::busyBuffers;
 
 GuiView::GuiView(int id)
 	: d(*new GuiViewPrivate(this)), id_(id), closing_(false), busy_(0),
-	  command_execute_(false), minibuffer_focus_(false), devel_mode_(false)
+	  command_execute_(false), minibuffer_focus_(false), toolbarsMovable_(true),
+	  devel_mode_(false)
 {
 	connect(this, SIGNAL(bufferViewChanged()),
 	        this, SLOT(onBufferViewChanged()));
@@ -1859,6 +1865,15 @@ bool GuiView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 
 	switch(cmd.action()) {
 	case LFUN_BUFFER_IMPORT:
+		break;
+
+	case LFUN_MASTER_BUFFER_EXPORT:
+		enable = doc_buffer
+			&& (doc_buffer->parent() != 0
+			    || doc_buffer->hasChildren())
+			&& !d.processing_thread_watcher_.isRunning()
+			// this launches a dialog, which would be in the wrong Buffer
+			&& !(::lyx::operator==(cmd.argument(), "custom"));
 		break;
 
 	case LFUN_MASTER_BUFFER_UPDATE:
@@ -3536,7 +3551,8 @@ void GuiView::toolBarPopup(const QPoint & /*pos*/)
 
 
 template<class T>
-Buffer::ExportStatus GuiView::GuiViewPrivate::runAndDestroy(const T& func, Buffer const * orig, Buffer * clone, string const & format)
+Buffer::ExportStatus GuiView::GuiViewPrivate::runAndDestroy(const T& func,
+		Buffer const * orig, Buffer * clone, string const & format)
 {
 	Buffer::ExportStatus const status = func(format);
 
@@ -3549,23 +3565,29 @@ Buffer::ExportStatus GuiView::GuiViewPrivate::runAndDestroy(const T& func, Buffe
 }
 
 
-Buffer::ExportStatus GuiView::GuiViewPrivate::compileAndDestroy(Buffer const * orig, Buffer * clone, string const & format)
+Buffer::ExportStatus GuiView::GuiViewPrivate::compileAndDestroy(
+		Buffer const * orig, Buffer * clone, string const & format)
 {
-	Buffer::ExportStatus (Buffer::* mem_func)(std::string const &, bool) const = &Buffer::doExport;
+	Buffer::ExportStatus (Buffer::* mem_func)(std::string const &, bool) const =
+			&Buffer::doExport;
 	return runAndDestroy(lyx::bind(mem_func, clone, _1, true), orig, clone, format);
 }
 
 
-Buffer::ExportStatus GuiView::GuiViewPrivate::exportAndDestroy(Buffer const * orig, Buffer * clone, string const & format)
+Buffer::ExportStatus GuiView::GuiViewPrivate::exportAndDestroy(
+		Buffer const * orig, Buffer * clone, string const & format)
 {
-	Buffer::ExportStatus (Buffer::* mem_func)(std::string const &, bool) const = &Buffer::doExport;
+	Buffer::ExportStatus (Buffer::* mem_func)(std::string const &, bool) const =
+			&Buffer::doExport;
 	return runAndDestroy(lyx::bind(mem_func, clone, _1, false), orig, clone, format);
 }
 
 
-Buffer::ExportStatus GuiView::GuiViewPrivate::previewAndDestroy(Buffer const * orig, Buffer * clone, string const & format)
+Buffer::ExportStatus GuiView::GuiViewPrivate::previewAndDestroy(
+		Buffer const * orig, Buffer * clone, string const & format)
 {
-	Buffer::ExportStatus (Buffer::* mem_func)(std::string const &) const = &Buffer::preview;
+	Buffer::ExportStatus (Buffer::* mem_func)(std::string const &) const =
+			&Buffer::preview;
 	return runAndDestroy(lyx::bind(mem_func, clone, _1), orig, clone, format);
 }
 
@@ -3576,7 +3598,8 @@ bool GuiView::GuiViewPrivate::asyncBufferProcessing(
 			   docstring const & msg,
 			   Buffer::ExportStatus (*asyncFunc)(Buffer const *, Buffer *, string const &),
 			   Buffer::ExportStatus (Buffer::*syncFunc)(string const &, bool) const,
-			   Buffer::ExportStatus (Buffer::*previewFunc)(string const &) const)
+			   Buffer::ExportStatus (Buffer::*previewFunc)(string const &) const,
+			   bool allow_async)
 {
 	if (!used_buffer)
 		return false;
@@ -3590,25 +3613,40 @@ bool GuiView::GuiViewPrivate::asyncBufferProcessing(
 		gv_->message(msg);
 	}
 #if EXPORT_in_THREAD
-	GuiViewPrivate::busyBuffers.insert(used_buffer);
-	Buffer * cloned_buffer = used_buffer->cloneFromMaster();
-	if (!cloned_buffer) {
-		Alert::error(_("Export Error"),
-		             _("Error cloning the Buffer."));
-		return false;
+	if (allow_async) {
+		GuiViewPrivate::busyBuffers.insert(used_buffer);
+		Buffer * cloned_buffer = used_buffer->cloneFromMaster();
+		if (!cloned_buffer) {
+			Alert::error(_("Export Error"),
+									 _("Error cloning the Buffer."));
+			return false;
+		}
+		QFuture<Buffer::ExportStatus> f = QtConcurrent::run(
+					asyncFunc,
+					used_buffer,
+					cloned_buffer,
+					format);
+		setPreviewFuture(f);
+		last_export_format = used_buffer->params().bufferFormat();
+		(void) syncFunc;
+		(void) previewFunc;
+		// We are asynchronous, so we don't know here anything about the success
+		return true;
+	} else {
+		Buffer::ExportStatus status;
+		if (syncFunc) {
+			status = (used_buffer->*syncFunc)(format, false);
+		} else if (previewFunc) {
+			status = (used_buffer->*previewFunc)(format);
+		} else
+			return false;
+		handleExportStatus(gv_, status, format);
+		(void) asyncFunc;
+		return (status == Buffer::ExportSuccess
+				|| status == Buffer::PreviewSuccess);
 	}
-	QFuture<Buffer::ExportStatus> f = QtConcurrent::run(
-				asyncFunc,
-				used_buffer,
-				cloned_buffer,
-				format);
-	setPreviewFuture(f);
-	last_export_format = used_buffer->params().bufferFormat();
-	(void) syncFunc;
-	(void) previewFunc;
-	// We are asynchronous, so we don't know here anything about the success
-	return true;
 #else
+	(void) allow_async;
 	Buffer::ExportStatus status;
 	if (syncFunc) {
 		status = (used_buffer->*syncFunc)(format, true);
@@ -3690,11 +3728,19 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 			importDocument(to_utf8(cmd.argument()));
 			break;
 
+		case LFUN_MASTER_BUFFER_EXPORT:
+			if (doc_buffer)
+				doc_buffer = const_cast<Buffer *>(doc_buffer->masterBuffer());
+			// fall through
 		case LFUN_BUFFER_EXPORT: {
 			if (!doc_buffer)
 				break;
 			// GCC only sees strfwd.h when building merged
 			if (::lyx::operator==(cmd.argument(), "custom")) {
+				// LFUN_MASTER_BUFFER_EXPORT is not enabled for this case,
+				// so the following test should not be needed.
+				// In principle, we could try to switch to such a view...
+				// if (cmd.action() == LFUN_BUFFER_EXPORT)
 				dispatch(FuncRequest(LFUN_DIALOG_SHOW, "sendto"), dr);
 				break;
 			}
@@ -3721,7 +3767,7 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 						_("Exporting ..."),
 						&GuiViewPrivate::exportAndDestroy,
 						&Buffer::doExport,
-						0);
+						0, cmd.allowAsync());
 			// TODO Inform user about success
 			break;
 		}
@@ -3741,7 +3787,7 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 						_("Exporting ..."),
 						&GuiViewPrivate::compileAndDestroy,
 						&Buffer::doExport,
-						0);
+						0, cmd.allowAsync());
 			break;
 		}
 		case LFUN_BUFFER_VIEW: {
@@ -3750,7 +3796,7 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 						_("Previewing ..."),
 						&GuiViewPrivate::previewAndDestroy,
 						0,
-						&Buffer::preview);
+						&Buffer::preview, cmd.allowAsync());
 			break;
 		}
 		case LFUN_MASTER_BUFFER_UPDATE: {
@@ -3759,7 +3805,7 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 						docstring(),
 						&GuiViewPrivate::compileAndDestroy,
 						&Buffer::doExport,
-						0);
+						0, cmd.allowAsync());
 			break;
 		}
 		case LFUN_MASTER_BUFFER_VIEW: {
@@ -3767,7 +3813,7 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 						(doc_buffer ? doc_buffer->masterBuffer() : 0),
 						docstring(),
 						&GuiViewPrivate::previewAndDestroy,
-						0, &Buffer::preview);
+						0, &Buffer::preview, cmd.allowAsync());
 			break;
 		}
 		case LFUN_EXPORT_CANCEL: {
@@ -3890,8 +3936,8 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 		case LFUN_BUFFER_RELOAD: {
 			LASSERT(doc_buffer, break);
 
-			//drop changes?
-			bool drop = (cmd.argument()=="dump");
+			// drop changes?
+			bool drop = (cmd.argument() == "dump");
 
 			int ret = 0;
 			if (!drop && !doc_buffer->isClean()) {

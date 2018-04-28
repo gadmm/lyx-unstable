@@ -171,8 +171,15 @@ Font libertine
 	Family           rm
 	OsfOption        osf
 	Package          libertineRoman
-	CompleteFont     libertine
+	CompleteFont     libertine-full
 	AltFonts         libertine-type1,libertine-2012,libertine-legacy
+EndFont
+
+AltFont libertine-full
+	GuiName          "Libertine"
+	Family           rm
+	Package          libertine
+	Requires         libertineRoman
 EndFont
 
 AltFont libertine-type1
@@ -347,6 +354,20 @@ AltFont pplj
 	GuiName          "Palatino"
 	Family           rm
 	SwitchDefault    1
+EndFont
+
+Font PTSerif-TLF
+	GuiName         "ParaType Serif"
+	Family          rm
+	Requires        paratype
+	Package         PTSerif
+	CompleteFont    paratype
+EndFont
+
+AltFont paratype
+	GuiName          "ParaType Serif"
+	Family           rm
+	Package          paratype
 EndFont
 
 Font times
@@ -575,6 +596,14 @@ Font NotoSans-TLF
 	Requires         noto
 EndFont
 
+Font PTSans-TLF
+	GuiName         "ParaType Sans"
+	Family          sf
+	ScaleOption     scaled=$$val
+	Requires        paratype
+	Package         PTSans
+EndFont
+
 Font tgadventor
 	GuiName          "TeX Gyre Adventor"
 	Family           sf
@@ -661,6 +690,14 @@ Font NotoMono-TLF
 	Family           tt
 	SwitchDefault    1
 	Requires         noto
+EndFont
+
+Font PTMono-TLF
+	GuiName         "ParaType Mono"
+	Family          tt
+	ScaleOption     scaled=$$val
+	Requires        paratype
+	Package         PTMono
 EndFont
 
 Font tgcursor

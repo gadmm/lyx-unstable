@@ -19,13 +19,12 @@
 
 #include "support/convert.h"
 #include "support/lassert.h"
+#include "support/lyxlib.h"
 
 #define DISABLE_PMPROF
 #include "support/pmprof.h"
 
 #include <QByteArray>
-
-#include <cmath>
 
 using namespace std;
 using namespace lyx::support;
@@ -182,26 +181,38 @@ int GuiFontMetrics::width(docstring const & s) const
 	if (strwidth_cache_.contains(s))
 		return strwidth_cache_[s];
 	PROFILE_CACHE_MISS(width);
-	/* For some reason QMetrics::width returns a wrong value with Qt5
-	 * with some arabic text. OTOH, QTextLayout is broken for single
-	 * characters with null width (like \not in mathed). Also, as a
-	 * safety measure, always use QMetrics::width with our math fonts.
+	/* Several problems have to be taken into account:
+	 * * QFontMetrics::width does not returns a wrong value with Qt5 with
+	 *   some arabic text, since the glyph-shaping operations are not
+	 *   done (documented in Qt5).
+	 * * QTextLayout is broken for single characters with null width
+	 *   (like \not in mathed).
+	 * * While QTextLine::horizontalAdvance is the right thing to use
+     *   for text strings, it does not give a good result with some
+     *   characters like the \int (gyph 4) of esint.
+
+	 * Also, as a safety measure, always use QFontMetrics::width with
+	 * our math fonts.
 	*/
 	int w = 0;
-	if (s.length() == 1
+	// is the string a single character from a math font ?
 #if QT_VERSION >= 0x040800
-	    || font_.styleName() == "LyX"
+	bool const math_char = s.length() == 1 || font_.styleName() == "LyX";
+#else
+	bool const math_char = s.length() == 1;
 #endif
-	    )
-		w = metrics_.width(toqstr(s));
-	else {
+	// keep value 0 for math chars with width 0
+	if (!math_char || metrics_.width(toqstr(s)) != 0) {
 		QTextLayout tl;
 		tl.setText(toqstr(s));
 		tl.setFont(font_);
 		tl.beginLayout();
 		QTextLine line = tl.createLine();
 		tl.endLayout();
-		w = (int) round(line.horizontalAdvance());
+		if (math_char)
+			w = iround(line.naturalTextWidth());
+		else
+			w = iround(line.horizontalAdvance());
 	}
 	strwidth_cache_.insert(s, w, s.size() * sizeof(char_type));
 	return w;
@@ -388,7 +399,7 @@ GuiFontMetrics::breakAt_helper(docstring const & s, int const x,
 	line.setLineWidth(x);
 	tl.createLine();
 	tl.endLayout();
-	int const line_wid = (int) round(line.horizontalAdvance());
+	int const line_wid = iround(line.horizontalAdvance());
 	if ((force && line.textLength() == offset) || line_wid > x)
 		return {-1, -1};
 	/* Since QString is UTF-16 and docstring is UCS-4, the offsets may

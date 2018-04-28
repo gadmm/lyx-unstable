@@ -2276,8 +2276,10 @@ Buffer * GuiView::loadDocument(FileName const & filename, bool tolastfiles)
 	setBuffer(newBuffer);
 	newBuffer->errors("Parse");
 
-	if (tolastfiles)
+	if (tolastfiles) {
 		theSession().lastFiles().add(filename);
+		theSession().writeFile();
+  }
 
 	return newBuffer;
 }
@@ -2816,6 +2818,7 @@ bool GuiView::saveBuffer(Buffer & b, FileName const & fn)
 	bool const success = (fn.empty() ? b.save() : b.saveAs(fn));
 	if (success) {
 		theSession().lastFiles().add(b.fileName());
+		theSession().writeFile();
 		return true;
 	}
 

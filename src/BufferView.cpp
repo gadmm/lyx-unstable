@@ -2044,6 +2044,8 @@ void BufferView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 		icp["key"] = from_utf8(arg);
 		if (!opt1.empty())
 			icp["before"] = from_utf8(opt1);
+		icp["literal"] = 
+			from_ascii(InsetCitation::last_literal ? "true" : "false");
 		string icstr = InsetCommand::params2string(icp);
 		FuncRequest fr(LFUN_INSET_INSERT, icstr);
 		lyx::dispatch(fr);

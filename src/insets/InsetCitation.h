@@ -88,6 +88,8 @@ public:
 				       std::vector<CitationStyle> const & valid_styles) const;
 	///
 	std::map<docstring, docstring> getQualifiedLists(docstring const p) const;
+	///
+	static bool last_literal;
 
 private:
 	/// tries to make a pretty label and makes a basic one if not
@@ -112,10 +114,6 @@ private:
 	///
 	docstring screenLabel() const;
 	//@}
-
-	/// we'll eventually want to be able to get info on this from the
-	/// various CiteEngines
-	static ParamInfo param_info_;
 
 	///
 	struct Cache {

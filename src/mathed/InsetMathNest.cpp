@@ -1246,27 +1246,6 @@ void InsetMathNest::doDispatch(Cursor & cur, FuncRequest & cmd)
 		break;
 	}
 
-	case LFUN_UNICODE_INSERT: {
-		if (cmd.argument().empty())
-			break;
-		// splits on whitespace
-		vector<docstring> args =
-			getVectorFromString(cmd.argument(), from_ascii(" "), false, true);
-		for (auto const & arg : args) {
-			if (!isHex(arg)) {
-				LYXERR0("Not a hexstring: " << arg);
-				continue;
-			}
-			char_type c = hexToInt(arg);
-			if (c >= 32 && c < 0x10ffff) {
-				FuncCode code = currentMode() == MATH_MODE ?
-					LFUN_MATH_INSERT : LFUN_SELF_INSERT;
-				lyx::dispatch(FuncRequest(code, docstring(1, c)));
-			}
-		}
-		break;
-	}
-
 	case LFUN_DIALOG_SHOW_NEW_INSET: {
 		docstring const & name = cmd.argument();
 		string data;

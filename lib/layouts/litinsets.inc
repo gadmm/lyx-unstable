@@ -41,14 +41,15 @@ InsetLayout "Flex:Chunk"
     AddToToc              literate
     IsTocCaption          0
     Argument 1
-            Mandatory     1
-            LabelString   "Options"
-            Tooltip       "Options"
-            LeftDelim     <<
-            RightDelim    >>=<br/>
-			IsTocCaption  1
-			AutoInsert    1
+      Mandatory           1
+      LabelString         "Options"
+      Tooltip             "Options"
+      LeftDelim           <<
+      RightDelim          >>=<br/>
+      IsTocCaption        1
+      AutoInsert          1
     EndArgument
     ResetsFont            false
     ForceOwnlines         true
+    NeedCProtect          true
 End

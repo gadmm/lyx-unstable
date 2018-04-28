@@ -971,6 +971,7 @@ char const * simplefeatures[] = {
 	"varwidth",
 	"footnote",
 	"tablefootnote",
+	"afterpage",
 };
 
 char const * bibliofeatures[] = {
@@ -1092,6 +1093,15 @@ string const LaTeXFeatures::getPackages() const
 
 	// The rest of these packages are somewhat more complicated
 	// than those above.
+
+	// [pdf]lscape is used to rotate longtables
+	if (mustProvide("lscape")) {
+		if (runparams_.flavor == OutputParams::LATEX
+		    || runparams_.flavor == OutputParams::DVILUATEX)
+			packages << "\\usepackage{lscape}\n";
+		else
+			packages << "\\usepackage{pdflscape}\n";
+	}
 
 	// The tipa package and its extensions (tipx, tone) must not
 	// be loaded with non-TeX fonts, since fontspec includes the

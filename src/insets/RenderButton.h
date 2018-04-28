@@ -35,7 +35,7 @@ public:
 	virtual void draw(PainterInfo & pi, int x, int y) const;
 
 	/// Provide the text for the button
-	void update(docstring const &, bool editable, bool inherit_font);
+	void update(docstring const &, bool editable, bool inherit);
 	void elideMode(std::pair<ElideMode, double> mode);
 
 	/// The "sensitive area" box, i.e., the button area

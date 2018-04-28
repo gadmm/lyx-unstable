@@ -49,6 +49,14 @@ std::string translate_len(std::string const &);
 
 void parse_text(Parser & p, std::ostream & os, unsigned flags, bool outer,
 		Context & context);
+void check_comment_bib(std::ostream & os, Context & context);
+
+void fix_child_filename(std::string & name);
+
+std::string const normalize_filename(std::string const & name);
+
+std::string find_file(std::string const & name, std::string const & path,
+		 char const * const * extensions);
 
 /*!
  * Parses a subdocument, usually useful in insets (whence the name).
@@ -103,10 +111,9 @@ extern void add_known_environment(std::string const & environment,
 	docstring const & end);
 extern void add_known_theorem(std::string const & theorem,
 	std::string const & o1, bool o2, docstring const & definition);
-extern Layout const * findLayoutWithoutModule(TextClass const & textclass,
+extern Layout const * findLayoutWithoutModule(TextClass const & tc,
 	std::string const & name, bool command);
-extern InsetLayout const * findInsetLayoutWithoutModule(
-	TextClass const & textclass, std::string const & name, bool command);
+extern InsetLayout const * findInsetLayoutWithoutModule(TextClass const & tc, std::string const & name, bool command);
 /*!
  * Check whether a module provides command (if \p command is true) or
  * environment (if \p command is false) \p name, and add the module to the

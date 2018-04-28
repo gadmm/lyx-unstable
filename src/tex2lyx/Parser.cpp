@@ -494,6 +494,7 @@ Parser::Arg Parser::getFullArg(char left, char right, bool allow_escaping)
 	if (! good())
 		return make_pair(false, string());
 
+	int group_level = 0;
 	string result;
 	Token t = get_token();
 
@@ -504,6 +505,15 @@ Parser::Arg Parser::getFullArg(char left, char right, bool allow_escaping)
 	} else {
 		while (good()) {
 			t = get_token();
+			// honor grouping
+			if (left != '{' && t.cat() == catBegin) {
+				++group_level;
+				continue;
+			}
+			if (left != '{' && t.cat() == catEnd) {
+				--group_level;
+				continue;
+			}
 			// Ignore comments
 			if (t.cat() == catComment) {
 				if (!t.cs().empty())
@@ -511,13 +521,15 @@ Parser::Arg Parser::getFullArg(char left, char right, bool allow_escaping)
 				continue;
 			}
 			if (allow_escaping) {
-				if (t.cat() != catEscape && t.character() == right)
+				if (t.cat() != catEscape && t.character() == right
+				    && group_level == 0)
 					break;
 			} else {
 				if (t.character() == right) {
 					if (t.cat() == catEscape)
 						result += '\\';
-					break;
+					if (group_level == 0)
+						break;
 				}
 			}
 			result += t.asInput();
@@ -533,11 +545,11 @@ string Parser::getArg(char left, char right, bool allow_escaping)
 }
 
 
-string Parser::getFullOpt(bool keepws)
+string Parser::getFullOpt(bool keepws, char left, char right)
 {
-	Arg arg = getFullArg('[', ']');
+	Arg arg = getFullArg(left, right);
 	if (arg.first)
-		return '[' + arg.second + ']';
+		return left + arg.second + right;
 	if (keepws)
 		unskip_spaces(true);
 	return string();
@@ -720,7 +732,7 @@ string Parser::verbatim_item()
 	if (next_token().cat() == catBegin) {
 		Token t = get_token(); // skip brace
 		string res;
-		for (Token t = get_token(); t.cat() != catEnd && good(); t = get_token()) {
+		for (t = get_token(); t.cat() != catEnd && good(); t = get_token()) {
 			if (t.cat() == catBegin) {
 				putback();
 				res += '{' + verbatim_item() + '}';

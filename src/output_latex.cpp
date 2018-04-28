@@ -142,11 +142,16 @@ string const getPolyglossiaEnvName(Language const * lang)
 
 
 string const getPolyglossiaBegin(string const & lang_begin_command,
-				 string const & lang, string const & opts)
+				 string const & lang, string const & opts,
+				 bool const localswitch = false)
 {
 	string result;
-	if (!lang.empty())
-		result = subst(lang_begin_command, "$$lang", lang);
+	if (!lang.empty()) {
+		// we need to revert the upcasing done in getPolyglossiaEnvName()
+		// in case we have a local polyglossia command (\textarabic).
+		string language = localswitch ? ascii_lowercase(lang) : lang;
+		result = subst(lang_begin_command, "$$lang", language);
+	}
 	string options = opts.empty() ?
 		    string() : "[" + opts + "]";
 	result = subst(result, "$$opts", options);
@@ -363,12 +368,12 @@ void TeXEnvironment(Buffer const & buf, Text const & text,
 		    pit_type & pit, otexstream & os)
 {
 	ParagraphList const & paragraphs = text.paragraphs();
-	ParagraphList::const_iterator par = paragraphs.constIterator(pit);
+	ParagraphList::const_iterator ipar = paragraphs.constIterator(pit);
 	LYXERR(Debug::LATEX, "TeXEnvironment for paragraph " << pit);
 
-	Layout const & current_layout = par->layout();
-	depth_type const current_depth = par->params().depth();
-	Length const & current_left_indent = par->params().leftIndent();
+	Layout const & current_layout = ipar->layout();
+	depth_type const current_depth = ipar->params().depth();
+	Length const & current_left_indent = ipar->params().leftIndent();
 
 	// This is for debugging purpose at the end.
 	pit_type const par_begin = pit;
@@ -436,10 +441,8 @@ void getArgInsets(otexstream & os, OutputParams const & runparams, Layout::LaTeX
 
 	// Default and preset args are always output, so if they require
 	// other arguments, consider this.
-	Layout::LaTeXArgMap::const_iterator lit = latexargs.begin();
-	Layout::LaTeXArgMap::const_iterator const lend = latexargs.end();
-	for (; lit != lend; ++lit) {
-		Layout::latexarg arg = (*lit).second;
+	for (auto const & larg : latexargs) {
+		Layout::latexarg const & arg = larg.second;
 		if ((!arg.presetarg.empty() || !arg.defaultarg.empty()) && !arg.requires.empty()) {
 				vector<string> req = getVectorFromString(arg.requires);
 				required.insert(required.end(), req.begin(), req.end());
@@ -905,7 +908,9 @@ void TeXOnePar(Buffer const & buf,
 			    && (par_lang != openLanguageName(state) || localswitch)
 			    && !par_lang.empty()) {
 				string bc = use_polyglossia ?
-					  getPolyglossiaBegin(lang_begin_command, par_lang, par_language->polyglossiaOpts())
+					  getPolyglossiaBegin(lang_begin_command, par_lang,
+					  		      par_language->polyglossiaOpts(),
+					  		      localswitch)
 					  : subst(lang_begin_command, "$$lang", par_lang);
 				os << bc;
 				os << lang_command_termination;
@@ -964,11 +969,13 @@ void TeXOnePar(Buffer const & buf,
 				if (runparams.encoding->package() == Encoding::CJK
 				    && par_lang != openLanguageName(state)
 				    && !par_lang.empty()) {
-					os << from_ascii(subst(
-						lang_begin_command,
-						"$$lang",
-						par_lang))
-					<< lang_command_termination;
+				    	string bc = use_polyglossia ?
+						    getPolyglossiaBegin(lang_begin_command, par_lang,
+						    			par_language->polyglossiaOpts(),
+						    			localswitch)
+						    : subst(lang_begin_command, "$$lang", par_lang);
+					os << bc
+					   << lang_command_termination;
 					if (using_begin_end)
 						pushLanguageName(par_lang, localswitch);
 				}
@@ -1135,7 +1142,8 @@ void TeXOnePar(Buffer const & buf,
 				    && current_lang != openLanguageName(state)) {
 					string bc = use_polyglossia ?
 						    getPolyglossiaBegin(lang_begin_command, current_lang,
-									current_language->polyglossiaOpts())
+									current_language->polyglossiaOpts(),
+									localswitch)
 						  : subst(lang_begin_command, "$$lang", current_lang);
 					os << bc;
 					pending_newline = !localswitch;

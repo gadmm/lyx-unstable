@@ -64,9 +64,11 @@ $$
 %\begin{}(,)(,)
 %\begin{}{}[]{}
 \bf
+\bibbysection[] % biblatex
 \bibitem[]{}
 \bibliography{}
 \bibliographystyle{}
+\addbibresource{} % biblatex
 \c{}
 \cite[]{}
 
@@ -110,7 +112,27 @@ $$
 \footciteyear[]{}
 \footciteyearpar[][]{}
 \citefield[]{}
-\citetitle[]{}
+%\citetitle[]{}
+
+% biblatex:
+\Cite[][]{}
+\cite*[][]{}
+\textcite[][]{}
+\Textcite[][]{}
+\parencite[][]{}
+\Parencite[][]{}
+\parencite*
+\smartcite[][]{}
+\Smartcite[][]{}
+\footcite[][]{}
+\Footcite[][]{}
+\autocite[][]{}
+\Autocite[][]{}
+\citecite[][]{}
+\citecite*[][]{}
+\fullcite[][]{}
+\footfullcite[][]{}
+\supercite[][]{}
 
 \cline{ - }
 \d{}
@@ -577,6 +599,7 @@ $$
 \pdfstringdef{}{}        % from the hyperref package
 \poptabs
 \prefacename
+\printbibliography[] % biblatex
 \printindex[]{}
 \protect
 \providecommand{}[][]{}
@@ -649,6 +672,7 @@ $$
 \subcaptionbox[translate]{translate}[][]{translate} % subcaption.sty
 \subcaptionbox*{translate}[][]{translate} % subcaption.sty
 \subjectname
+\subfloat[][]{}
 \subfigure[translate][translate]{translate} % obsolete subfigure.sty
 \subparagraph[]{}  % These "sub" versions of the sectioning commands weren't
 \subparagraph*{}   % in the original commandlist for some reason (adk)
@@ -705,7 +729,6 @@ $$
 \vspace{}
 \vspace*{}
 \whiledo{}{}
-\xymatrix{} % this is basically an array => the contents would be parsed badly (bug 8396)
 
 % LaTeX environments.
 % They have always one extra "argument":
@@ -740,7 +763,7 @@ multline*{displaymath}
 math{}
 displaymath{displaymath}
 flalign{displaymath}
-flalign{displaymath}
+flalign*{displaymath}
 % These require extra args
 alignat{}{displaymath}
 alignat*{displaymath}

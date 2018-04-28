@@ -1892,7 +1892,8 @@ bool GuiView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 
 	case LFUN_BUFFER_RELOAD:
 		enable = doc_buffer && !doc_buffer->isUnnamed()
-			&& doc_buffer->fileName().exists() && !doc_buffer->isClean();
+			&& doc_buffer->fileName().exists()
+			&& (!doc_buffer->isClean() || doc_buffer->notifiesExternalModification());
 		break;
 
 	case LFUN_BUFFER_CHILD_OPEN:

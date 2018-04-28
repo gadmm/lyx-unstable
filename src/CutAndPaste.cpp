@@ -1242,6 +1242,10 @@ bool pasteClipboardText(Cursor & cur, ErrorList & errorList, bool asParagraphs,
 				if (available)
 					available = !buffer.paragraphs().empty();
 				if (available && !buffer.paragraphs()[0].empty()) {
+					// TeX2lyx (also used in the HTML chain) assumes English as document language
+					// if no language is explicitly set (as is the case here).
+					// We thus reset the temp buffer's language to the context language
+					buffer.changeLanguage(buffer.language(), cur.getFont().language());
 					cur.recordUndo();
 					// TeX2lyx (also used in the HTML chain) assumes English as document language
 					// if no language is explicitly set (as is the case here).

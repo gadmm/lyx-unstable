@@ -31,8 +31,8 @@
 #include "support/debug.h"
 #include "support/docstream.h"
 #include "support/lassert.h"
+#include "support/lyxlib.h"
 
-#include <cmath>
 #include <map>
 #include <algorithm>
 
@@ -88,6 +88,7 @@ namespace {
  * 0 = end, 1 = line, 2 = polyline, 3 = square line, 4 = square polyline
  * 6 = square polyline (moved to the other end)
  * 5 = square line (second point is in the second square)
+ * 7 = rounded thick line (i.e. dot for short line)
  */
 
 double const parenthHigh[] = {
@@ -331,9 +332,18 @@ double const hline[] = {
 };
 
 
+double const dot[] = {
+//	1, 0.5, 0.2, 0.5, 0.2,
+//	1, 0.4, 0.4, 0.6, 0.4,
+//	1, 0.5, 0.5, 0.5, 0.5,
+	7, 0.4, 0.4, 0.6, 0.4,
+	0
+};
+
+
 double const ddot[] = {
-	1, 0.2, 0.5, 0.3, 0.5,
-	1, 0.7, 0.5, 0.8, 0.5,
+	7, 0.0, 0.4, 0.3, 0.4,
+	7, 0.6, 0.4, 1.0, 0.4,
 	0
 };
 
@@ -367,12 +377,6 @@ double const dline3[] = {
 	1, 0.1,   0.1,   0.15,  0.15,
 	1, 0.475, 0.475, 0.525, 0.525,
 	1, 0.85,  0.85,  0.9,   0.9,
-	0
-};
-
-
-double const hlinesmall[] = {
-	1, 0.4, 0.5, 0.6, 0.5,
 	0
 };
 
@@ -503,7 +507,7 @@ named_deco_struct deco_table[] = {
 	{"acute",          slash,      0 },
 	{"tilde",          tilde,      0 },
 	{"bar",            hline,      0 },
-	{"dot",            hlinesmall, 0 },
+	{"dot",            dot,        0 },
 	{"check",          angle,      1 },
 	{"breve",          parenth,    1 },
 	{"vec",            vec,        3 },
@@ -742,7 +746,7 @@ void mathed_draw_deco(PainterInfo const & pi, double x, double y,
 	double const t = pi.base.solidLineThickness();
 	for (int i = 0; d[i]; ) {
 		int code = int(d[i++]);
-		if (code & 1) {  // code == 1 || code == 3 || code == 5
+		if (code & 1) {  // code == 1 || code == 3 || code == 5 || code == 7
 			double xx = d[i++];
 			double yy = d[i++];
 			double x2 = d[i++];
@@ -758,6 +762,16 @@ void mathed_draw_deco(PainterInfo const & pi, double x, double y,
 				mt.transform(x2, y2);
 			pi.pain.lineDouble(x + xx, y + yy, x + x2, y + y2,
 			                   pi.base.font.color(), t);
+			if (code == 5) {  // thicker, but rounded
+				pi.pain.line(
+					int(x + xx + 0.5+1), int(y + yy + 0.5-1),
+					int(x + x2 + 0.5-1), int(y + y2 + 0.5-1),
+				pi.base.font.color());
+				pi.pain.line(
+					int(x + xx + 0.5+1), int(y + yy + 0.5+1),
+					int(x + x2 + 0.5-1), int(y + y2 + 0.5+1),
+				pi.base.font.color());
+			}
 		} else {
 			double xp[32];
 			double yp[32];

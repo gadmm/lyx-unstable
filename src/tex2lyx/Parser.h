@@ -67,7 +67,8 @@ enum {
 	FLAG_OPTION     = 1 << 11, //  read [...] style option
 	FLAG_BRACED     = 1 << 12, //  read {...} style argument
 	FLAG_CELL       = 1 << 13, //  read table cell
-	FLAG_TABBING    = 1 << 14  //  We are inside a tabbing environment
+	FLAG_TABBING    = 1 << 14,  //  We are inside a tabbing environment
+	FLAG_RDELIM     = 1 << 15,  //  next right delimiter ends the parsing
 };
 
 
@@ -213,7 +214,7 @@ public:
 	void dump() const;
 
 	/// Does an optional argument follow after the current token?
-	bool hasOpt();
+	bool hasOpt(std::string const l = "[");
 	///
 	typedef std::pair<bool, std::string> Arg;
 	/*!

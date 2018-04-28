@@ -47,14 +47,15 @@ namespace lyx {
 
 namespace {
 
-void output_arguments(ostream &, Parser &, bool, bool, bool, Context &,
+void output_arguments(ostream &, Parser &, bool, bool, string, Context &,
                       Layout::LaTeXArgMap const &);
 
 }
 
 
 void parse_text_in_inset(Parser & p, ostream & os, unsigned flags, bool outer,
-		Context const & context, InsetLayout const * layout)
+		Context const & context, InsetLayout const * layout,
+		string const rdelim)
 {
 	bool const forcePlainLayout =
 		layout ? layout->forcePlainLayout() : false;
@@ -64,11 +65,11 @@ void parse_text_in_inset(Parser & p, ostream & os, unsigned flags, bool outer,
 	else
 		newcontext.font = context.font;
 	if (layout)
-		output_arguments(os, p, outer, false, false, newcontext,
+		output_arguments(os, p, outer, false, string(), newcontext,
 		                 layout->latexargs());
-	parse_text(p, os, flags, outer, newcontext);
+	parse_text(p, os, flags, outer, newcontext, rdelim);
 	if (layout)
-		output_arguments(os, p, outer, false, true, newcontext,
+		output_arguments(os, p, outer, false, "post", newcontext,
 		                 layout->postcommandargs());
 	newcontext.check_end_layout(os);
 }
@@ -77,14 +78,15 @@ void parse_text_in_inset(Parser & p, ostream & os, unsigned flags, bool outer,
 namespace {
 
 void parse_text_in_inset(Parser & p, ostream & os, unsigned flags, bool outer,
-		Context const & context, string const & name)
+		Context const & context, string const & name,
+		string const rdelim = string())
 {
 	InsetLayout const * layout = 0;
 	DocumentClass::InsetLayouts::const_iterator it =
 		context.textclass.insetLayouts().find(from_ascii(name));
 	if (it != context.textclass.insetLayouts().end())
 		layout = &(it->second);
-	parse_text_in_inset(p, os, flags, outer, context, layout);
+	parse_text_in_inset(p, os, flags, outer, context, layout, rdelim);
 }
 
 /// parses a paragraph snippet, useful for example for \\emph{...}
@@ -346,7 +348,7 @@ string minted_nonfloat_caption = "";
 
 // Characters that have to be escaped by \\ in LaTeX
 char const * const known_escaped_chars[] = {
-		"&", "_", "$", "%", "#", "^", "{", "}"};
+		"&", "_", "$", "%", "#", "^", "{", "}", 0};
 
 
 /// splits "x=z, y=b" into a map and an ordered keyword vector
@@ -621,7 +623,7 @@ pair<bool, docstring> convert_unicodesymbols(docstring s)
 		else {
 			res = false;
 			for (auto const & c : known_escaped_chars)
-				if (prefixIs(s, from_ascii("\\") + c))
+				if (c != 0 && prefixIs(s, from_ascii("\\") + c))
 					res = true;
 			i = 1;
 		}
@@ -747,14 +749,16 @@ void skip_spaces_braces(Parser & p, bool keepws = false)
 }
 
 
-void output_arguments(ostream & os, Parser & p, bool outer, bool need_layout, bool post,
+void output_arguments(ostream & os, Parser & p, bool outer, bool need_layout, string const prefix,
                       Context & context, Layout::LaTeXArgMap const & latexargs)
 {
-	if (need_layout) {
-		context.check_layout(os);
-		need_layout = false;
-	} else
-		need_layout = true;
+	if (context.layout->latextype != LATEX_ITEM_ENVIRONMENT || !prefix.empty()) {
+		if (need_layout) {
+			context.check_layout(os);
+			need_layout = false;
+		} else
+			need_layout = true;
+	}
 	int i = 0;
 	Layout::LaTeXArgMap::const_iterator lait = latexargs.begin();
 	Layout::LaTeXArgMap::const_iterator const laend = latexargs.end();
@@ -764,31 +768,50 @@ void output_arguments(ostream & os, Parser & p, bool outer, bool need_layout, bo
 		if (lait->second.mandatory) {
 			if (p.next_token().cat() != catBegin)
 				break;
-			p.get_token(); // eat '{'
+			string ldelim = to_utf8(lait->second.ldelim);
+			string rdelim = to_utf8(lait->second.rdelim);
+			if (ldelim.empty())
+				ldelim = "{";
+			if (rdelim.empty())
+				rdelim = "}";
+			p.get_token(); // eat ldelim
+			if (ldelim.size() > 1)
+		    		p.get_token(); // eat ldelim
 			if (need_layout) {
 				context.check_layout(os);
 				need_layout = false;
 			}
 			begin_inset(os, "Argument ");
-			if (post)
-				os << "post:";
+			if (!prefix.empty())
+				os << prefix << ':';
 			os << i << "\nstatus collapsed\n\n";
-			parse_text_in_inset(p, os, FLAG_BRACE_LAST, outer, context);
+			parse_text_in_inset(p, os, FLAG_RDELIM, outer, context, 0, rdelim);
 			end_inset(os);
 		} else {
-			if (p.next_token().cat() == catEscape ||
-			    p.next_token().character() != '[')
+			string ldelim = to_utf8(lait->second.ldelim);
+			string rdelim = to_utf8(lait->second.rdelim);
+			if (ldelim.empty())
+				ldelim = "[";
+			if (rdelim.empty())
+				rdelim = "]";
+			string tok = p.next_token().asInput();
+			// we only support delimiters with max 2 chars for now.
+			if (ldelim.size() > 1)
+				tok += p.next_next_token().asInput();
+			if (p.next_token().cat() == catEscape || tok != ldelim)
 				continue;
-			p.get_token(); // eat '['
+			p.get_token(); // eat ldelim
+			if (ldelim.size() > 1)
+		    		p.get_token(); // eat ldelim
 			if (need_layout) {
 				context.check_layout(os);
 				need_layout = false;
 			}
 			begin_inset(os, "Argument ");
-			if (post)
-				os << "post:";
+			if (!prefix.empty())
+				os << prefix << ':';
 			os << i << "\nstatus collapsed\n\n";
-			parse_text_in_inset(p, os, FLAG_BRACK_LAST, outer, context);
+			parse_text_in_inset(p, os, FLAG_RDELIM, outer, context, 0, rdelim);
 			end_inset(os);
 		}
 		eat_whitespace(p, os, context, false);
@@ -819,10 +842,10 @@ void output_command_layout(ostream & os, Parser & p, bool outer,
 		context.need_end_deeper = true;
 	}
 	context.check_deeper(os);
-	output_arguments(os, p, outer, true, false, context,
+	output_arguments(os, p, outer, true, string(), context,
 	                 context.layout->latexargs());
 	parse_text(p, os, FLAG_ITEM, outer, context);
-	output_arguments(os, p, outer, false, true, context,
+	output_arguments(os, p, outer, false, "post", context,
 	                 context.layout->postcommandargs());
 	context.check_end_layout(os);
 	if (parent_context.deeper_paragraph) {
@@ -2060,15 +2083,18 @@ void parse_environment(Parser & p, ostream & os, bool outer,
 		}
 		context.check_deeper(os);
 		// handle known optional and required arguments
-		// Unfortunately LyX can't handle arguments of list arguments (bug 7468):
-		// It is impossible to place anything after the environment name,
-		// but before the first \\item.
 		if (context.layout->latextype == LATEX_ENVIRONMENT)
-			output_arguments(os, p, outer, false, false, context,
+			output_arguments(os, p, outer, false, string(), context,
 			                 context.layout->latexargs());
+		else if (context.layout->latextype == LATEX_ITEM_ENVIRONMENT) {
+			ostringstream oss;
+			output_arguments(oss, p, outer, false, string(), context,
+			                 context.layout->latexargs());
+			context.list_extra_stuff = oss.str();
+		}
 		parse_text(p, os, FLAG_END, outer, context);
 		if (context.layout->latextype == LATEX_ENVIRONMENT)
-			output_arguments(os, p, outer, false, true, context,
+			output_arguments(os, p, outer, false, "post", context,
 			                 context.layout->postcommandargs());
 		context.check_end_layout(os);
 		if (parent_context.deeper_paragraph) {
@@ -2583,7 +2609,7 @@ void fix_child_filename(string & name)
 
 
 void parse_text(Parser & p, ostream & os, unsigned flags, bool outer,
-		Context & context)
+		Context & context, string const rdelim)
 {
 	Layout const * newlayout = 0;
 	InsetLayout const * newinsetlayout = 0;
@@ -2660,6 +2686,16 @@ void parse_text(Parser & p, ostream & os, unsigned flags, bool outer,
 			return;
 		if (t.cat() == catEnd && (flags & FLAG_BRACE_LAST))
 			return;
+		string tok = t.asInput();
+		// we only support delimiters with max 2 chars for now.
+		if (rdelim.size() > 1)
+			tok += p.next_token().asInput();
+		if (t.cat() != catEscape && !rdelim.empty()
+		    && tok == rdelim && (flags & FLAG_RDELIM)) {
+		    	if (rdelim.size() > 1)
+		    		p.get_token(); // eat rdelim
+			return;
+		}
 
 		// If there is anything between \end{env} and \begin{env} we
 		// don't need to output a separator.
@@ -3048,10 +3084,10 @@ void parse_text(Parser & p, ostream & os, unsigned flags, bool outer,
 			continue;
 		}
 
-		if (t.cs() == "item") {
+		// "item" by default, but could be something else
+		if (t.cs() == context.layout->itemcommand()) {
 			string s;
-			bool const optarg = p.hasOpt();
-			if (optarg) {
+			if (context.layout->labeltype == LABEL_MANUAL) {
 				// FIXME: This swallows comments, but we cannot use
 				//        eat_whitespace() since we must not output
 				//        anything before the item.
@@ -3065,26 +3101,19 @@ void parse_text(Parser & p, ostream & os, unsigned flags, bool outer,
 				// An item in an unknown list-like environment
 				// FIXME: Do this in check_layout()!
 				context.has_item = false;
-				if (optarg)
-					output_ert_inset(os, "\\item", context);
-				else
-					output_ert_inset(os, "\\item ", context);
+				string item = "\\" + context.layout->itemcommand();
+				if (!p.hasOpt())
+					item += " ";
+				output_ert_inset(os, item, context);
 			}
-			if (optarg) {
-				if (context.layout->labeltype != LABEL_MANUAL) {
-					// handle option of itemize item
-					begin_inset(os, "Argument item:1\n");
-					os << "status open\n";
-					os << "\n\\begin_layout Plain Layout\n";
-					Parser p2(s + ']');
-					os << parse_text_snippet(p2,
-						FLAG_BRACK_LAST, outer, context);
-					// we must not use context.check_end_layout(os)
-					// because that would close the outer itemize layout
-					os << "\n\\end_layout\n";
-					end_inset(os);
-					eat_whitespace(p, os, context, false);
-				} else if (!s.empty()) {
+			if (context.layout->labeltype != LABEL_MANUAL)
+				output_arguments(os, p, outer, false, "item", context,
+					         context.layout->itemargs());
+			if (!context.list_extra_stuff.empty()) {
+				os << context.list_extra_stuff;
+				context.list_extra_stuff.clear();
+			}
+			else if (!s.empty()) {
 					// LyX adds braces around the argument,
 					// so we need to remove them here.
 					if (s.size() > 2 && s[0] == '{' &&
@@ -3106,7 +3135,6 @@ void parse_text(Parser & p, ostream & os, unsigned flags, bool outer,
 					os << ' ';
 					eat_whitespace(p, os, context, false);
 				}
-			}
 			continue;
 		}
 
@@ -3618,14 +3646,16 @@ void parse_text(Parser & p, ostream & os, unsigned flags, bool outer,
 			continue;
 		}
 
-		if ((where = is_known(t.cs(), known_text_font_series))) {
+		// beamer has a \textbf<overlay>{} inset
+		if (!p.hasOpt("<") && (where = is_known(t.cs(), known_text_font_series))) {
 			parse_text_attributes(p, os, FLAG_ITEM, outer,
 				context, "\\series", context.font.series,
 				known_coded_font_series[where - known_text_font_series]);
 			continue;
 		}
 
-		if ((where = is_known(t.cs(), known_text_font_shapes))) {
+		// beamer has a \textit<overlay>{} inset
+		if (!p.hasOpt("<") && (where = is_known(t.cs(), known_text_font_shapes))) {
 			parse_text_attributes(p, os, FLAG_ITEM, outer,
 				context, "\\shape", context.font.shape,
 				known_coded_font_shapes[where - known_text_font_shapes]);
@@ -3704,9 +3734,10 @@ void parse_text(Parser & p, ostream & os, unsigned flags, bool outer,
 			continue;
 		}
 
-		if (t.cs() == "uuline" || t.cs() == "uwave"
+		// beamer has an \emph<overlay>{} inset
+		if ((t.cs() == "uuline" || t.cs() == "uwave"
 		        || t.cs() == "emph" || t.cs() == "noun"
-		        || t.cs() == "xout") {
+		        || t.cs() == "xout") && !p.hasOpt("<")) {
 			context.check_layout(os);
 			os << "\n\\" << t.cs() << " on\n";
 			parse_text_snippet(p, os, FLAG_ITEM, outer, context);

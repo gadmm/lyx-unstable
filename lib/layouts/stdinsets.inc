@@ -4,7 +4,7 @@
 #
 # Detailed format description is available in the customization manual
 
-Format 66
+Format 67
 
 Provides stdinsets 1
 
@@ -150,6 +150,7 @@ InsetLayout Note:Comment
 	EndHTMLStyle
 	AddToToc              note
 	IsTocCaption          true
+	NeedCProtect          true
 End
 
 
@@ -552,6 +553,7 @@ InsetLayout "Flex:URL"
 	PassThru              true
 	FreeSpacing           true
 	ForceLTR              true
+	NeedCProtect          true
 	Font
 	  Family              Typewriter
 	  Color               urltext

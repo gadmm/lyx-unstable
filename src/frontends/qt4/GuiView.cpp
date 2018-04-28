@@ -3070,12 +3070,6 @@ bool GuiView::closeTabWorkArea(TabWorkArea * twa)
 
 bool GuiView::saveBufferIfNeeded(Buffer & buf, bool hiding)
 {
-	if (buf.isClean() || buf.paragraphs().empty())
-		return true;
-
-	// Switch to this Buffer.
-	setBuffer(&buf);
-
 	docstring file;
 	bool exists;
 	// FIXME: Unicode?
@@ -3088,6 +3082,12 @@ bool GuiView::saveBufferIfNeeded(Buffer & buf, bool hiding)
 		file = filename.displayName(30);
 		exists = filename.exists();
 	}
+
+	if ((exists && buf.isClean()) || buf.paragraphs().empty())
+		return true;
+
+	// Switch to this Buffer.
+	setBuffer(&buf);
 
 	// Bring this window to top before asking questions.
 	raise();
@@ -3960,6 +3960,7 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 		case LFUN_BUFFER_EXTERNAL_MODIFICATION_CLEAR:
 			LASSERT(doc_buffer, break);
 			doc_buffer->clearExternalModification();
+			doc_buffer->markDirty();
 			break;
 
 		case LFUN_BUFFER_CLOSE:

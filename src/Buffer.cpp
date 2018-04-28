@@ -5303,9 +5303,11 @@ void Buffer::Impl::fileExternallyModified(bool const exists)
 	if (checksum_ == filename.checksum()) {
 		LYXERR(Debug::FILES, "External modification but "
 		       "checksum unchanged: " << filename);
+		// hide external modification notification if the old file is reinstated
+		// in some way.
+		owner_->clearExternalModification();
 		return;
 	}
-	lyx_clean = bak_clean = false;
 	// If the file has been deleted, only mark the file as dirty since it is
 	// pointless to prompt for reloading. If later a file is moved into this
 	// location, then the externally modified warning will appear then.

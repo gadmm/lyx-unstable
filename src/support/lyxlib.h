@@ -15,6 +15,8 @@
 #ifndef LYX_LIB_H
 #define LYX_LIB_H
 
+#include <cmath>
+
 namespace lyx {
 namespace support {
 
@@ -34,6 +36,11 @@ inline bool float_equal(double var, double number, double error)
 	return (number - error <= var && var <= number + error);
 }
 
+/// round \p x to nearest integer
+inline int iround(double x)
+{
+	return static_cast<int>(round(x));
+}
 
 } // namespace support
 } // namespace lyx

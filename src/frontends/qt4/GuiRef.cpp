@@ -18,6 +18,8 @@
 #include "Buffer.h"
 #include "BufferParams.h"
 #include "BufferList.h"
+#include "BufferView.h"
+#include "Cursor.h"
 #include "FuncRequest.h"
 
 #include "qt_helpers.h"
@@ -293,10 +295,26 @@ void GuiRef::closeEvent(QCloseEvent * e)
 
 void GuiRef::updateContents()
 {
-	int orig_type = typeCO->currentIndex();
+	QString const orig_type =
+		typeCO->itemData(typeCO->currentIndex()).toString();
 
 	referenceED->clear();
 	nameED->clear();
+	typeCO->clear();
+
+	// FIXME Bring InsetMathRef on par with InsetRef
+	// (see #9798)
+	typeCO->addItem(qt_("<reference>"), "ref");
+	typeCO->addItem(qt_("(<reference>)"), "eqref");
+	typeCO->addItem(qt_("<page>"), "pageref");
+	typeCO->addItem(qt_("on page <page>"), "vpageref");
+	typeCO->addItem(qt_("<reference> on page <page>"), "vref");
+	if (bufferview()->cursor().inTexted()) {
+		typeCO->addItem(qt_("Formatted reference"), "formatted");
+		typeCO->addItem(qt_("Textual reference"), "nameref");
+		typeCO->addItem(qt_("Label only"), "labelonly");
+	} else
+		typeCO->addItem(qt_("Formatted reference"), "prettyref");
 
 	referenceED->setText(toqstr(params_["reference"]));
 	nameED->setText(toqstr(params_["name"]));
@@ -305,10 +323,15 @@ void GuiRef::updateContents()
 
 	// restore type settings for new insets
 	bool const new_inset = params_["reference"].empty();
-	if (new_inset)
-		typeCO->setCurrentIndex(orig_type);
+	if (new_inset) {
+		int index = typeCO->findData(orig_type);
+		if (index == -1)
+			index = 0;
+		typeCO->setCurrentIndex(index);
+	}
 	else
-		typeCO->setCurrentIndex(InsetRef::getType(params_.getCmdName()));
+		typeCO->setCurrentIndex(
+			typeCO->findData(toqstr(params_.getCmdName())));
 	typeCO->setEnabled(typeAllowed() && !isBufferReadonly());
 	if (!typeAllowed())
 		typeCO->setCurrentIndex(0);
@@ -350,7 +373,7 @@ void GuiRef::applyView()
 {
 	last_reference_ = referenceED->text();
 
-	params_.setCmdName(InsetRef::getName(typeCO->currentIndex()));
+	params_.setCmdName(fromqstr(typeCO->itemData(typeCO->currentIndex()).toString()));
 	params_["reference"] = qstring_to_ucs4(last_reference_);
 	params_["name"] = qstring_to_ucs4(nameED->text());
 	params_["plural"] = pluralCB->isChecked() ?
@@ -468,8 +491,8 @@ void GuiRef::redoRefs()
 			QString const cat = refsCategories.at(i);
 			QTreeWidgetItem * item = new QTreeWidgetItem(refsTW);
 			item->setText(0, cat);
-			for (int i = 0; i < refsStrings.size(); ++i) {
-				QString const ref = refsStrings.at(i);
+			for (int j = 0; j < refsStrings.size(); ++j) {
+				QString const ref = refsStrings.at(j);
 				if ((ref.startsWith(cat + QString(":")))
 				    || (cat == qt_("<No prefix>")
 				       && (!ref.mid(1).contains(":") || ref.left(1).contains(":")))) {
@@ -586,9 +609,9 @@ void GuiRef::resetFilter()
 }
 
 
-bool GuiRef::initialiseParams(std::string const & data)
+bool GuiRef::initialiseParams(std::string const & sdata)
 {
-	InsetCommand::string2params(data, params_);
+	InsetCommand::string2params(sdata, params_);
 	return true;
 }
 

@@ -3503,6 +3503,8 @@ void Paragraph::forOutliner(docstring & os, size_t const maxlen,
 	size_t tmplen = shorten ? maxlen + 1 : maxlen;
 	if (label && !labelString().empty())
 		os += labelString() + ' ';
+	if (!layout().isTocCaption())
+		return;
 	for (pos_type i = 0; i < size() && os.length() < tmplen; ++i) {
 		if (isDeleted(i))
 			continue;
@@ -4145,6 +4147,15 @@ SpellChecker::Result Paragraph::spellCheck(pos_type & from, pos_type & to,
 			speller->suggest(wl, suggestions);
 	}
 	return result;
+}
+
+
+void Paragraph::anonymize()
+{
+	// This is a very crude anonymization for now
+	for (char_type & c : d->text_)
+		if (isLetterChar(c) || isNumber(c))
+			c = 'a';
 }
 
 

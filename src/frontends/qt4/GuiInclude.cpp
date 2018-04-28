@@ -70,6 +70,8 @@ GuiInclude::GuiInclude(GuiView & lv)
 	connect(bypassCB, SIGNAL(clicked()), this, SLOT(change_adaptor()));
 	connect(bypassCB, SIGNAL(clicked()), this, SLOT(setListingsMsg()));
 
+	disable_widget_if_ndef_FILEFORMAT(literalCB);
+
 	setFocusProxy(filenameED);
 
 	bc().setPolicy(ButtonPolicy::OkApplyCancelReadOnlyPolicy);
@@ -228,7 +230,11 @@ void GuiInclude::paramsToDialog(InsetCommandParams const & icp)
 		string extra = getStringFromVector(pars);
 		listingsED->setPlainText(toqstr(InsetListingsParams(extra).separatedParams()));
 	}
+#ifdef FILEFORMAT
 	literalCB->setChecked(icp["literal"] == "true");
+#else
+	literalCB->setChecked(true);
+#endif
 
 	// Make sure that the bc is in the INITIAL state
 	if (bc().policy().buttonStatus(ButtonPolicy::OKAY))

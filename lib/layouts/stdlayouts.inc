@@ -7,7 +7,7 @@
 # quotations and such.
 
 
-Format 66
+Format 67
 
 Style Quotation
 	Category              MainText
@@ -78,9 +78,10 @@ Style Verbatim
 	LatexType             Environment
 	LatexName             verbatim
 	NextNoIndent          1
-	ParbreakIsNewline	  1
+	ParbreakIsNewline     1
 	FreeSpacing           1
 	PassThru              1
+	NeedCProtect          1
 	KeepEmpty             1
 	NewLine               0
 	TopSep                0.7

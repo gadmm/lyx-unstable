@@ -223,6 +223,11 @@ public:
 	///
 	bool confirmDeletion() const { return !text().empty(); }
 
+	///
+	bool needsCProtection() const;
+	///
+	bool hasCProtectContent() const;
+
 protected:
 	///
 	void iterateForToc(DocIterator const & cdit, bool output_active,

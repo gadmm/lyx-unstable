@@ -195,6 +195,7 @@ LexerKeyword lyxrcTags[] = {
 	{ "\\use_converter_needauth", LyXRC::RC_USE_CONVERTER_NEEDAUTH },
 	{ "\\use_converter_needauth_forbidden", LyXRC::RC_USE_CONVERTER_NEEDAUTH_FORBIDDEN },
 	{ "\\use_lastfilepos", LyXRC::RC_USELASTFILEPOS },
+	{ "\\use_native_filedialog", LyXRC::RC_USE_NATIVE_FILEDIALOG },
 	{ "\\use_pixmap_cache", LyXRC::RC_USE_PIXMAP_CACHE },
 	// compatibility with versions older than 1.4.0 only
 	{ "\\use_system_colors", LyXRC::RC_USE_SYSTEM_COLORS },
@@ -272,6 +273,7 @@ void LyXRC::setDefaults()
 	num_lastfiles = 20;
 	check_lastfiles = true;
 	use_lastfilepos = true;
+	use_native_filedialog = true;
 	load_session = false;
 	make_backup = true;
 	save_compressed = false;
@@ -282,6 +284,8 @@ void LyXRC::setDefaults()
 // FIXME: this check should test the target platform (darwin)
 #if defined(USE_MACOSX_PACKAGING)
 	spellchecker = "native";
+#elif defined(USE_ENCHANT)
+	spellchecker = "enchant";
 #elif defined(USE_ASPELL)
 	spellchecker = "aspell";
 #elif defined(USE_HUNSPELL)
@@ -870,6 +874,9 @@ LyXRC::ReturnValues LyXRC::read(Lexer & lexrc, bool check_format)
 			// Spellchecker settings:
 		case RC_ACCEPT_COMPOUND:
 			lexrc >> spellchecker_accept_compound;
+			break;
+		case RC_USE_NATIVE_FILEDIALOG:
+			lexrc >> use_native_filedialog;
 			break;
 		case RC_USE_SYSTEM_COLORS:
 			lexrc >> use_system_colors;
@@ -2405,6 +2412,16 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		if (tag != RC_LAST)
 			break;
 		// fall through
+	case RC_USE_NATIVE_FILEDIALOG:
+		if (ignore_system_lyxrc ||
+		    use_native_filedialog != system_lyxrc.use_native_filedialog) {
+			os << "\\use_native_filedialog "
+			   << convert<string>(use_native_filedialog)
+			   << '\n';
+		}
+		if (tag != RC_LAST)
+			break;
+		// fall through
 	case RC_USE_SYSTEM_COLORS:
 		if (ignore_system_lyxrc ||
 		    use_system_colors != system_lyxrc.use_system_colors) {
@@ -3015,6 +3032,7 @@ void actOnUpdatedPrefs(LyXRC const & lyxrc_orig, LyXRC const & lyxrc_new)
 	case LyXRC::RC_USE_CONVERTER_CACHE:
 	case LyXRC::RC_USE_CONVERTER_NEEDAUTH_FORBIDDEN:
 	case LyXRC::RC_USE_CONVERTER_NEEDAUTH:
+	case LyXRC::RC_USE_NATIVE_FILEDIALOG:
 	case LyXRC::RC_USE_SYSTEM_COLORS:
 	case LyXRC::RC_USE_TOOLTIP:
 	case LyXRC::RC_USE_PIXMAP_CACHE:

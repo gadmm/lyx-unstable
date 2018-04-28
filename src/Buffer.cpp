@@ -2343,10 +2343,19 @@ BiblioInfo const & Buffer::masterBibInfo() const
 }
 
 
+BiblioInfo const & Buffer::bibInfo() const
+{
+	return d->bibinfo_;
+}
+
+
 void Buffer::registerBibfiles(FileNamePairList const & bf) const {
+	// We register the bib files in the master buffer,
+	// if there is one, but also in every single buffer,
+	// in case a child is compiled alone.
 	Buffer const * const tmp = masterBuffer();
 	if (tmp != this)
-		return tmp->registerBibfiles(bf);
+		tmp->registerBibfiles(bf);
 
 	for (auto const & p : bf) {
 		FileNamePairList::const_iterator temp =
@@ -2415,21 +2424,33 @@ void Buffer::collectBibKeys(FileNameList & checkedFiles) const
 }
 
 
-void Buffer::addBiblioInfo(BiblioInfo const & bi) const
+void Buffer::addBiblioInfo(BiblioInfo const & bin) const
 {
-	Buffer const * tmp = masterBuffer();
-	BiblioInfo & masterbi = (tmp == this) ?
-		d->bibinfo_ : tmp->d->bibinfo_;
-	masterbi.mergeBiblioInfo(bi);
+	// We add the biblio info to the master buffer,
+	// if there is one, but also to every single buffer,
+	// in case a child is compiled alone.
+	BiblioInfo & bi = d->bibinfo_;
+	bi.mergeBiblioInfo(bin);
+
+	if (parent() != 0) {
+		BiblioInfo & masterbi = parent()->d->bibinfo_;
+		masterbi.mergeBiblioInfo(bin);
+	}
 }
 
 
-void Buffer::addBibTeXInfo(docstring const & key, BibTeXInfo const & bi) const
+void Buffer::addBibTeXInfo(docstring const & key, BibTeXInfo const & bin) const
 {
-	Buffer const * tmp = masterBuffer();
-	BiblioInfo & masterbi = (tmp == this) ?
-		d->bibinfo_ : tmp->d->bibinfo_;
-	masterbi[key] = bi;
+	// We add the bibtex info to the master buffer,
+	// if there is one, but also to every single buffer,
+	// in case a child is compiled alone.
+	BiblioInfo & bi = d->bibinfo_;
+	bi[key] = bin;
+
+	if (parent() != 0) {
+		BiblioInfo & masterbi = parent()->d->bibinfo_;
+		masterbi[key] = bin;
+	}
 }
 
 
@@ -4639,8 +4660,9 @@ void Buffer::updateBuffer(UpdateScope scope, UpdateType utype) const
 	DocumentClass const & textclass = master->params().documentClass();
 
 	FileNamePairList old_bibfiles;
-	// do this only if we are the top-level Buffer
-	if (master == this) {
+	// Do this only if we are the top-level Buffer. We also need to account
+	// for the case of a previewed child with ignored parent here.
+	if (master == this && !d->ignore_parent) {
 		textclass.counters().reset(from_ascii("bibitem"));
 		reloadBibInfoCache();
 		// we will re-read this cache as we go through, but we need

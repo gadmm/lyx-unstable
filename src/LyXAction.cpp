@@ -1359,8 +1359,9 @@ void LyXAction::init()
  * \li Action: Inserts the current date.
  * \li Syntax: date-insert [<ARG>]
  * \li Params: <ARG>: Format of date. The default value (%x) can be set
-                     in Preferences->Date format. For possible formats
-                     see manual page of strftime function.
+                      in Preferences->Output->General->Date format. For
+                      possible formats see the manual page of the
+                      strftime function.
  * \li Origin: jdblair, 31 Jan 2000
  * \endvar
  */
@@ -3850,10 +3851,10 @@ void LyXAction::init()
 /*!
  * \var lyx::FuncCode lyx::LFUN_UNICODE_INSERT
  * \li Action: Inserts a single unicode character.
- * \li Syntax: unicode-insert <CHAR>
- * \li Params: <CHAR>: The character to insert, given as its code
+ * \li Syntax: unicode-insert <CHAR1> <CHAR2> ...
+ * \li Params: <CHARn>: The character to insert, given as its code
                        point, in hexadecimal.
- * \li Sample: unicode-insert 0x0100
+ * \li Sample: unicode-insert 0x0100 0x0259
  * \li Origin: Lgb, 22 Oct 2006
  * \endvar
  */

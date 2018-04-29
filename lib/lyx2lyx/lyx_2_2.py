@@ -24,15 +24,8 @@ import sys, os
 
 # Uncomment only what you need to import, please.
 
-#from parser_tools import find_token, find_end_of, find_tokens, \
-#  find_token_exact, find_end_of_inset, find_end_of_layout, \
-#  find_token_backwards, is_in_inset, get_value, get_quoted_value, \
-#  del_token, check_token, get_option_value
-
 from lyx2lyx_tools import (add_to_preamble, put_cmd_in_ert, get_ert,
-    lyx2latex, lyx2verbatim, length_in_bp, convert_info_insets)
-#   insert_to_preamble, latex_length, revert_flex_inset,
-#   revert_font_attrs, hex2ratio, str2bool
+    lyx2latex, lyx2verbatim, length_in_bp, convert_info_insets, insert_document_option)
 
 from parser_tools import (check_token, del_complete_lines,
     find_end_of_inset, find_end_of_layout, find_nonempty_line, find_re,
@@ -667,7 +660,7 @@ def convert_dashes(document):
     # remove ligature breaks between dashes
     i = 0
     while True:
-        i = find_substring(document.body, 
+        i = find_substring(document.body,
                            r"-\SpecialChar \textcompwordmark{}", i+1)
         if i == -1:
             break
@@ -865,12 +858,7 @@ def revert_georgian(document):
         j = find_token(document.header, "\\language_package default", 0)
         if j != -1:
             document.header[j] = "\\language_package babel"
-        k = find_token(document.header, "\\options", 0)
-        if k != -1:
-            document.header[k] = document.header[k].replace("\\options", "\\options georgian,")
-        else:
-            l = find_token(document.header, "\\use_default_options", 0)
-            document.header.insert(l + 1, "\\options georgian")
+        insert_document_option(document, "georgian")
 
 
 def revert_sigplan_doi(document):
@@ -1293,7 +1281,7 @@ def revert_colorbox(document):
         if framecolor == "black" and backcolor == "none": # default values
             i += 15 # skip box option lines
             continue
-        
+
         # Emulate non-default colours with LaTeX code:
         einset = find_end_of_inset(document.body, i)
         if einset == -1:

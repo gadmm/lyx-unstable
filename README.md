@@ -39,7 +39,6 @@ For a complete list of changes try
 
 ## Important bug fixes
 
-* Crash with segfault when exiting or dissolving math insets.
 * Scrolling issues with keyboard across large insets.
 * Fix flicker due to changing metrics while selecting with the mouse. (#8951)
 * Do not randomly delete aux files while compiling. (#9963)
@@ -85,6 +84,7 @@ For a complete list of changes try
 * Properly enforce scrolling boundaries.
 * Properly reset references and counters when updating citations.
 * Properly reset selection when inputting a composed character.
+* Improve the behaviour on external modifications.
 
 ## Minor enhancements
 

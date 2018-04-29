@@ -377,3 +377,59 @@ msgid ""
 "files, graphic dimensions in case of other file types)"
 msgstr "Rogner selon les coordonnées indiquées ci-après (boîte d'encombrement pour "
 "la sortie DVI/PS, vue pour la sortie PDF"
+
+#: src/frontends/qt4/ui/OutputUi.ui:111
+msgid ""
+"Allow running unsafe converters for this document. This setting is stored "
+"with the session rather than in the file, and is always applied immediately."
+msgstr ""
+"Permettre l'exécution de convertisseurs non-sûrs pour ce document. Ce paramètre "
+"est enregistré avec la session plutôt qu'avec le fichier, et est appliqué immédiatement."
+
+#: src/frontends/qt4/ui/OutputUi.ui:114
+msgid "&Allow unsafe converters"
+msgstr "&Permettre l’utilisation des convertisseurs non-sûrs"
+
+#: src/Converter.cpp:295
+msgid ""
+"<p>It appears that the following LaTeX backend has been configured with the "
+"argument <tt>-shell-escape</tt> or <tt>-enable-write18</tt>:</"
+"p><center><p><tt>%1$s</tt></p></center><p>With these options, LaTeX can "
+"execute arbitrary commands on your system, including dangerous ones, if "
+"instructed to do so by a maliciously crafted LyX document. LyX now offers a "
+"way to secure the use of such arguments with the <tt>needauth</tt> converter "
+"option, and discourages using these arguments without it."
+msgstr ""
+"<p>Il semblerait que le convertisseur LaTeX suivant a été configuré avec l'argument"
+"<tt>-shell-escape</tt> or <tt>-enable-write18</tt>:</"
+"p><center><p><tt>%1$s</tt></p></center><p>Avec ces options, LaTeX peut "
+"exécuter des commandes arbitraires sur votre système, y compris des dangereuses, "
+"si instruites dans ce but par un document LyX malicieux. LyX offre désormais un "
+"moyen de sécuriser l'utilisation de tels arguments avec l'option de convertisseur "
+"<tt>needauth</tt>, et décourage leur utilisation sans."
+
+#: src/Converter.cpp:307
+msgid "Unsafe argument disabled"
+msgstr "Option non-sûre désactivée"
+
+#: src/Converter.cpp:323
+#, c-format
+msgid ""
+"<p>The requested operation requires the use of a converter from %2$s to %3$s:"
+"</p><blockquote><p><tt>%1$s</tt></p></blockquote><p>This external program "
+"can execute arbitrary commands on your system, including dangerous ones, if "
+"instructed to do so by a maliciously crafted .lyx document.</p>"
+msgstr ""
+"<p>L'opération requise nécessite une conversion du format %2$s au format "
+"%3$s :</p><blockquote><p><tt>%1$s</tt></p></blockquote><p>Ce programme "
+"externe peut exécuter des commandes système arbitraires, en particulier des "
+"commandes dangereuses, si instruites dans ce but par un document LyX "
+"malicieux.</p>"
+
+#: src/frontends/qt4/GuiView.cpp:593
+msgid ""
+"<b>Warning:</b> unsafe converters are allowed for this document. Right-click "
+"to change."
+msgstr ""
+"<b>Avertissement :</b> les convertisseurs non-sûrs sont autorisés pour ce document. "
+"Faites un clic droit pour changer."

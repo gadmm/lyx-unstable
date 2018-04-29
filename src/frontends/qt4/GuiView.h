@@ -171,6 +171,8 @@ public:
 	/// \name GuiBufferDelegate.
 	//@{
 	void resetAutosaveTimers();
+	// shows an error list
+	// if from_master is true, show master's error list
 	void errors(std::string const &, bool from_master = false);
 	void structureChanged();
 	void updateTocItem(std::string const &, DocIterator const &);

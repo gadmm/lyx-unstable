@@ -638,7 +638,7 @@ void InsetInclude::latex(otexstream & os, OutputParams const & runparams) const
 				opts.erase(opts.begin() + i--);
 			} else if (prefixIs(opts[i], from_ascii("caption="))) {
 #ifdef FILEFORMAT
-				caption = params().prepareCommand(runparams, opts[i].substr(8),
+				caption = params().prepareCommand(runparams, trim(opts[i].substr(8), "{}"),
 								  ParamInfo::HANDLING_LATEXIFY);
 #else
 				// FIXME We should use HANDLING_LATEXIFY here,
@@ -799,8 +799,16 @@ void InsetInclude::latex(otexstream & os, OutputParams const & runparams) const
 		runparams.par_begin = 0;
 		runparams.par_end = tmp->paragraphs().size();
 		runparams.is_child = true;
-		if (!tmp->makeLaTeXFile(tmpwritefile, masterFileName(buffer()).
-				onlyPath().absFileName(), runparams, Buffer::OnlyBody)) {
+		Buffer::ExportStatus retval =
+			tmp->makeLaTeXFile(tmpwritefile, masterFileName(buffer()).
+				onlyPath().absFileName(), runparams, Buffer::OnlyBody);
+		if (retval == Buffer::ExportKilled && buffer().isClone() &&
+		      buffer().isExporting()) {
+		  // We really shouldn't get here, I don't think.
+		  LYXERR0("No conversion exception?");
+			throw ConversionException();
+		}
+		else if (retval != Buffer::ExportSuccess) {
 			if (!runparams.silent) {
 				docstring msg = bformat(_("Included file `%1$s' "
 					"was not exported correctly.\n "
@@ -809,10 +817,8 @@ void InsetInclude::latex(otexstream & os, OutputParams const & runparams) const
 				ErrorList const & el = tmp->errorList("Export");
 				if (!el.empty())
 					msg = bformat(from_ascii("%1$s\n\n%2$s\n\n%3$s"),
-						msg, el.begin()->error,
-						el.begin()->description);
-				throw ExceptionMessage(ErrorException, _("Error: "),
-						       msg);
+					        msg, el.begin()->error, el.begin()->description);
+				throw ExceptionMessage(ErrorException, _("Error: "), msg);
 			}
 		}
 		runparams.encoding = oldEnc;
@@ -822,12 +828,15 @@ void InsetInclude::latex(otexstream & os, OutputParams const & runparams) const
 		// If needed, use converters to produce a latex file from the child
 		if (tmpwritefile != writefile) {
 			ErrorList el;
-			bool const success =
+			Converters::RetVal const retval =
 				theConverters().convert(tmp, tmpwritefile, writefile,
-							included_file,
-							inc_format, tex_format, el);
-
-			if (!success && !runparams.silent) {
+				    included_file, inc_format, tex_format, el);
+			if (retval == Converters::KILLED && buffer().isClone() &&
+			    buffer().isExporting()) {
+				// We really shouldn't get here, I don't think.
+				LYXERR0("No conversion exception?");
+				throw ConversionException();
+			} else if (retval != Converters::SUCCESS && !runparams.silent) {
 				docstring msg = bformat(_("Included file `%1$s' "
 						"was not exported correctly.\n "
 						"LaTeX export is probably incomplete."),

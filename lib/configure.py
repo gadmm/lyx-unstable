@@ -772,10 +772,10 @@ def checkFormatEntries(dtl_tools):
 def checkConverterEntries():
     ''' Check all converters (\converter entries) '''
     checkProg('the pdflatex program', ['pdflatex $$i'],
-        rc_entry = [ r'\converter pdflatex   pdf2       "%%"	"latex=pdflatex"' ])
+        rc_entry = [ r'\converter pdflatex   pdf2       "%%"	"latex=pdflatex,hyperref-driver=pdftex"' ])
 
     checkProg('XeTeX', ['xelatex $$i'],
-        rc_entry = [ r'\converter xetex      pdf4       "%%"	"latex=xelatex"' ])
+        rc_entry = [ r'\converter xetex      pdf4       "%%"	"latex=xelatex,hyperref-driver=xetex"' ])
 
     checkLuatex()
 
@@ -927,7 +927,7 @@ def checkConverterEntries():
         rc_entry = [ r'\converter rtf      html        "%%"	""' ])
     # Do not define a converter to pdf6, ps is a pure export format
     checkProg('a PS to PDF converter', ['ps2pdf $$i $$o'],
-        rc_entry = [ r'\converter ps         pdf        "%%"	""' ])
+        rc_entry = [ r'\converter ps         pdf        "%%"	"hyperref-driver=dvips"' ])
     #
     checkProg('a PS to TXT converter', ['pstotext $$i > $$o'],
         rc_entry = [ r'\converter ps         text2      "%%"	""' ])
@@ -977,13 +977,13 @@ def checkConverterEntries():
         rc_entry = [ r'\converter dvi        text4      "%%"	""' ])
     #
     checkProg('a DVI to PS converter', ['dvips -o $$o $$i'],
-        rc_entry = [ r'\converter dvi        ps         "%%"	""' ])
+        rc_entry = [ r'\converter dvi        ps         "%%"	"hyperref-driver=dvips"' ])
     #
     checkProg('a DVI to cropped EPS converter', ['dvips -E -o $$o $$i'],
         rc_entry = [ r'\converter dvi        eps3         "%%"	""' ])
     #
-    checkProg('a DVI to PDF converter', ['dvipdfmx -o $$o $$i', 'dvipdfm -o $$o $$i'],
-        rc_entry = [ r'\converter dvi        pdf3       "%%"	""' ])
+    checkProg('a DVI to PDF converter', ['dvipdfmx', 'dvipdfm'],
+        rc_entry = [ r'\converter dvi        pdf3       "%%  -o $$o $$i"	"hyperref-driver=%%"' ])
     #
     checkProg('a fax program', ['kdeprintfax $$i', 'ksendfax $$i', 'hylapex $$i'],
         rc_entry = [ r'\converter ps         fax        "%%"	""'])
@@ -1442,18 +1442,13 @@ def checkLatexConfig(check_config, bool_docbook):
     if rmcopy:
         removeFiles( [ 'chkconfig.ltx' ] )
     #
-    # currently, values in chkconfig are only used to set
-    # \font_encoding
-    values = {}
-    for line in open('chkconfig.vars').readlines():
-        key, val = re.sub('-', '_', line).split('=')
-        val = val.strip()
-        values[key] = val.strip("'")
-    # chk_fontenc may not exist
-    try:
-        addToRC(r'\font_encoding "%s"' % values["chk_fontenc"])
-    except:
-        pass
+    # values in chkconfig were only used to set
+    # \font_encoding, which is obsolete
+#    values = {}
+#    for line in open('chkconfig.vars').readlines():
+#        key, val = re.sub('-', '_', line).split('=')
+#        val = val.strip()
+#        values[key] = val.strip("'")
     # if configure successed, move textclass.lst.tmp to textclass.lst
     # and packages.lst.tmp to packages.lst
     if (os.path.isfile('textclass.lst.tmp')
@@ -1795,7 +1790,7 @@ if __name__ == '__main__':
     lyx_check_config = True
     lyx_kpsewhich = True
     outfile = 'lyxrc.defaults'
-    lyxrc_fileformat = 25
+    lyxrc_fileformat = 27
     rc_entries = ''
     lyx_keep_temps = False
     version_suffix = ''

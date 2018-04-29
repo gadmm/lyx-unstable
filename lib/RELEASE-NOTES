@@ -22,6 +22,10 @@
 
 !!!The following pref variables are obsoleted in 2.4:
 
+* \font_encoding
+  The font encoding is now automatically set depending on the document
+  fonts and languages.
+
 * \use_qimage
   This is no longer necessary due to the rewrite of the painter.
 
@@ -69,3 +73,9 @@ LFUN_EXPORT_CANCEL: Used to cancel background export processes.
 
 * Please additionally see the release notes from the versions in-between:
   https://wiki.lyx.org/LyX/ReleaseNotes
+
+* Several ttf fonts (esint10.ttf, stmary10.ttf, wasy10.ttf) were changed
+  to reflect the fact that newer Qt libraries do not support displaying certain
+  codepoints anymore (bug #8493, #10161). 
+  Distribution packagers need to repack those font files in case they are
+  delivering the fonts as a separated package dependent from core LyX.

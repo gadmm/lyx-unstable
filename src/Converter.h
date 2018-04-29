@@ -30,8 +30,16 @@ class ErrorList;
 class Format;
 class Formats;
 
-typedef std::vector<Format const *> FormatList;
+class ConversionException : public std::exception {
+public:
+	ConversionException() {}
+	virtual ~ConversionException() throw() {}
+	virtual const char * what() const throw() 
+		{ return "Exception caught in conversion routine!"; }
+};
 
+
+typedef std::vector<Format const *> FormatList;
 
 ///
 class Converter {
@@ -79,6 +87,8 @@ public:
 	std::string const result_file() const { return result_file_; }
 	///
 	std::string const parselog() const { return parselog_; }
+	///
+	std::string const hyperref_driver() const { return href_driver_; }
 
 private:
 	///
@@ -114,6 +124,8 @@ private:
 	trivstring result_file_;
 	/// Command to convert the program output to a LaTeX log file format
 	trivstring parselog_;
+	/// The hyperref driver
+	trivstring href_driver_;
 };
 
 
@@ -124,7 +136,13 @@ public:
 	typedef std::vector<Converter> ConverterList;
 	///
 	typedef ConverterList::const_iterator const_iterator;
-
+	/// Return values for converter runs
+	enum RetVal {
+		SUCCESS = 0,
+		FAILURE = 1,
+		KILLED  = 1000
+	};
+	
 	///
 	Converter const & get(int i) const { return converterlist_[i]; }
 	///
@@ -159,6 +177,8 @@ public:
 	///
 	OutputParams::FLAVOR getFlavor(Graph::EdgePath const & path,
 				       Buffer const * buffer = 0);
+	///
+	std::string getHyperrefDriver(Graph::EdgePath const & path);
 	/// Flags for converting files
 	enum ConversionFlags {
 		/// No special flags
@@ -169,7 +189,7 @@ public:
 		try_cache = 1 << 1
 	};
 	///
-	bool convert(Buffer const * buffer,
+	RetVal convert(Buffer const * buffer,
 		     support::FileName const & from_file, support::FileName const & to_file,
 		     support::FileName const & orig_from,
 		     std::string const & from_format, std::string const & to_format,
@@ -204,7 +224,7 @@ private:
 	bool scanLog(Buffer const & buffer, std::string const & command,
 		     support::FileName const & filename, ErrorList & errorList);
 	///
-	bool runLaTeX(Buffer const & buffer, std::string const & command,
+	RetVal runLaTeX(Buffer const & buffer, std::string const & command,
 		      OutputParams const &, ErrorList & errorList);
 	///
 	ConverterList converterlist_;

@@ -15,10 +15,13 @@
 #ifndef LANGUAGE_H
 #define LANGUAGE_H
 
+#include "BufferParams.h"
+
 #include "support/docstring.h"
 #include "support/trivstring.h"
 
 #include <map>
+#include <vector>
 
 
 namespace lyx {
@@ -50,6 +53,8 @@ public:
 	std::string const quoteStyle() const { return quote_style_; }
 	/// requirement (package, function)
 	std::string const requires() const { return requires_; }
+	/// provides feature
+	std::string const provides() const { return provides_; }
 	/// translatable GUI name
 	std::string const display() const { return display_; }
 	/// is this a RTL language?
@@ -79,8 +84,8 @@ public:
 	docstring babel_presettings() const { return babel_presettings_; }
 	/// This language internally sets a font encoding
 	bool internalFontEncoding() const { return internal_enc_; }
-	/// fontenc encoding(s)
-	std::string const fontenc() const { return fontenc_; }
+	/// The most suitable font encoding(s) for the selected document font
+	std::string fontenc(BufferParams const &) const;
 	/// This language needs to be passed to babel itself (not the class)
 	bool asBabelOptions() const { return as_babel_options_; }
 	/// This language corresponds to a translation of the GUI
@@ -109,6 +114,8 @@ private:
 	///
 	trivstring requires_;
 	///
+	trivstring provides_;
+	///
 	trivstring display_;
 	///
 	bool rightToLeft_;
@@ -125,7 +132,7 @@ private:
 	///
 	trivdocstring babel_presettings_;
 	///
-	trivstring fontenc_;
+	std::vector<std::string> fontenc_;
 	///
 	bool internal_enc_;
 	///

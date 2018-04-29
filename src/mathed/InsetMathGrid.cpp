@@ -397,7 +397,8 @@ void InsetMathGrid::metrics(MetricsInfo & mi, Dimension & dim) const
 	for (idx_type i = 0; i < nargs(); ++i) {
 		if (cellinfo_[i].multi_ != CELL_PART_OF_MULTICOLUMN) {
 			Dimension dimc;
-			cell(i).metrics(mi, dimc);
+			// the 'false' is to make sure that the cell is tall enough
+			cell(i).metrics(mi, dimc, false);
 		}
 	}
 
@@ -1017,47 +1018,47 @@ bool InsetMathGrid::idxForward(Cursor & cur) const
 }
 
 
-bool InsetMathGrid::idxFirst(Cursor & cur) const
+idx_type InsetMathGrid::firstIdx() const
 {
+	size_type idx = 0;
 	switch (v_align_) {
 		case 't':
-			cur.idx() = 0;
+			//idx = 0;
 			break;
 		case 'b':
-			cur.idx() = (nrows() - 1) * ncols();
+			idx = (nrows() - 1) * ncols();
 			break;
 		default:
-			cur.idx() = ((nrows() - 1) / 2) * ncols();
+			idx = ((nrows() - 1) / 2) * ncols();
 	}
 	// If we are in a multicolumn cell, move to the "real" cell
-	while (cellinfo_[cur.idx()].multi_ == CELL_PART_OF_MULTICOLUMN) {
-		LASSERT(cur.idx() > 0, return false);
-		--cur.idx();
+	while (cellinfo_[idx].multi_ == CELL_PART_OF_MULTICOLUMN) {
+		LASSERT(idx > 0, return 0);
+		--idx;
 	}
-	cur.pos() = 0;
-	return true;
+	return idx;
 }
 
 
-bool InsetMathGrid::idxLast(Cursor & cur) const
+idx_type InsetMathGrid::lastIdx() const
 {
+	size_type idx = 0;
 	switch (v_align_) {
 		case 't':
-			cur.idx() = ncols() - 1;
+			idx = ncols() - 1;
 			break;
 		case 'b':
-			cur.idx() = nargs() - 1;
+			idx = nargs() - 1;
 			break;
 		default:
-			cur.idx() = ((nrows() - 1) / 2 + 1) * ncols() - 1;
+			idx = ((nrows() - 1) / 2 + 1) * ncols() - 1;
 	}
 	// If we are in a multicolumn cell, move to the "real" cell
-	while (cellinfo_[cur.idx()].multi_ == CELL_PART_OF_MULTICOLUMN) {
-		LASSERT(cur.idx() > 0, return false);
-		--cur.idx();
+	while (cellinfo_[idx].multi_ == CELL_PART_OF_MULTICOLUMN) {
+		LASSERT(idx > 0, return false);
+		--idx;
 	}
-	cur.pos() = cur.lastpos();
-	return true;
+	return idx;
 }
 
 

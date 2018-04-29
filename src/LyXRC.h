@@ -80,7 +80,6 @@ public:
 		RC_ESC_CHARS,
 		RC_EXAMPLEPATH,
 		RC_EXPORT_OVERWRITE,
-		RC_FONT_ENCODING,
 		RC_FILEFORMAT,
 		RC_FORWARD_SEARCH_DVI,
 		RC_FORWARD_SEARCH_PDF,
@@ -173,6 +172,7 @@ public:
 		RC_USE_CONVERTER_CACHE,
 		RC_USE_CONVERTER_NEEDAUTH_FORBIDDEN,
 		RC_USE_CONVERTER_NEEDAUTH,
+		RC_USE_NATIVE_FILEDIALOG,
 		RC_USE_SYSTEM_COLORS,
 		RC_USE_TOOLTIP,
 		RC_USE_PIXMAP_CACHE,
@@ -308,8 +308,6 @@ public:
 	/// DPI of monitor
 	unsigned int dpi;
 	///
-	std::string fontenc;
-	///
 	std::string roman_font_name;
 	///
 	std::string sans_font_name;
@@ -333,6 +331,8 @@ public:
 	bool use_tooltip;
 	/// Use the colors from current system theme?
 	bool use_system_colors;
+	/// use native file dialog or our own ?
+	bool use_native_filedialog;
 	/// Use pixmap cache?
 	bool use_pixmap_cache;
 	/// Spellchecker engine: aspell, hunspell, etc

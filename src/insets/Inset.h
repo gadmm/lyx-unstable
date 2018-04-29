@@ -599,6 +599,9 @@ public:
 	virtual void rejectChanges() {}
 
 	///
+	virtual bool needsCProtection(bool const) const { return false; }
+
+	///
 	virtual ColorCode backgroundColor(PainterInfo const &) const;
 	///
 	virtual ColorCode labelColor() const;

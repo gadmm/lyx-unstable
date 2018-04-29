@@ -394,7 +394,7 @@ BufferParams::BufferParams()
 	papersize = PAPER_DEFAULT;
 	orientation = ORIENTATION_PORTRAIT;
 	use_geometry = false;
-	biblio_style = "plain";
+	biblio_style = string();
 	use_bibtopic = false;
 	multibib = string();
 	use_indices = false;
@@ -406,7 +406,7 @@ BufferParams::BufferParams()
 	secnumdepth = 3;
 	tocdepth = 3;
 	language = default_language;
-	fontenc = "global";
+	fontenc = "auto";
 	fonts_roman[0] = "default";
 	fonts_roman[1] = "default";
 	fonts_sans[0] = "default";
@@ -2093,8 +2093,8 @@ bool BufferParams::writeLaTeX(otexstream & os, LaTeXFeatures & features,
 		OutputParams tmp_params = features.runparams();
 		pdfoptions().writeLaTeX(tmp_params, os,
 					features.isProvided("hyperref"));
-		// correctly break URLs with hyperref and dvi output
-		if (features.runparams().flavor == OutputParams::LATEX
+		// correctly break URLs with hyperref and dvi/ps output
+		if (features.runparams().hyperref_driver == "dvips"
 		    && features.isAvailable("breakurl"))
 			os << "\\usepackage{breakurl}\n";
 	} else if (features.isRequired("nameref"))
@@ -3113,26 +3113,32 @@ string const BufferParams::dvips_options() const
 
 string const BufferParams::main_font_encoding() const
 {
-	return font_encodings().empty() ? "default" : font_encodings().back();
+	if (font_encodings().empty()) {
+		if (ascii_lowercase(language->fontenc(*this)) == "none")
+			return "none";
+		return "default";
+	}
+	return font_encodings().back();
 }
 
 
 vector<string> const BufferParams::font_encodings() const
 {
-	string doc_fontenc = (fontenc == "global") ? lyxrc.fontenc : fontenc;
+	string doc_fontenc = (fontenc == "auto") ? string() : fontenc;
 
 	vector<string> fontencs;
 
 	// "default" means "no explicit font encoding"
 	if (doc_fontenc != "default") {
-		fontencs = getVectorFromString(doc_fontenc);
-		if (!language->fontenc().empty()
-		    && ascii_lowercase(language->fontenc()) != "none") {
-			vector<string> fencs = getVectorFromString(language->fontenc());
-			vector<string>::const_iterator fit = fencs.begin();
-			for (; fit != fencs.end(); ++fit) {
-				if (find(fontencs.begin(), fontencs.end(), *fit) == fontencs.end())
-					fontencs.push_back(*fit);
+		if (!doc_fontenc.empty())
+			// If we have a custom setting, we use only that!
+			return getVectorFromString(doc_fontenc);
+		if (!language->fontenc(*this).empty()
+		    && ascii_lowercase(language->fontenc(*this)) != "none") {
+			vector<string> fencs = getVectorFromString(language->fontenc(*this));
+			for (auto & fe : fencs) {
+				if (find(fontencs.begin(), fontencs.end(), fe) == fontencs.end())
+					fontencs.push_back(fe);
 			}
 		}
 	}
@@ -3424,6 +3430,9 @@ bool BufferParams::addCiteEngine(vector<string> const & engine)
 
 string const & BufferParams::defaultBiblioStyle() const
 {
+	if (!biblio_style.empty())
+		return biblio_style;
+
 	map<string, string> const & bs = documentClass().defaultBiblioStyle();
 	auto cit = bs.find(theCiteEnginesList.getTypeAsString(citeEngineType()));
 	if (cit != bs.end())

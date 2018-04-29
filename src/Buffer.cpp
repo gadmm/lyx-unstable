@@ -1115,7 +1115,9 @@ bool Buffer::importFile(string const & format, FileName const & name, ErrorList 
 		return false;
 
 	FileName const lyx = tempFileName("Buffer_importFileXXXXXX.lyx");
-	if (theConverters().convert(0, name, lyx, name, format, "lyx", errorList)) {
+	Converters::RetVal const retval =
+	    theConverters().convert(0, name, lyx, name, format, "lyx", errorList);
+	if (retval == Converters::SUCCESS) {
 		bool const success = readFile(lyx) == ReadSuccess;
 		removeTempFile(lyx);
 		return success;
@@ -1677,7 +1679,7 @@ bool Buffer::write(ostream & ofs) const
 }
 
 
-bool Buffer::makeLaTeXFile(FileName const & fname,
+Buffer::ExportStatus Buffer::makeLaTeXFile(FileName const & fname,
 			   string const & original_path,
 			   OutputParams const & runparams_in,
 			   OutputWhat output) const
@@ -1701,14 +1703,14 @@ bool Buffer::makeLaTeXFile(FileName const & fname,
 		Alert::error(_("Iconv software exception Detected"), bformat(_("Please "
 			"verify that the support software for your encoding (%1$s) is "
 			"properly installed"), from_ascii(encoding)));
-		return false;
+		return ExportError;
 	}
 	if (!openFileWrite(ofs, fname))
-		return false;
+		return ExportError;
 
 	ErrorList & errorList = d->errorLists["Export"];
 	errorList.clear();
-	bool failed_export = false;
+	ExportStatus status = ExportSuccess;
 	otexstream os(ofs);
 
 	// make sure we are ready to export
@@ -1718,8 +1720,11 @@ bool Buffer::makeLaTeXFile(FileName const & fname,
 	updateBuffer();
 	updateMacroInstances(OutputUpdate);
 
+	ExportStatus retval;
 	try {
-		writeLaTeXSource(os, original_path, runparams, output);
+		retval = writeLaTeXSource(os, original_path, runparams, output);
+		if (retval == ExportKilled)
+			return ExportKilled;
 	}
 	catch (EncodingException const & e) {
 		docstring const failed(1, e.failed_char);
@@ -1742,18 +1747,18 @@ bool Buffer::makeLaTeXFile(FileName const & fname,
 					"Changing the document encoding to utf8 could help."),
 						      {e.par_id, e.pos}, {e.par_id, e.pos + 1}));
 		}
-		failed_export = true;
+		status = ExportError;
 	}
 	catch (iconv_codecvt_facet_exception const & e) {
 		errorList.push_back(ErrorItem(_("iconv conversion failed"),
 		                              _(e.what())));
-		failed_export = true;
+		status = ExportError;
 	}
 	catch (exception const & e) {
 		errorList.push_back(ErrorItem(_("conversion failed"),
 		                              _(e.what())));
 		lyxerr << e.what() << endl;
-		failed_export = true;
+		status = ExportError;
 	}
 	catch (...) {
 		lyxerr << "Caught some really weird exception..." << endl;
@@ -1764,7 +1769,7 @@ bool Buffer::makeLaTeXFile(FileName const & fname,
 
 	ofs.close();
 	if (ofs.fail()) {
-		failed_export = true;
+		status = ExportError;
 		lyxerr << "File '" << fname << "' was not closed properly." << endl;
 	}
 
@@ -1772,11 +1777,11 @@ bool Buffer::makeLaTeXFile(FileName const & fname,
 		errorList.clear();
 	else
 		errors("Export");
-	return !failed_export;
+	return status;
 }
 
 
-void Buffer::writeLaTeXSource(otexstream & os,
+Buffer::ExportStatus Buffer::writeLaTeXSource(otexstream & os,
 			   string const & original_path,
 			   OutputParams const & runparams_in,
 			   OutputWhat output) const
@@ -1794,6 +1799,9 @@ void Buffer::writeLaTeXSource(otexstream & os,
 	// FIXME: when only the current paragraph is shown, this is ignored
 	//        (or not reached) and characters encodable in the current
 	//        encoding are not converted to ASCII-representation.
+
+	// Some macros rely on font encoding
+	runparams.main_fontenc = params().main_font_encoding();
 
 	// If we are compiling a file standalone, even if this is the
 	// child of some other buffer, let's cut the link here, so the
@@ -1970,7 +1978,7 @@ void Buffer::writeLaTeXSource(otexstream & os,
 			// Restore the parenthood if needed
 			if (!runparams.is_child)
 				d->ignore_parent = false;
-			return;
+			return ExportSuccess;
 		}
 
 		// make the body.
@@ -1993,7 +2001,10 @@ void Buffer::writeLaTeXSource(otexstream & os,
 	LYXERR(Debug::INFO, "preamble finished, now the body.");
 
 	// the real stuff
-	latexParagraphs(*this, text(), os, runparams);
+	try {
+		latexParagraphs(*this, text(), os, runparams);
+	}
+	catch (ConversionException const &) { return ExportKilled; }
 
 	// Restore the parenthood if needed
 	if (!runparams.is_child)
@@ -2012,10 +2023,11 @@ void Buffer::writeLaTeXSource(otexstream & os,
 
 	LYXERR(Debug::INFO, "Finished making LaTeX file.");
 	LYXERR(Debug::INFO, "Row count was " << os.texrow().rows() - 1 << '.');
+	return ExportSuccess;
 }
 
 
-void Buffer::makeDocBookFile(FileName const & fname,
+Buffer::ExportStatus Buffer::makeDocBookFile(FileName const & fname,
 			      OutputParams const & runparams,
 			      OutputWhat output) const
 {
@@ -2023,22 +2035,26 @@ void Buffer::makeDocBookFile(FileName const & fname,
 
 	ofdocstream ofs;
 	if (!openFileWrite(ofs, fname))
-		return;
+		return ExportError;
 
 	// make sure we are ready to export
 	// this needs to be done before we validate
 	updateBuffer();
 	updateMacroInstances(OutputUpdate);
 
-	writeDocBookSource(ofs, fname.absFileName(), runparams, output);
+	ExportStatus const retval =
+		writeDocBookSource(ofs, fname.absFileName(), runparams, output);
+	if (retval == ExportKilled)
+		return ExportKilled;
 
 	ofs.close();
 	if (ofs.fail())
 		lyxerr << "File '" << fname << "' was not closed properly." << endl;
+	return ExportSuccess;
 }
 
 
-void Buffer::writeDocBookSource(odocstream & os, string const & fname,
+Buffer::ExportStatus Buffer::writeDocBookSource(odocstream & os, string const & fname,
 			     OutputParams const & runparams,
 			     OutputWhat output) const
 {
@@ -2112,35 +2128,42 @@ void Buffer::writeDocBookSource(odocstream & os, string const & fname,
 
 		sgml::openTag(os, top);
 		os << '\n';
-		docbookParagraphs(text(), *this, os, runparams);
+		try {
+			docbookParagraphs(text(), *this, os, runparams);
+		}
+		catch (ConversionException const &) { return ExportKilled; }
 		sgml::closeTag(os, top_element);
 	}
+	return ExportSuccess;
 }
 
 
-void Buffer::makeLyXHTMLFile(FileName const & fname,
+Buffer::ExportStatus Buffer::makeLyXHTMLFile(FileName const & fname,
 			      OutputParams const & runparams) const
 {
 	LYXERR(Debug::LATEX, "makeLyXHTMLFile...");
 
 	ofdocstream ofs;
 	if (!openFileWrite(ofs, fname))
-		return;
+		return ExportError;
 
 	// make sure we are ready to export
 	// this has to be done before we validate
 	updateBuffer(UpdateMaster, OutputUpdate);
 	updateMacroInstances(OutputUpdate);
 
-	writeLyXHTMLSource(ofs, runparams, FullSource);
+	ExportStatus const retval = writeLyXHTMLSource(ofs, runparams, FullSource);
+	if (retval == ExportKilled)
+		return retval;
 
 	ofs.close();
 	if (ofs.fail())
 		lyxerr << "File '" << fname << "' was not closed properly." << endl;
+	return retval;
 }
 
 
-void Buffer::writeLyXHTMLSource(odocstream & os,
+Buffer::ExportStatus Buffer::writeLyXHTMLSource(odocstream & os,
 			     OutputParams const & runparams,
 			     OutputWhat output) const
 {
@@ -2241,13 +2264,18 @@ void Buffer::writeLyXHTMLSource(odocstream & os,
 		if (output != IncludedFile)
 			// if we're an included file, the counters are in the master.
 			params().documentClass().counters().reset();
-		xhtmlParagraphs(text(), *this, xs, runparams);
+		try {
+			xhtmlParagraphs(text(), *this, xs, runparams);
+		}
+		catch (ConversionException const &) { return ExportKilled; }
 		if (output_body_tag)
 			os << "</body>\n";
 	}
 
 	if (output_preamble)
 		os << "</html>\n";
+
+	return ExportSuccess;
 }
 
 
@@ -2270,7 +2298,12 @@ int Buffer::runChktex()
 	runparams.flavor = OutputParams::LATEX;
 	runparams.nice = false;
 	runparams.linelen = lyxrc.plaintext_linelen;
-	makeLaTeXFile(FileName(name), org_path, runparams);
+	ExportStatus const retval =
+		makeLaTeXFile(FileName(name), org_path, runparams);
+	if (retval != ExportSuccess) {
+		// error code on failure
+		return -1;
+	}
 
 	TeXErrors terr;
 	Chktex chktex(lyxrc.chktex_command, onlyFileName(name), filePath());
@@ -2362,10 +2395,19 @@ BiblioInfo const & Buffer::masterBibInfo() const
 }
 
 
+BiblioInfo const & Buffer::bibInfo() const
+{
+	return d->bibinfo_;
+}
+
+
 void Buffer::registerBibfiles(FileNamePairList const & bf) const {
+	// We register the bib files in the master buffer,
+	// if there is one, but also in every single buffer,
+	// in case a child is compiled alone.
 	Buffer const * const tmp = masterBuffer();
 	if (tmp != this)
-		return tmp->registerBibfiles(bf);
+		tmp->registerBibfiles(bf);
 
 	for (auto const & p : bf) {
 		FileNamePairList::const_iterator temp =
@@ -2435,21 +2477,33 @@ void Buffer::collectBibKeys(FileNameList & checkedFiles) const
 }
 
 
-void Buffer::addBiblioInfo(BiblioInfo const & bi) const
+void Buffer::addBiblioInfo(BiblioInfo const & bin) const
 {
-	Buffer const * tmp = masterBuffer();
-	BiblioInfo & masterbi = (tmp == this) ?
-		d->bibinfo_ : tmp->d->bibinfo_;
-	masterbi.mergeBiblioInfo(bi);
+	// We add the biblio info to the master buffer,
+	// if there is one, but also to every single buffer,
+	// in case a child is compiled alone.
+	BiblioInfo & bi = d->bibinfo_;
+	bi.mergeBiblioInfo(bin);
+
+	if (parent() != 0) {
+		BiblioInfo & masterbi = parent()->d->bibinfo_;
+		masterbi.mergeBiblioInfo(bin);
+	}
 }
 
 
-void Buffer::addBibTeXInfo(docstring const & key, BibTeXInfo const & bi) const
+void Buffer::addBibTeXInfo(docstring const & key, BibTeXInfo const & bin) const
 {
-	Buffer const * tmp = masterBuffer();
-	BiblioInfo & masterbi = (tmp == this) ?
-		d->bibinfo_ : tmp->d->bibinfo_;
-	masterbi[key] = bi;
+	// We add the bibtex info to the master buffer,
+	// if there is one, but also to every single buffer,
+	// in case a child is compiled alone.
+	BiblioInfo & bi = d->bibinfo_;
+	bi[key] = bin;
+
+	if (parent() != 0) {
+		BiblioInfo & masterbi = parent()->d->bibinfo_;
+		masterbi[key] = bin;
+	}
 }
 
 
@@ -3140,9 +3194,28 @@ vector<docstring> const Buffer::prepareBibFilePaths(OutputParams const & runpara
 		string utf8input = to_utf8(bit.first);
 		string database =
 			prepareFileNameForLaTeX(utf8input, ".bib", runparams.nice);
-		FileName const try_in_file =
+		FileName try_in_file =
 			makeAbsPath(database + ".bib", filePath());
-		bool const not_from_texmf = try_in_file.isReadableFile();
+		bool not_from_texmf = try_in_file.isReadableFile();
+		// If the file has not been found, try with the real file name
+		// (it might come from a child in a sub-directory)
+		if (!not_from_texmf) {
+			try_in_file = bit.second;
+			if (try_in_file.isReadableFile()) {
+				// Check if the file is in texmf
+				FileName kpsefile(findtexfile(changeExtension(utf8input, "bib"), "bib", true));
+				not_from_texmf = kpsefile.empty()
+						|| kpsefile.absFileName() != try_in_file.absFileName();
+				if (not_from_texmf)
+					// If this exists, make path relative to the master
+					// FIXME Unicode
+					database =
+						removeExtension(prepareFileNameForLaTeX(
+											to_utf8(makeRelPath(from_utf8(try_in_file.absFileName()),
+																from_utf8(filePath()))),
+											".bib", runparams.nice));
+			}
+		}
 
 		if (!runparams.inComment && !runparams.dryrun && !runparams.nice &&
 		    not_from_texmf) {
@@ -4238,6 +4311,7 @@ Buffer::ExportStatus Buffer::doExport(string const & target, bool put_in_tempdir
 			return ExportNoPathToFormat;
 		}
 		runparams.flavor = converters.getFlavor(path, this);
+		runparams.hyperref_driver = converters.getHyperrefDriver(path);
 		for (auto const & edge : path)
 			if (theConverters().get(edge).nice()) {
 				need_nice_file = true;
@@ -4267,40 +4341,53 @@ Buffer::ExportStatus Buffer::doExport(string const & target, bool put_in_tempdir
 	// Plain text backend
 	if (backend_format == "text") {
 		runparams.flavor = OutputParams::TEXT;
-		writePlaintextFile(*this, FileName(filename), runparams);
+		try {
+			writePlaintextFile(*this, FileName(filename), runparams);
+		}
+		catch (ConversionException const &) { return ExportCancel; }
 	}
 	// HTML backend
 	else if (backend_format == "xhtml") {
 		runparams.flavor = OutputParams::HTML;
 		setMathFlavor(runparams);
-		makeLyXHTMLFile(FileName(filename), runparams);
+		if (makeLyXHTMLFile(FileName(filename), runparams) == ExportKilled)
+			return ExportKilled;
 	} else if (backend_format == "lyx")
 		writeFile(FileName(filename));
 	// Docbook backend
 	else if (params().isDocBook()) {
 		runparams.nice = !put_in_tempdir;
-		makeDocBookFile(FileName(filename), runparams);
+		if (makeDocBookFile(FileName(filename), runparams) == ExportKilled)
+			return ExportKilled;
 	}
 	// LaTeX backend
 	else if (backend_format == format || need_nice_file) {
 		runparams.nice = true;
-		bool const success = makeLaTeXFile(FileName(filename), string(), runparams);
+		ExportStatus const retval =
+			makeLaTeXFile(FileName(filename), string(), runparams);
+		if (retval == ExportKilled)
+			return ExportKilled;
 		if (d->cloned_buffer_)
 			d->cloned_buffer_->d->errorLists["Export"] = d->errorLists["Export"];
-		if (!success)
-			return ExportError;
+		if (retval != ExportSuccess)
+			return retval;
 	} else if (!lyxrc.tex_allows_spaces
 		   && contains(filePath(), ' ')) {
 		Alert::error(_("File name error"),
-			   _("The directory path to the document cannot contain spaces."));
+			bformat(_("The directory path to the document\n%1$s\n"
+			    "contains spaces, but your TeX installation does "
+			    "not allow them. You should save the file to a directory "
+					"whose name does not contain spaces."), from_ascii(filePath())));
 		return ExportTexPathHasSpaces;
 	} else {
 		runparams.nice = false;
-		bool const success = makeLaTeXFile(
-			FileName(filename), filePath(), runparams);
+		ExportStatus const retval =
+			makeLaTeXFile(FileName(filename), filePath(), runparams);
+		if (retval == ExportKilled)
+			return ExportKilled;
 		if (d->cloned_buffer_)
 			d->cloned_buffer_->d->errorLists["Export"] = d->errorLists["Export"];
-		if (!success)
+		if (retval != ExportSuccess)
 			return ExportError;
 	}
 
@@ -4309,9 +4396,12 @@ Buffer::ExportStatus Buffer::doExport(string const & target, bool put_in_tempdir
 	ErrorList & error_list = d->errorLists[error_type];
 	string const ext = theFormats().extension(format);
 	FileName const tmp_result_file(changeExtension(filename, ext));
-	bool const success = converters.convert(this, FileName(filename),
-		tmp_result_file, FileName(absFileName()), backend_format, format,
-		error_list);
+	Converters::RetVal const retval = 
+		converters.convert(this, FileName(filename), tmp_result_file, 
+		FileName(absFileName()), backend_format, format, error_list);
+	if (retval == Converters::KILLED)
+		return ExportCancel;
+	bool success = (retval == Converters::SUCCESS);
 	d->delete_aux_files_.clear();
 	if (!success)
 		d->delete_aux_files_.insert(AuxFiles::All);
@@ -4644,9 +4734,7 @@ void Buffer::bufferErrors(TeXErrors const & terr, ErrorList & errorList) const
 }
 
 
-void Buffer::updateBuffer(UpdateScope const scope,
-                          UpdateType const utype,
-                          bool const recurse) const
+void Buffer::updateBuffer(UpdateScope scope, UpdateType utype) const
 {
 	LBUFERR(!text().paragraphs().empty());
 
@@ -4655,8 +4743,9 @@ void Buffer::updateBuffer(UpdateScope const scope,
 	DocumentClass const & textclass = master->params().documentClass();
 
 	FileNamePairList old_bibfiles;
-	// do this only if we are the top-level Buffer
-	if (master == this) {
+	// Do this only if we are the top-level Buffer. We also need to account
+	// for the case of a previewed child with ignored parent here.
+	if (master == this && !d->ignore_parent) {
 		textclass.counters().reset(from_ascii("bibitem"));
 		reloadBibInfoCache();
 		// we will re-read this cache as we go through, but we need
@@ -4717,18 +4806,37 @@ void Buffer::updateBuffer(UpdateScope const scope,
 		return;
 
 	// if the bibfiles changed, the cache of bibinfo is invalid
-	sort(d->bibfiles_cache_.begin(), d->bibfiles_cache_.end());
-	// the old one should already be sorted
-	if (recurse && old_bibfiles != d->bibfiles_cache_)
+	FileNamePairList new_bibfiles = d->bibfiles_cache_;
+	// this is a trick to determine whether the two vectors have
+	// the same elements.
+	sort(new_bibfiles.begin(), new_bibfiles.end());
+	sort(old_bibfiles.begin(), old_bibfiles.end());
+	if (old_bibfiles != new_bibfiles) {
+		LYXERR(Debug::FILES, "Reloading bibinfo cache.");
+		invalidateBibinfoCache();
+		reloadBibInfoCache();
 		// We relied upon the bibinfo cache when recalculating labels. But that
 		// cache was invalid, although we didn't find that out until now. So we
 		// have to do it all again.
 		// That said, the only thing we really need to do is update the citation
 		// labels. Nothing else will have changed. So we could create a new
 		// UpdateType that would signal that fact, if we needed to do so.
-		return updateBuffer(scope, utype, false);
-	else
+		parit = cbuf.par_iterator_begin();
+		// we will be re-doing the counters and references and such.
+		textclass.counters().reset();
+		clearReferenceCache();
+		// we should not need to do this again?
+		// updateMacros();
+		setChangesPresent(false);
+		updateBuffer(parit, utype);
+		// this will already have been done by reloadBibInfoCache();
+		// d->bibinfo_cache_valid_ = true;
+	}
+	else {
+		LYXERR(Debug::FILES, "Bibfiles unchanged.");
+		// this is also set to true on the other path, by reloadBibInfoCache.
 		d->bibinfo_cache_valid_ = true;
+	}
 	d->cite_labels_valid_ = true;
 	/// FIXME: Perf
 	cbuf.tocBackend().update(true, utype);

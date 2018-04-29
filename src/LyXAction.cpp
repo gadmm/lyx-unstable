@@ -487,6 +487,17 @@ void LyXAction::init()
 
 
 /*!
+ * \var lyx::FuncCode lyx::LFUN_BUFFER_ANONYMIZE
+ * \li Action: For debug purposes only. Convert all [a-zA-Z0-1] characters to
+               single character. Useful when submitting docs to list or bugzilla.
+ * \li Syntax: buffer-anonymize
+ * \li Origin: sanda, Feb 1 2018
+ * \endvar
+ */
+		{ LFUN_BUFFER_ANONYMIZE, "buffer-anonymize", Noop, Edit },
+
+
+/*!
  * \var lyx::FuncCode lyx::LFUN_BUFFER_AUTO_SAVE
  * \li Action: Saves the current buffer to a temporary file.
  * \li Notion: Saves the current buffer to a file named "#filename#". This LFUN
@@ -1359,8 +1370,9 @@ void LyXAction::init()
  * \li Action: Inserts the current date.
  * \li Syntax: date-insert [<ARG>]
  * \li Params: <ARG>: Format of date. The default value (%x) can be set
-                     in Preferences->Date format. For possible formats
-                     see manual page of strftime function.
+                      in Preferences->Output->General->Date format. For
+                      possible formats see the manual page of the
+                      strftime function.
  * \li Origin: jdblair, 31 Jan 2000
  * \endvar
  */
@@ -2502,6 +2514,25 @@ void LyXAction::init()
  */
 		{ LFUN_MARK_TOGGLE, "mark-toggle", ReadOnly, Edit },
 
+
+/*!
+ * \var lyx::FuncCode lyx::LFUN_MASTER_BUFFER_EXPORT
+ * \li Action: Exports the master buffer (document) to the given format.
+ * \li Syntax: master-buffer-export [<FORMAT>] [<DEST>]
+ * \li Params: <FORMAT> is one of the formats which you can find in 
+                        Tools->Preferences->File formats->Format.
+                        Usual format you will enter is "pdf2" (pdflatex),
+                        "pdflatex" (plain tex for pdflatex) or "ps" for postscript.\n
+                        Note that "custom" is not allowed in this case.\n
+                        If absent or "default", then the default output format of the
+                        document is used.\n
+               <DEST>   If present, this argument provides the export destination
+                        filename. Its containing folder will also be the destination
+                        folder, where all the needed external files will be copied.
+ * \li Origin: rkh, 18 April 2018
+ * \endvar
+ */
+		{ LFUN_MASTER_BUFFER_EXPORT, "master-buffer-export", ReadOnly, Buffer },
 
 /*!
  * \var lyx::FuncCode lyx::LFUN_MASTER_BUFFER_UPDATE
@@ -3785,7 +3816,7 @@ void LyXAction::init()
  * \var lyx::FuncCode lyx::LFUN_TEXTSTYLE_UPDATE
  * \li Action: Apply text style and update the settings to be used by #LFUN_TEXTSTYLE_APPLY.
  * \li Syntax: textstyle-update <FONT_INFO>
- * \li Params: <FONT_INFO>: specifies font atributes, e.g. family, series, shape,
+ * \li Params: <FONT_INFO>: specifies font attributes, e.g. family, series, shape,
                             size, emph, noun, underbar, number, color, language,
                             toggleall.\n
                             Use lyx -dbg action for exact syntax of text-style
@@ -3859,10 +3890,10 @@ void LyXAction::init()
 /*!
  * \var lyx::FuncCode lyx::LFUN_UNICODE_INSERT
  * \li Action: Inserts a single unicode character.
- * \li Syntax: unicode-insert <CHAR>
- * \li Params: <CHAR>: The character to insert, given as its code
+ * \li Syntax: unicode-insert <CHAR1> <CHAR2> ...
+ * \li Params: <CHARn>: The character to insert, given as its code
                        point, in hexadecimal.
- * \li Sample: unicode-insert 0x0100
+ * \li Sample: unicode-insert 0x0100 0x0259
  * \li Origin: Lgb, 22 Oct 2006
  * \endvar
  */
@@ -4245,16 +4276,6 @@ void LyXAction::init()
  * \endvar
  */
 		{ LFUN_WORD_REPLACE, "word-replace", Noop, Edit },
-
-/*!
- * \var lyx::FuncCode lyx::LFUN_BUFFER_ANONYMIZE
- * \li Action: For debug purposes only. Convert all [a-zA-Z0-1] characters to
-               single character. Useful when submitting docs to list or bugzilla.
- * \li Syntax: buffer-anonymize
- * \li Origin: sanda, Feb 1 2018
- * \endvar
- */
-		{ LFUN_BUFFER_ANONYMIZE, "buffer-anonymize", Noop, Edit },
 
 /*!
  * \var lyx::FuncCode lyx::LFUN_WORD_RIGHT

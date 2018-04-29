@@ -551,7 +551,10 @@ void InsetCitation::forOutliner(docstring & os, size_t const, bool const) const
 // engine, e.g. \cite[]{} for the basic engine.
 void InsetCitation::latex(otexstream & os, OutputParams const & runparams) const
 {
-	BiblioInfo const & bi = buffer().masterBibInfo();
+	// When this is a child compiled on its own, we use the childs
+	// own bibinfo, else the master's
+	BiblioInfo const & bi = runparams.is_child
+			? buffer().masterBibInfo() : buffer().bibInfo();
 	docstring const key = getParam("key");
 	// "keyonly" command: output the plain key and stop.
 	if (getCmdName() == "keyonly") {

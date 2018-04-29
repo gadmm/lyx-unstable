@@ -336,6 +336,7 @@ void InsetBox::latex(otexstream & os, OutputParams const & runparams) const
 	string separation_string = params_.separation.asLatexString();
 	string shadowsize_string = params_.shadowsize.asLatexString();
 	bool stdwidth = false;
+	string const cprotect = hasCProtectContent() ? "\\cprotect" : string();
 	// in general the overall width of some decorated boxes is wider thean the inner box
 	// we could therefore calculate the real width for all sizes so that if the user wants
 	// e.g. 0.1\columnwidth or 2cm he gets exactly this size
@@ -426,7 +427,7 @@ void InsetBox::latex(otexstream & os, OutputParams const & runparams) const
 			if (params_.framecolor != "black" || params_.backgroundcolor != "none")
 				os << "\\fcolorbox{" << params_.framecolor << "}{" << params_.backgroundcolor << "}";
 			else
-				os << "\\fbox";
+				os << cprotect << "\\fbox";
 		}
 		os << "{";
 		break;

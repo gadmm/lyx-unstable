@@ -24,16 +24,16 @@ import sys, os
 
 # Uncomment only what you need to import, please.
 
-from parser_tools import (find_end_of_inset, find_token, get_value) 
+from parser_tools import (find_end_of_inset, find_end_of_layout, find_token, get_bool_value, get_value) 
 #    del_token, del_value, del_complete_lines,
-#    find_complete_lines, find_end_of, find_end_of_layout, 
+#    find_complete_lines, find_end_of, 
 #    find_re, find_substring, find_token_backwards,
-#    get_containing_inset, get_containing_layout, get_bool_value, get_value,
+#    get_containing_inset, get_containing_layout, get_value,
 #    get_quoted_value, is_in_inset, set_bool_value
 #    find_tokens, find_token_exact, check_token, get_option_value
 
-from lyx2lyx_tools import (add_to_preamble)
-#  put_cmd_in_ert, revert_font_attrs, insert_to_preamble, latex_length
+from lyx2lyx_tools import (put_cmd_in_ert, add_to_preamble)
+#  revert_font_attrs, insert_to_preamble, latex_length
 #  get_ert, lyx2latex, lyx2verbatim, length_in_bp, convert_info_insets
 #  revert_flex_inset, hex2ratio, str2bool
 
@@ -97,7 +97,6 @@ def revert_paratype(document):
         i3 = find_token(document.header, "\\font_typewriter \"default\"", 0)
         j = find_token(document.header, "\\font_sans \"PTSans-TLF\"", 0)
         sfval = get_value(document.header, "\\font_sf_scale", 0)
-        document.warning("sfval: " + str(sfval))
         # cutoff " 100"
         sfval = sfval[:-4]
         sfoption = ""
@@ -115,26 +114,92 @@ def revert_paratype(document):
         else:
             if i1!= -1: 
                 add_to_preamble(document, ["\\usepackage{PTSerif}"])
+                document.header[i1] = document.header[i1].replace("PTSerif-TLF", "default")
             if j!= -1: 
                 if sfoption != "":
                 	add_to_preamble(document, ["\\usepackage[" + sfoption + "]{PTSans}"])
                 else:
                 	add_to_preamble(document, ["\\usepackage{PTSans}"])
+                document.header[j] = document.header[j].replace("PTSans-TLF", "default")
             if k!= -1: 
                 if ttoption != "":
                 	add_to_preamble(document, ["\\usepackage[" + ttoption + "]{PTMono}"])
                 else:
-                	add_to_preamble(document, ["\\usepackage{PTMono}"])
+                	add_to_preamble(document, ["\\usepackage{PTMono}"])    
+                document.header[k] = document.header[k].replace("PTMono-TLF", "default")
 
 
 def revert_xcharter(document):
     " Revert XCharter font definitions to LaTeX "
 
-    if find_token(document.header, "\\use_non_tex_fonts false", 0) != -1:
-        preamble = ""
-        i1 = find_token(document.header, "\\font_roman \"xcharter\"", 0)
-        if i1 != -1:
-            add_to_preamble(document, ["\\usepackage{XCharter}"])
+    i = find_token(document.header, "\\font_roman \"xcharter\"", 0)
+    if i == -1:
+        return
+
+    # replace unsupported font setting
+    document.header[i] = document.header[i].replace("xcharter", "default")
+    # no need for preamble code with system fonts
+    if get_bool_value(document.header, "\\use_non_tex_fonts"):
+        return
+
+    # transfer old style figures setting to package options
+    j = find_token(document.header, "\\font_osf true")
+    if j != -1:
+        options = "[osf]"
+        document.header[j] = "\\font_osf false"
+    else:
+        options = ""
+    if i != -1:
+        add_to_preamble(document, ["\\usepackage%s{XCharter}"%options])
+
+
+def revert_lscape(document):
+    " Reverts the landscape environment (Landscape module) to TeX-code "
+
+    if not "landscape" in document.get_module_list():
+        return
+
+    i = 0
+    while True:
+        i = find_token(document.body, "\\begin_inset Flex Landscape", i)
+        if i == -1:
+            return
+        j = find_end_of_inset(document.body, i)
+        if j == -1:
+            document.warning("Malformed LyX document: Can't find end of Landscape inset")
+            i += 1
+            continue
+
+        if document.body[i] == "\\begin_inset Flex Landscape (Floating)":
+            document.body[j - 2 : j + 1] = put_cmd_in_ert("\\end{landscape}}")
+            document.body[i : i + 4] = put_cmd_in_ert("\\afterpage{\\begin{landscape}")
+            add_to_preamble(document, ["\\usepackage{afterpage}"])
+        else:
+            document.body[j - 2 : j + 1] = put_cmd_in_ert("\\end{landscape}")
+            document.body[i : i + 4] = put_cmd_in_ert("\\begin{landscape}")
+
+        add_to_preamble(document, ["\\usepackage{pdflscape}"])
+        # no need to reset i
+
+
+def convert_fontenc(document):
+    " Convert default fontenc setting "
+
+    i = find_token(document.header, "\\fontencoding global", 0)
+    if i == -1:
+        return
+
+    document.header[i] = document.header[i].replace("global", "auto")
+
+
+def revert_fontenc(document):
+    " Revert default fontenc setting "
+
+    i = find_token(document.header, "\\fontencoding auto", 0)
+    if i == -1:
+        return
+
+    document.header[i] = document.header[i].replace("auto", "global")
 
 
 ##
@@ -145,10 +210,16 @@ supported_versions = ["2.4.0", "2.4"]
 convert = [
            [545, [convert_lst_literalparam]],
            [546, []],
-           [547, []]
+           [547, []],
+           [548, []],
+           [549, []],
+           [550, [convert_fontenc]]
           ]
 
 revert =  [
+           [549, [revert_fontenc]],
+           [548, []],# dummy format change
+           [547, [revert_lscape]],
            [546, [revert_xcharter]],
            [545, [revert_paratype]],
            [544, [revert_lst_literalparam]]

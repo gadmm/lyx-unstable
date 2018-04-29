@@ -59,8 +59,7 @@ namespace {
 
 // The format should also be updated in configure.py, and conversion code
 // should be added to prefs2prefs_prefs.py.
-static unsigned int const LYXRC_FILEFORMAT = 25; // lasgouttes: remove qimage
-
+static unsigned int const LYXRC_FILEFORMAT = 27; // spitz: add flavor value to needaux flag
 // when adding something to this array keep it sorted!
 LexerKeyword lyxrcTags[] = {
 	{ "\\accept_compound", LyXRC::RC_ACCEPT_COMPOUND },
@@ -107,7 +106,6 @@ LexerKeyword lyxrcTags[] = {
 	{ "\\escape_chars", LyXRC::RC_ESC_CHARS },
 	{ "\\example_path", LyXRC::RC_EXAMPLEPATH },
 	{ "\\export_overwrite", LyXRC::RC_EXPORT_OVERWRITE },
-	{ "\\font_encoding", LyXRC::RC_FONT_ENCODING },
 	{ "\\format", LyXRC::RC_FILEFORMAT },
 	{ "\\forward_search_dvi", LyXRC::RC_FORWARD_SEARCH_DVI },
 	{ "\\forward_search_pdf", LyXRC::RC_FORWARD_SEARCH_PDF },
@@ -196,6 +194,7 @@ LexerKeyword lyxrcTags[] = {
 	{ "\\use_converter_needauth", LyXRC::RC_USE_CONVERTER_NEEDAUTH },
 	{ "\\use_converter_needauth_forbidden", LyXRC::RC_USE_CONVERTER_NEEDAUTH_FORBIDDEN },
 	{ "\\use_lastfilepos", LyXRC::RC_USELASTFILEPOS },
+	{ "\\use_native_filedialog", LyXRC::RC_USE_NATIVE_FILEDIALOG },
 	{ "\\use_pixmap_cache", LyXRC::RC_USE_PIXMAP_CACHE },
 	// compatibility with versions older than 1.4.0 only
 	{ "\\use_system_colors", LyXRC::RC_USE_SYSTEM_COLORS },
@@ -241,7 +240,6 @@ void LyXRC::setDefaults()
 	default_platex_view_format = "pdf3";
 	chktex_command = "chktex -n1 -n3 -n6 -n9 -n22 -n25 -n30 -n38";
 	bibtex_command = "automatic";
-	fontenc = "default";
 	index_command = "makeindex -c -q";
 	nomencl_command = "makeindex -s nomencl.ist";
 	pygmentize_command = string();
@@ -273,6 +271,7 @@ void LyXRC::setDefaults()
 	num_lastfiles = 20;
 	check_lastfiles = true;
 	use_lastfilepos = true;
+	use_native_filedialog = true;
 	load_session = false;
 	make_backup = true;
 	save_compressed = false;
@@ -283,6 +282,8 @@ void LyXRC::setDefaults()
 // FIXME: this check should test the target platform (darwin)
 #if defined(USE_MACOSX_PACKAGING)
 	spellchecker = "native";
+#elif defined(USE_ENCHANT)
+	spellchecker = "enchant";
 #elif defined(USE_ASPELL)
 	spellchecker = "aspell";
 #elif defined(USE_HUNSPELL)
@@ -407,6 +408,8 @@ bool LyXRC::read(FileName const & filename, bool check_format)
 		lexrc2.setFile(tempfile);
 		LYXERR(Debug::LYXRC, "Reading '" << tempfile << "'...");
 		retval = read(lexrc2, check_format);
+		if (retval == FormatMismatch)
+			LYXERR0("Conversion failed for " << filename.absFileName());
 	}
 	return retval == ReadOK;
 }
@@ -530,10 +533,6 @@ LyXRC::ReturnValues LyXRC::read(Lexer & lexrc, bool check_format)
 					lexrc.printError("LyX: Keymap `$$Token' not found");
 				}
 			}
-			break;
-
-		case RC_FONT_ENCODING:
-			lexrc >> fontenc;
 			break;
 
 		case RC_PRINTLANDSCAPEFLAG:
@@ -872,6 +871,9 @@ LyXRC::ReturnValues LyXRC::read(Lexer & lexrc, bool check_format)
 			// Spellchecker settings:
 		case RC_ACCEPT_COMPOUND:
 			lexrc >> spellchecker_accept_compound;
+			break;
+		case RC_USE_NATIVE_FILEDIALOG:
+			lexrc >> use_native_filedialog;
 			break;
 		case RC_USE_SYSTEM_COLORS:
 			lexrc >> use_system_colors;
@@ -2118,18 +2120,9 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		if (tag != RC_LAST)
 			break;
 		// fall through
-	case RC_FONT_ENCODING:
-		if (ignore_system_lyxrc ||
-		    fontenc != system_lyxrc.fontenc) {
-			os << "\\font_encoding \"" << fontenc << "\"\n";
-		}
-		if (tag != RC_LAST)
-			break;
-
 		os << "\n#\n"
 		   << "# FILE SECTION ######################################\n"
 		   << "#\n\n";
-
 	// fall through
 	case RC_DOCUMENTPATH:
 		if (ignore_system_lyxrc ||
@@ -2416,6 +2409,16 @@ void LyXRC::write(ostream & os, bool ignore_system_lyxrc, string const & name) c
 		if (ignore_system_lyxrc ||
 		    spellchecker_esc_chars != system_lyxrc.spellchecker_esc_chars) {
 			os << "\\escape_chars \"" << spellchecker_esc_chars << "\"\n";
+		}
+		if (tag != RC_LAST)
+			break;
+		// fall through
+	case RC_USE_NATIVE_FILEDIALOG:
+		if (ignore_system_lyxrc ||
+		    use_native_filedialog != system_lyxrc.use_native_filedialog) {
+			os << "\\use_native_filedialog "
+			   << convert<string>(use_native_filedialog)
+			   << '\n';
 		}
 		if (tag != RC_LAST)
 			break;
@@ -2943,7 +2946,6 @@ void actOnUpdatedPrefs(LyXRC const & lyxrc_orig, LyXRC const & lyxrc_new)
 	case LyXRC::RC_EDITOR_ALTERNATIVES:
 	case LyXRC::RC_ESC_CHARS:
 	case LyXRC::RC_EXAMPLEPATH:
-	case LyXRC::RC_FONT_ENCODING:
 	case LyXRC::RC_FILEFORMAT:
 	case LyXRC::RC_GROUP_LAYOUTS:
 	case LyXRC::RC_HUNSPELLDIR_PATH:
@@ -3030,6 +3032,7 @@ void actOnUpdatedPrefs(LyXRC const & lyxrc_orig, LyXRC const & lyxrc_new)
 	case LyXRC::RC_USE_CONVERTER_CACHE:
 	case LyXRC::RC_USE_CONVERTER_NEEDAUTH_FORBIDDEN:
 	case LyXRC::RC_USE_CONVERTER_NEEDAUTH:
+	case LyXRC::RC_USE_NATIVE_FILEDIALOG:
 	case LyXRC::RC_USE_SYSTEM_COLORS:
 	case LyXRC::RC_USE_TOOLTIP:
 	case LyXRC::RC_USE_PIXMAP_CACHE:
@@ -3192,10 +3195,6 @@ string const LyXRC::getDescription(LyXRCTags tag)
 
 	case RC_EXAMPLEPATH:
 		str = _("The path that LyX will set when offering to choose an example. An empty value selects the directory LyX was started from.");
-		break;
-
-	case RC_FONT_ENCODING:
-		str = _("The font encoding used for the LaTeX2e fontenc package. T1 is highly recommended for non-English languages.");
 		break;
 
 	case RC_FILEFORMAT:

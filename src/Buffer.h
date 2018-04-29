@@ -133,6 +133,7 @@ public:
 		// export
 		ExportSuccess,
 		ExportCancel,
+		ExportKilled,
 		ExportError,
 		ExportNoPathToFormat,
 		ExportTexPathHasSpaces,
@@ -297,7 +298,7 @@ public:
 	};
 
 	/// Just a wrapper for writeLaTeXSource, first creating the ofstream.
-	bool makeLaTeXFile(support::FileName const & filename,
+	ExportStatus makeLaTeXFile(support::FileName const & filename,
 			   std::string const & original_path,
 			   OutputParams const &,
 			   OutputWhat output = FullSource) const;
@@ -323,23 +324,23 @@ public:
 	    ofs.close();
 	    \endcode
 	 */
-	void writeLaTeXSource(otexstream & os,
+	ExportStatus writeLaTeXSource(otexstream & os,
 			   std::string const & original_path,
 			   OutputParams const &,
 			   OutputWhat output = FullSource) const;
 	///
-	void makeDocBookFile(support::FileName const & filename,
+	ExportStatus makeDocBookFile(support::FileName const & filename,
 			     OutputParams const & runparams_in,
 			     OutputWhat output = FullSource) const;
 	///
-	void writeDocBookSource(odocstream & os, std::string const & filename,
+	ExportStatus writeDocBookSource(odocstream & os, std::string const & filename,
 			     OutputParams const & runparams_in,
 			     OutputWhat output = FullSource) const;
 	///
-	void makeLyXHTMLFile(support::FileName const & filename,
+	ExportStatus makeLyXHTMLFile(support::FileName const & filename,
 			     OutputParams const & runparams_in) const;
 	///
-	void writeLyXHTMLSource(odocstream & os,
+	ExportStatus writeLyXHTMLSource(odocstream & os,
 			     OutputParams const & runparams_in,
 			     OutputWhat output = FullSource) const;
 	/// returns the main language for the buffer (document)
@@ -515,6 +516,8 @@ public:
 	/// \return the bibliography information for this buffer's master,
 	/// or just for it, if it isn't a child.
 	BiblioInfo const & masterBibInfo() const;
+	/// \return this buffer's bibliography information
+	BiblioInfo const & bibInfo() const;
 	/// collect bibliography info from the various insets in this buffer.
 	void collectBibKeys(support::FileNameList &) const;
 	/// add some BiblioInfo to our cache
@@ -725,8 +728,7 @@ public:
 	/// \param scope: whether to start with the master document or just
 	/// do this one.
 	/// \param output: whether we are preparing for output.
-	void updateBuffer(UpdateScope scope, UpdateType utype,
-	                  bool recurse = true) const;
+	void updateBuffer(UpdateScope scope, UpdateType utype) const;
 	///
 	void updateBuffer(ParIterator & parit, UpdateType utype) const;
 

@@ -68,11 +68,12 @@
 #include "frontends/alert.h"
 
 #include <QAbstractItemModel>
-#include <QHeaderView>
+#include <QButtonGroup>
 #include <QColor>
 #include <QColorDialog>
 #include <QCloseEvent>
 #include <QFontDatabase>
+#include <QHeaderView>
 #include <QScrollBar>
 #include <QTextBoundaryFinder>
 #include <QTextCursor>
@@ -469,6 +470,33 @@ PreambleModule::PreambleModule(QWidget * parent)
 	preambleTE->setWordWrapMode(QTextOption::NoWrap);
 	setFocusProxy(preambleTE);
 	connect(preambleTE, SIGNAL(textChanged()), this, SIGNAL(changed()));
+	connect(findLE, SIGNAL(textEdited(const QString &)), this, SLOT(checkFindButton()));
+	connect(findButtonPB, SIGNAL(clicked()), this, SLOT(findText()));
+	connect(findLE, SIGNAL(returnPressed()), this, SLOT(findText()));
+	checkFindButton();
+	// https://stackoverflow.com/questions/13027091/how-to-override-tab-width-in-qt
+	const int tabStop = 4;
+	QFontMetrics metrics(preambleTE->currentFont());
+	preambleTE->setTabStopWidth(tabStop * metrics.width(' '));
+}
+
+
+void PreambleModule::checkFindButton()
+{
+	findButtonPB->setEnabled(!findLE->text().isEmpty());
+}
+
+
+void PreambleModule::findText()
+{
+	bool const found = preambleTE->find(findLE->text());
+	if (!found) {
+		// wrap
+		QTextCursor qtcur = preambleTE->textCursor();
+		qtcur.movePosition(QTextCursor::Start);
+		preambleTE->setTextCursor(qtcur);
+		preambleTE->find(findLE->text());
+	}
 }
 
 
@@ -528,6 +556,8 @@ void PreambleModule::closeEvent(QCloseEvent * e)
 LocalLayout::LocalLayout(QWidget * parent)
 	: UiWidget<Ui::LocalLayoutUi>(parent), current_id_(0), validated_(false)
 {
+	locallayoutTE->setFont(guiApp->typewriterSystemFont());
+	locallayoutTE->setWordWrapMode(QTextOption::NoWrap);
 	connect(locallayoutTE, SIGNAL(textChanged()), this, SLOT(textChanged()));
 	connect(validatePB, SIGNAL(clicked()), this, SLOT(validatePressed()));
 	connect(convertPB, SIGNAL(clicked()), this, SLOT(convertPressed()));
@@ -811,6 +841,62 @@ GuiDocument::GuiDocument(GuiView & lv)
 	connect(outputModule->saveTransientPropertiesCB, SIGNAL(clicked()),
 	        this, SLOT(change_adaptor()));
 
+
+	// language & quote
+	// this must preceed font, since fonts depend on this
+	langModule = new UiWidget<Ui::LanguageUi>(this);
+	connect(langModule->languageCO, SIGNAL(activated(int)),
+		this, SLOT(change_adaptor()));
+	connect(langModule->languageCO, SIGNAL(activated(int)),
+		this, SLOT(languageChanged(int)));
+	connect(langModule->defaultencodingRB, SIGNAL(clicked()),
+		this, SLOT(change_adaptor()));
+	connect(langModule->otherencodingRB, SIGNAL(clicked()),
+		this, SLOT(change_adaptor()));
+	connect(langModule->encodingCO, SIGNAL(activated(int)),
+		this, SLOT(change_adaptor()));
+	connect(langModule->quoteStyleCO, SIGNAL(activated(int)),
+		this, SLOT(change_adaptor()));
+	connect(langModule->languagePackageCO, SIGNAL(activated(int)),
+		this, SLOT(change_adaptor()));
+	connect(langModule->languagePackageLE, SIGNAL(textChanged(QString)),
+		this, SLOT(change_adaptor()));
+	connect(langModule->languagePackageCO, SIGNAL(currentIndexChanged(int)),
+		this, SLOT(languagePackageChanged(int)));
+	connect(langModule->dynamicQuotesCB, SIGNAL(clicked()),
+		this, SLOT(change_adaptor()));
+
+	langModule->languagePackageLE->setValidator(new NoNewLineValidator(
+		langModule->languagePackageLE));
+
+	QAbstractItemModel * language_model = guiApp->languageModel();
+	// FIXME: it would be nice if sorting was enabled/disabled via a checkbox.
+	language_model->sort(0);
+	langModule->languageCO->setModel(language_model);
+	langModule->languageCO->setModelColumn(0);
+
+	// Always put the default encoding in the first position.
+	langModule->encodingCO->addItem(qt_("Language Default (no inputenc)"));
+	QStringList encodinglist;
+	for (auto const & encvar : encodings) {
+		if (!encvar.unsafe() && !encvar.guiName().empty())
+			encodinglist.append(qt_(encvar.guiName()));
+	}
+	encodinglist.sort();
+	langModule->encodingCO->addItems(encodinglist);
+
+	langModule->languagePackageCO->addItem(
+		qt_("Default"), toqstr("default"));
+	langModule->languagePackageCO->addItem(
+		qt_("Automatic"), toqstr("auto"));
+	langModule->languagePackageCO->addItem(
+		qt_("Always Babel"), toqstr("babel"));
+	langModule->languagePackageCO->addItem(
+		qt_("Custom"), toqstr("custom"));
+	langModule->languagePackageCO->addItem(
+		qt_("None[[language package]]"), toqstr("none"));
+
+
 	// fonts
 	fontModule = new FontModule(this);
 	connect(fontModule->osFontsCB, SIGNAL(clicked()),
@@ -874,9 +960,9 @@ GuiDocument::GuiDocument(GuiView & lv)
 	fontModule->fontsizeCO->addItem(qt_("11"));
 	fontModule->fontsizeCO->addItem(qt_("12"));
 
-	fontModule->fontencCO->addItem(qt_("Default"), QString("global"));
+	fontModule->fontencCO->addItem(qt_("Automatic"), QString("auto"));
+	fontModule->fontencCO->addItem(qt_("Class default"), QString("default"));
 	fontModule->fontencCO->addItem(qt_("Custom"), QString("custom"));
-	fontModule->fontencCO->addItem(qt_("None (no fontenc)"), QString("default"));
 
 	for (int n = 0; GuiDocument::fontfamilies_gui[n][0]; ++n)
 		fontModule->fontsDefaultCO->addItem(
@@ -1041,60 +1127,6 @@ GuiDocument::GuiDocument(GuiView & lv)
 		marginsModule->columnsepL);
 
 
-	// language & quote
-	langModule = new UiWidget<Ui::LanguageUi>(this);
-	connect(langModule->languageCO, SIGNAL(activated(int)),
-		this, SLOT(change_adaptor()));
-	connect(langModule->languageCO, SIGNAL(activated(int)),
-		this, SLOT(languageChanged(int)));
-	connect(langModule->defaultencodingRB, SIGNAL(clicked()),
-		this, SLOT(change_adaptor()));
-	connect(langModule->otherencodingRB, SIGNAL(clicked()),
-		this, SLOT(change_adaptor()));
-	connect(langModule->encodingCO, SIGNAL(activated(int)),
-		this, SLOT(change_adaptor()));
-	connect(langModule->quoteStyleCO, SIGNAL(activated(int)),
-		this, SLOT(change_adaptor()));
-	connect(langModule->languagePackageCO, SIGNAL(activated(int)),
-		this, SLOT(change_adaptor()));
-	connect(langModule->languagePackageLE, SIGNAL(textChanged(QString)),
-		this, SLOT(change_adaptor()));
-	connect(langModule->languagePackageCO, SIGNAL(currentIndexChanged(int)),
-		this, SLOT(languagePackageChanged(int)));
-	connect(langModule->dynamicQuotesCB, SIGNAL(clicked()),
-		this, SLOT(change_adaptor()));
-
-	langModule->languagePackageLE->setValidator(new NoNewLineValidator(
-		langModule->languagePackageLE));
-
-	QAbstractItemModel * language_model = guiApp->languageModel();
-	// FIXME: it would be nice if sorting was enabled/disabled via a checkbox.
-	language_model->sort(0);
-	langModule->languageCO->setModel(language_model);
-	langModule->languageCO->setModelColumn(0);
-
-	// Always put the default encoding in the first position.
-	langModule->encodingCO->addItem(qt_("Language Default (no inputenc)"));
-	QStringList encodinglist;
-	for (auto const & encvar : encodings) {
-		if (!encvar.unsafe() && !encvar.guiName().empty())
-			encodinglist.append(qt_(encvar.guiName()));
-	}
-	encodinglist.sort();
-	langModule->encodingCO->addItems(encodinglist);
-
-	langModule->languagePackageCO->addItem(
-		qt_("Default"), toqstr("default"));
-	langModule->languagePackageCO->addItem(
-		qt_("Automatic"), toqstr("auto"));
-	langModule->languagePackageCO->addItem(
-		qt_("Always Babel"), toqstr("babel"));
-	langModule->languagePackageCO->addItem(
-		qt_("Custom"), toqstr("custom"));
-	langModule->languagePackageCO->addItem(
-		qt_("None[[language package]]"), toqstr("none"));
-
-
 	// color
 	colorModule = new UiWidget<Ui::ColorUi>(this);
 	connect(colorModule->fontColorPB, SIGNAL(clicked()),
@@ -1212,7 +1244,7 @@ GuiDocument::GuiDocument(GuiView & lv)
 	headers << qt_("Package") << qt_("Load automatically")
 		<< qt_("Load always") << qt_("Do not load");
 	mathsModule->packagesTW->setHorizontalHeaderLabels(headers);
-	setSectionResizeMode(mathsModule->packagesTW->horizontalHeader(), QHeaderView::ResizeToContents);
+	setSectionResizeMode(mathsModule->packagesTW->horizontalHeader(), QHeaderView::Stretch);
 	map<string, string> const & packages = BufferParams::auto_packages();
 	mathsModule->packagesTW->setRowCount(packages.size());
 	int packnum = 0;
@@ -1245,15 +1277,34 @@ GuiDocument::GuiDocument(GuiView & lv)
 		autoRB->setToolTip(autoTooltip);
 		alwaysRB->setToolTip(alwaysTooltip);
 		neverRB->setToolTip(neverTooltip);
+
+		// Pack the buttons in a layout in order to get proper alignment
+		QWidget * autoRBWidget = new QWidget();
+		QHBoxLayout * autoRBLayout = new QHBoxLayout(autoRBWidget);
+		autoRBLayout->addWidget(autoRB);
+		autoRBLayout->setAlignment(Qt::AlignCenter);
+		autoRBLayout->setContentsMargins(0, 0, 0, 0);
+		autoRBWidget->setLayout(autoRBLayout);
+
+		QWidget * alwaysRBWidget = new QWidget();
+		QHBoxLayout * alwaysRBLayout = new QHBoxLayout(alwaysRBWidget);
+		alwaysRBLayout->addWidget(alwaysRB);
+		alwaysRBLayout->setAlignment(Qt::AlignCenter);
+		alwaysRBLayout->setContentsMargins(0, 0, 0, 0);
+		alwaysRBWidget->setLayout(alwaysRBLayout);
+
+		QWidget * neverRBWidget = new QWidget();
+		QHBoxLayout * neverRBLayout = new QHBoxLayout(neverRBWidget);
+		neverRBLayout->addWidget(neverRB);
+		neverRBLayout->setAlignment(Qt::AlignCenter);
+		neverRBLayout->setContentsMargins(0, 0, 0, 0);
+		neverRBWidget->setLayout(neverRBLayout);
+
 		QTableWidgetItem * pack = new QTableWidgetItem(toqstr(package));
 		mathsModule->packagesTW->setItem(packnum, 0, pack);
-		mathsModule->packagesTW->setCellWidget(packnum, 1, autoRB);
-		mathsModule->packagesTW->setCellWidget(packnum, 2, alwaysRB);
-		mathsModule->packagesTW->setCellWidget(packnum, 3, neverRB);
-		//center the radio buttons
-		autoRB->setStyleSheet("margin-left:50%; margin-right:50%;");
-		alwaysRB->setStyleSheet("margin-left:50%; margin-right:50%;");
-		neverRB->setStyleSheet("margin-left:50%; margin-right:50%;");
+		mathsModule->packagesTW->setCellWidget(packnum, 1, autoRBWidget);
+		mathsModule->packagesTW->setCellWidget(packnum, 2, alwaysRBWidget);
+		mathsModule->packagesTW->setCellWidget(packnum, 3, neverRBWidget);
 
 		connect(autoRB, SIGNAL(clicked()),
 		        this, SLOT(change_adaptor()));
@@ -2085,8 +2136,13 @@ bool GuiDocument::ot1() const
 {
 	QString const fontenc =
 		fontModule->fontencCO->itemData(fontModule->fontencCO->currentIndex()).toString();
+	int const i = langModule->languageCO->currentIndex();
+	if (i == -1)
+		return false;
+	QString const langname = langModule->languageCO->itemData(i).toString();
+	Language const * newlang = lyx::languages.getLanguage(fromqstr(langname));
 	return (fontenc == "default"
-		|| (fontenc == "global" && (lyxrc.fontenc == "default" || lyxrc.fontenc == "OT1"))
+		|| (fontenc == "auto" && newlang->fontenc(buffer().params()) == "OT1")
 		|| (fontenc == "custom" && fontModule->fontencLE->text() == "OT1"));
 }
 
@@ -2981,17 +3037,19 @@ void GuiDocument::applyView()
 		if (!item)
 			continue;
 		int row = mathsModule->packagesTW->row(item);
-		QRadioButton * rb = (QRadioButton*)mathsModule->packagesTW->cellWidget(row, 1);
+
+		QRadioButton * rb =
+			(QRadioButton*)mathsModule->packagesTW->cellWidget(row, 1)->layout()->itemAt(0)->widget();
 		if (rb->isChecked()) {
 			bp_.use_package(it->first, BufferParams::package_auto);
 			continue;
 		}
-		rb = (QRadioButton*)mathsModule->packagesTW->cellWidget(row, 2);
+		rb = (QRadioButton*)mathsModule->packagesTW->cellWidget(row, 2)->layout()->itemAt(0)->widget();
 		if (rb->isChecked()) {
 			bp_.use_package(it->first, BufferParams::package_on);
 			continue;
 		}
-		rb = (QRadioButton*)mathsModule->packagesTW->cellWidget(row, 3);
+		rb = (QRadioButton*)mathsModule->packagesTW->cellWidget(row, 3)->layout()->itemAt(0)->widget();
 		if (rb->isChecked())
 			bp_.use_package(it->first, BufferParams::package_off);
 	}
@@ -3518,17 +3576,20 @@ void GuiDocument::paramsToDialog()
 		int row = mathsModule->packagesTW->row(item);
 		switch (bp_.use_package(it->first)) {
 			case BufferParams::package_off: {
-				QRadioButton * rb = (QRadioButton*)mathsModule->packagesTW->cellWidget(row, 3);
+				QRadioButton * rb =
+					(QRadioButton*)mathsModule->packagesTW->cellWidget(row, 3)->layout()->itemAt(0)->widget();
 				rb->setChecked(true);
 				break;
 			}
 			case BufferParams::package_on: {
-				QRadioButton * rb = (QRadioButton*)mathsModule->packagesTW->cellWidget(row, 2);
+				QRadioButton * rb =
+					(QRadioButton*)mathsModule->packagesTW->cellWidget(row, 2)->layout()->itemAt(0)->widget();
 				rb->setChecked(true);
 				break;
 			}
 			case BufferParams::package_auto: {
-				QRadioButton * rb = (QRadioButton*)mathsModule->packagesTW->cellWidget(row, 1);
+				QRadioButton * rb =
+					(QRadioButton*)mathsModule->packagesTW->cellWidget(row, 1)->layout()->itemAt(0)->widget();
 				rb->setChecked(true);
 				break;
 			}
@@ -3756,12 +3817,13 @@ void GuiDocument::paramsToDialog()
 	if (nn >= 0)
 		fontModule->fontsDefaultCO->setCurrentIndex(nn);
 
-	if (bp_.fontenc == "global" || bp_.fontenc == "default") {
+	if (bp_.fontenc == "auto" || bp_.fontenc == "default") {
 		fontModule->fontencCO->setCurrentIndex(
 			fontModule->fontencCO->findData(toqstr(bp_.fontenc)));
 		fontModule->fontencLE->setEnabled(false);
 	} else {
-		fontModule->fontencCO->setCurrentIndex(1);
+		fontModule->fontencCO->setCurrentIndex(
+					fontModule->fontencCO->findData("custom"));
 		fontModule->fontencLE->setText(toqstr(bp_.fontenc));
 	}
 
@@ -4538,7 +4600,8 @@ void GuiDocument::allPackagesNot()
 void GuiDocument::allPackages(int col)
 {
 	for (int row = 0; row < mathsModule->packagesTW->rowCount(); ++row) {
-		QRadioButton * rb = (QRadioButton*)mathsModule->packagesTW->cellWidget(row, col);
+		QRadioButton * rb =
+			(QRadioButton*)mathsModule->packagesTW->cellWidget(row, col)->layout()->itemAt(0)->widget();
 		rb->setChecked(true);
 	}
 }

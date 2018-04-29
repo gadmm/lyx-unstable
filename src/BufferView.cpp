@@ -65,6 +65,7 @@
 #include "insets/InsetText.h"
 
 #include "mathed/MathData.h"
+#include "mathed/InsetMathNest.h"
 
 #include "frontends/alert.h"
 #include "frontends/Application.h"
@@ -240,7 +241,8 @@ struct BufferView::Private
 		last_inset_(0), clickable_inset_(false),
 		mouse_position_cache_(),
 		bookmark_edit_position_(-1), gui_(0),
-		  horiz_scroll_offset_(0), repaint_caret_row_(false),
+		  horiz_scroll_offset_(0),
+		caret_ascent_(0), caret_descent_(0),
 		  wa_(wa)
 	{
 		xsel_cache_.set = false;
@@ -321,11 +323,11 @@ struct BufferView::Private
 	/// at previous draw event
 	CursorSlice last_row_slice_;
 
-	/// a slice pointing to where the cursor has been drawn after the current
-	/// draw() call.
-	CursorSlice caret_slice_;
-	/// indicates whether the caret slice needs to be repainted in this draw() run.
-	bool repaint_caret_row_;
+	// The vertical size of the blinking caret. Only used for math
+	// Using it for text could be bad when undo restores the cursor
+	// current font, since the caret size could become wrong.
+	int caret_ascent_;
+	int caret_descent_;
 	///
 	frontend::WorkArea & wa_;
 	///
@@ -1902,6 +1904,33 @@ void BufferView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 	}
 
 
+	case LFUN_UNICODE_INSERT: {
+		if (cmd.argument().empty())
+			break;
+
+		FuncCode code = cur.inset().currentMode() == Inset::MATH_MODE ?
+			LFUN_MATH_INSERT : LFUN_SELF_INSERT;
+		int i = 0;
+		while (true) {
+			docstring const arg = from_utf8(cmd.getArg(i));
+			if (arg.empty())
+				break;
+			if (!isHex(arg)) {
+				LYXERR0("Not a hexstring: " << arg);
+				++i;
+				continue;
+			}
+			char_type c = hexToInt(arg);
+			if (c >= 32 && c < 0x10ffff) {
+				LYXERR(Debug::KEY, "Inserting c: " << c);
+				lyx::dispatch(FuncRequest(code, docstring(1, c)));
+			}
+			++i;
+		}
+		break;
+	}
+
+
 	// This would be in Buffer class if only Cursor did not
 	// require a bufferview
 	case LFUN_INSET_FORALL: {
@@ -3011,13 +3040,26 @@ bool BufferView::paragraphVisible(DocIterator const & dit) const
 }
 
 
+void BufferView::setCaretAscentDescent(int asc, int des)
+{
+	d->caret_ascent_ = asc;
+	d->caret_descent_ = des;
+}
+
+
 void BufferView::caretPosAndHeight(Point & p, int & h) const
 {
+	int asc, des;
 	Cursor const & cur = cursor();
-	Font const font = cur.real_current_font;
-	frontend::FontMetrics const & fm = theFontMetrics(font);
-	int const asc = fm.maxAscent();
-	int const des = fm.maxDescent();
+	if (cur.inMathed()) {
+		asc = d->caret_ascent_;
+		des = d->caret_descent_;
+	} else {
+		Font const font = cur.real_current_font;
+		frontend::FontMetrics const & fm = theFontMetrics(font);
+		asc = fm.maxAscent();
+		des = fm.maxDescent();
+	}
 	h = asc + des;
 	p = getPos(cur);
 	p.y_ -= asc;
@@ -3081,34 +3123,6 @@ void BufferView::setCurrentRowSlice(CursorSlice const & rowSlice)
 	// Since we changed row, the scroll offset is not valid anymore
 	d->horiz_scroll_offset_ = 0;
 	d->current_row_slice_ = rowSlice;
-}
-
-
-namespace {
-
-bool sliceInRow(CursorSlice const & cs, Text const *, Row const & row)
-{
-	/* The normal case is the last line. The previous line takes care
-	 * of empty rows (e.g. empty paragraphs). Cursor boundary issues
-	 * are taken care of when setting caret_slice_ in
-	 * BufferView::draw.
-	 */
-	return !cs.empty()
-		/// FIXME: cs.inset_ may be dangling (regression at e7fdce0b). We
-		///disable the test for now. Let us cross fingers and hope that the
-		///resulting heuristic is good enough.
-		//&& cs.text() == text
-		&& cs.pit() == row.pit()
-	    && ((row.pos() == row.endpos() && row.pos() == cs.pos())
-	       || (row.pos() <= cs.pos() && cs.pos() < row.endpos()));
-}
-
-}
-
-
-bool BufferView::needRepaint(Text const * text, Row const & row) const
-{
-	return d->repaint_caret_row_ && sliceInRow(d->caret_slice_, text, row);
 }
 
 
@@ -3183,16 +3197,6 @@ void BufferView::draw(frontend::Painter & pain, bool paint_caret)
 	int const y = tm.first().second->position();
 	PainterInfo pi(this, pain);
 
-	/**  A repaint of the previous caret row is needed if there is
-	 *  caret painted on screen and either
-	 *   1/ a new caret has to be painted at a place different from
-	 *      the existing one;
-	 *   2/ there is no need for a caret anymore.
-	 */
-	d->repaint_caret_row_ =
-		((paint_caret && d->cursor_.top() != d->caret_slice_)
-		 || (!paint_caret && !d->caret_slice_.empty()));
-
 	// Check whether the row where the cursor lives needs to be scrolled.
 	// Update the drawing strategy if needed.
 	checkCursorScrollOffset();
@@ -3208,7 +3212,7 @@ void BufferView::draw(frontend::Painter & pain, bool paint_caret)
 		if (pain.isNull()) {
 			pi.full_repaint = true;
 			tm.draw(pi, 0, y);
-		} else if (d->repaint_caret_row_) {
+		} else {
 			pi.full_repaint = false;
 			tm.draw(pi, 0, y);
 		}
@@ -3282,15 +3286,15 @@ void BufferView::draw(frontend::Painter & pain, bool paint_caret)
 		d->update_flags_ = Update::None;
 	}
 
-	// Remember what has just been done for the next draw() step
+	// If a caret has to be painted, mark its text row as dirty to
+	//make sure that it will be repainted on next redraw.
+	/* FIXME: investigate whether this can be avoided when the cursor did not
+	 * move at all
+	 */
 	if (paint_caret) {
-		d->caret_slice_ = d->cursor_.top();
-		if (d->caret_slice_.pos() > 0
-		    && (d->cursor_.boundary()
-		        || d->caret_slice_.pos() == d->caret_slice_.lastpos()))
-			--d->caret_slice_.pos();
-	} else
-		d->caret_slice_ = CursorSlice();
+		Row const & caret_row = d->cursor_.textRow();
+		caret_row.changed(true);
+	}
 }
 
 

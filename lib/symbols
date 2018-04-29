@@ -700,8 +700,8 @@ phone              wasy          7   0 textmode &phone;  wasysym,amstext,lyxmath
 recorder           wasy          6   0 textmode &telrec; wasysym,amstext,lyxmathsym # works in text mode only (produces \Sigma in math mode)
 clock              wasy          28  0 textmode &clock;  wasysym,amstext,lyxmathsym # works in text mode only (produces \o in math mode)
 lightning          wasy          18  0 textmode &#x2607; wasysym,amstext,lyxmathsym # works in text mode only (produces ` in math mode)
-# FIXME Display is wrong (bug 8493): qt does not display characters at the \t position (0x09)
-pointer            wasy          9   0 textmode x        wasysym,amstext,lyxmathsym # works in text mode only (produces \Psi in math mode)
+# qt does not display characters at the \t position (0x09)
+pointer            wasy          170   0 textmode x        wasysym,amstext,lyxmathsym # works in text mode only (produces \Psi in math mode)
 RIGHTarrow         wasy          17  0 textmode &#x25B6; wasysym,amstext,lyxmathsym # works in text mode only (produces \jmath in math mode)
 LEFTarrow          wasy          16  0 textmode &#x25C0; wasysym,amstext,lyxmathsym # works in text mode only (produces \imath in math mode)
 UParrow            wasy          75  0 textmode &#x25B2; wasysym,amstext,lyxmathsym # works in text mode only (produces K in math mode)
@@ -729,10 +729,10 @@ frownie            wasy          47  0 x        &#x2639;
 blacksmiley        wasy          45  0 x        &#x263B;
 sun                wasy          46  0 x        &#x263C;
 checked            wasy          8   0 x        &#x2713;
-bell               wasy          10  0 x        &#x237E;
+bell               wasy          171 0 x        &#x237E;
 eighthnote         wasy          11  0 x        &#x266E;
-quarternote        wasy          12  0 x        &#x2669;
-halfnote           wasy          13  0 x        &#x1d15e;
+quarternote        wasy          172 0 x        &#x2669;
+halfnote           wasy          174 0 x        &#x1d15e;
 fullnote           wasy          14  0 x        &#x1d15d;
 twonotes           wasy          15  0 x        &#x266B;
 brokenvert         wasy          124 0 x        &brvbar;
@@ -866,14 +866,16 @@ Ydown              stmry   5   0 mathbin    x  stmaryrd
 Yleft              stmry   6   0 mathbin    x  stmaryrd
 Yright             stmry   7   0 mathbin    x  stmaryrd
 varcurlyvee        stmry   8   0 mathbin    x  stmaryrd
-# qt does not display characters at the \t position (0x09)
-# therefore our .ttf font contains a copy at 254 (0xfe)
+# qt4 does not display characters at the \t position (0x09)
+# therefore our .ttf font contains a copy at 170 (0xaa)
 #varcurlywedge      stmry   9   0 mathbin    x  stmaryrd
-varcurlywedge      stmry 254   0 mathbin    x  stmaryrd
-minuso             stmry  10   0 mathbin    x  stmaryrd
+#10,12,13 codepoints broken in qt5
+varcurlywedge      stmry 170   0 mathbin    x  stmaryrd
+minuso             stmry 171   0 mathbin    x  stmaryrd
 baro               stmry  11   0 mathbin    x  stmaryrd
-sslash             stmry  12   0 mathbin    x  stmaryrd
-bbslash            stmry  13   0 mathbin    x  stmaryrd
+sslash             stmry 172   0 mathbin    x  stmaryrd
+#for whatever reason qt5 refuses to display anything at position 173
+bbslash            stmry 174   0 mathbin    x  stmaryrd
 moo                stmry  14   0 mathbin    x  stmaryrd
 varotimes          stmry  15   0 mathbin    x  stmaryrd
 varoast            stmry  16   0 mathbin    x  stmaryrd
@@ -1032,17 +1034,18 @@ iiintop            esint        005    0  mathop  &tint;        esint
 iiiint             esint        007    0  mathop  &qint;        esint|amsmath
 
 iiiintop           esint        007    0  mathop  &qint;        esint
-oint               esint        011    0  mathop  &conint;      esint
+#9 codepoint forbidden in qt4, 10,12,13 in qt5
+oint               esint        043    0  mathop  &conint;      esint
 
-ointop             esint        011    0  mathop  &conint;      esint
-oiint              esint        013    0  mathop  &Conint;      esint
-oiintop            esint        013    0  mathop  &Conint;      esint
+ointop             esint        043    0  mathop  &conint;      esint
+oiint              esint        045    0  mathop  &Conint;      esint
+oiintop            esint        045    0  mathop  &Conint;      esint
 sqint              esint        015    0  mathop  x             esint
 sqintop            esint        015    0  mathop  x             esint
 sqiint             esint        017    0  mathop  x             esint
 sqiintop           esint        017    0  mathop  x             esint
-dotsint            esint        019    0  mathop  &int;&ctdot;&int; esint
-dotsintop          esint        019    0  mathop  &int;&ctdot;&int; esint
+dotsint            esint        041    0  mathop  &int;&ctdot;&int; esint
+dotsintop          esint        042    0  mathop  &int;&ctdot;&int; esint
 ointctrclockwise   esint        023    0  mathop  &awconint;    esint
 ointctrclockwiseop esint        023    0  mathop  &awconint;    esint
 ointclockwise      esint        025    0  mathop  &cwconint;    esint

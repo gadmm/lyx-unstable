@@ -124,9 +124,11 @@ void Converter::readFlags()
 				"latex" : flag_value;
 		} else if (flag_name == "xml")
 			xml_ = true;
-		else if (flag_name == "needaux")
+		else if (flag_name == "needaux") {
 			need_aux_ = true;
-		else if (flag_name == "resultdir")
+			latex_flavor_ = flag_value.empty() ?
+				"latex" : flag_value;
+		} else if (flag_name == "resultdir")
 			result_dir_ = (flag_value.empty())
 				? token_base : flag_value;
 		else if (flag_name == "resultfile")
@@ -137,6 +139,8 @@ void Converter::readFlags()
 			nice_ = true;
 		else if (flag_name == "needauth")
 			need_auth_ = true;
+		else if (flag_name == "hyperref-driver")
+			href_driver_ = flag_value;
 	}
 	if (!result_dir_.empty() && result_file_.empty())
 		result_file_ = "index." + theFormats().extension(to_);
@@ -264,7 +268,7 @@ OutputParams::FLAVOR Converters::getFlavor(Graph::EdgePath const & path,
 	for (Graph::EdgePath::const_iterator cit = path.begin();
 	     cit != path.end(); ++cit) {
 		Converter const & conv = converterlist_[*cit];
-		if (conv.latex()) {
+		if (conv.latex() || conv.need_aux()) {
 			if (conv.latex_flavor() == "latex")
 				return OutputParams::LATEX;
 			if (conv.latex_flavor() == "xelatex")
@@ -281,6 +285,18 @@ OutputParams::FLAVOR Converters::getFlavor(Graph::EdgePath const & path,
 	}
 	return buffer ? buffer->params().getOutputFlavor()
 		      : OutputParams::LATEX;
+}
+
+
+string Converters::getHyperrefDriver(Graph::EdgePath const & path)
+{
+	for (Graph::EdgePath::const_iterator cit = path.begin();
+	     cit != path.end(); ++cit) {
+		Converter const & conv = converterlist_[*cit];
+		if (!conv.hyperref_driver().empty())
+			return conv.hyperref_driver();
+	}
+	return string();
 }
 
 
@@ -358,18 +374,20 @@ bool Converters::checkAuth(Converter const & conv, FileName const & doc_fname)
 }
 
 
-bool Converters::convert(Buffer const * buffer,
+Converters::RetVal Converters::convert(Buffer const * buffer,
 			 FileName const & from_file, FileName const & to_file,
 			 FileName const & orig_from,
 			 string const & from_format, string const & to_format,
 			 ErrorList & errorList, int conversionflags)
 {
 	if (from_format == to_format)
-		return move(from_format, from_file, to_file, false);
+		return move(from_format, from_file, to_file, false) ?
+		      SUCCESS : FAILURE;
 
 	if ((conversionflags & try_cache) &&
 	    ConverterCache::get().inCache(orig_from, to_format))
-		return ConverterCache::get().copy(orig_from, to_format, to_file);
+		return ConverterCache::get().copy(orig_from, to_format, to_file) ?
+		      SUCCESS : FAILURE;
 
 	Graph::EdgePath edgepath = getPath(from_format, to_format);
 	if (edgepath.empty()) {
@@ -399,22 +417,22 @@ bool Converters::convert(Buffer const * buffer,
 			if (exitval == Systemcall::KILLED) {
 				frontend::Alert::warning(
 					_("Converter killed"),
-					bformat(_("The running converter\n %1$s\nwas killed by the user."), 
+					bformat(_("The following converter was killed by the user.\n %1$s\n"),
 						from_utf8(command)));
-				return false;
+				return KILLED;
 			}
 			if (to_file.isReadableFile()) {
 				if (conversionflags & try_cache)
 					ConverterCache::get().add(orig_from,
 							to_format, to_file);
-				return true;
+				return SUCCESS;
 			}
 		}
 
 		// only warn once per session and per file type
 		static std::map<string, string> warned;
 		if (warned.find(from_format) != warned.end() && warned.find(from_format)->second == to_format) {
-			return false;
+			return FAILURE;
 		}
 		warned.insert(make_pair(from_format, to_format));
 
@@ -423,7 +441,7 @@ bool Converters::convert(Buffer const * buffer,
 						    "format files to %2$s.\n"
 						    "Define a converter in the preferences."),
 							from_ascii(from_format), from_ascii(to_format)));
-		return false;
+		return FAILURE;
 	}
 
 	// buffer is only invalid for importing, and then runparams is not
@@ -441,6 +459,7 @@ bool Converters::convert(Buffer const * buffer,
 		runparams.index_command = (buffer->params().index_command == "default") ?
 			string() : buffer->params().index_command;
 		runparams.document_language = buffer->params().language->babel();
+		runparams.main_fontenc = buffer->params().main_font_encoding();
 		runparams.only_childbibs = !buffer->params().useBiblatex()
 				&& !buffer->params().useBibtopic()
 				&& buffer->params().multibib == "child";
@@ -533,7 +552,7 @@ bool Converters::convert(Buffer const * buffer,
 		}
 
 		if (!checkAuth(conv, buffer ? buffer->fileName() : FileName()))
-			return false;
+			return FAILURE;
 
 		if (conv.latex()) {
 			// We are not importing, we have a buffer
@@ -546,8 +565,9 @@ bool Converters::convert(Buffer const * buffer,
 			LYXERR(Debug::FILES, "Running " << command);
 			// FIXME KILLED
 			// Check changed return value here.
-			if (!runLaTeX(*buffer, command, runparams, errorList))
-				return false;
+			RetVal const retval = runLaTeX(*buffer, command, runparams, errorList);
+				if (retval != SUCCESS)
+					return retval;
 		} else {
 			if (conv.need_aux() && !run_latex) {
 				// We are not importing, we have a buffer
@@ -576,9 +596,9 @@ bool Converters::convert(Buffer const * buffer,
 						<< " to update aux file");
 					// FIXME KILLED
 					// Check changed return value here.
-					if (!runLaTeX(*buffer, command,
-						      runparams, errorList))
-						return false;
+					RetVal const retval = runLaTeX(*buffer, command, runparams, errorList);
+						if (retval != SUCCESS)
+							return retval;
 				}
 			}
 
@@ -636,9 +656,9 @@ bool Converters::convert(Buffer const * buffer,
 				if (res == Systemcall::KILLED) {
 					frontend::Alert::warning(
 						_("Converter killed"),
-						bformat(_("The running converter\n %1$s\nwas killed by the user."), 
+						bformat(_("The following converter was killed by the user.\n %1$s\n"), 
 							from_utf8(command)));
-					return false;
+					return KILLED;
 				}
 				
 				if (!real_outfile.empty()) {
@@ -665,12 +685,12 @@ bool Converters::convert(Buffer const * buffer,
 					if (res == Systemcall::KILLED) {
 						frontend::Alert::warning(
 							_("Converter killed"),
-							bformat(_("The running converter\n %1$s\nwas killed by the user."), 
+							bformat(_("The following converter was killed by the user.\n %1$s\n"), 
 								from_utf8(command)));
-						return false;
+						return KILLED;
 					}
 					if (!scanLog(*buffer, command, makeAbsPath(logfile, path), errorList))
-						return false;
+						return FAILURE;
 				}
 			}
 
@@ -679,11 +699,15 @@ bool Converters::convert(Buffer const * buffer,
 					Alert::information(_("Process Killed"),
 						bformat(_("The conversion process was killed while running:\n%1$s"),
 							wrapParas(from_utf8(command))));
-				} else if (res == Systemcall::TIMEOUT) {
+					return KILLED;
+				} 
+				if (res == Systemcall::TIMEOUT) {
 					Alert::information(_("Process Timed Out"),
 						bformat(_("The conversion process:\n%1$s\ntimed out before completing."),
 							wrapParas(from_utf8(command))));
-				} else if (conv.to() == "program") {
+					return KILLED;
+				} 
+				if (conv.to() == "program") {
 					Alert::error(_("Build errors"),
 						_("There were errors during the build process."));
 				} else {
@@ -693,14 +717,14 @@ bool Converters::convert(Buffer const * buffer,
 						bformat(_("An error occurred while running:\n%1$s"),
 						wrapParas(from_utf8(command))));
 				}
-				return false;
+				return FAILURE;
 			}
 		}
 	}
 
 	Converter const & conv = converterlist_[edgepath.back()];
 	if (conv.To()->dummy())
-		return true;
+		return SUCCESS;
 
 	if (!conv.result_dir().empty()) {
 		// The converter has put the file(s) in a directory.
@@ -715,14 +739,14 @@ bool Converters::convert(Buffer const * buffer,
 				Alert::error(_("Cannot convert file"),
 					bformat(_("Could not move a temporary directory from %1$s to %2$s."),
 						from_utf8(from), from_utf8(to)));
-				return false;
+				return FAILURE;
 			}
 		}
-		return true;
+		return SUCCESS;
 	} else {
 		if (conversionflags & try_cache)
 			ConverterCache::get().add(orig_from, to_format, outfile);
-		return move(conv.to(), outfile, to_file, conv.latex());
+		return move(conv.to(), outfile, to_file, conv.latex()) ? SUCCESS : FAILURE;
 	}
 }
 
@@ -796,9 +820,7 @@ bool Converters::scanLog(Buffer const & buffer, string const & /*command*/,
 }
 
 
-// FIXME KILL
-// Probably need to return an INT here
-bool Converters::runLaTeX(Buffer const & buffer, string const & command,
+Converters::RetVal Converters::runLaTeX(Buffer const & buffer, string const & command,
 			  OutputParams const & runparams, ErrorList & errorList)
 {
 	buffer.setBusy(true);
@@ -821,7 +843,7 @@ bool Converters::runLaTeX(Buffer const & buffer, string const & command,
 	if (result == Systemcall::KILLED) {
 		Alert::error(_("Export canceled"),
 			_("The export process was terminated by the user."));
-		return result;
+		return KILLED;
 	}
 
 	if (result & LaTeX::ERRORS)
@@ -850,7 +872,6 @@ bool Converters::runLaTeX(Buffer const & buffer, string const & command,
 			       _("No output file was generated."));
 	}
 
-
 	buffer.setBusy(false);
 
 	int const ERROR_MASK =
@@ -858,7 +879,7 @@ bool Converters::runLaTeX(Buffer const & buffer, string const & command,
 			LaTeX::ERRORS |
 			LaTeX::NO_OUTPUT;
 
-	return (result & ERROR_MASK) == 0;
+	return (result & ERROR_MASK) == 0 ? SUCCESS : FAILURE;
 }
 
 

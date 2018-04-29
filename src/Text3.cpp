@@ -89,6 +89,7 @@ using namespace lyx::support;
 namespace lyx {
 
 using cap::copySelection;
+using cap::copySelectionToTemp;
 using cap::cutSelection;
 using cap::cutSelectionToTemp;
 using cap::pasteFromStack;
@@ -249,20 +250,7 @@ static bool doInsertInset(Cursor & cur, Text * text,
 		ci->setButtonLabel();
 
 	cur.recordUndo();
-	if (cmd.action() == LFUN_INDEX_INSERT) {
-		docstring ds = subst(text->getStringToIndex(cur), '\n', ' ');
-		text->insertInset(cur, inset);
-		if (edit)
-			inset->edit(cur, true);
-		// Now put this into inset
-		Font const f(inherit_font, cur.current_font.language());
-		if (!ds.empty()) {
-			cur.text()->insertStringAsLines(cur, ds, f);
-			cur.leaveInset(*inset);
-		}
-		return true;
-	}
-	else if (cmd.action() == LFUN_ARGUMENT_INSERT) {
+	if (cmd.action() == LFUN_ARGUMENT_INSERT) {
 		bool cotextinsert = false;
 		InsetArgument const * const ia = static_cast<InsetArgument const *>(inset);
 		Layout const & lay = cur.paragraph().layout();
@@ -301,9 +289,16 @@ static bool doInsertInset(Cursor & cur, Text * text,
 
 	bool gotsel = false;
 	if (cur.selection()) {
-		cutSelectionToTemp(cur, false, pastesel);
-		cur.clearSelection();
-		gotsel = true;
+		if (cmd.action() == LFUN_INDEX_INSERT)
+				copySelectionToTemp(cur);
+			else
+				cutSelectionToTemp(cur, false, pastesel);
+			cur.clearSelection();
+			gotsel = true;
+		} else if (cmd.action() == LFUN_INDEX_INSERT) {
+			gotsel = text->selectWordWhenUnderCursor(cur, WHOLE_WORD);
+			copySelectionToTemp(cur);
+			cur.clearSelection();
 	}
 	text->insertInset(cur, inset);
 
@@ -1696,21 +1691,6 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 		bv->buffer().errors("Paste");
 		break;
 
-	case LFUN_UNICODE_INSERT: {
-		if (cmd.argument().empty())
-			break;
-		docstring hexstring = cmd.argument();
-		if (isHex(hexstring)) {
-			char_type c = hexToInt(hexstring);
-			if (c >= 32 && c < 0x10ffff) {
-				lyxerr << "Inserting c: " << c << endl;
-				docstring s = docstring(1, c);
-				lyx::dispatch(FuncRequest(LFUN_SELF_INSERT, s));
-			}
-		}
-		break;
-	}
-
 	case LFUN_QUOTE_INSERT: {
 		cap::replaceSelection(cur);
 		cur.recordUndo();
@@ -2148,9 +2128,11 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 
 	case LFUN_NOMENCL_INSERT: {
 		InsetCommandParams p(NOMENCL_CODE);
-		if (cmd.argument().empty())
-			p["symbol"] = bv->cursor().innerText()->getStringToIndex(bv->cursor());
-		else
+		if (cmd.argument().empty()) {
+			p["symbol"] = 
+				bv->cursor().innerText()->getStringForDialog(bv->cursor());
+			cur.clearSelection();
+		} else
 			p["symbol"] = cmd.argument();
 		string const data = InsetCommand::params2string(p);
 		bv->showDialog("nomenclature", data);
@@ -2926,11 +2908,6 @@ bool Text::getStatus(Cursor & cur, FuncRequest const & cmd,
 	}
 	case LFUN_NOTE_INSERT:
 		code = NOTE_CODE;
-		// in commands (sections etc.) and description items,
-		// only Notes are allowed
-		enable = (cmd.argument().empty() || cmd.getArg(0) == "Note" ||
-			  (!cur.paragraph().layout().isCommand()
-			   && !inDescriptionItem(cur)));
 		break;
 	case LFUN_FLEX_INSERT: {
 		code = FLEX_CODE;

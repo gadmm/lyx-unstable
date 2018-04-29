@@ -60,7 +60,6 @@ try <https://github.com/gadmm/lyx-unstable/compare/master...staging>.
 
 ## Important bug fixes
 
-* Crash with segfault when exiting or dissolving math insets.
 * Scrolling issues with keyboard across large insets.
 * Fix flicker due to changing metrics while selecting with the mouse. (#8951)
 * Do not randomly delete aux files while compiling. (#9963)
@@ -106,6 +105,7 @@ try <https://github.com/gadmm/lyx-unstable/compare/master...staging>.
 * Properly enforce scrolling boundaries.
 * Properly reset references and counters when updating citations.
 * Properly reset selection when inputting a composed character.
+* Improve the behaviour on external modifications.
 
 ## Minor enhancements
 

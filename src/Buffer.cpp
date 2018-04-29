@@ -1800,6 +1800,9 @@ Buffer::ExportStatus Buffer::writeLaTeXSource(otexstream & os,
 	//        (or not reached) and characters encodable in the current
 	//        encoding are not converted to ASCII-representation.
 
+	// Some macros rely on font encoding
+	runparams.main_fontenc = params().main_font_encoding();
+
 	// If we are compiling a file standalone, even if this is the
 	// child of some other buffer, let's cut the link here, so the
 	// file is really independent and no concurring settings from
@@ -4371,7 +4374,10 @@ Buffer::ExportStatus Buffer::doExport(string const & target, bool put_in_tempdir
 	} else if (!lyxrc.tex_allows_spaces
 		   && contains(filePath(), ' ')) {
 		Alert::error(_("File name error"),
-			   _("The directory path to the document cannot contain spaces."));
+			bformat(_("The directory path to the document\n%1$s\n"
+			    "contains spaces, but your TeX installation does "
+			    "not allow them. You should save the file to a directory "
+					"whose name does not contain spaces."), from_ascii(filePath())));
 		return ExportTexPathHasSpaces;
 	} else {
 		runparams.nice = false;
@@ -4728,9 +4734,7 @@ void Buffer::bufferErrors(TeXErrors const & terr, ErrorList & errorList) const
 }
 
 
-void Buffer::updateBuffer(UpdateScope const scope,
-                          UpdateType const utype,
-                          bool const recurse) const
+void Buffer::updateBuffer(UpdateScope scope, UpdateType utype) const
 {
 	LBUFERR(!text().paragraphs().empty());
 
@@ -4802,18 +4806,37 @@ void Buffer::updateBuffer(UpdateScope const scope,
 		return;
 
 	// if the bibfiles changed, the cache of bibinfo is invalid
-	sort(d->bibfiles_cache_.begin(), d->bibfiles_cache_.end());
-	// the old one should already be sorted
-	if (recurse && old_bibfiles != d->bibfiles_cache_)
+	FileNamePairList new_bibfiles = d->bibfiles_cache_;
+	// this is a trick to determine whether the two vectors have
+	// the same elements.
+	sort(new_bibfiles.begin(), new_bibfiles.end());
+	sort(old_bibfiles.begin(), old_bibfiles.end());
+	if (old_bibfiles != new_bibfiles) {
+		LYXERR(Debug::FILES, "Reloading bibinfo cache.");
+		invalidateBibinfoCache();
+		reloadBibInfoCache();
 		// We relied upon the bibinfo cache when recalculating labels. But that
 		// cache was invalid, although we didn't find that out until now. So we
 		// have to do it all again.
 		// That said, the only thing we really need to do is update the citation
 		// labels. Nothing else will have changed. So we could create a new
 		// UpdateType that would signal that fact, if we needed to do so.
-		return updateBuffer(scope, utype, false);
-	else
+		parit = cbuf.par_iterator_begin();
+		// we will be re-doing the counters and references and such.
+		textclass.counters().reset();
+		clearReferenceCache();
+		// we should not need to do this again?
+		// updateMacros();
+		setChangesPresent(false);
+		updateBuffer(parit, utype);
+		// this will already have been done by reloadBibInfoCache();
+		// d->bibinfo_cache_valid_ = true;
+	}
+	else {
+		LYXERR(Debug::FILES, "Bibfiles unchanged.");
+		// this is also set to true on the other path, by reloadBibInfoCache.
 		d->bibinfo_cache_valid_ = true;
+	}
 	d->cite_labels_valid_ = true;
 	/// FIXME: Perf
 	cbuf.tocBackend().update(true, utype);

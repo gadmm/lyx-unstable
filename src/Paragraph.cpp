@@ -314,13 +314,15 @@ public:
 
 	/// Output the surrogate pair formed by \p c and \p next to \p os.
 	/// \return the number of characters written.
-	int latexSurrogatePair(otexstream & os, char_type c, char_type next,
+	int latexSurrogatePair(BufferParams const &, otexstream & os,
+			       char_type c, char_type next,
 			       OutputParams const &);
 
 	/// Output a space in appropriate formatting (or a surrogate pair
 	/// if the next character is a combining character).
 	/// \return whether a surrogate pair was output.
-	bool simpleTeXBlanks(OutputParams const &,
+	bool simpleTeXBlanks(BufferParams const &,
+			     OutputParams const &,
 			     otexstream &,
 			     pos_type i,
 			     unsigned int & column,
@@ -330,8 +332,11 @@ public:
 	/// Output consecutive unicode chars, belonging to the same script as
 	/// specified by the latex macro \p ltx, to \p os starting from \p i.
 	/// \return the number of characters written.
-	int writeScriptChars(otexstream & os, docstring const & ltx,
-			   Change const &, Encoding const &, pos_type & i);
+	int writeScriptChars(BufferParams const &, OutputParams const &,
+			     otexstream & os,
+			     docstring const & ltx,
+			     Change const &, Encoding const &,
+			     std::string const, pos_type & i);
 
 	/// This could go to ParagraphParameters if we want to.
 	int startTeXParParams(BufferParams const &, otexstream &,
@@ -865,8 +870,9 @@ int Paragraph::eraseChars(pos_type start, pos_type end, bool trackChanges)
 }
 
 
-int Paragraph::Private::latexSurrogatePair(otexstream & os, char_type c,
-		char_type next, OutputParams const & runparams)
+int Paragraph::Private::latexSurrogatePair(BufferParams const & bparams,
+		otexstream & os, char_type c, char_type next,
+		OutputParams const & runparams)
 {
 	// Writing next here may circumvent a possible font change between
 	// c and next. Since next is only output if it forms a surrogate pair
@@ -883,23 +889,63 @@ int Paragraph::Private::latexSurrogatePair(otexstream & os, char_type c,
 			latex1 = from_ascii(tipashortcut);
 		}
 	}
-	docstring const latex2 = encoding.latexChar(c).first;
+	docstring latex2 = encoding.latexChar(c).first;
+
 	if (docstring(1, next) == latex1) {
-		// the encoding supports the combination
+		// The encoding supports the combination:
+		// output as is (combining char after base char).
 		os << latex2 << latex1;
 		return latex1.length() + latex2.length();
-	} else if (runparams.local_font &&
-		   runparams.local_font->language()->lang() == "polutonikogreek") {
-		// polutonikogreek only works without the brackets
-		os << latex1 << latex2;
-		return latex1.length() + latex2.length();
-	} else
-		os << latex1 << '{' << latex2 << '}';
-	return latex1.length() + latex2.length() + 2;
+	}
+
+	// Handle combining characters in "script" context (i.e., \textgreek and \textcyrillic)
+	docstring::size_type const brace1 = latex2.find_first_of(from_ascii("{"));
+	docstring::size_type const brace2 = latex2.find_last_of(from_ascii("}"));
+	string script = to_ascii(latex2.substr(1, brace1 - 1));
+	// "Script chars" need to embraced in \textcyrillic and \textgreek notwithstanding
+	// whether they are encodable or not (it only depends on the font encoding)
+	if (!runparams.isFullUnicode())
+		// This will get us a script value to deal with below
+		Encodings::isKnownScriptChar(c, script);
+	int pos = 0;
+	int length = brace2;
+	string fontenc;
+	if (runparams.local_font)
+		fontenc = runparams.local_font->language()->fontenc(bparams);
+	else
+		fontenc = runparams.main_fontenc;
+	docstring scriptmacro;
+	docstring cb;
+	if (script == "textgreek" || script == "textcyrillic") {
+		// We separate the script macro (\text[greek|cyr]) from the rest,
+		// since we need to include the combining char in it (#6463).
+		// This is "the rest":
+		pos = brace1 + 1;
+		length -= pos;
+		latex2 = latex2.substr(pos, length);
+		// We only need the script macro with non-native font encodings
+		if (Encodings::needsScriptWrapper(script, fontenc)) {
+			scriptmacro = from_ascii("\\" + script + "{");
+			cb = from_ascii("}");
+		}
+	}
+
+	docstring lb;
+	docstring rb;
+	// polutonikogreek does not play nice with brackets
+	if (!runparams.local_font
+	    || runparams.local_font->language()->lang() != "polutonikogreek") {
+		lb = from_ascii("{");
+		rb = from_ascii("}");
+	}
+
+	os << scriptmacro << latex1 << lb << latex2 << rb << cb;
+	return latex1.length() + latex2.length() + lb.length() + rb.length() + cb.length();
 }
 
 
-bool Paragraph::Private::simpleTeXBlanks(OutputParams const & runparams,
+bool Paragraph::Private::simpleTeXBlanks(BufferParams const & bparams,
+				       OutputParams const & runparams,
 				       otexstream & os,
 				       pos_type i,
 				       unsigned int & column,
@@ -913,7 +959,7 @@ bool Paragraph::Private::simpleTeXBlanks(OutputParams const & runparams,
 		char_type next = text_[i + 1];
 		if (Encodings::isCombiningChar(next)) {
 			// This space has an accent, so we must always output it.
-			column += latexSurrogatePair(os, ' ', next, runparams) - 1;
+			column += latexSurrogatePair(bparams, os, ' ', next, runparams) - 1;
 			return true;
 		}
 	}
@@ -944,10 +990,13 @@ bool Paragraph::Private::simpleTeXBlanks(OutputParams const & runparams,
 }
 
 
-int Paragraph::Private::writeScriptChars(otexstream & os,
+int Paragraph::Private::writeScriptChars(BufferParams const & bparams,
+					 OutputParams const & runparams,
+					 otexstream & os,
 					 docstring const & ltx,
 					 Change const & runningChange,
 					 Encoding const & encoding,
+					 string const fontenc,
 					 pos_type & i)
 {
 	// FIXME: modifying i here is not very nice...
@@ -955,10 +1004,6 @@ int Paragraph::Private::writeScriptChars(otexstream & os,
 	// We only arrive here when character text_[i] could not be translated
 	// into the current latex encoding (or its latex translation has been forced,)
 	// and it belongs to a known script.
-	// TODO: We need \textcyr and \textgreek wrappers also for characters
-	//       that can be encoded in the "LaTeX encoding" but not in the
-	//       current *font encoding*.
-	//       (See #9681 for details and test)
 	// Parameter ltx contains the latex translation of text_[i] as specified
 	// in the unicodesymbols file and is something like "\textXXX{<spec>}".
 	// The latex macro name "textXXX" specifies the script to which text_[i]
@@ -972,12 +1017,8 @@ int Paragraph::Private::writeScriptChars(otexstream & os,
 	int pos = 0;
 	int length = brace2;
 	bool closing_brace = true;
-	if (script == "textgreek" && encoding.latexName() == "iso-8859-7") {
-		// Correct encoding is being used, so we can avoid \textgreek.
-		// TODO: wrong test: we need to check the *font encoding*
-		//       (i.e. the active language and its FontEncoding tag)
-	        // 	 instead of the LaTeX *input encoding*!
-		// 	 See #9637 for details and test-cases.
+	if (!Encodings::needsScriptWrapper(script, fontenc)) {
+		// Correct font encoding is being used, so we can avoid \text[greek|cyr].
 		pos = brace1 + 1;
 		length -= pos;
 		closing_brace = false;
@@ -1006,6 +1047,18 @@ int Paragraph::Private::writeScriptChars(otexstream & os,
 		// Stop here if there is a font attribute or encoding change.
 		if (found && cit != end && prev_font != cit->font())
 			break;
+
+		// Check whether we have a combining pair
+		char_type next_next = '\0';
+		if (i + 2 < size) {
+			next_next = text_[i + 2];
+			if (Encodings::isCombiningChar(next_next)) {
+				length += latexSurrogatePair(bparams, os, next, next_next, runparams) - 1;
+				i += 2;
+				continue;
+			}
+		}
+
 		docstring const latex = encoding.latexChar(next).first;
 		docstring::size_type const b1 =
 					latex.find_first_of(from_ascii("{"));
@@ -1315,7 +1368,7 @@ void Paragraph::Private::latexSpecialChar(otexstream & os,
 		if (i + 1 < int(text_.size())) {
 			next = text_[i + 1];
 			if (Encodings::isCombiningChar(next)) {
-				column += latexSurrogatePair(os, c, next, runparams) - 1;
+				column += latexSurrogatePair(bparams, os, c, next, runparams) - 1;
 				++i;
 				break;
 			}
@@ -1341,11 +1394,21 @@ void Paragraph::Private::latexSpecialChar(otexstream & os,
 				tipas = true;
 			}
 		}
-		if (Encodings::isKnownScriptChar(c, script)
-		    && prefixIs(latex.first, from_ascii("\\" + script)))
-			column += writeScriptChars(os, latex.first,
-					running_change, encoding, i) - 1;
-		else if (latex.second
+		string fontenc;
+		if (running_font.language()->lang() == bparams.language->lang())
+			fontenc = runparams.main_fontenc;
+		else
+			fontenc = running_font.language()->fontenc(bparams);
+		// "Script chars" need to embraced in \textcyrillic and \textgreek notwithstanding
+		// whether they are encodable or not (it only depends on the font encoding)
+		if (!runparams.isFullUnicode() && Encodings::isKnownScriptChar(c, script)) {
+			docstring const wrapper = from_ascii("\\" + script + "{");
+			docstring ltx = latex.first;
+			if (!prefixIs(ltx, wrapper))
+				ltx = wrapper + latex.first + from_ascii("}");
+			column += writeScriptChars(bparams, runparams, os, ltx, running_change,
+						   encoding, fontenc, i) - 1;
+		} else if (latex.second
 			 && ((!prefixIs(nextlatex, '\\')
 			       && !prefixIs(nextlatex, '{')
 			       && !prefixIs(nextlatex, '}'))
@@ -1490,6 +1553,7 @@ void Paragraph::Private::validate(LaTeXFeatures & features) const
 	// then the contents
 	BufferParams const bp = features.runparams().is_child
 		? features.buffer().masterParams() : features.buffer().params();
+	string bscript = "textbaltic";
 	for (pos_type i = 0; i < int(text_.size()) ; ++i) {
 		char_type c = text_[i];
 		if (c == 0x0022) {
@@ -1498,11 +1562,16 @@ void Paragraph::Private::validate(LaTeXFeatures & features) const
 			else if (bp.main_font_encoding() != "T1"
 				 || ((&owner_->getFontSettings(bp, i))->language()->internalFontEncoding()))
 				features.require("textquotedbl");
-		}
-		if (!bp.use_dash_ligatures
-		    && (c == 0x2013 || c == 0x2014)
-		    && bp.useNonTeXFonts
-		    && features.runparams().flavor == OutputParams::XETEX)
+		} else if (Encodings::isKnownScriptChar(c, bscript)){
+			string fontenc = (&owner_->getFontSettings(bp, i))->language()->fontenc(bp);
+			if (fontenc.empty())
+				fontenc = features.runparams().main_fontenc;
+			if (Encodings::needsScriptWrapper("textbaltic", fontenc))
+				features.require("textbalticdefs");
+		} else if (!bp.use_dash_ligatures
+			   && (c == 0x2013 || c == 0x2014)
+			   && bp.useNonTeXFonts
+			   && features.runparams().flavor == OutputParams::XETEX)
 			// XeTeX's dash behaviour is determined via a global setting
 			features.require("xetexdashbreakstate");
 		BufferEncodings::validate(c, features);
@@ -2626,7 +2695,7 @@ void Paragraph::latex(BufferParams const & bparams,
 			// latexSpecialChar ignores spaces if
 			// style.pass_thru is false.
 			if (i != body_pos - 1) {
-				if (d->simpleTeXBlanks(runparams, os,
+				if (d->simpleTeXBlanks(bparams, runparams, os,
 						i, column, current_font, style)) {
 					// A surrogate pair was output. We
 					// must not call latexSpecialChar
@@ -3380,8 +3449,13 @@ bool Paragraph::isHardHyphenOrApostrophe(pos_type pos) const
 
 bool Paragraph::needsCProtection() const
 {
-	// first check the layout of the paragraph
-	if (layout().needcprotect) {
+	// first check the layout of the paragraph, but only in insets
+	InsetText const * textinset = inInset().asInsetText();
+	bool const maintext = textinset
+		? textinset->text().isMainText()
+		: false;
+
+	if (!maintext && layout().needcprotect) {
 		// Environments need cprotection regardless the content
 		if (layout().latextype == LATEX_ENVIRONMENT)
 			return true;
@@ -3401,7 +3475,7 @@ bool Paragraph::needsCProtection() const
 	// now check whether we have insets that need cprotection
 	pos_type size = d->text_.size();
 	for (pos_type i = 0; i < size; ++i)
-		if (isInset(i) && getInset(i)->needsCProtection())
+		if (isInset(i) && getInset(i)->needsCProtection(maintext))
 			return true;
 
 	return false;

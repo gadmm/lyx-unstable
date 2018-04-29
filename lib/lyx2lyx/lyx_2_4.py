@@ -182,6 +182,26 @@ def revert_lscape(document):
         # no need to reset i
 
 
+def convert_fontenc(document):
+    " Convert default fontenc setting "
+
+    i = find_token(document.header, "\\fontencoding global", 0)
+    if i == -1:
+        return
+
+    document.header[i] = document.header[i].replace("global", "auto")
+
+
+def revert_fontenc(document):
+    " Revert default fontenc setting "
+
+    i = find_token(document.header, "\\fontencoding auto", 0)
+    if i == -1:
+        return
+
+    document.header[i] = document.header[i].replace("auto", "global")
+
+
 ##
 # Conversion hub
 #
@@ -191,10 +211,14 @@ convert = [
            [545, [convert_lst_literalparam]],
            [546, []],
            [547, []],
-           [548, []]
+           [548, []],
+           [549, []],
+           [550, [convert_fontenc]]
           ]
 
 revert =  [
+           [549, [revert_fontenc]],
+           [548, []],# dummy format change
            [547, [revert_lscape]],
            [546, [revert_xcharter]],
            [545, [revert_paratype]],

@@ -1275,6 +1275,10 @@ void GuiWorkArea::Private::paintPreeditText(GuiPainter & pain)
 
 void GuiWorkArea::paintEvent(QPaintEvent * ev)
 {
+	// Hopefully fixes bug #10989.
+	if (view().busy())
+		return;
+
 	// When Debug::PAINTING is set, produce a flicker
 	guiApp->colorCache().invert_debug = lyxerr.debugging(Debug::PAINTING)
 		? !guiApp->colorCache().invert_debug

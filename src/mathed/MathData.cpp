@@ -259,22 +259,14 @@ bool isInside(DocIterator const & it, MathData const & ar,
 #endif
 
 
-void MathData::metrics(MetricsInfo & mi, Dimension & dim) const
+void MathData::metrics(MetricsInfo & mi, Dimension & dim, bool tight) const
 {
-	// This is the only point where the drawing font is known.
-	// We set cursor current font so that the blinking caret height
-	// adapts to math font.
-	Cursor & cur = mi.base.bv->cursor();
-	if (cur.inMathed() && &cur.cell() == this) {
-		cur.current_font.fontInfo() = mi.base.font;
-		cur.real_current_font.fontInfo() = mi.base.font;
-	}
-
 	frontend::FontMetrics const & fm = theFontMetrics(mi.base.font);
-	dim = fm.dimension('I');
+	BufferView * bv = mi.base.bv;
+	int const Iascent = fm.dimension('I').ascent();
 	int xascent = fm.dimension('x').ascent();
-	if (xascent >= dim.asc)
-		xascent = (2 * dim.asc) / 3;
+	if (xascent >= Iascent)
+		xascent = (2 * Iascent) / 3;
 	minasc_ = xascent;
 	mindes_ = (3 * xascent) / 4;
 	slevel_ = (4 * xascent) / 5;
@@ -282,11 +274,28 @@ void MathData::metrics(MetricsInfo & mi, Dimension & dim) const
 
 	MathRow mrow(mi, this);
 	mrow.metrics(mi, dim);
-	mrow_cache_[mi.base.bv] = mrow;
-	kerning_ = mrow.kerning(mi.base.bv);
+	mrow_cache_[bv] = mrow;
+	kerning_ = mrow.kerning(bv);
+
+	// Set a minimal ascent/descent for the cell
+	if (tight)
+		// FIXME: this is the minimal ascent seen empirically, check
+		// what the TeXbook says.
+		dim.asc = max(dim.asc, fm.ascent('x'));
+	else {
+		dim.asc = max(dim.asc, fm.maxAscent());
+		dim.des = max(dim.des, fm.maxDescent());
+	}
+
+	// This is one of the the few points where the drawing font is known,
+	// so that we can set the caret vertical dimensions.
+	Cursor & cur = bv->cursor();
+	if (cur.inMathed() && &cur.cell() == this)
+		bv->setCaretAscentDescent(min(dim.asc, fm.maxAscent()),
+		                          min(dim.des, fm.maxDescent()));
 
 	// Cache the dimension.
-	mi.base.bv->coordCache().arrays().add(this, dim);
+	bv->coordCache().arrays().add(this, dim);
 }
 
 

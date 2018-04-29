@@ -258,7 +258,7 @@ static docstring const textcyr_T2A_def = from_ascii(
 static docstring const textcyr_def = from_ascii(
 	"\\DeclareRobustCommand{\\cyrtext}{%\n"
 	"  \\fontencoding{T2A}\\selectfont\\def\\encodingdefault{T2A}}\n"
-	"\\DeclareRobustCommand{\\textcyr}[1]{\\leavevmode{\\cyrtext #1}}\n");
+	"\\DeclareRobustCommand{\\textcyrillic}[1]{\\leavevmode{\\cyrtext #1}}\n");
 
 static docstring const lyxmathsym_def = from_ascii(
 	"\\newcommand{\\lyxmathsym}[1]{\\ifmmode\\begingroup\\def\\b@ld{bold}\n"
@@ -544,6 +544,12 @@ void LaTeXFeatures::require(set<string> const & names)
 }
 
 
+void LaTeXFeatures::provide(string const & name)
+{
+	provides_.insert(name);
+}
+
+
 void LaTeXFeatures::useLayout(docstring const & layoutname)
 {
 	useLayout(layoutname, 0);
@@ -609,6 +615,11 @@ bool LaTeXFeatures::isRequired(string const & name) const
 
 bool LaTeXFeatures::isProvided(string const & name) const
 {
+	// Currently, this is only features provided by babel languages
+	// (such as textgreek)
+	if (provides_.find(name) != provides_.end())
+		return true;
+
 	if (params_.useNonTeXFonts)
 		return params_.documentClass().provides(name);
 
@@ -634,9 +645,6 @@ bool LaTeXFeatures::isProvided(string const & name) const
 			from_ascii(params_.fontsMath())).provides(name, ot1,
 								       complete,
 								       nomath);
-	// TODO: "textbaltic" provided, if the font-encoding is "L7x"
-	//       "textgreek" provided, if a language with font-encoding LGR is used in the document
-	//       "textcyr" provided, if a language with font-encoding T2A is used in the document
 }
 
 
@@ -737,6 +745,9 @@ void LaTeXFeatures::useLanguage(Language const * lang)
 		UsedLanguages_.insert(lang);
 	if (!lang->requires().empty())
 		require(lang->requires());
+	// currently only supported for Babel
+	if (!lang->provides().empty() && useBabel())
+		provide(lang->provides());
 	// CJK languages do not have a babel name.
 	// They use the CJK package
 	if (lang->encoding()->package() == Encoding::CJK)
@@ -880,26 +891,27 @@ set<string> LaTeXFeatures::getEncodingSet(string const & doc_encoding) const
 }
 
 
-void LaTeXFeatures::getFontEncodings(vector<string> & encs) const
+void LaTeXFeatures::getFontEncodings(vector<string> & encs, bool const onlylangs) const
 {
-	// these must be loaded if glyphs of this script are used
-	// unless a language providing them is used in the document
-	if (mustProvide("textgreek")
-	    && find(encs.begin(), encs.end(), "LGR") == encs.end())
-		encs.insert(encs.begin(), "LGR");
-	if (mustProvide("textcyr")
-	    && find(encs.begin(), encs.end(), "T2A") == encs.end())
-		encs.insert(encs.begin(), "T2A");
+	if (!onlylangs) {
+		// these must be loaded if glyphs of this script are used
+		// unless a language providing them is used in the document
+		if (mustProvide("textgreek")
+		    && find(encs.begin(), encs.end(), "LGR") == encs.end())
+			encs.insert(encs.begin(), "LGR");
+		if (mustProvide("textcyrillic")
+		    && find(encs.begin(), encs.end(), "T2A") == encs.end())
+			encs.insert(encs.begin(), "T2A");
+	}
 
-	for (auto const & lang : UsedLanguages_)
-		if (!lang->fontenc().empty()
-		    && ascii_lowercase(lang->fontenc()) != "none") {
-			vector<string> extraencs = getVectorFromString(lang->fontenc());
-			for (auto const & extra : extraencs) {
-				if (find(encs.begin(), encs.end(), extra) == encs.end())
-					encs.insert(encs.begin(), extra);
-			}
+	for (auto const & lang : UsedLanguages_) {
+		vector<string> extraencs =
+			getVectorFromString(lang->fontenc(buffer().masterParams()));
+		for (auto const & extra : extraencs) {
+			if (extra != "none" && find(encs.begin(), encs.end(), extra) == encs.end())
+				encs.insert(encs.begin(), extra);
 		}
+	}
 }
 
 namespace {
@@ -1367,7 +1379,7 @@ TexString LaTeXFeatures::getMacros() const
 		macros << textgreek_def << '\n';
 	}
 
-	if (!usePolyglossia() && mustProvide("textcyr")) {
+	if (!usePolyglossia() && mustProvide("textcyrillic")) {
 		// ensure T2A font encoding is set up also if fontenc is not loaded by LyX
 		if (params_.main_font_encoding() == "default")
 			macros << textcyr_T2A_def;
@@ -1376,19 +1388,19 @@ TexString LaTeXFeatures::getMacros() const
 
 	// non-standard text accents:
 	if (mustProvide("textcommaabove") || mustProvide("textcommaaboveright") ||
-	    mustProvide("textcommabelow") || mustProvide("textbaltic"))
+	    mustProvide("textcommabelow") || mustProvide("textbalticdefs"))
 		macros << lyxaccent_def;
 
-	if (mustProvide("textcommabelow") || mustProvide("textbaltic"))
+	if (mustProvide("textcommabelow") || mustProvide("textbalticdefs"))
 		macros << textcommabelow_def << '\n';
 
-	if (mustProvide("textcommaabove") || mustProvide("textbaltic"))
+	if (mustProvide("textcommaabove") || mustProvide("textbalticdefs"))
 		macros << textcommaabove_def << '\n';
 
 	if (mustProvide("textcommaaboveright"))
 		macros << textcommaaboveright_def << '\n';
 
-	if (mustProvide("textbaltic"))
+	if (mustProvide("textbalticdefs"))
 		macros << textbaltic_def << '\n';
 
 	// split-level fractions

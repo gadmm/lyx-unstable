@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LyX-2.4\n"
 "Report-Msgid-Bugs-To: lyx-devel@lists.lyx.org\n"
-"POT-Creation-Date: 2018-04-02 10:54+0200\n"
-"PO-Revision-Date: 2018-04-02 08:59+0000\n"
+"POT-Creation-Date: 2018-04-26 07:18+0200\n"
+"PO-Revision-Date: 2018-04-26 05:25+0000\n"
 "Last-Translator: Kornel Benko <kornel@lyx.org>\n"
 "Language-Team: Slovak <kornel@lyx.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Lokalize 2.0\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
 "X-Language: sk_SK\n"
 "X-Source-Language: en_US\n"
@@ -2310,6 +2310,10 @@ msgstr "&Lokálna schéma…"
 msgid "Class Options"
 msgstr "Nastavenie Triedy"
 
+#: src/frontends/qt4/GuiDocument.cpp:964
+msgid "Class default"
+msgstr "Triedny štandard"
+
 #: src/frontends/qt4/ui/LaTeXUi.ui:64
 msgid "Enable to use the options that are predefined in the layout file"
 msgstr "Umožni voľby preddefinované v súbore so schémou"
@@ -2567,6 +2571,19 @@ msgstr "Rozšírená ta&buľka znakov"
 #: src/frontends/qt4/ui/ListingsUi.ui:345
 msgid "Lan&guage:"
 msgstr "&Jazyk:"
+
+#: lib/layouts/landscape.module:2 lib/layouts/landscape.module:10
+#: lib/layouts/landscape.module:15
+msgid "Landscape"
+msgstr "Na Šírku"
+
+#: lib/layouts/landscape.module:25
+msgid "Landscape (Floating)"
+msgstr "Na Šírku (Plávanie)"
+
+#: lib/layouts/landscape.module:28
+msgid "Landscape (floating)"
+msgstr "Na Šírku (plávanie)"
 
 #: src/frontends/qt4/ui/ListingsUi.ui:355
 msgid "Select the programming language"
@@ -3997,17 +4014,6 @@ msgstr "&Logický"
 #: src/frontends/qt4/ui/PrefLanguageUi.ui:257
 msgid "&Visual"
 msgstr "&Vizuálny"
-
-#: src/frontends/qt4/ui/PrefLatexUi.ui:34
-msgid ""
-"Enable if a specific font encoding (such as T1) should be used (via fontenc)"
-msgstr ""
-"Zapnúť keď potrebujete špecifické kódovanie písiem (ako napr. T1) (cez "
-"fontenc)"
-
-#: src/frontends/qt4/ui/PrefLatexUi.ui:37
-msgid "Use LaTe&X font encoding:"
-msgstr "Použiť LaTe&X kódovanie:"
 
 #: src/frontends/qt4/ui/PrefLatexUi.ui:51
 msgid "&DVI viewer paper size options:"
@@ -11007,6 +11013,11 @@ msgstr ""
 "Kontroluje schému pre číslovanie, položky, opis a listina/etiketovanie.\n"
 "Pozrite si sekciu 'Customized Lists' v Užívateľskej Príručke pre detailné "
 "vysvetlenie."
+
+#: src/frontends/qt4/GuiView.cpp:709
+#, c-format
+msgid "Conversion cancelled while previewing format: %1$s"
+msgstr "Konverzia bola zrušená počas náhľadu formátu: %1$s"
 
 #: lib/layouts/enumitem.module:58 lib/layouts/paralist.module:29
 #: lib/layouts/powerdot.layout:276
@@ -25399,10 +25410,6 @@ msgstr "Žiadne informácie pre export formátu %1$s."
 msgid "File name error"
 msgstr "Chyba v názve súboru"
 
-#: src/Buffer.cpp:4284
-msgid "The directory path to the document cannot contain spaces."
-msgstr "Cesta k dokumentu nesmie obsahovať medzery."
-
 #: src/Buffer.cpp:4364 src/Buffer.cpp:4394 src/frontends/qt4/GuiView.cpp:690
 msgid "Document export cancelled."
 msgstr "Exportovanie dokumentu bolo zrušené."
@@ -26422,17 +26429,6 @@ msgstr "&Vždy spustiť pre tento dokument"
 msgid "Converter killed"
 msgstr "Konvertor prerušený"
 
-#: src/Converter.cpp:428 src/Converter.cpp:669 src/Converter.cpp:698
-#, c-format
-msgid ""
-"The running converter\n"
-" %1$s\n"
-"was killed by the user."
-msgstr ""
-"Beh konverzie\n"
-" %1$s\n"
-"bol prerušený užívateľom."
-
 #: src/Converter.cpp:447 src/Converter.cpp:722 src/Converter.cpp:745
 #: src/Converter.cpp:788
 msgid "Cannot convert file"
@@ -26578,6 +26574,10 @@ msgstr ""
 #: src/Converter.cpp:879
 msgid "Output is empty"
 msgstr "Výstup je prázdny"
+
+#: lib/layouts/landscape.module:5
+msgid "Output parts of the document in landscape mode."
+msgstr "Vytlačiť čiastky z dokumentu na šírku."
 
 #: src/Converter.cpp:880
 msgid "No output file was generated."
@@ -27418,14 +27418,6 @@ msgstr ""
 "Cesta, ktorú vám LyX pri voľbe príkladov ponúkne. Prázdna hodnota spôsobí, "
 "že bude nastavený adresár, z ktorého bol LyX spustený."
 
-#: src/LyXRC.cpp:3182
-msgid ""
-"The font encoding used for the LaTeX2e fontenc package. T1 is highly "
-"recommended for non-English languages."
-msgstr ""
-"Kódovanie písma použité pre LaTeX2e balíček fontenc. T1 je vrelo odporučené "
-"pre neanglické jazyky."
-
 #: src/LyXRC.cpp:3189
 msgid ""
 "Define the options of makeindex (cf. man makeindex) or select an alternative "
@@ -27927,14 +27919,6 @@ msgstr ", Okraj: "
 #: src/Text2.cpp:409
 msgid "No font change defined."
 msgstr "Žiadna zmena fontu nie je definovaná."
-
-#: src/Text2.cpp:449
-msgid "Nothing to index!"
-msgstr "Nie je čo indexovať!"
-
-#: src/Text2.cpp:451
-msgid "Cannot index more than one paragraph!"
-msgstr "Nie je možné indexovať viac ako jeden odstavec!"
 
 #: src/Text3.cpp:194
 msgid "Math editor mode"
@@ -29359,10 +29343,6 @@ msgstr "11"
 msgid "12"
 msgstr "12"
 
-#: src/frontends/qt4/GuiDocument.cpp:879
-msgid "None (no fontenc)"
-msgstr "Žiadne (bez fontenc)"
-
 #: src/frontends/qt4/GuiDocument.cpp:887
 msgid ""
 "Use OpenType and TrueType fonts directly (requires XeTeX or LuaTeX)\n"
@@ -29657,10 +29637,10 @@ msgstr " (nedostupný)"
 msgid "Class Default (TeX Fonts)"
 msgstr "Triedny Štandard (TeX fonty)"
 
-#: src/frontends/qt4/GuiDocument.cpp:2208
-#: src/frontends/qt4/GuiDocument.cpp:2235
+#: src/frontends/qt4/GuiDocument.cpp:2264
+#: src/frontends/qt4/GuiDocument.cpp:2291
 msgid "Class Default"
-msgstr "Triedny štandard"
+msgstr "Triedny Štandard"
 
 #: src/frontends/qt4/GuiDocument.cpp:2312
 msgid "Lay&outs"
@@ -31199,6 +31179,19 @@ msgstr ""
 "%1$s\n"
 "neexistuje."
 
+#: src/Buffer.cpp:4366
+#, c-format
+msgid ""
+"The directory path to the document\n"
+"%1$s\n"
+"contains spaces, but your TeX installation does not allow them. You should "
+"save the file to a directory whose name does not contain spaces."
+msgstr ""
+"Cesta do adresára dokumentu\n"
+"%1$s\n"
+"obsahuje medzery, ale vaša inštalácia TeXu to nepovoľuje. Súbor by ste mali "
+"uložiť do adresára ktorého meno neobsahuje medzery."
+
 #: src/frontends/qt4/GuiView.cpp:2337
 #, c-format
 msgid "Opening document %1$s..."
@@ -32181,6 +32174,15 @@ msgstr ""
 "Nasledujúce znaky použité vo vložke %1$s sú nereprezentovateľné\n"
 "v aktuálnom kódovaní a boli vynechané:\n"
 "%2$s."
+
+#: src/Converter.cpp:444 src/Converter.cpp:686 src/Converter.cpp:715
+#, c-format
+msgid ""
+"The following converter was killed by the user.\n"
+" %1$s\n"
+msgstr ""
+"Nasledujúci konvertor bol zrušený používateľom.\n"
+"  %1$s\n"
 
 #: src/insets/InsetExternal.cpp:403
 #, c-format
@@ -33648,6 +33650,32 @@ msgstr ""
 #: src/support/userinfo.cpp:45
 msgid "Unknown user"
 msgstr "Neznámy používateľ"
+
+#~ msgid "Cannot index more than one paragraph!"
+#~ msgstr "Nie je možné indexovať viac ako jeden odstavec!"
+
+#~ msgid "Nothing to index!"
+#~ msgstr "Nie je čo indexovať!"
+
+#~ msgid ""
+#~ "Enable if a specific font encoding (such as T1) should be used (via "
+#~ "fontenc)"
+#~ msgstr ""
+#~ "Zapnúť keď potrebujete špecifické kódovanie písiem (ako napr. T1) (cez "
+#~ "fontenc)"
+
+#~ msgid "None (no fontenc)"
+#~ msgstr "Žiadne (bez fontenc)"
+
+#~ msgid ""
+#~ "The font encoding used for the LaTeX2e fontenc package. T1 is highly "
+#~ "recommended for non-English languages."
+#~ msgstr ""
+#~ "Kódovanie písma použité pre LaTeX2e balíček fontenc. T1 je vrelo "
+#~ "odporučené pre neanglické jazyky."
+
+#~ msgid "Use LaTe&X font encoding:"
+#~ msgstr "Použiť LaTe&X kódovanie:"
 
 #~ msgid "C&aption:"
 #~ msgstr "Pop&is:"
@@ -38149,3 +38177,15 @@ msgstr "Neznámy používateľ"
 #~ msgid "Please install correctly to see what has changed\n"
 #~ msgstr ""
 #~ "Prosím vykonajte správnu inštaláciu keď chcete zistiť čo sa zmenilo\n"
+
+#~ msgid ""
+#~ "The running converter\n"
+#~ " %1$s\n"
+#~ "was killed by the user."
+#~ msgstr ""
+#~ "Beh konverzie\n"
+#~ " %1$s\n"
+#~ "bol prerušený užívateľom."
+
+#~ msgid "The directory path to the document cannot contain spaces."
+#~ msgstr "Cesta k dokumentu nesmie obsahovať medzery."

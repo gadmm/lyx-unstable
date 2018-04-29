@@ -7,8 +7,16 @@ changes happened in particular if possible. A good example would be
 
 -----------------------
 
+2018-04-22  Jürgen Spitzmüller <spitz@lyx.org>
+	* format incremented to 550: rename \fontencoding global to \fontencoding auto.
+	  Semantic change: this is now automatically set depending on the document fonts.
+
+2018-04-21  Jürgen Spitzmüller <spitz@lyx.org>
+	* format incremented to 549: change \textcyr to \textcyrillic.
+	  Dummy format change for now (in case it turns out we need to do something).
+
 2018-04-18  Jürgen Spitzmüller <spitz@lyx.org>
-	* format incremented to 546: Add Landscape flex inset in Landscape module.
+	* format incremented to 548: Add Landscape flex inset in Landscape module.
 	  \begin{landscape}...\end{landscape} > \begin_inset Flex Landscape
 
 2018-03-14 Yuriy Skalko <yuriy.skalko@gmail.com>

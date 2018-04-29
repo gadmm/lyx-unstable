@@ -98,6 +98,11 @@ public:
 	static FuncRequest const unknown;
 	///
 	static FuncRequest const noaction;
+	///
+	bool allowAsync() const { return allow_async_; }
+	///
+	void allowAsync(bool allow_async) { allow_async_ = allow_async; }
+
 private:
 	/// the action
 	FuncCode action_;
@@ -116,6 +121,9 @@ private:
 	mouse_button::state button_;
 	///
 	KeyModifier modifier_;
+	/// Commands should be run synchronously when they
+	/// are launched via "command-sequence" or "repeat" or "buffer-forall"
+	bool allow_async_;
 };
 
 

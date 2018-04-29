@@ -103,6 +103,8 @@ public:
 	void require(std::string const & name);
 	/// Add a set of feature names requirements
 	void require(std::set<std::string> const & names);
+	/// Add a feature name provision
+	void provide(std::string const & name);
 	/// Is the (required) package available?
 	static bool isAvailable(std::string const & name);
 	/// Has the package been required?
@@ -136,7 +138,8 @@ public:
 	///
 	std::set<std::string> getEncodingSet(std::string const & doc_encoding) const;
 	///
-	void getFontEncodings(std::vector<std::string> & encodings) const;
+	void getFontEncodings(std::vector<std::string> & encodings,
+			      bool const onlylangs = false) const;
 	///
 	void useLayout(docstring const & lyt);
 	///
@@ -185,10 +188,12 @@ private:
 	std::list<docstring> usedLayouts_;
 	///
 	std::list<docstring> usedInsetLayouts_;
-	/// The features that are needed by the document
-	typedef std::set<std::string> Features;
 	///
+	typedef std::set<std::string> Features;
+	/// The features that are needed by the document
 	Features features_;
+	/// Features that are provided
+	Features provides_;
 	/// Static preamble bits, from external templates, or anywhere else
 	typedef std::list<TexString> SnippetList;
 	///

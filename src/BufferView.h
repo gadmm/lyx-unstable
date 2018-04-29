@@ -148,9 +148,6 @@ public:
 	/// Only to be called with good y coordinates (after a bv::metrics)
 	bool needsFitCursor() const;
 
-	/// returns true if this row needs to be repainted (to erase caret)
-	bool needRepaint(Text const * text, Row const & row) const;
-
 	// Returns the amount of horizontal scrolling applied to the
 	// top-level row where the cursor lies
 	int horizScrollOffset() const;
@@ -321,6 +318,8 @@ public:
 	bool paragraphVisible(DocIterator const & dit) const;
 	/// is the cursor currently visible in the view
 	bool cursorInView(Point const & p, int h) const;
+	/// set the ascent and descent of the caret
+	void setCaretAscentDescent(int asc, int des);
 	/// get the position and height of the caret
 	void caretPosAndHeight(Point & p, int & h) const;
 

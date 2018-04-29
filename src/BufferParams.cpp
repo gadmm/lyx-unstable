@@ -406,7 +406,11 @@ BufferParams::BufferParams()
 	secnumdepth = 3;
 	tocdepth = 3;
 	language = default_language;
+#ifdef FILEFORMAT
 	fontenc = "auto";
+#else
+	fontenc = "global";
+#endif
 	fonts_roman[0] = "default";
 	fonts_roman[1] = "default";
 	fonts_sans[0] = "default";
@@ -3124,7 +3128,13 @@ string const BufferParams::main_font_encoding() const
 
 vector<string> const BufferParams::font_encodings() const
 {
-	string doc_fontenc = (fontenc == "auto") ? string() : fontenc;
+	string doc_fontenc =
+#ifdef FILEFORMAT
+		(fontenc == "auto")
+#else
+		(fontenc == "global")
+#endif
+		? string() : fontenc;
 
 	vector<string> fontencs;
 

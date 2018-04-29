@@ -960,7 +960,13 @@ GuiDocument::GuiDocument(GuiView & lv)
 	fontModule->fontsizeCO->addItem(qt_("11"));
 	fontModule->fontsizeCO->addItem(qt_("12"));
 
-	fontModule->fontencCO->addItem(qt_("Automatic"), QString("auto"));
+	fontModule->fontencCO->addItem(qt_("Automatic"),
+#ifdef FILEFORMAT
+	                               QString("auto")
+#else
+	                               QString("global")
+#endif
+	                               );
 	fontModule->fontencCO->addItem(qt_("Class default"), QString("default"));
 	fontModule->fontencCO->addItem(qt_("Custom"), QString("custom"));
 
@@ -2142,7 +2148,13 @@ bool GuiDocument::ot1() const
 	QString const langname = langModule->languageCO->itemData(i).toString();
 	Language const * newlang = lyx::languages.getLanguage(fromqstr(langname));
 	return (fontenc == "default"
-		|| (fontenc == "auto" && newlang->fontenc(buffer().params()) == "OT1")
+		|| (
+#ifdef FILEFORMAT
+		    fontenc == "auto"
+#else
+		    fontenc == "global"
+#endif
+		    && newlang->fontenc(buffer().params()) == "OT1")
 		|| (fontenc == "custom" && fontModule->fontencLE->text() == "OT1"));
 }
 
@@ -3817,7 +3829,13 @@ void GuiDocument::paramsToDialog()
 	if (nn >= 0)
 		fontModule->fontsDefaultCO->setCurrentIndex(nn);
 
-	if (bp_.fontenc == "auto" || bp_.fontenc == "default") {
+	if (
+#ifdef FILEFORMAT
+		    bp_.fontenc == "auto"
+#else
+		    bp_.fontenc == "global"
+#endif
+		    || bp_.fontenc == "default") {
 		fontModule->fontencCO->setCurrentIndex(
 			fontModule->fontencCO->findData(toqstr(bp_.fontenc)));
 		fontModule->fontencLE->setEnabled(false);

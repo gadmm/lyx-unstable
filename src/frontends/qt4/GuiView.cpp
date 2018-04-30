@@ -1963,6 +1963,12 @@ bool GuiView::getStatus(FuncRequest const & cmd, FuncStatus & flag)
 		enable = doc_buffer && doc_buffer->notifiesExternalModification();
 		break;
 
+	case LFUN_BUFFER_EXTERNAL_MODIFICATION_CHILDREN_CLEAR:
+	case LFUN_BUFFER_EXTERNAL_MODIFICATION_CHILDREN_RELOAD:
+		enable = doc_buffer &&
+			doc_buffer->descendentNotifiesExternalModification();
+		break;
+
 	case LFUN_BUFFER_EXPORT: {
 		if (!doc_buffer || d.processing_thread_watcher_.isRunning()) {
 			enable = false;
@@ -4029,6 +4035,36 @@ void GuiView::dispatch(FuncRequest const & cmd, DispatchResult & dr)
 			LASSERT(doc_buffer, break);
 			doc_buffer->clearExternalModification();
 			doc_buffer->markDirty();
+			break;
+
+		case LFUN_BUFFER_EXTERNAL_MODIFICATION_CHILDREN_CLEAR:
+			LASSERT(doc_buffer, break);
+			for (Buffer * b : doc_buffer->getDescendents())
+				if (b->notifiesExternalModification()) {
+					b->clearExternalModification();
+					// This unhides hidden children
+					b->markDirty();
+				}
+			doc_buffer->updateTitles();
+			break;
+
+		case LFUN_BUFFER_EXTERNAL_MODIFICATION_CHILDREN_RELOAD:
+			LASSERT(doc_buffer, break);
+			for (Buffer * b : doc_buffer->getDescendents()) {
+				if (!b->notifiesExternalModification())
+					continue;
+				if (b->isClean())
+					// Directly reload in this case, without switching.
+					b->reload();
+				else {
+					lyx::dispatch(FuncRequest(LFUN_BUFFER_SWITCH,
+					                          b->absFileName()));
+					lyx::dispatch(FuncRequest(LFUN_BUFFER_RELOAD));
+				}
+				b->clearExternalModification();
+			}
+			doc_buffer->updateBuffer();
+			doc_buffer->updateTitles();
 			break;
 
 		case LFUN_BUFFER_CLOSE:

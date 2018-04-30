@@ -3101,8 +3101,9 @@ void Buffer::setInternal(bool flag)
 
 void Buffer::markDirty()
 {
-	if (d->lyx_clean) {
+	if (d->lyx_clean && d->wa_) {
 		d->lyx_clean = false;
+		d->wa_->unhide(this);
 		updateTitles();
 	}
 	d->bak_clean = false;
@@ -5407,27 +5408,18 @@ void Buffer::Impl::refreshFileMonitor()
 
 void Buffer::Impl::fileExternallyModified(bool const exists)
 {
-	// ignore notifications after our own saving operations
-	if (checksum_ == filename.checksum()) {
-		LYXERR(Debug::FILES, "External modification but "
-		       "checksum unchanged: " << filename);
-		// hide external modification notification if the old file is reinstated
-		// in some way.
-		owner_->clearExternalModification();
-		return;
-	}
-	// If the file has been deleted, only mark the file as dirty since it is
-	// pointless to prompt for reloading. If later a file is moved into this
-	// location, then the externally modified warning will appear then.
-	if (exists)
-			externally_modified_ = true;
-	// Update external modification notification.
-	// Dirty buffers must be visible at all times.
-	if (wa_ && wa_->unhide(owner_))
-		wa_->updateTitles();
-	else
-		// Unable to unhide the buffer (e.g. no GUI or not current View)
-		lyx_clean = true;
+	// Ignore notifications after our own saving operations, and hide
+	// notification if the old file is reinstated in some way.
+	bool const changed = checksum_ != filename.checksum();
+	// If the file has been deleted, do not show an external modification
+	// since it is pointless to prompt for reloading. If later a file is
+	// moved into this location, then the externally modified warning will
+	// appear then.
+	externally_modified_ = exists && changed;
+	// Update external modification notification, and ascendent's children
+	// external modification notifications.
+	for (Buffer * b : owner_->allRelatives())
+		b->updateTitles();
 }
 
 
@@ -5437,11 +5429,20 @@ bool Buffer::notifiesExternalModification() const
 }
 
 
+bool Buffer::descendentNotifiesExternalModification() const
+{
+	for (Buffer * b : getDescendents())
+		if (b->notifiesExternalModification())
+			return true;
+	return false;
+}
+
+
 void Buffer::clearExternalModification() const
 {
 	d->externally_modified_ = false;
-	if (d->wa_)
-		d->wa_->updateTitles();
+	for (Buffer * b : allRelatives())
+		b->updateTitles();
 }
 
 

@@ -365,6 +365,8 @@ public:
 	bool notifiesExternalModification() const;
 	void clearExternalModification() const;
 
+	bool descendentNotifiesExternalModification() const;
+
 	/// mark the main lyx file as not needing saving
 	void markClean() const;
 
@@ -386,7 +388,7 @@ public:
 
 	void setInternal(bool flag);
 
-	/// Mark this buffer as dirty.
+	/// Mark this buffer as dirty. If the buffer is hidden, unhide it.
 	void markDirty();
 
 	/// Returns the buffer's filename. It is always an absolute path.

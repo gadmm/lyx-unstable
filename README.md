@@ -105,7 +105,9 @@ try <https://github.com/gadmm/lyx-unstable/compare/master...staging>.
 * Properly enforce scrolling boundaries.
 * Properly reset references and counters when updating citations.
 * Properly reset selection when inputting a composed character.
-* Improve the behaviour on external modifications.
+* Improve the behaviour on external modifications: notifications are
+  less invasive, it is now possible to reload all children at once, and there
+  should no longer be any false positive.
 
 ## Minor enhancements
 

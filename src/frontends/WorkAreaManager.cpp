@@ -16,6 +16,8 @@
 #include "Application.h"
 #include "WorkArea.h"
 
+#include "support/debug.h"
+
 
 namespace lyx {
 namespace frontend {

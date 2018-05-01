@@ -893,12 +893,35 @@ void LyXAction::init()
 /*!
  * \var lyx::FuncCode lyx::LFUN_BUFFER_EXTERNAL_MODIFICATION_CLEAR
  * \li Action: Clear the external modification flag on the current buffer.
+ *             This marks the buffer dirty.
  * \li Syntax: buffer-external-modification-clear
  * \li Origin: gm, 2 March 2017
  * \endvar
  */
 		{ LFUN_BUFFER_EXTERNAL_MODIFICATION_CLEAR,
 		  "buffer-external-modification-clear", ReadOnly, Buffer },
+
+/*!
+ * \var lyx::FuncCode lyx::LFUN_BUFFER_EXTERNAL_MODIFICATION_CHILDREN_CLEAR
+ * \li Action: Clear the external modification flag for all descendents.
+ *             This marks these buffers dirty and causes hidden buffers to be
+ *             shown.
+ * \li Syntax: buffer-external-modification-children-clear
+ * \li Origin: gm, 30 April 2018
+ * \endvar
+ */
+		{ LFUN_BUFFER_EXTERNAL_MODIFICATION_CHILDREN_CLEAR,
+		  "buffer-external-modification-children-clear", ReadOnly, Buffer },
+
+/*!
+ * \var lyx::FuncCode lyx::LFUN_BUFFER_EXTERNAL_MODIFICATION_CHILDREN_RELOAD
+ * \li Action: Reload descendents with the external modification flag.
+ * \li Syntax: buffer-external-modification-children-reload
+ * \li Origin: gm, 30 April 2018
+ * \endvar
+ */
+		{ LFUN_BUFFER_EXTERNAL_MODIFICATION_CHILDREN_RELOAD,
+		  "buffer-external-modification-children-reload", ReadOnly, Buffer },
 
 /*!
 * \var lyx::FuncCode lyx::LFUN_BUFFER_ZOOM

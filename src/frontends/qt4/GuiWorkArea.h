@@ -291,8 +291,6 @@ class GuiWorkAreaContainer : public QWidget, public Ui::WorkAreaUi
 
 private Q_SLOTS:
 	void updateDisplay();
-	void reload() const;
-	void ignore() const;
 
 protected:
 	void mouseDoubleClickEvent(QMouseEvent * event); //override

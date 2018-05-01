@@ -240,7 +240,7 @@ GuiWorkArea::Private::Private(GuiWorkArea * parent)
   need_resize_(false), preedit_lines_(1),
   last_pixel_ratio_(1.0),
   completer_(new GuiCompleter(p, p)), dialog_mode_(false), auth_(false),
-  read_only_(false), clean_(true), externally_modified_(false)
+  read_only_(false), clean_(true)
 {
 	int const time = QApplication::cursorFlashTime() / 2;
 	if (time > 0) {
@@ -1391,13 +1391,17 @@ void GuiWorkArea::updateWindowTitle()
 	    || buf.hasReadonlyFlag() != d->read_only_
 	    || buf.lyxvc().vcstatus() != d->vc_status_
 	    || buf.isClean() != d->clean_
-	    || buf.notifiesExternalModification() != d->externally_modified_) {
+	    || buf.notifiesExternalModification() != d->externally_modified_
+	    || (buf.descendentNotifiesExternalModification()
+	        != d->descendent_externally_modified_)) {
 		d->file_name_ = buf.fileName();
 		d->auth_ = auth;
 		d->read_only_ = buf.hasReadonlyFlag();
 		d->vc_status_ = buf.lyxvc().vcstatus();
 		d->clean_ = buf.isClean();
 		d->externally_modified_ = buf.notifiesExternalModification();
+		d->descendent_externally_modified_ =
+			buf.descendentNotifiesExternalModification();
 		Q_EMIT titleChanged(this);
 	}
 }
@@ -2129,9 +2133,19 @@ GuiWorkAreaContainer::GuiWorkAreaContainer(GuiWorkArea * wa, QWidget * parent)
 	layout()->addWidget(wa);
 	connect(wa, SIGNAL(titleChanged(GuiWorkArea *)),
 	        this, SLOT(updateDisplay()));
-	connect(reloadPB, SIGNAL(clicked()), this, SLOT(reload()));
-	connect(ignorePB, SIGNAL(clicked()), this, SLOT(ignore()));
-	setMessageColour({notificationFrame}, {reloadPB, ignorePB});
+	auto connect_lfun = [&](QPushButton * q, FuncCode f) {
+		connect(q, &QPushButton::clicked,
+		        this, [=]() { dispatch(FuncRequest(f)); });
+	};
+	connect_lfun(reloadPB, LFUN_BUFFER_RELOAD);
+	connect_lfun(ignorePB, LFUN_BUFFER_EXTERNAL_MODIFICATION_CLEAR);
+	connect_lfun(childrenReloadPB,
+	             LFUN_BUFFER_EXTERNAL_MODIFICATION_CHILDREN_RELOAD);
+	connect_lfun(childrenIgnorePB,
+	             LFUN_BUFFER_EXTERNAL_MODIFICATION_CHILDREN_CLEAR);
+	setMessageColour({notificationFrame, childrenNotificationFrame},
+	                 {reloadPB, ignorePB, childrenReloadPB,
+			                 childrenIgnorePB});
 	updateDisplay();
 }
 
@@ -2140,6 +2154,8 @@ void GuiWorkAreaContainer::updateDisplay()
 {
 	Buffer const & buf = wa_->bufferView().buffer();
 	notificationFrame->setHidden(!buf.notifiesExternalModification());
+	childrenNotificationFrame->
+		setHidden(!buf.descendentNotifiesExternalModification());
 	QString const label = qt_("<b>The file %1 changed on disk.</b>")
 		.arg(toqstr(buf.fileName().displayName()));
 	externalModificationLabel->setText(label);
@@ -2151,18 +2167,6 @@ void GuiWorkAreaContainer::dispatch(FuncRequest f) const
 	lyx::dispatch(FuncRequest(LFUN_BUFFER_SWITCH,
 	                          wa_->bufferView().buffer().absFileName()));
 	lyx::dispatch(f);
-}
-
-
-void GuiWorkAreaContainer::reload() const
-{
-	dispatch(FuncRequest(LFUN_BUFFER_RELOAD));
-}
-
-
-void GuiWorkAreaContainer::ignore() const
-{
-	dispatch(FuncRequest(LFUN_BUFFER_EXTERNAL_MODIFICATION_CLEAR));
 }
 
 

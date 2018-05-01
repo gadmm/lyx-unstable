@@ -207,8 +207,9 @@ struct GuiWorkArea::Private
 	///
 	bool clean_;
 	///
-	bool externally_modified_;
-
+	bool externally_modified_ = false;
+	///
+	bool descendent_externally_modified_ = false;
 }; // GuiWorkArea
 
 

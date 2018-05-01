@@ -172,20 +172,7 @@ void InsetBranch::doDispatch(Cursor & cur, FuncRequest & cmd)
 		bool const activate = (cmd.action() == LFUN_BRANCH_ACTIVATE
 				       || cmd.action() == LFUN_BRANCH_MASTER_ACTIVATE);
 		if (our_branch->isSelected() != activate) {
-			// FIXME If the branch is in the master document, we cannot
-			// call recordUndo..., because the master may be hidden, and
-			// the code presently assumes that hidden documents can never
-			// be dirty. See GuiView::closeBufferAll(), for example.
-			// An option would be to check if the master is hidden.
-			// If it is, unhide.
-			if (!master)
-				buffer().undo().recordUndoBufferParams(cur);
-			else
-				// at least issue a warning for now (ugly, but better than dataloss).
-				frontend::Alert::warning(_("Branch state changes in master document"),
-				    lyx::support::bformat(_("The state of the branch '%1$s' "
-					"was changed in the master file. "
-					"Please make sure to save the master."), params_.branch), true);
+			buffer().undo().recordUndoBufferParams(cur);
 			our_branch->setSelected(activate);
 			// cur.forceBufferUpdate() is not enough
 			buf->updateBuffer();

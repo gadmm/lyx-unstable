@@ -496,6 +496,56 @@ void CursorData::clearSelection()
 }
 
 
+int CursorData::countInsetsInSelection(InsetCode const & inset_code)
+{
+	if (!selection_)
+		return 0;
+
+	DocIterator from, to;
+	from = selectionBegin();
+	to = selectionEnd();
+
+	int count = 0;
+
+	if (!from.nextInset())      //move to closest inset
+		from.forwardInset();
+
+	while (!from.empty() && from < to) {
+		Inset * inset = from.nextInset();
+		if (!inset)
+			break;
+		if (inset->lyxCode() == inset_code)
+			count ++;
+		from.forwardInset();
+	}
+	return count;
+}
+
+
+bool CursorData::insetInSelection(InsetCode const & inset_code)
+{
+	if (!selection_)
+		return false;
+
+	DocIterator from, to;
+	from = selectionBegin();
+	to = selectionEnd();
+
+	if (!from.nextInset())      //move to closest inset
+		from.forwardInset();
+
+	while (!from.empty() && from < to) {
+		Inset * inset = from.nextInset();
+		if (!inset)
+			break;
+		if (inset->lyxCode() == inset_code)
+			return true;
+		from.forwardInset();
+	}
+	return false;
+}
+
+
 bool CursorData::fixIfBroken()
 {
 	bool const broken_cursor = DocIterator::fixIfBroken();
@@ -2230,6 +2280,12 @@ void Cursor::screenUpdateFlags(Update::flags f) const
 }
 
 
+void Cursor::noScreenUpdate() const
+{
+	disp_.screenUpdate(Update::None);
+}
+
+
 void Cursor::forceBufferUpdate() const
 {
 	disp_.forceBufferUpdate();
@@ -2245,12 +2301,6 @@ void Cursor::clearBufferUpdate() const
 bool Cursor::needBufferUpdate() const
 {
 	return disp_.needBufferUpdate();
-}
-
-
-void Cursor::noScreenUpdate() const
-{
-	disp_.screenUpdate(Update::None);
 }
 
 

@@ -129,6 +129,12 @@ public:
 	void setSelection(DocIterator const & where, int n);
 	///
 	void clearSelection();
+	/// check whether selection contains specific type of inset
+	/// returns 0 if no selection was made
+	bool insetInSelection(InsetCode const & inset);
+	/// count occurences of specific inset type in the selection
+	/// returns 0 if no selection was made
+	int countInsetsInSelection(InsetCode const & inset);
 
 	/// access to normalized selection anchor
 	CursorSlice normalAnchor() const;
@@ -392,16 +398,11 @@ public:
 	void undispatched() const;
 	/// the event was already dispatched
 	void dispatched() const;
-	/// Set which screen update should be done
+
+	/// Describe the screen update that should be done
 	void screenUpdateFlags(Update::flags f) const;
-	/// Forces an updateBuffer() call
-	void forceBufferUpdate() const;
-	/// Removes any pending updateBuffer() call
-	void clearBufferUpdate() const;
-	/// Do we need to call updateBuffer()?
-	bool needBufferUpdate() const;
 	/**
-	 * don't call update() when done
+	 * Reset update flags to Update::None.
 	 *
 	 * Should only be called by an inset's doDispatch() method. It means:
 	 * I handled that request and I can reassure you that the screen does
@@ -411,6 +412,13 @@ public:
 	 * Not using noScreenUpdate() should never be wrong.
 	 */
 	void noScreenUpdate() const;
+
+	/// Forces an updateBuffer() call
+	void forceBufferUpdate() const;
+	/// Removes any pending updateBuffer() call
+	void clearBufferUpdate() const;
+	/// Do we need to call updateBuffer()?
+	bool needBufferUpdate() const;
 
 	/// Repopulate the slices insets from bottom to top. Useful
 	/// for stable iterators or Undo data.

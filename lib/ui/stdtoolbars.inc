@@ -96,9 +96,8 @@ ToolbarSet
 		Item "Toggle math toolbar" "toolbar-toggle math"
 		Item "Toggle table toolbar" "toolbar-toggle table"
 		Item "Toggle review toolbar" "toolbar-toggle review"
-		Separator
-		DynamicMenu "dynamic-custom-insets" "Custom Insets"
-		DynamicMenu "dynamic-char-styles" "Character Styles"
+#		Separator
+#		DynamicMenu "dynamic-custom-insets" "Custom Insets"
 	End
 
 	Toolbar "view/update" "View/Update"
@@ -140,6 +139,7 @@ ToolbarSet
 		Item "Insert math macro" "math-macro newmacroname newcommand"
 		Item "Include file" "dialog-show-new-inset include"
 		Separator
+		DynamicMenu "dynamic-char-styles" "Character Styles"
 		Item "Text style" "dialog-show character"
 		Item "Paragraph settings" "layout-paragraph"
 		Item "Thesaurus" "thesaurus-entry"

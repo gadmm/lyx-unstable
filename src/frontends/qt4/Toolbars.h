@@ -46,7 +46,9 @@ public:
 		///
 		ICONPALETTE,
 		///
-		INSETS
+		INSETS,
+		///
+		DYNAMICMENU
 	};
 
 	ToolbarItem(Type type,

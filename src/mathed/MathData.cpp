@@ -259,14 +259,14 @@ bool isInside(DocIterator const & it, MathData const & ar,
 #endif
 
 
-void MathData::metrics(MetricsInfo & mi, Dimension & dim, bool tight) const
+void MathData::metrics(MetricsInfo & mi, Dimension & dim) const
 {
 	frontend::FontMetrics const & fm = theFontMetrics(mi.base.font);
 	BufferView * bv = mi.base.bv;
-	int const Iascent = fm.dimension('I').ascent();
+	dim = fm.dimension('I');
 	int xascent = fm.dimension('x').ascent();
-	if (xascent >= Iascent)
-		xascent = (2 * Iascent) / 3;
+	if (xascent >= dim.asc)
+		xascent = (2 * dim.asc) / 3;
 	minasc_ = xascent;
 	mindes_ = (3 * xascent) / 4;
 	slevel_ = (4 * xascent) / 5;
@@ -276,16 +276,6 @@ void MathData::metrics(MetricsInfo & mi, Dimension & dim, bool tight) const
 	mrow.metrics(mi, dim);
 	mrow_cache_[bv] = mrow;
 	kerning_ = mrow.kerning(bv);
-
-	// Set a minimal ascent/descent for the cell
-	if (tight)
-		// FIXME: this is the minimal ascent seen empirically, check
-		// what the TeXbook says.
-		dim.asc = max(dim.asc, fm.ascent('x'));
-	else {
-		dim.asc = max(dim.asc, fm.maxAscent());
-		dim.des = max(dim.des, fm.maxDescent());
-	}
 
 	// This is one of the the few points where the drawing font is known,
 	// so that we can set the caret vertical dimensions.

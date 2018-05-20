@@ -281,8 +281,7 @@ void MathData::metrics(MetricsInfo & mi, Dimension & dim) const
 	// so that we can set the caret vertical dimensions.
 	Cursor & cur = bv->cursor();
 	if (cur.inMathed() && &cur.cell() == this)
-		bv->setCaretAscentDescent(min(dim.asc, fm.maxAscent()),
-		                          min(dim.des, fm.maxDescent()));
+		bv->setCaretAscentDescent(fm.maxAscent(), fm.maxDescent());
 
 	// Cache the dimension.
 	bv->coordCache().arrays().add(this, dim);

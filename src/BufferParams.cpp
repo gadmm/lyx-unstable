@@ -1070,6 +1070,8 @@ string BufferParams::readToken(Lexer & lex, string const & token,
 		spacing().set(spacetranslator().find(nspacing), tmp_val);
 	} else if (token == "\\float_placement") {
 		lex >> float_placement;
+	} else if (token == "\\float_alignment") {
+		lex >> float_alignment;
 
 	} else if (prefixIs(token, "\\pdf_") || token == "\\use_hyperref") {
 		string toktmp = pdfoptions().readToken(lex, token);
@@ -1260,9 +1262,10 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 	os << "\\bibtex_command " << bibtex_command << '\n';
 	os << "\\index_command " << index_command << '\n';
 
-	if (!float_placement.empty()) {
+	if (!float_placement.empty())
 		os << "\\float_placement " << float_placement << '\n';
-	}
+	if (!float_alignment.empty())
+		os << "\\float_alignment " << float_alignment << '\n';
 	os << "\\paperfontsize " << fontsize << '\n';
 
 	spacing().writeFile(os);

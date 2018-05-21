@@ -225,8 +225,10 @@ void Font::lyxWriteChanges(Font const & orgfont,
 		os << "\\emph " << LyXMiscNames[bits_.emph()] << "\n";
 	if (orgfont.fontInfo().number() != bits_.number())
 		os << "\\numeric " << LyXMiscNames[bits_.number()] << "\n";
+#ifdef FILEFORMAT
 	if (orgfont.fontInfo().nospellcheck() != bits_.nospellcheck())
 		os << "\\nospellcheck " << LyXMiscNames[bits_.nospellcheck()] << "\n";
+#endif
 	if (orgfont.fontInfo().underbar() != bits_.underbar()) {
 		// This is only for backwards compatibility
 		switch (bits_.underbar()) {
@@ -621,7 +623,9 @@ string Font::toString(bool const toggle) const
 	   << "uwave " << bits_.uwave() << '\n'
 	   << "noun " << bits_.noun() << '\n'
 	   << "number " << bits_.number() << '\n'
+#ifdef FILEFORMAT
 	   << "nospellcheck " << bits_.nospellcheck() << '\n'
+#endif
 	   << "color " << bits_.color() << '\n'
 	   << "language " << lang << '\n'
 	   << "toggleall " << convert<string>(toggle);

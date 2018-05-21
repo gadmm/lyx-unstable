@@ -266,6 +266,8 @@ GuiCharacter::GuiCharacter(GuiView & lv)
 	bc().addReadOnly(colorCO);
 	bc().addReadOnly(autoapplyCB);
 
+	disable_widget_if_ndef_FILEFORMAT(nospellcheckCB);
+
 #ifdef Q_OS_MAC
 	// On Mac it's common to have tool windows which are always in the
 	// foreground and are hidden when the main window is not focused.
@@ -555,7 +557,9 @@ void GuiCharacter::applyView()
 	fi.setSize(size[sizeCO->currentIndex()].second);
 	fi.setEmph(setMarkupState(emphCB->checkState()));
 	fi.setNoun(setMarkupState(nounCB->checkState()));
+#ifdef FILEFORMAT
 	fi.setNoSpellcheck(setMarkupState(nospellcheckCB->checkState()));
+#endif
 	setBar(fi, bar[ulineCO->currentIndex()].second);
 	setStrike(fi, strike[strikeCO->currentIndex()].second);
 	fi.setColor(lcolor.getFromLyXName(fromqstr(colorCO->itemData(colorCO->currentIndex()).toString())));

@@ -2620,6 +2620,14 @@ void GuiApplication::restoreGuiSession()
 }
 
 
+void GuiApplication::writeGuiSession()
+{
+	for (GuiView const * v : d->views_)
+		if (v)
+			v->writeSession();
+}
+
+
 QString const GuiApplication::romanFontName()
 {
 	QFont font;

@@ -42,6 +42,7 @@ For a complete list of changes try
 * Scrolling issues with keyboard across large insets.
 * Fix flicker due to changing metrics while selecting with the mouse. (#8951)
 * Do not randomly delete aux files while compiling. (#9963)
+* Fix loss of last opened files information.
 
 ## New features
 

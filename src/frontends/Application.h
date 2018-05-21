@@ -188,6 +188,8 @@ public:
 	/// Load files and restore GUI Session.
 	virtual void restoreGuiSession() = 0;
 
+	virtual void writeGuiSession() = 0;
+
 	///
 	virtual Buffer const * updateInset(Inset const * inset) const = 0;
 

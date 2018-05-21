@@ -219,6 +219,9 @@ public:
 	/// Current ratio between physical pixels and device-independent pixels
 	double pixelRatio() const;
 
+	/// write all open workareas into the session file
+	void writeSession() const;
+
 	/// Creates a new object that calls callback when activate()d, as soon as
 	/// scrolling is at rest. The returned object can call callback as long as
 	/// it lives, so it should be owned by the callee.
@@ -437,8 +440,6 @@ private:
 	bool saveBufferIfNeeded(Buffer & buf, bool hiding);
 	/// closes all workareas
 	bool closeWorkAreaAll();
-	/// write all open workareas into the session file
-	void writeSession() const;
 	/// is the buffer in this workarea also shown in another tab ?
 	/// This tab can either be in the same view or in another one.
 	bool inMultiTabs(GuiWorkArea * wa);

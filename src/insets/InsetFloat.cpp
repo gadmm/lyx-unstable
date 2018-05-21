@@ -234,9 +234,17 @@ void InsetFloatParams::write(ostream & os) const
 	} else
 		os << type << '\n';
 
-	if (!placement.empty())
+	if (!placement.empty()
+#ifndef FILEFORMAT
+		&& placement != "document"
+#endif
+	    )
 		os << "placement " << placement << "\n";
-	if (!alignment.empty())
+	if (!alignment.empty()
+#ifndef FILEFORMAT
+		&& alignment != "document"
+#endif
+	    )
 		os << "alignment " << alignment << "\n";
 
 	if (wide)

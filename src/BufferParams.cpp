@@ -1266,10 +1266,16 @@ void BufferParams::writeFile(ostream & os, Buffer const * buf) const
 	os << "\\bibtex_command " << bibtex_command << '\n';
 	os << "\\index_command " << index_command << '\n';
 
-	if (!float_placement.empty())
+	if (!float_placement.empty()
+#ifndef FILEFORMAT
+	    && float_placement != "class"
+#endif
+	    )
 		os << "\\float_placement " << float_placement << '\n';
+#ifdef FILEFORMAT
 	if (!float_alignment.empty())
 		os << "\\float_alignment " << float_alignment << '\n';
+#endif
 	os << "\\paperfontsize " << fontsize << '\n';
 
 	spacing().writeFile(os);

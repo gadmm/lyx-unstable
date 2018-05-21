@@ -180,8 +180,11 @@ void FloatPlacement::initFloatTypeCO(FloatList const & floats)
 void FloatPlacement::initFloatPlacementCO(bool const local)
 {
 	placementCO->addItem(qt_("Class Defaults"), "class");
-	if (local)
+	if (local) {
 		placementCO->addItem(qt_("Document Defaults"), "document");
+		disable_item_if_ndef_FILEFORMAT(placementCO->model(),
+		                                placementCO->findData(toqstr("class")));
+	}
 	placementCO->addItem(qt_("Custom"), "custom");
 }
 
@@ -338,6 +341,13 @@ void FloatPlacement::checkAllowed() const
 		heredefinitelyCB->setEnabled(!defaults);
 		ignoreCB->setEnabled(!defaults && ignore && !heredefinitely);
 	}
+
+	for (auto w : {alignClassDefaultRB,
+	               alignDocDefaultRB,
+	               alignLeftRB,
+	               alignCenterRB,
+	               alignRightRB})
+		disable_widget_if_ndef_FILEFORMAT(w);
 }
 
 

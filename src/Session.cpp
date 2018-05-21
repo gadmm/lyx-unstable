@@ -13,6 +13,8 @@
 
 #include "Session.h"
 
+#include "frontends/Application.h"
+
 #include "support/debug.h"
 #include "support/filetools.h"
 #include "support/Package.h"
@@ -433,6 +435,8 @@ void Session::readFile()
 
 void Session::writeFile() const
 {
+	if (theApp())
+		theApp()->writeGuiSession();
 	ofstream os(session_file.toFilesystemEncoding().c_str());
 	if (os) {
 		os << "## Automatically generated lyx session file \n"

@@ -66,7 +66,10 @@ public:
 	DispatchResult const & dispatch(FuncRequest const &);
 	void dispatch(FuncRequest const &, DispatchResult & dr);
 	FuncStatus getStatus(FuncRequest const & cmd) const;
-	void restoreGuiSession();
+	void restoreGuiSession() override;
+	/// Write LyX Session information
+	void writeGuiSession() override;
+
 	Buffer const * updateInset(Inset const * inset) const;
 	int exec();
 	void exit(int status);
@@ -131,7 +134,7 @@ public:
 	///
 	QList<int> viewIds() const;
 
-	/// Clear all session information.
+	/// Clear all Qt session information.
 	void clearSession();
 
 	///

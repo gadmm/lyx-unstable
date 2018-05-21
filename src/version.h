@@ -33,8 +33,8 @@ extern char const * const lyx_version_info;
 #ifdef FILEFORMAT
 // Do not remove the comment below, so we get merge conflict in
 // independent branches. Instead add your own.
-#define LYX_FORMAT_LYX 550 // spitz: \fontenc auto
-#define LYX_FORMAT_TEX2LYX 550
+#define LYX_FORMAT_LYX 551 // spitz: \nospellcheck font param
+#define LYX_FORMAT_TEX2LYX 551
 
 #else
 // LyX 2.3 format

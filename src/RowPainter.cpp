@@ -140,6 +140,13 @@ void RowPainter::paintInset(Row::Element const & e) const
 }
 
 
+void RowPainter::paintLanguageMarkings(Row::Element const & e) const
+{
+	paintForeignMark(e);
+	paintNoSpellingMark(e);
+}
+
+
 void RowPainter::paintForeignMark(Row::Element const & e) const
 {
 	Language const * lang = e.font.language();
@@ -157,8 +164,32 @@ void RowPainter::paintForeignMark(Row::Element const & e) const
 }
 
 
+void RowPainter::paintNoSpellingMark(Row::Element const & e) const
+{
+	//if (!lyxrc.mark_no_spelling)
+	//	return;
+	if (e.font.language() == latex_language)
+		return;
+	if (e.font.fontInfo().nospellcheck() != FONT_ON)
+		return;
+
+	// We at the same voffset than the misspelled mark, since
+	// these two are mutually exclusive
+	FontMetrics const & fm = theFontMetrics(e.font);
+	int const thickness = max(fm.lineWidth(), 2);
+	int const desc = e.inset ? e.dim.descent() : 0;
+	double const y = yo_ + desc
+		+ (e.change.changed() ? 3 : 1.5) * pi_.base.solidLineThickness()
+		+ 2 + thickness / 2;
+	pi_.pain.line(int(x_), y, int(x_ + e.full_width()), y, Color_language,
+		      Painter::line_onoffdash, pi_.base.solidLineThickness());
+}
+
+
 void RowPainter::paintMisspelledMark(Row::Element const & e) const
 {
+	if (e.font.fontInfo().nospellcheck() == FONT_ON)
+		return;
 	// if changed the misspelled marker gets placed slightly lower than normal
 	// to avoid drawing at the same vertical offset
 	FontMetrics const & fm = theFontMetrics(e.font);
@@ -549,8 +580,9 @@ void RowPainter::paintOnlyInsets()
 		Row::Element const & e = *cit;
 		if (e.type == Row::INSET) {
 			paintInset(e);
-			// The line that indicates word in a different language
-			paintForeignMark(e);
+			// The markings of foreign languages
+			// and of text ignored for spellchecking
+			paintLanguageMarkings(e);
 			// change tracking (not for insets that handle it themselves)
 			if (!e.inset->canPaintChange(*pi_.base.bv))
 				paintChange(e);
@@ -586,8 +618,9 @@ void RowPainter::paintText()
 			pi_.pain.textDecoration(e.font.fontInfo(), int(x_), yo_, int(e.full_width()));
 		}
 
-		// The line that indicates word in a different language
-		paintForeignMark(e);
+		// The markings of foreign languages
+		// and of text ignored for spellchecking
+		paintLanguageMarkings(e);
 
 		// change tracking (not for insets that handle it themselves)
 		if (e.type != Row::INSET || ! e.inset->canPaintChange(*pi_.base.bv))

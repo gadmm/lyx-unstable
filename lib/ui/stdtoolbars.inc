@@ -86,12 +86,12 @@ ToolbarSet
 		Separator
 		Item "Toggle emphasis" "font-emph"
 		Item "Toggle noun" "font-noun"
-		Item "Apply last" "textstyle-apply"
+		Item "Apply last text properties" "textstyle-apply"
 		Separator
 		Item "Insert math" "math-mode on"
 		Item "Insert graphics" "dialog-show-new-inset graphics"
 		TableInsert "Insert table"
-#		DynamicMenu "dynamic-custom-insets" "Custom Insets"
+#		DynamicMenu "dynamic-custom-insets" "Custom insets"
 		Separator
 		Item "Toggle outline" "dialog-toggle toc"
 		Item "Toggle math toolbar" "toolbar-toggle math"
@@ -139,7 +139,7 @@ ToolbarSet
 		Item "Include file" "dialog-show-new-inset include"
 		Separator
 		DynamicMenu "dynamic-char-styles" "Character Styles"
-		Item "Text style" "dialog-show character"
+		Item "Text properties" "dialog-show character"
 		Item "Paragraph settings" "layout-paragraph"
 		Item "Thesaurus" "thesaurus-entry"
 	End

@@ -566,9 +566,59 @@ bool Text::isRTL(Paragraph const & par) const
 
 namespace {
 
-	Language const * getLanguage(Cursor const & cur, string const & lang) {
-		return lang.empty() ? cur.getFont().language() : languages.getLanguage(lang);
+Language const * getLanguage(Cursor const & cur, string const & lang)
+{
+	return lang.empty() ? cur.getFont().language() : languages.getLanguage(lang);
+}
+
+
+docstring resolveLayout(docstring layout, DocIterator const & dit)
+{
+	Paragraph const & par = dit.paragraph();
+	docstring const old_layout = par.layout().name();
+	DocumentClass const & tclass = dit.buffer()->params().documentClass();
+
+	if (layout.empty())
+		layout = tclass.defaultLayoutName();
+
+	if (dit.inset().forcePlainLayout(dit.idx()))
+		// in this case only the empty layout is allowed
+		layout = tclass.plainLayoutName();
+	else if (par.usePlainLayout()) {
+		// in this case, default layout maps to empty layout
+		if (layout == tclass.defaultLayoutName())
+			layout = tclass.plainLayoutName();
+	} else {
+		// otherwise, the empty layout maps to the default
+		if (layout == tclass.plainLayoutName())
+			layout = tclass.defaultLayoutName();
 	}
+
+	// If the entry is obsolete, use the new one instead.
+	if (tclass.hasLayout(layout)) {
+		docstring const & obs = tclass[layout].obsoleted_by();
+		if (!obs.empty())
+			layout = obs;
+	}
+	if (!tclass.hasLayout(layout))
+		layout.clear();
+	return layout;
+}
+
+
+bool isAlreadyLayout(docstring const & layout, CursorData const & cur)
+{
+	ParagraphList const & pars = cur.text()->paragraphs();
+
+	pit_type pit = cur.selBegin().pit();
+	pit_type const epit = cur.selEnd().pit() + 1;
+	for ( ; pit != epit; ++pit)
+		if (pars[pit].layout().name() != layout)
+			return false;
+
+	return true;
+}
+
 
 } // namespace
 
@@ -1496,60 +1546,25 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 		cur.message(cur.paragraph().layout().name());
 		break;
 
-	case LFUN_LAYOUT: {
+	case LFUN_LAYOUT:
+	case LFUN_LAYOUT_TOGGLE: {
 		bool const ignoreautonests = cmd.getArg(1) == "ignoreautonests";
-		docstring layout = ignoreautonests ? from_utf8(cmd.getArg(0)) : cmd.argument();
-		LYXERR(Debug::INFO, "LFUN_LAYOUT: (arg) " << to_utf8(layout));
+		docstring req_layout = ignoreautonests ? from_utf8(cmd.getArg(0)) : cmd.argument();
+		LYXERR(Debug::INFO, "LFUN_LAYOUT: (arg) " << to_utf8(req_layout));
 
-		Paragraph const & para = cur.paragraph();
-		docstring const old_layout = para.layout().name();
-		DocumentClass const & tclass = bv->buffer().params().documentClass();
-
-		if (layout.empty())
-			layout = tclass.defaultLayoutName();
-
-		if (owner_->forcePlainLayout())
-			// in this case only the empty layout is allowed
-			layout = tclass.plainLayoutName();
-		else if (para.usePlainLayout()) {
-			// in this case, default layout maps to empty layout
-			if (layout == tclass.defaultLayoutName())
-				layout = tclass.plainLayoutName();
-		} else {
-			// otherwise, the empty layout maps to the default
-			if (layout == tclass.plainLayoutName())
-				layout = tclass.defaultLayoutName();
-		}
-
-		bool hasLayout = tclass.hasLayout(layout);
-
-		// If the entry is obsolete, use the new one instead.
-		if (hasLayout) {
-			docstring const & obs = tclass[layout].obsoleted_by();
-			if (!obs.empty())
-				layout = obs;
-		}
-
-		if (!hasLayout) {
-			cur.errorMessage(from_utf8(N_("Layout ")) + cmd.argument() +
+		docstring layout = resolveLayout(req_layout, cur);
+		if (layout.empty()) {
+			cur.errorMessage(from_utf8(N_("Layout ")) + req_layout +
 				from_utf8(N_(" not known")));
 			break;
 		}
 
-		bool change_layout = (old_layout != layout);
+		docstring const old_layout = cur.paragraph().layout().name();
+		bool change_layout = !isAlreadyLayout(layout, cur);
 
-		if (!change_layout && cur.selection() &&
-			cur.selBegin().pit() != cur.selEnd().pit())
-		{
-			pit_type spit = cur.selBegin().pit();
-			pit_type epit = cur.selEnd().pit() + 1;
-			while (spit != epit) {
-				if (pars_[spit].layout().name() != old_layout) {
-					change_layout = true;
-					break;
-				}
-				++spit;
-			}
+		if (cmd.action() == LFUN_LAYOUT_TOGGLE && !change_layout) {
+			change_layout = true;
+			layout = resolveLayout(docstring(), cur);
 		}
 
 		if (change_layout) {
@@ -1565,13 +1580,11 @@ void Text::dispatch(Cursor & cur, FuncRequest & cmd)
 			}
 		}
 
-		Layout::LaTeXArgMap args = tclass[layout].args();
-		Layout::LaTeXArgMap::const_iterator lait = args.begin();
-		Layout::LaTeXArgMap::const_iterator const laend = args.end();
-		for (; lait != laend; ++lait) {
-			Layout::latexarg arg = (*lait).second;
+		DocumentClass const & tclass = bv->buffer().params().documentClass();
+		for (auto const & la_pair : tclass[layout].args()) {
+			Layout::latexarg const & arg = la_pair.second;
 			if (arg.autoinsert) {
-				FuncRequest cmd2(LFUN_ARGUMENT_INSERT, (*lait).first);
+				FuncRequest const cmd2(LFUN_ARGUMENT_INSERT, la_pair.first);
 				lyx::dispatch(cmd2);
 			}
 		}
@@ -3265,15 +3278,14 @@ bool Text::getStatus(Cursor & cur, FuncRequest const & cmd,
 		}
 		break;
 
-	case LFUN_LAYOUT: {
-		DocumentClass const & tclass = cur.buffer()->params().documentClass();
+	case LFUN_LAYOUT:
+	case LFUN_LAYOUT_TOGGLE: {
 		bool const ignoreautonests = cmd.getArg(1) == "ignoreautonests";
-		docstring layout = ignoreautonests ? from_utf8(cmd.getArg(0)) : cmd.argument();
-		if (layout.empty())
-			layout = tclass.defaultLayoutName();
-		enable = !owner_->forcePlainLayout() && tclass.hasLayout(layout);
+		docstring const req_layout = ignoreautonests ? from_utf8(cmd.getArg(0)) : cmd.argument();
+		docstring const layout = resolveLayout(req_layout, cur);
 
-		flag.setOnOff(layout == cur.paragraph().layout().name());
+		enable = !owner_->forcePlainLayout() && !layout.empty();
+		flag.setOnOff(isAlreadyLayout(layout, cur));
 		break;
 	}
 

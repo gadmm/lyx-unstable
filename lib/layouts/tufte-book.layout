@@ -1,11 +1,11 @@
 #% Do not delete the line below; configure depends on this
-#  \DeclareLaTeXClass[tufte-book,bibentry.sty,changepage.sty,fancyhdr.sty,hardwrap.sty,ifmtarg.sty,ifplatform.sty,letterspace.sty,multicol.sty,natbib.sty,optparams.sty,paralist.sty,placeins.sty,ragged2e.sty,setspace.sty,textcase.sty,titlesec.sty,titletoc.sty,xcolor.sty,xifthen.sty,xkeyval.sty]{Tufte Book}
+#  \DeclareLaTeXClass[tufte-book]{Tufte Book}
 #  \DeclareCategory{Books}
 # tufte-book textclass definition file.
 # Jason Waskiewicz <jason.waskiewicz@sendit.nodak.edu>, 2009/10/18
 # Modified by Uwe Stöhr <uwestoehr@web.de>, 2009/11/15
 
-Format 67
+Format 68
 
 Provides geometry 1
 Provides natbib-internal 1
@@ -16,6 +16,20 @@ PageStyle	Headings
 ClassOptions
 	Other		nohyper
 end
+
+# Tufte uses \cite for margin note citations
+AddToCiteEngine authoryear
+	cite[][]
+End
+
+CiteFormat authoryear
+	_sidenote Sidenote
+	_side sidenote
+	_fullcite bibl. entry
+	_bibentry Full bibliography entry.
+	# "Margin: Full bibliography entry." (dialog) / "Margin: Key (bibliography entry)"
+	cite {%dialog%[[%_sidenote%]][[%_side%]]}: {%dialog%[[%_bibentry%]][[{%label%[[%!fullcite%]][[%key%%!nextkey% (%_fullcite%)]]}]]}
+End
 
 Style Standard
 	Margin		Static

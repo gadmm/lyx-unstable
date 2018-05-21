@@ -1275,9 +1275,15 @@ void GuiWorkArea::Private::paintPreeditText(GuiPainter & pain)
 
 void GuiWorkArea::paintEvent(QPaintEvent * ev)
 {
-	// Hopefully fixes bug #10989.
-	if (view().busy())
+	// Do not trigger the painting machinery if we are not ready (see
+	// bug #10989). However, since macOS has turned the screen black at
+	// this point, our backing store has to be copied to screen.
+	if (view().busy()) {
+		// this is a no-op except on macOS.
+		d->updateScreen(ev->rect());
+		ev->accept();
 		return;
+	}
 
 	// When Debug::PAINTING is set, produce a flicker
 	guiApp->colorCache().invert_debug = lyxerr.debugging(Debug::PAINTING)

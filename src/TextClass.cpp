@@ -63,7 +63,7 @@ namespace lyx {
 // You should also run the development/tools/updatelayouts.py script,
 // to update the format of all of our layout files.
 //
-int const LAYOUT_FORMAT = 67; //spitz: New layout tag NeedsCProtect
+int const LAYOUT_FORMAT = 68; //spitz: New layout tag AddToCiteEngine
 
 
 #ifdef FILEFORMAT
@@ -225,6 +225,7 @@ enum TextClassTags {
 	TC_EXCLUDESMODULE,
 	TC_HTMLTOCSECTION,
 	TC_CITEENGINE,
+	TC_ADDTOCITEENGINE,
 	TC_CITEENGINETYPE,
 	TC_CITEFORMAT,
 	TC_CITEFRAMEWORK,
@@ -238,6 +239,7 @@ enum TextClassTags {
 namespace {
 
 LexerKeyword textClassTags[] = {
+	{ "addtociteengine",   TC_ADDTOCITEENGINE },
 	{ "addtohtmlpreamble", TC_ADDTOHTMLPREAMBLE },
 	{ "addtohtmlstyles",   TC_ADDTOHTMLSTYLES },
 	{ "addtopreamble",     TC_ADDTOPREAMBLE },
@@ -765,7 +767,11 @@ TextClass::ReturnValues TextClass::read(Lexer & lexrc, ReadType rt)
 			break;
 
 		case TC_CITEENGINE:
-			error = !readCiteEngine(lexrc);
+			error = !readCiteEngine(lexrc, rt);
+			break;
+
+		case TC_ADDTOCITEENGINE:
+			error = !readCiteEngine(lexrc, rt, true);
 			break;
 
 		case TC_CITEENGINETYPE:
@@ -774,7 +780,7 @@ TextClass::ReturnValues TextClass::read(Lexer & lexrc, ReadType rt)
 			break;
 
 		case TC_CITEFORMAT:
-			error = !readCiteFormat(lexrc);
+			error = !readCiteFormat(lexrc, rt);
 			break;
 
 		case TC_CITEFRAMEWORK:
@@ -1036,15 +1042,36 @@ void TextClass::readClassOptions(Lexer & lexrc)
 }
 
 
-bool TextClass::readCiteEngine(Lexer & lexrc)
+vector<CitationStyle> const & TextClass::citeStyles(
+	CiteEngineType const & type) const
+{
+	static vector<CitationStyle> empty;
+	map<CiteEngineType, vector<CitationStyle> >::const_iterator it = cite_styles_.find(type);
+	if (it == cite_styles_.end())
+		return empty;
+	return it->second;
+}
+
+
+bool TextClass::readCiteEngine(Lexer & lexrc, ReadType rt, bool const add)
 {
 	int const type = readCiteEngineType(lexrc);
+	CiteEngineType cetype = ENGINE_TYPE_DEFAULT;
 	if (type & ENGINE_TYPE_AUTHORYEAR)
-		cite_styles_[ENGINE_TYPE_AUTHORYEAR].clear();
-	if (type & ENGINE_TYPE_NUMERICAL)
-		cite_styles_[ENGINE_TYPE_NUMERICAL].clear();
-	if (type & ENGINE_TYPE_DEFAULT)
-		cite_styles_[ENGINE_TYPE_DEFAULT].clear();
+		cetype = ENGINE_TYPE_AUTHORYEAR;
+	else if (type & ENGINE_TYPE_NUMERICAL)
+		cetype = ENGINE_TYPE_NUMERICAL;
+
+	if (rt == CITE_ENGINE && !citeStyles(cetype).empty())
+		// The cite engines are not supposed to overwrite
+		// CiteStyle defined by the class or a module.
+		return true;
+
+	if (rt != CITE_ENGINE && !add)
+		// Reset if we defined CiteStyle
+		// from the class or a module
+		cite_styles_[cetype].clear();
+
 	string def;
 	bool getout = false;
 	while (!getout && lexrc.isOK()) {
@@ -1135,13 +1162,33 @@ bool TextClass::readCiteEngine(Lexer & lexrc)
 			cs.stardesc = stardescs[0];
 		if (size > 1)
 			cs.startooltip = stardescs[1];
-		if (type & ENGINE_TYPE_AUTHORYEAR)
-			cite_styles_[ENGINE_TYPE_AUTHORYEAR].push_back(cs);
-		if (type & ENGINE_TYPE_NUMERICAL)
-			cite_styles_[ENGINE_TYPE_NUMERICAL].push_back(cs);
-		if (type & ENGINE_TYPE_DEFAULT)
-			cite_styles_[ENGINE_TYPE_DEFAULT].push_back(cs);
+		if (add)
+			class_cite_styles_[cetype].push_back(cs);
+		else
+			cite_styles_[cetype].push_back(cs);
 	}
+	// Stop here if we do AddToCiteEngine,
+	// except if we have already a style to add something to
+	if (add && citeStyles(cetype).empty())
+		return getout;
+
+	// Add the styles from AddToCiteEngine to the class' styles
+	// (but only if they are not yet defined)
+	for (auto const cis : class_cite_styles_) {
+		// Only consider the current CiteEngineType
+		if (cis.first != cetype)
+			continue;
+		for (auto const ciss : cis.second) {
+			bool defined = false;
+			// Check if the style "name" is already def'ed
+			for (auto const av : citeStyles(cis.first))
+				if (av.name == ciss.name)
+					defined = true;
+			if (!defined)
+				cite_styles_[cis.first].push_back(ciss);
+		}
+	}
+	class_cite_styles_[cetype].clear();
 	return getout;
 }
 
@@ -1169,11 +1216,20 @@ int TextClass::readCiteEngineType(Lexer & lexrc) const
 }
 
 
-bool TextClass::readCiteFormat(Lexer & lexrc)
+bool TextClass::readCiteFormat(Lexer & lexrc, ReadType rt)
 {
 	int const type = readCiteEngineType(lexrc);
+	CiteEngineType cetype = ENGINE_TYPE_DEFAULT;
+	if (type & ENGINE_TYPE_AUTHORYEAR)
+		cetype = ENGINE_TYPE_AUTHORYEAR;
+	else if (type & ENGINE_TYPE_NUMERICAL)
+		cetype = ENGINE_TYPE_NUMERICAL;
+
 	string etype;
 	string definition;
+	// Cite engine definitions do not overwrite existing
+	// definitions from the class or a module
+	bool const overwrite = rt != CITE_ENGINE;
 	while (lexrc.isOK()) {
 		lexrc.next();
 		etype = lexrc.getString();
@@ -1187,19 +1243,27 @@ bool TextClass::readCiteFormat(Lexer & lexrc)
 		if (initchar == '#')
 			continue;
 		if (initchar == '!' || initchar == '_' || prefixIs(etype, "B_")) {
-			if (type & ENGINE_TYPE_AUTHORYEAR)
-				cite_macros_[ENGINE_TYPE_AUTHORYEAR][etype] = definition;
-			if (type & ENGINE_TYPE_NUMERICAL)
-				cite_macros_[ENGINE_TYPE_NUMERICAL][etype] = definition;
-			if (type & ENGINE_TYPE_DEFAULT)
-				cite_macros_[ENGINE_TYPE_DEFAULT][etype] = definition;
+			bool defined = false;
+			// Check if the macro is already def'ed
+			for (auto const cm : cite_macros_) {
+				if (cm.first != cetype)
+					continue;
+				if (cm.second.find(etype) != cm.second.end())
+					defined = true;
+			}
+			if (!defined || overwrite)
+				cite_macros_[cetype][etype] = definition;
 		} else {
-			if (type & ENGINE_TYPE_AUTHORYEAR)
-				cite_formats_[ENGINE_TYPE_AUTHORYEAR][etype] = definition;
-			if (type & ENGINE_TYPE_NUMERICAL)
-				cite_formats_[ENGINE_TYPE_NUMERICAL][etype] = definition;
-			if (type & ENGINE_TYPE_DEFAULT)
-				cite_formats_[ENGINE_TYPE_DEFAULT][etype] = definition;
+			bool defined = false;
+			// Check if the format is already def'ed
+			for (auto const cm : cite_formats_) {
+				if (cm.first != cetype)
+					continue;
+				if (cm.second.find(etype) != cm.second.end())
+					defined = true;
+			}
+			if (!defined || overwrite)
+				cite_formats_[cetype][etype] = definition;
 		}
 	}
 	return true;
@@ -1692,8 +1756,7 @@ void TextClass::iterateFlex(InsetLayout::InsetLyXType type,
 
 DocumentClassPtr getDocumentClass(
 		LayoutFile const & baseClass, LayoutModuleList const & modlist,
-		LayoutModuleList const & celist,
-		bool const clone)
+		string const & cengine, bool const clone)
 {
 	DocumentClassPtr doc_class =
 	    DocumentClassPtr(new DocumentClass(baseClass));
@@ -1732,37 +1795,34 @@ DocumentClassPtr getDocumentClass(
 		}
 	}
 
-	LayoutModuleList::const_iterator cit = celist.begin();
-	LayoutModuleList::const_iterator cen = celist.end();
-	for (; cit != cen; ++cit) {
-		string const ceName = *cit;
-		LyXCiteEngine * ce = theCiteEnginesList[ceName];
-		if (!ce) {
-			docstring const msg =
-						bformat(_("The cite engine %1$s has been requested by\n"
-						"this document but has not been found in the list of\n"
-						"available engines. If you recently installed it, you\n"
-						"probably need to reconfigure LyX.\n"), from_utf8(ceName));
-			if (!clone)
-				frontend::Alert::warning(_("Cite Engine not available"), msg);
-			continue;
-		}
-		if (!ce->isAvailable() && !clone) {
-			docstring const prereqs = from_utf8(getStringFromVector(ce->prerequisites(), "\n\t"));
-			docstring const msg =
-				bformat(_("The cite engine %1$s requires a package that is not\n"
-					"available in your LaTeX installation, or a converter that\n"
-					"you have not installed. LaTeX output may not be possible.\n"
-					"Missing prerequisites:\n"
-						"\t%2$s\n"
-					"See section 3.1.2.3 (Modules) of the User's Guide for more information."),
-				from_utf8(ceName), prereqs);
-			frontend::Alert::warning(_("Package not available"), msg, true);
-		}
+	if (cengine.empty())
+		return doc_class;
+
+	LyXCiteEngine * ce = theCiteEnginesList[cengine];
+	if (!ce) {
+		docstring const msg =
+					bformat(_("The cite engine %1$s has been requested by\n"
+					"this document but has not been found in the list of\n"
+					"available engines. If you recently installed it, you\n"
+					"probably need to reconfigure LyX.\n"), from_utf8(cengine));
+		if (!clone)
+			frontend::Alert::warning(_("Cite Engine not available"), msg);
+	} else if (!ce->isAvailable() && !clone) {
+		docstring const prereqs = from_utf8(getStringFromVector(ce->prerequisites(), "\n\t"));
+		docstring const msg =
+			bformat(_("The cite engine %1$s requires a package that is not\n"
+				"available in your LaTeX installation, or a converter that\n"
+				"you have not installed. LaTeX output may not be possible.\n"
+				"Missing prerequisites:\n"
+					"\t%2$s\n"
+				"See section 3.1.2.3 (Modules) of the User's Guide for more information."),
+			from_utf8(cengine), prereqs);
+		frontend::Alert::warning(_("Package not available"), msg, true);
+	} else {
 		FileName layout_file = libFileSearch("citeengines", ce->getFilename());
 		if (!doc_class->read(layout_file, TextClass::CITE_ENGINE)) {
 			docstring const msg =
-						bformat(_("Error reading cite engine %1$s\n"), from_utf8(ceName));
+						bformat(_("Error reading cite engine %1$s\n"), from_utf8(cengine));
 			frontend::Alert::warning(_("Read Error"), msg);
 		}
 	}

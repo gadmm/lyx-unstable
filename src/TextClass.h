@@ -361,6 +361,8 @@ protected:
 	bool cite_full_author_list_;
 	/// The possible citation styles
 	std::map<CiteEngineType, std::vector<CitationStyle> > cite_styles_;
+	/// Class-added citation styles
+	std::map<CiteEngineType, std::vector<CitationStyle> > class_cite_styles_;
 	///
 	std::map<std::string, docstring> outliner_names_;
 private:
@@ -390,11 +392,13 @@ private:
 	///
 	bool readFloat(Lexer &);
 	///
-	bool readCiteEngine(Lexer &);
+	std::vector<CitationStyle> const & citeStyles(CiteEngineType const &) const;
+	///
+	bool readCiteEngine(Lexer &, ReadType, bool const add = false);
 	///
 	int readCiteEngineType(Lexer &) const;
 	///
-	bool readCiteFormat(Lexer &);
+	bool readCiteFormat(Lexer &, ReadType);
 	///
 	bool readOutlinerName(Lexer &);
 };
@@ -534,7 +538,7 @@ private:
 	/// The only way to make a DocumentClass is to call this function.
 	friend DocumentClassPtr
 		getDocumentClass(LayoutFile const &, LayoutModuleList const &,
-				 LayoutModuleList const &,
+				 std::string const &,
 				 bool const clone);
 };
 
@@ -545,7 +549,7 @@ private:
 /// on the CutStack.
 DocumentClassPtr getDocumentClass(LayoutFile const & baseClass,
 			LayoutModuleList const & modlist,
-			LayoutModuleList const & celist,
+			std::string const & cengine = std::string(),
 			bool const clone = false);
 
 /// convert page sides option to text 1 or 2

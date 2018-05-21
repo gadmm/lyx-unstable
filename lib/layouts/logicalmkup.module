@@ -25,8 +25,7 @@ InsetLayout Flex:Noun
 			font-family: sans-serif;
 		}
 	EndHTMLStyle
-	ResetsFont            true
-	CustomPars            false
+	ResetsFont true
 End
 
 
@@ -40,8 +39,7 @@ InsetLayout Flex:Emph
 	EndFont
 	InToc                 true
 	HTMLTag               em
-	ResetsFont            true
-	CustomPars            false
+	ResetsFont true
 End
 
 
@@ -58,8 +56,7 @@ InsetLayout Flex:Strong
 	EndPreamble
 	InToc                 true
 	HTMLTag               strong
-	ResetsFont            true
-	CustomPars            false
+	ResetsFont true
 End
 
 
@@ -76,7 +73,6 @@ InsetLayout Flex:Code
 	EndPreamble
 	InToc                 true
 	HTMLTag               code
-	ResetsFont            true
-	CustomPars            false
+	ResetsFont true
 	Spellcheck            false
 End

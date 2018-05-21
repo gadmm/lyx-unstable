@@ -175,11 +175,12 @@ void RowPainter::paintNoSpellingMark(Row::Element const & e) const
 
 	// We at the same voffset than the misspelled mark, since
 	// these two are mutually exclusive
+	FontMetrics const & fm = theFontMetrics(e.font);
+	int const thickness = max(fm.lineWidth(), 2);
 	int const desc = e.inset ? e.dim.descent() : 0;
-	int const y = yo_ + pi_.base.solidLineOffset() + desc
-		+ pi_.base.solidLineThickness()
-		+ (e.change.changed() ? pi_.base.solidLineThickness() + 1 : 0)
-		+ 1;
+	double const y = yo_ + desc
+		+ (e.change.changed() ? 3 : 1.5) * pi_.base.solidLineThickness()
+		+ 2 + thickness / 2;
 	pi_.pain.line(int(x_), y, int(x_ + e.full_width()), y, Color_language,
 		      Painter::line_onoffdash, pi_.base.solidLineThickness());
 }

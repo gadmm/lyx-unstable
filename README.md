@@ -109,6 +109,7 @@ try <https://github.com/gadmm/lyx-unstable/compare/master...staging>.
 * Improve the behaviour on external modifications: notifications are
   less invasive, it is now possible to reload all children at once, and there
   should no longer be any false positive.
+* Restore normal caret ascent and descent in math.
 
 ## Minor enhancements
 

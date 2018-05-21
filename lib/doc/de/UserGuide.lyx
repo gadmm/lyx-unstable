@@ -8601,12 +8601,10 @@ Unformatiert
 \end_layout
 
 \begin_layout Verbatim
-
 Dies ist Unformatiert.
 \end_layout
 
 \begin_layout Verbatim
-
 Die folgenden 2 Zeilen sind leer:
 \end_layout
 
@@ -8619,7 +8617,6 @@ Die folgenden 2 Zeilen sind leer:
 \end_layout
 
 \begin_layout Verbatim
-
 Fast alles ist in Unformatiert erlaubt:"%&$§#~'`
 \backslash
 }][{|
@@ -8643,7 +8640,6 @@ Unformatiert
 \end_layout
 
 \begin_layout Verbatim*
-
 Dies ist Unformatiert*.
 \end_layout
 
@@ -13795,7 +13791,7 @@ eingebaut
 , also mit jeder Dokumentklasse verfügbar.
  Ergänzend zu diesen bieten manche Dokumentklassen oder Module 
 \emph on
-benutzerdefinierte Textstile
+spezifische Textstile
 \emph default
  für bestimmte Zwecke.
  Wir beschreiben beide Formen von Textstilen gleich.
@@ -14147,12 +14143,12 @@ Das ist nicht nur ein Beispiel, sondern auch eine Warnung.
 \end_layout
 
 \begin_layout Standard
-Im Gegensatz zu den benutzerdefinierten Zeichenstilen sind die eingebauten
- im \SpecialChar LyX
--Arbeitsbereich als normale Schriftänderungen dargestellt, und sie sind
- auch in den 
+Im Gegensatz zu den spezifischen Textstilen sind die eingebauten im \SpecialChar LyX
+-Arbeitsbere
+ich als normale Schriftänderungen dargestellt, und sie sind auch in den
+ 
 \family sans
-Textstil
+Texteigenschaften
 \family default
 -Dialog integriert.
  Deshalb können Sie diese jederzeit auf die Voreinstellung zurücksetzen,
@@ -14185,7 +14181,7 @@ arg   "dialog-show character"
 \end_layout
 
 \begin_layout Subsubsection
-Benutzerdefinierte Textstile
+Spezifische Textstile
 \begin_inset CommandInset label
 LatexCommand label
 name "subsec:Benutzerdefinierte-Textstile"
@@ -14196,8 +14192,8 @@ name "subsec:Benutzerdefinierte-Textstile"
 \end_layout
 
 \begin_layout Standard
-Benutzerdefinierte Textstile können von der Dokumentklasse angeboten werden,
- von einem Modul (siehe Abschnitt
+Spezifische Textstile können von der Dokumentklasse angeboten werden, von
+ einem Modul (siehe Abschnitt
 \begin_inset space ~
 \end_inset
 
@@ -14226,8 +14222,8 @@ noprefix "false"
 \end_inset
 
 ).
- Wie die beiden eingebauten Textstile auch bieten die benutzerdefinierten
- semantische Auszeichnung für spezifische Funktionen.
+ Wie die beiden eingebauten Textstile auch bieten die spezifischen semantische
+ Auszeichnung für spezifische Funktionen.
  Beispielsweise bietet \SpecialChar LyX
  ein Modul 
 \emph on
@@ -14257,7 +14253,7 @@ Bedeutungen
 Diese Stile sind, falls verfügbar, im Menü 
 \family sans
 Bearbeiten\SpecialChar menuseparator
-Textstil
+Textstile
 \family default
  zugänglich.
 \end_layout
@@ -14279,8 +14275,7 @@ Hervorhebung
 \emph on
 Hervorhebung
 \emph default
- als normale Schriftänderung erscheint, erscheint der benutzerdefinierte
- Stil 
+ als normale Schriftänderung erscheint, erscheint der spezifische Stil 
 \begin_inset Flex Emph
 status open
 
@@ -14292,7 +14287,7 @@ Hervorgehoben
 
  als Einfügung mit einer Marke unter dem ausgezeichneten Text, welche die
  Bedeutung benennt.
- So (ähnlich) sehen alle benutzerdefinierten Textstile aus.
+ So (ähnlich) sehen alle spezifischen Textstile aus.
  Beispielsweise sind die drei anderen von dem von uns geladenen Modul: 
 \begin_inset Flex Code
 status open
@@ -14324,8 +14319,8 @@ Eigenname
 \end_inset
 
 .
- Beachten Sie, dass die benutzerdefinierten Stile nicht immer, wie in diesen
- Beispielen, ihre formale Erscheinung im \SpecialChar LyX
+ Beachten Sie, dass die spezifischen Stile nicht immer, wie in diesen Beispielen
+, ihre formale Erscheinung im \SpecialChar LyX
 -Arbeitsbereich emulieren.
 \end_layout
 
@@ -14363,11 +14358,11 @@ Es gibt immer Situationen, in denen man formale Feineinstellungen vornehmen
 \end_layout
 
 \begin_layout Standard
-Falls weder von der Dokumentklasse noch von einem Modul benutzerdefinierte
- Textstile für solche Zwecke bereitgestellt werden (was, wie oben beschrieben,
- generell der bessere Weg wäre, solche Dinge anzugehen), finden Sie sich
- möglicherweise in der Situation gezwungen zu sein, schnell die Eigenschaften
- der entsprechenden Textpassagen anzupassen.
+Falls weder von der Dokumentklasse noch von einem Modul spezifische Textstile
+ für solche Zwecke bereitgestellt werden (was, wie oben beschrieben, generell
+ der bessere Weg wäre, solche Dinge anzugehen), finden Sie sich möglicherweise
+ in der Situation gezwungen zu sein, schnell die Eigenschaften der entsprechende
+n Textpassagen anzupassen.
  Hier kommt dann 
 \emph on
 formale Auszeichnung
@@ -14423,7 +14418,7 @@ Keine
  alles beim Alten lassen.
  Mit 
 \family sans
-Zurücksetzen
+Standard
 \family default
  wird die Eigenschaft auf ihren Standardwert in der gerade benutzten Absatzumgeb
 ung zurückgesetzt.
@@ -14442,7 +14437,7 @@ Keine
 \family default
  und 
 \family sans
-Zurücksetzen
+Standard
 \family default
 ) sind:
 \end_layout
@@ -14933,8 +14928,18 @@ reference "sec:Rechtschreibprüfung"
 
 \end_inset
 
-), werden dann englisch markierten Wörter nach dem englischen Wörterbuch
+), werden dann als Englisch markierte Wörter nach dem englischen Wörterbuch
  geprüft.
+\begin_inset Newline newline
+\end_inset
+
+Falls Sie Textpassagen von der Rechtschreibprüfung ausnehmen wollen, aktivieren
+ Sie 
+\family sans
+Keine Rechtschreibprüfung
+\family default
+.
+ Der Text wird dann trotzdem korrekt getrennt.
 \end_layout
 
 \begin_layout Labeling
@@ -37650,92 +37655,6 @@ Schiebt den Absatz, in dem sich der Cursor befindet, einen Absatz nach oben
 \end_layout
 
 \begin_layout Subsection
-Textstil
-\end_layout
-
-\begin_layout Standard
-Dieses Untermenü bietet verschiedene Möglichkeiten, um das Erscheinungsbild
- ausgewählter Textpassagen anzupassen.
- Sie können
-\end_layout
-
-\begin_layout Enumerate
-Texteigenschaften mit Hilfe des Dialogs 
-\family sans
-Textstil
-\family default
- anpassen (via 
-\family sans
-Benutzerdefiniert\SpecialChar ldots
-
-\family default
-; das ist in Abschnitt
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "subsec:Textstil-Dialog"
-
-\end_inset
-
- beschrieben),
-\end_layout
-
-\begin_layout Enumerate
-die Groß- und Kleinschreibung von ausgewähltem Text ändern (
-\family sans
-Große Anfangsbuchstaben
-\family default
-, 
-\family sans
-Großbuchstaben
-\family default
-, 
-\family sans
-Kleinbuchstaben
-\family default
-)
-\end_layout
-
-\begin_layout Enumerate
-Benutzerdefinierte Textstile auswählen, wenn sie von der Dokumentklasse
- oder einem geladenen Modul zur Verfügung gestellt werden (im Fall dieses
- Dokuments sind dies: 
-\family sans
-Code
-\family default
-, 
-\family sans
-Hervorgehoben
-\family default
-, 
-\family sans
-Eigenname
-\family default
- und 
-\family sans
-Stark
-\family default
-; siehe Abschnitt
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "subsec:Benutzerdefinierte-Textstile"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-)
-\end_layout
-
-\begin_layout Subsection
 Absatz-Einstellungen
 \begin_inset Index idx
 status collapsed
@@ -37769,6 +37688,112 @@ Text
 Layout
 \family default
  Absätze durch Einrückung getrennt hat.
+\end_layout
+
+\begin_layout Subsection
+Texteigenschaften
+\end_layout
+
+\begin_layout Standard
+Dieses Untermenü bietet verschiedene Möglichkeiten, um das Erscheinungsbild
+ ausgewählter Textpassagen anzupassen.
+ Sie können
+\end_layout
+
+\begin_layout Enumerate
+Texteigenschaften mit Hilfe des Dialogs 
+\family sans
+Texteigenschaften
+\family default
+ anpassen (via 
+\family sans
+Anpassen\SpecialChar ldots
+
+\family default
+; das ist in Abschnitt
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Textstil-Dialog"
+
+\end_inset
+
+ beschrieben),
+\end_layout
+
+\begin_layout Enumerate
+die zuletzt in diesem Dialog ausgewählten Eigenschaften direkt anwenden
+ (mittels 
+\family sans
+\lang english
+Letzte Einstellungen anwenden
+\family default
+\lang ngerman
+)
+\end_layout
+
+\begin_layout Enumerate
+die Groß- und Kleinschreibung von ausgewähltem Text ändern (
+\family sans
+Große Anfangsbuchstaben
+\family default
+, 
+\family sans
+Großbuchstaben
+\family default
+, 
+\family sans
+Kleinbuchstaben
+\family default
+)
+\end_layout
+
+\begin_layout Subsection
+Spezifische Textstile
+\end_layout
+
+\begin_layout Standard
+Dieses Untermenü erscheint nur, wenn die Dokumentklasse oder ein geladenes
+ Modul spezifische Textstile zur Verfügung stellt (im Fall dieses Dokuments
+ sind dies: 
+\family sans
+Code
+\family default
+, 
+\family sans
+Hervorgehoben
+\family default
+, 
+\family sans
+Eigenname
+\family default
+ und 
+\family sans
+Stark
+\family default
+, bereitgestellt vom Modul 
+\family sans
+Logisches Markup
+\family default
+).
+ Siehe Abschnitt
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Benutzerdefinierte-Textstile"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ für Einzelheiten.
 \end_layout
 
 \begin_layout Subsection
@@ -38883,15 +38908,15 @@ reference "sec:Zweige"
 \end_layout
 
 \begin_layout Subsection
-Benutzerdefinierte Einfügungen
+Spezifische Einfügungen
 \end_layout
 
 \begin_layout Standard
 Fügt dokumentklassen-spezifische Einfügungen ein.
  Solche Einfügungen existieren nur, wenn sie in der Layout-Datei der Dokumentkla
 sse definiert sind.
- Ein Beispiel ist die Dokumentklasse „article (Elsevier)“ mit drei benutzerdefin
-ierten Einfügungen.
+ Ein Beispiel ist die Dokumentklasse „article (Elsevier)“ mit drei spezifischen
+ Einfügungen.
  Der Abschnitt 
 \emph on
 Flexible Einfügungen und InsetLayout
@@ -38908,7 +38933,7 @@ Das Layout-Dateiformat
 \emph on
 Anpassung
 \emph default
- Handbuchs erklärt, wie benutzerdefinierte Einfügungen definiert werden.
+ Handbuchs erklärt, wie spezifische Einfügungen definiert werden.
 \end_layout
 
 \begin_layout Subsection
@@ -40958,12 +40983,13 @@ arg   "font-emph"
 \begin_inset Text
 
 \begin_layout Plain Layout
-Text hervorheben, Funktion des 
-\family sans
-Bearbeiten\SpecialChar menuseparator
-Textstil
-\family default
- Dialogs
+Text hervorheben, Funktion des Dialogs 
+\begin_inset Info
+type  "menu"
+arg   "dialog-show character"
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -40990,12 +41016,13 @@ arg   "font-noun"
 \begin_inset Text
 
 \begin_layout Plain Layout
-Text als Eigenname setzen, Funktion des 
-\family sans
-Bearbeiten\SpecialChar menuseparator
-Textstil
-\family default
- Dialogs
+Text als Eigenname setzen, Funktion des Dialogs 
+\begin_inset Info
+type  "menu"
+arg   "dialog-show character"
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -41022,12 +41049,13 @@ arg   "textstyle-apply"
 \begin_inset Text
 
 \begin_layout Plain Layout
-Formatiert Text mit der aktuellen Einstellungen des 
-\family sans
-Bearbeiten\SpecialChar menuseparator
-Textstil
-\family default
- Dialogs
+Formatiert Text mit der aktuellen Einstellungen des Dialogs 
+\begin_inset Info
+type  "menu"
+arg   "dialog-show character"
+\end_inset
+
+
 \end_layout
 
 \end_inset

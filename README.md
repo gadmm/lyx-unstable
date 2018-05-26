@@ -37,12 +37,17 @@ and modern Windows platforms.
 For a complete list of changes try
 <https://github.com/gadmm/lyx-unstable/compare/master...staging>.
 
+For a (sort of) chronological view try
+<https://github.com/gadmm/lyx-unstable/blame/unstable/README.md>.
+
 ## Important bug fixes
 
 * Scrolling issues with keyboard across large insets.
 * Fix flicker due to changing metrics while selecting with the mouse. (#8951)
 * Do not randomly delete aux files while compiling. (#9963)
 * Fix loss of last opened files information.
+* Fix random scolling inside nested insets when the window is resized (e.g. math
+  toolbars are shown).
 
 ## New features
 

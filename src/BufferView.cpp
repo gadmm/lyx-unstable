@@ -921,7 +921,7 @@ void BufferView::scrollToCursor(DocIterator const & dit, bool const recenter)
 	LYXERR(Debug::SCROLLING, "recentering!");
 
 	CursorSlice const & bot = dit.bottom();
-	TextMetrics & tm = d->text_metrics_[bot.text()];
+	TextMetrics & tm = textMetrics(bot.text());
 
 	pos_type const max_pit = pos_type(bot.text()->paragraphs().size() - 1);
 	int bot_pit = bot.pit();
@@ -943,8 +943,10 @@ void BufferView::scrollToCursor(DocIterator const & dit, bool const recenter)
 		CursorSlice const & cs = dit.innerTextSlice();
 		int offset = coordOffset(dit).y_;
 		int ypos = pm.position() + offset;
+		ParagraphMetrics const & inner_pm =
+			textMetrics(cs.text()).parMetrics(cs.pit());
 		Dimension const & row_dim =
-			pm.getRow(cs.pos(), dit.boundary()).dimension();
+			inner_pm.getRow(cs.pos(), dit.boundary()).dimension();
 		if (recenter)
 			scroll(ypos - height_/2);
 

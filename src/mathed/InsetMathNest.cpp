@@ -1473,7 +1473,6 @@ void InsetMathNest::edit(Cursor & cur, bool front, EntryDirection entry_from)
 	bool enter_front = (entry_from == Inset::ENTRY_DIRECTION_LEFT ||
 		(entry_from == Inset::ENTRY_DIRECTION_IGNORE && front));
 	enter_front ? idxFirst(cur) : idxLast(cur);
-	cur.resetAnchor();
 	//lyxerr << "InsetMathNest::edit, cur:\n" << cur << endl;
 }
 

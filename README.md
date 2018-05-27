@@ -115,6 +115,7 @@ For a (sort of) chronological view try
   less invasive, it is now possible to reload all children at once, and there
   should no longer be any false positive.
 * Restore normal caret ascent and descent in math.
+* Fix math selection being reset when leaving math inset.
 
 ## Minor enhancements
 

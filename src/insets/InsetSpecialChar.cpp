@@ -28,6 +28,8 @@
 #include "support/debug.h"
 #include "support/docstream.h"
 
+#include <cmath>
+
 using namespace std;
 
 namespace lyx {
@@ -132,7 +134,7 @@ void InsetSpecialChar::metrics(MetricsInfo & mi, Dimension & dim) const
 	docstring s;
 	switch (kind_) {
 		case ALLOWBREAK:
-			dim.wid = fm.em() / 8;
+			dim.wid = round(mi.base.solidLineThickness() * 2);
 			break;
 		case LIGATURE_BREAK:
 			s = from_ascii("|");
@@ -266,11 +268,12 @@ void InsetSpecialChar::draw(PainterInfo & pi, int x, int y) const
 		// A small vertical line
 		int const asc = theFontMetrics(pi.base.font).ascent('x');
 		int const desc = theFontMetrics(pi.base.font).descent('g');
-		int const x0 = x; // x + 1; // FIXME: incline,
-		int const x1 = x; // x - 1; // similar to LibreOffice?
-		int const y0 = y + desc;
-		int const y1 = y - asc / 3;
-		pi.pain.line(x0, y1, x1, y0, Color_special);
+		double const t = pi.base.solidLineThickness();
+		double const x0 = x - t;
+		double const x1 = x + 2 * t;
+		double const y0 = y + desc;
+		double const y1 = y - asc / 3.;
+		pi.pain.lineDouble(x0, y0, x1, y1, Color_special, t);
 		break;
 	}
 	case LIGATURE_BREAK:

@@ -744,8 +744,11 @@ void InsetMathMacro::draw(PainterInfo & pi, int x, int y) const
 			y += max(fontDim.des, cdim.des);
 		}
 
-		pi.pain.rectangle(expx, expy - dim.asc + 1, dim.wid - 1,
-				  dim.height() - 2, Color_mathmacroframe);
+		// FIXME : margins
+		pi.pain.rectangleDouble(expx, expy - dim.asc + 1,
+		                        dim.wid - 1, dim.height() - 2,
+		                        Color_mathmacroframe,
+		                        pi.base.thinLineThickness());
 	} else {
 		// We should not be here, since the macro is linearized in this case.
 		LBUFERR(false);

@@ -30,6 +30,8 @@
 #include "texstream.h"
 #include "TextClass.h"
 
+#include "mathed/MathSupport.h"
+
 #include "support/docstream.h"
 #include "support/gettext.h"
 #include "support/lstrings.h"
@@ -40,6 +42,7 @@
 #include "frontends/Painter.h"
 
 #include <algorithm>
+#include <cmath>
 #include <sstream>
 
 using namespace std;
@@ -143,78 +146,27 @@ void InsetPhantom::draw(PainterInfo & pi, int x, int y) const
 	drawMarkers(pi, x, y);
 
 	// draw the arrow(s)
-	static int const arrow_size = 4;
+	int const arrow_size = pi.base.em(1./9) * 2; //even number for grid alignment
+	double const dt = mathed_deco_thickness(pi.base);
+
 	ColorCode const origcol = pi.base.font.color();
 	pi.base.font.setColor(Color_special);
 	pi.base.font.setColor(origcol);
 	Dimension const dim = dimension(*pi.base.bv);
 
+	double const xv = round(x + (dim.wid - arrow_size) / 2. - 0.5);
+	double const yv = y - dim.asc;
+	double const w = arrow_size - dt;
+	double const yh = round(y - (dim.asc - dim.des + arrow_size) / 2. - 0.5);
 	if (params_.type == InsetPhantomParams::Phantom ||
-		params_.type == InsetPhantomParams::VPhantom) {
-		// y1---------
-		//           / \.
-		// y2-----  / | \.
-		//            |
-		//            |
-		// y3-----  \ | /
-		//           \ /
-		// y4---------
-		//          | | |
-		//         /  |  \.
-		//        x1  x2 x3
-
-		int const x2 = x + dim.wid / 2;
-		int const x1 = x2 - arrow_size;
-		int const x3 = x2 + arrow_size;
-
-		int const y1 = y - dim.asc;
-		int const y2 = y1 + arrow_size;
-		int const y4 = y + dim.des;
-		int const y3 = y4 - arrow_size;
-
-		// top arrow
-		pi.pain.line(x2, y1, x1, y2, Color_added_space);
-		pi.pain.line(x2, y1, x3, y2, Color_added_space);
-
-		// bottom arrow
-		pi.pain.line(x2, y4, x1, y3, Color_added_space);
-		pi.pain.line(x2, y4, x3, y3, Color_added_space);
-
-		// joining line
-		pi.pain.line(x2, y1, x2, y4, Color_added_space);
-	}
+		params_.type == InsetPhantomParams::VPhantom)
+		mathed_draw_deco(pi, xv, yv, w, dim.height() - dt,
+		                 from_ascii("updownarrow"));
 
 	if (params_.type == InsetPhantomParams::Phantom ||
-		params_.type == InsetPhantomParams::HPhantom) {
-		// y1----   /          \.
-		//        /              \.
-		// y2--- <---------------->
-		//        \              /
-		// y3----   \          /
-		//       |   |        |   |
-		//      x1  x2       x3  x4
-
-		x = x + pi.base.textToInsetOffset();
-		int const x1 = x;
-		int const x2 = x + arrow_size;
-		int const x4 = x + dim.wid - 2 * pi.base.textToInsetOffset();
-		int const x3 = x4 - arrow_size;
-
-		int const y2 = y + (dim.des - dim.asc) / 2;
-		int const y1 = y2 - arrow_size;
-		int const y3 = y2 + arrow_size;
-
-		// left arrow
-		pi.pain.line(x1, y2, x2, y3, Color_added_space);
-		pi.pain.line(x1, y2, x2, y1, Color_added_space);
-
-		// right arrow
-		pi.pain.line(x4, y2, x3, y3, Color_added_space);
-		pi.pain.line(x4, y2, x3, y1, Color_added_space);
-
-		// joining line
-		pi.pain.line(x1, y2, x4, y2, Color_added_space);
-	}
+		params_.type == InsetPhantomParams::HPhantom)
+		mathed_draw_deco(pi, x, yh, dim.wid - dt - 1, w,
+		                 from_ascii("xleftrightarrow"));
 }
 
 

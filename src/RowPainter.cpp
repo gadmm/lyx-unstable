@@ -181,8 +181,9 @@ void RowPainter::paintNoSpellingMark(Row::Element const & e) const
 	double const y = yo_ + desc
 		+ (e.change.changed() ? 3 : 1.5) * pi_.base.solidLineThickness()
 		+ 2 + thickness / 2;
-	pi_.pain.line(int(x_), y, int(x_ + e.full_width()), y, Color_language,
-		      Painter::line_onoffdash, pi_.base.solidLineThickness());
+	pi_.pain.lineDouble(x_, y, x_ + e.full_width(), y,
+	                    Color_language, thickness, Painter::line_onoffdash);
+
 }
 
 

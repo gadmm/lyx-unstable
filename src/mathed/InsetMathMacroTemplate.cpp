@@ -48,6 +48,7 @@
 #include "support/docstream.h"
 #include "support/lstrings.h"
 
+#include <cmath>
 #include <set>
 #include <sstream>
 
@@ -112,9 +113,10 @@ void InsetLabelBox::metrics(MetricsInfo & mi, Dimension & dim) const
 
 	// frame
 	if (frame_) {
-		dim.wid += 6;
-		dim.asc += 5;
-		dim.des += 5;
+		double const t = mi.base.thinLineThickness();
+		dim.wid += round(6 * t);
+		dim.asc += round(5 * t);
+		dim.des += round(5 * t);
 	}
 
 	// adjust to common height in main metrics phase
@@ -173,11 +175,15 @@ void InsetLabelBox::draw(PainterInfo & pi, int x, int y) const
 	}
 
 	// draw frame
-	int boxHeight = parent_.commonLabelBoxAscent() + parent_.commonLabelBoxDescent();
+	int boxHeight = parent_.commonLabelBoxAscent() +
+		parent_.commonLabelBoxDescent();
 	if (frame_) {
-		pi.pain.rectangle(x + 1, y - dim.ascent() + 1,
-				  dim.wid - 2, boxHeight - 2,
-				  Color_mathline);
+		double const t = pi.base.thinLineThickness();
+		double const x1 = round(x + t);
+		double const a = round(y - dim.asc + t);
+		double const w = round(dim.wid - 2 * t);
+		double const h = round(boxHeight - 2 * t);
+		pi.pain.rectangleDouble(x1, a, w, h, Color_mathline, t);
 	}
 }
 
@@ -564,9 +570,10 @@ void InsetMathMacroTemplate::metrics(MetricsInfo & mi, Dimension & dim) const
 	if (macro)
 		macro->unlock();
 
-	dim.wid += 6;
-	dim.des += 2;
-	dim.asc += 2;
+	double const t = mi.base.thinLineThickness();
+	dim.wid += round(6 * t);
+	dim.des += round(2 * t);
+	dim.asc += round(2 * t);
 }
 
 
@@ -580,10 +587,12 @@ void InsetMathMacroTemplate::draw(PainterInfo & pi, int x, int y) const
 	Dimension const dim = dimension(*pi.base.bv);
 
 	// draw outer frame
-	int const a = y - dim.asc + 1;
-	int const w = dim.wid - 2;
-	int const h = dim.height() - 2;
-	pi.pain.rectangle(x + 1, a, w, h, Color_mathframe);
+	double const t = pi.base.thinLineThickness();
+	double const x1 = round(x + 0.5 + t);
+	double const a = round(y - dim.asc + t);
+	double const w = round(dim.wid - 2 * t);
+	double const h = round(dim.height() - 2 * t);
+	pi.pain.rectangleDouble(x1, a, w, h, Color_mathframe, t);
 
 	// just to be sure: set some dummy values for coord cache
 	for (idx_type i = 0; i < nargs(); ++i)

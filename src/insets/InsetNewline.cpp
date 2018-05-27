@@ -191,71 +191,72 @@ void InsetNewline::draw(PainterInfo & pi, int x, int y) const
 	frontend::FontMetrics const & fm = theFontMetrics(pi.base.font);
 	int const wid = fm.width('n');
 	int const asc = fm.maxAscent();
+	double const t = pi.base.solidLineThickness();
 
-	int xp[3];
-	int yp[3];
+	double xp[3];
+	double yp[3];
 
-	yp[0] = int(y - 0.875 * asc * 0.75);
-	yp[1] = int(y - 0.500 * asc * 0.75);
-	yp[2] = int(y - 0.125 * asc * 0.75);
-
-	if (pi.ltr_pos) {
-		xp[0] = int(x + wid * 0.375);
-		xp[1] = int(x);
-		xp[2] = int(x + wid * 0.375);
-	} else {
-		xp[0] = int(x + wid * 0.625);
-		xp[1] = int(x + wid);
-		xp[2] = int(x + wid * 0.625);
-	}
-
-	pi.pain.lines(xp, yp, 3, ColorName());
-
-	yp[0] = int(y - 0.500 * asc * 0.75);
-	yp[1] = int(y - 0.500 * asc * 0.75);
-	yp[2] = int(y - asc * 0.75);
+	yp[0] = y - 0.875 * asc * 0.75;
+	yp[1] = y - 0.500 * asc * 0.75;
+	yp[2] = y - 0.125 * asc * 0.75;
 
 	if (pi.ltr_pos) {
-		xp[0] = int(x);
-		xp[1] = int(x + wid);
-		xp[2] = int(x + wid);
+		xp[0] = x + wid * 0.375;
+		xp[1] = x;
+		xp[2] = x + wid * 0.375;
 	} else {
-		xp[0] = int(x + wid);
-		xp[1] = int(x);
-		xp[2] = int(x);
+		xp[0] = x + wid * 0.625;
+		xp[1] = x + wid;
+		xp[2] = x + wid * 0.625;
 	}
 
-	pi.pain.lines(xp, yp, 3, ColorName());
+	pi.pain.linesDouble(xp, yp, 3, ColorName(), t);
+
+	yp[0] = y - 0.500 * asc * 0.75;
+	yp[1] = y - 0.500 * asc * 0.75;
+	yp[2] = y - asc * 0.75;
+
+	if (pi.ltr_pos) {
+		xp[0] = x;
+		xp[1] = x + wid;
+		xp[2] = x + wid;
+	} else {
+		xp[0] = x + wid;
+		xp[1] = x;
+		xp[2] = x;
+	}
+
+	pi.pain.linesDouble(xp, yp, 3, ColorName(), t);
 
 	if (params_.kind == InsetNewlineParams::LINEBREAK) {
 
-		yp[2] = int(y - 0.500 * asc * 0.75);
+		yp[2] = y - 0.500 * asc * 0.75;
 
 		if (pi.ltr_pos) {
-			xp[0] = int(x + 1.3 * wid);
-			xp[1] = int(x + 2 * wid);
-			xp[2] = int(x + 2 * wid);
+			xp[0] = x + 1.3 * wid;
+			xp[1] = x + 2 * wid;
+			xp[2] = x + 2 * wid;
 		} else {
-			xp[0] = int(x - 0.3 * wid);
-			xp[1] = int(x - wid);
-			xp[2] = int(x - wid);
+			xp[0] = x - 0.3 * wid;
+			xp[1] = x - wid;
+			xp[2] = x - wid;
 		}
-		pi.pain.lines(xp, yp, 3, ColorName());
+		pi.pain.linesDouble(xp, yp, 3, ColorName(), t);
 
-		yp[0] = int(y - 0.875 * asc * 0.75);
-		yp[1] = int(y - 0.500 * asc * 0.75);
-		yp[2] = int(y - 0.125 * asc * 0.75);
+		yp[0] = y - 0.875 * asc * 0.75;
+		yp[1] = y - 0.500 * asc * 0.75;
+		yp[2] = y - 0.125 * asc * 0.75;
 
 		if (pi.ltr_pos) {
-			xp[0] = int(x + 2 * wid * 0.813);
-			xp[1] = int(x + 2 * wid);
-			xp[2] = int(x + 2 * wid * 0.813);
+			xp[0] = x + 2 * wid * 0.813;
+			xp[1] = x + 2 * wid;
+			xp[2] = x + 2 * wid * 0.813;
 		} else {
-			xp[0] = int(x - wid * 0.625);
-			xp[1] = int(x - wid);
-			xp[2] = int(x - wid * 0.625);
+			xp[0] = x - wid * 0.625;
+			xp[1] = x - wid;
+			xp[2] = x - wid * 0.625;
 		}
-		pi.pain.lines(xp, yp, 3, ColorName());
+		pi.pain.linesDouble(xp, yp, 3, ColorName(), t);
 	}
 }
 

@@ -127,10 +127,11 @@ void InsetNewpage::draw(PainterInfo & pi, int x, int y) const
 	pi.pain.rectText(text_start, y + d, insetLabel(), font,
 		Color_none, Color_none);
 
-	pi.pain.line(x, y, text_start, y,
-		   ColorName(), Painter::line_onoffdash);
-	pi.pain.line(text_end, y, int(x + dim.wid), y,
-		   ColorName(), Painter::line_onoffdash);
+	double const t = pi.base.thinLineThickness();
+	pi.pain.lineDouble(x, y, text_start, y,
+	                   ColorName(), t, Painter::line_onoffdash);
+	pi.pain.lineDouble(text_end, y, x + dim.wid, y,
+	                   ColorName(), t, Painter::line_onoffdash);
 }
 
 

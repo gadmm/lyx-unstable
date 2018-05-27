@@ -42,12 +42,6 @@ using namespace std;
 
 namespace lyx {
 
-namespace {
-
-int const ADD_TO_VSPACE_WIDTH = 5;
-
-} // namespace
-
 
 InsetVSpace::InsetVSpace(VSpace const & space)
 	: Inset(0), space_(space)
@@ -125,14 +119,10 @@ docstring const InsetVSpace::label() const
 }
 
 
-namespace {
-int const vspace_arrow_size = 4;
-}
-
-
 void InsetVSpace::metrics(MetricsInfo & mi, Dimension & dim) const
 {
-	int height = 3 * vspace_arrow_size;
+	int const arrow_size = mi.base.em(1. / 12) * 2;
+	int height = 3 * arrow_size;
 	if (space_.length().len().value() >= 0.0)
 		height = max(height, space_.inPixels(*mi.base.bv));
 
@@ -149,21 +139,24 @@ void InsetVSpace::metrics(MetricsInfo & mi, Dimension & dim) const
 
 	dim.asc = height / 2 + (a - d) / 2; // align cursor with the
 	dim.des = height - dim.asc;         // label text
-	dim.wid = ADD_TO_VSPACE_WIDTH + 2 * vspace_arrow_size + 5 + w;
+	dim.wid = int(3 * arrow_size + 5 * mi.base.solidLineThickness() + w);
 }
 
 
 void InsetVSpace::draw(PainterInfo & pi, int x, int y) const
 {
+	int const arrow_size = pi.base.em(1. / 6); //even number for grid alignment
+	double const t = pi.base.solidLineThickness();
+
 	Dimension const dim = dimension(*pi.base.bv);
-	x += ADD_TO_VSPACE_WIDTH;
+	x += arrow_size;
 	int const start = y - dim.asc;
 	int const end   = y + dim.des;
 
 	// y-values for top arrow
-	int ty1, ty2;
+	double ty1, ty2;
 	// y-values for bottom arrow
-	int by1, by2;
+	double by1, by2;
 
 	if (space_.kind() == VSpace::VFILL) {
 		ty1 = ty2 = start;
@@ -172,14 +165,14 @@ void InsetVSpace::draw(PainterInfo & pi, int x, int y) const
 		// adding or removing space
 		bool const added = space_.kind() != VSpace::LENGTH ||
 				   space_.length().len().value() >= 0.0;
-		ty1 = added ? (start + vspace_arrow_size) : start;
-		ty2 = added ? start : (start + vspace_arrow_size);
-		by1 = added ? (end - vspace_arrow_size) : end;
-		by2 = added ? end : (end - vspace_arrow_size);
+		ty1 = added ? (start + arrow_size) : start;
+		ty2 = added ? start : (start + arrow_size);
+		by1 = added ? (end - arrow_size) : end;
+		by2 = added ? end : (end - arrow_size);
 	}
 
-	int const midx = x + vspace_arrow_size;
-	int const rightx = midx + vspace_arrow_size;
+	double const midx = x + arrow_size - 0.5;
+	double const rightx = midx + arrow_size - 0.5;
 
 	// first the string
 	int w = 0;
@@ -193,20 +186,21 @@ void InsetVSpace::draw(PainterInfo & pi, int x, int y) const
 	docstring const lab = label();
 	theFontMetrics(font).rectText(lab, w, a, d);
 
-	pi.pain.rectText(x + 2 * vspace_arrow_size + 5,
-			 start + (end - start) / 2 + (a - d) / 2,
-			 lab, font, Color_none, Color_none);
+	pi.pain.rectText(int(x + 2 * arrow_size + 5 * t),
+	                 start + (end - start) / 2 + (a - d) / 2,
+	                 lab, font, Color_none, Color_none);
 
 	// top arrow
-	pi.pain.line(x, ty1, midx, ty2, Color_added_space);
-	pi.pain.line(midx, ty2, rightx, ty1, Color_added_space);
+	double const xs[3] = {x - 0.5, midx, rightx};
+	double const ys[3] = {ty1, ty2, ty1};
+	pi.pain.linesDouble(xs, ys, 3, Color_added_space, t);
 
 	// bottom arrow
-	pi.pain.line(x, by1, midx, by2, Color_added_space);
-	pi.pain.line(midx, by2, rightx, by1, Color_added_space);
+	double const ys2[3] = {by1, by2, by1};
+	pi.pain.linesDouble(xs, ys2, 3, Color_added_space, t);
 
 	// joining line
-	pi.pain.line(midx, ty2, midx, by2, Color_added_space);
+	pi.pain.lineDouble(midx, ty2, midx, by2, Color_added_space, t);
 }
 
 

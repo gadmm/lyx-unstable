@@ -116,6 +116,7 @@ For a (sort of) chronological view try
   should no longer be any false positive.
 * Restore normal caret ascent and descent in math.
 * Fix math selection being reset when leaving math inset.
+* Fix a performance issues and some spurious warning when exporting with math.
 
 ## Minor enhancements
 

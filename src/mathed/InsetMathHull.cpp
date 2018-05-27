@@ -2313,8 +2313,8 @@ bool InsetMathHull::readQuiet(Lexer & lex)
 int InsetMathHull::plaintext(odocstringstream & os,
         OutputParams const & op, size_t max_length) const
 {
-	// Try enabling this now that there is a flag as requested at #2275.
-	if (buffer().isExporting() && display()) {
+	// ASCII art is no longer in use ATM
+	if (0 && display()) {
 		Dimension dim;
 		TextMetricsInfo mi;
 		metricsT(mi, dim);
@@ -2669,8 +2669,6 @@ void InsetMathHull::forOutliner(docstring & os, size_t const, bool const) const
 	odocstringstream ods;
 	OutputParams op(0);
 	op.for_toc = true;
-	// FIXME: this results in spilling TeX into the LyXHTML output since the
-	// outliner is used to generate the LyXHTML list of figures/etc.
 	plaintext(ods, op);
 	os += ods.str();
 }

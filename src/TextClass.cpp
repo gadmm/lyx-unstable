@@ -1042,7 +1042,7 @@ void TextClass::readClassOptions(Lexer & lexrc)
 }
 
 
-vector<CitationStyle> const & TextClass::citeStyles(
+vector<CitationStyle> const & TextClass::getCiteStyles(
 	CiteEngineType const & type) const
 {
 	static vector<CitationStyle> empty;
@@ -1056,21 +1056,31 @@ vector<CitationStyle> const & TextClass::citeStyles(
 bool TextClass::readCiteEngine(Lexer & lexrc, ReadType rt, bool const add)
 {
 	int const type = readCiteEngineType(lexrc);
-	CiteEngineType cetype = ENGINE_TYPE_DEFAULT;
-	if (type & ENGINE_TYPE_AUTHORYEAR)
-		cetype = ENGINE_TYPE_AUTHORYEAR;
-	else if (type & ENGINE_TYPE_NUMERICAL)
-		cetype = ENGINE_TYPE_NUMERICAL;
+	bool authoryear = (type & ENGINE_TYPE_AUTHORYEAR);
+	bool numerical = (type & ENGINE_TYPE_NUMERICAL);
+	bool defce = (type & ENGINE_TYPE_DEFAULT);
 
-	if (rt == CITE_ENGINE && !citeStyles(cetype).empty())
+	if (rt == CITE_ENGINE) {
 		// The cite engines are not supposed to overwrite
 		// CiteStyle defined by the class or a module.
-		return true;
+		if (authoryear)
+			authoryear = getCiteStyles(ENGINE_TYPE_AUTHORYEAR).empty();
+		if (numerical)
+			numerical = getCiteStyles(ENGINE_TYPE_NUMERICAL).empty();
+		if (defce)
+			defce = getCiteStyles(ENGINE_TYPE_DEFAULT).empty();
+	}
 
-	if (rt != CITE_ENGINE && !add)
+	if (rt != CITE_ENGINE && !add) {
 		// Reset if we defined CiteStyle
 		// from the class or a module
-		cite_styles_[cetype].clear();
+		if (authoryear)
+			cite_styles_[ENGINE_TYPE_AUTHORYEAR].clear();
+		if (numerical)
+			cite_styles_[ENGINE_TYPE_NUMERICAL].clear();
+		if (defce)
+			cite_styles_[ENGINE_TYPE_DEFAULT].clear();
+	}
 
 	string def;
 	bool getout = false;
@@ -1162,33 +1172,64 @@ bool TextClass::readCiteEngine(Lexer & lexrc, ReadType rt, bool const add)
 			cs.stardesc = stardescs[0];
 		if (size > 1)
 			cs.startooltip = stardescs[1];
-		if (add)
-			class_cite_styles_[cetype].push_back(cs);
-		else
-			cite_styles_[cetype].push_back(cs);
+		if (add) {
+			if (authoryear)
+				class_cite_styles_[ENGINE_TYPE_AUTHORYEAR].push_back(cs);
+			if (numerical)
+				class_cite_styles_[ENGINE_TYPE_NUMERICAL].push_back(cs);
+			if (defce)
+				class_cite_styles_[ENGINE_TYPE_DEFAULT].push_back(cs);
+		} else {
+			if (authoryear)
+				cite_styles_[ENGINE_TYPE_AUTHORYEAR].push_back(cs);
+			if (numerical)
+				cite_styles_[ENGINE_TYPE_NUMERICAL].push_back(cs);
+			if (defce)
+				cite_styles_[ENGINE_TYPE_DEFAULT].push_back(cs);
+		}
 	}
-	// Stop here if we do AddToCiteEngine,
+	// If we do AddToCiteEngine, do not apply yet,
 	// except if we have already a style to add something to
-	if (add && citeStyles(cetype).empty())
-		return getout;
+	bool apply_ay = !add;
+	bool apply_num = !add;
+	bool apply_def = !add;
+	if (add) {
+		if (type & ENGINE_TYPE_AUTHORYEAR)
+			apply_ay = !getCiteStyles(ENGINE_TYPE_AUTHORYEAR).empty();
+		if (type & ENGINE_TYPE_NUMERICAL)
+			apply_num = !getCiteStyles(ENGINE_TYPE_NUMERICAL).empty();
+		if (type & ENGINE_TYPE_DEFAULT)
+			apply_def = !getCiteStyles(ENGINE_TYPE_DEFAULT).empty();
+	}
 
 	// Add the styles from AddToCiteEngine to the class' styles
 	// (but only if they are not yet defined)
 	for (auto const cis : class_cite_styles_) {
 		// Only consider the current CiteEngineType
-		if (cis.first != cetype)
+		if (!(type & cis.first))
 			continue;
 		for (auto const ciss : cis.second) {
 			bool defined = false;
 			// Check if the style "name" is already def'ed
-			for (auto const av : citeStyles(cis.first))
+			for (auto const av : getCiteStyles(cis.first))
 				if (av.name == ciss.name)
 					defined = true;
-			if (!defined)
-				cite_styles_[cis.first].push_back(ciss);
+			if (!defined) {
+				if (cis.first == ENGINE_TYPE_AUTHORYEAR && apply_ay)
+					cite_styles_[ENGINE_TYPE_AUTHORYEAR].push_back(ciss);
+				else if (cis.first == ENGINE_TYPE_NUMERICAL && apply_num)
+					cite_styles_[ENGINE_TYPE_NUMERICAL].push_back(ciss);
+				else if (cis.first == ENGINE_TYPE_DEFAULT && apply_def)
+					cite_styles_[ENGINE_TYPE_DEFAULT].push_back(ciss);
+			}
 		}
 	}
-	class_cite_styles_[cetype].clear();
+	if (type & ENGINE_TYPE_AUTHORYEAR && apply_ay)
+		class_cite_styles_[ENGINE_TYPE_AUTHORYEAR].clear();
+	if (type & ENGINE_TYPE_NUMERICAL && apply_num)
+		class_cite_styles_[ENGINE_TYPE_NUMERICAL].clear();
+	if (type & ENGINE_TYPE_DEFAULT && apply_def)
+		class_cite_styles_[ENGINE_TYPE_DEFAULT].clear();
 	return getout;
 }
 
@@ -1219,12 +1260,6 @@ int TextClass::readCiteEngineType(Lexer & lexrc) const
 bool TextClass::readCiteFormat(Lexer & lexrc, ReadType rt)
 {
 	int const type = readCiteEngineType(lexrc);
-	CiteEngineType cetype = ENGINE_TYPE_DEFAULT;
-	if (type & ENGINE_TYPE_AUTHORYEAR)
-		cetype = ENGINE_TYPE_AUTHORYEAR;
-	else if (type & ENGINE_TYPE_NUMERICAL)
-		cetype = ENGINE_TYPE_NUMERICAL;
-
 	string etype;
 	string definition;
 	// Cite engine definitions do not overwrite existing
@@ -1246,24 +1281,36 @@ bool TextClass::readCiteFormat(Lexer & lexrc, ReadType rt)
 			bool defined = false;
 			// Check if the macro is already def'ed
 			for (auto const cm : cite_macros_) {
-				if (cm.first != cetype)
+				if (!(type & cm.first))
 					continue;
 				if (cm.second.find(etype) != cm.second.end())
 					defined = true;
 			}
-			if (!defined || overwrite)
-				cite_macros_[cetype][etype] = definition;
+			if (!defined || overwrite) {
+				if (type & ENGINE_TYPE_AUTHORYEAR)
+					cite_macros_[ENGINE_TYPE_AUTHORYEAR][etype] = definition;
+				if (type & ENGINE_TYPE_NUMERICAL)
+					cite_macros_[ENGINE_TYPE_NUMERICAL][etype] = definition;
+				if (type & ENGINE_TYPE_DEFAULT)
+					cite_macros_[ENGINE_TYPE_DEFAULT][etype] = definition;
+			}
 		} else {
 			bool defined = false;
 			// Check if the format is already def'ed
 			for (auto const cm : cite_formats_) {
-				if (cm.first != cetype)
+				if (!(type & cm.first))
 					continue;
 				if (cm.second.find(etype) != cm.second.end())
 					defined = true;
 			}
-			if (!defined || overwrite)
-				cite_formats_[cetype][etype] = definition;
+			if (!defined || overwrite){
+				if (type & ENGINE_TYPE_AUTHORYEAR)
+					cite_formats_[ENGINE_TYPE_AUTHORYEAR][etype] = definition;
+				if (type & ENGINE_TYPE_NUMERICAL)
+					cite_formats_[ENGINE_TYPE_NUMERICAL][etype] = definition;
+				if (type & ENGINE_TYPE_DEFAULT)
+					cite_formats_[ENGINE_TYPE_DEFAULT][etype] = definition;
+			}
 		}
 	}
 	return true;

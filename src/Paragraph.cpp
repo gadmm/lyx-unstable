@@ -1880,7 +1880,11 @@ Font const & Paragraph::getFontSettings(BufferParams const & bparams,
 {
 	if (pos > size()) {
 		LYXERR0("pos: " << pos << " size: " << size());
-		LBUFERR(false);
+		// FIXME: we sometimes end up here during painting. Regression circa
+		// 05/2018 perhaps.
+		static Font const f;
+		LASSERT(size(), return f);
+		LASSERT(false, pos = size() - 1);
 	}
 
 	FontList::const_iterator cit = d->fontlist_.fontIterator(pos);

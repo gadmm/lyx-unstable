@@ -117,6 +117,7 @@ For a (sort of) chronological view try
 * Restore normal caret ascent and descent in math.
 * Fix math selection being reset when leaving math inset.
 * Fix a performance issues and some spurious warning when exporting with math.
+* Work around buffer error during painting.
 
 ## Minor enhancements
 

@@ -29,6 +29,10 @@ public:
 	InsetMathBrace * asBraceInset() { return this; }
 	/// identifies brace insets
 	InsetMathBrace const * asBraceInset() const { return this; }
+#ifndef FILEFORMAT
+	/// we write extra braces in any case...
+	bool extraBraces() const { return true; }
+#endif
 	///
 	void metrics(MetricsInfo & mi, Dimension & dim) const;
 	///
